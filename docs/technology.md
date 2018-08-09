@@ -54,5 +54,5 @@ Highest order of application complexity but also closest to real world scenario.
 
 ## Summary
 
-One thing about all of these is there is plenty of decent boiler-plate out thereso initial setup and what not isn't that complex, necessarily.
+One thing about all of these is there is plenty of decent boiler-plate out there so initial setup and what not isn't that complex, necessarily.
 That said mindful of everyone feeling comfortable and able to contribute.
