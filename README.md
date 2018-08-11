@@ -1,4 +1,5 @@
 # SmartCourse (working title)
+[![Build Status](https://travis-ci.com/SmartCourse/app.svg?branch=dev)](https://travis-ci.com/SmartCourse/app)
 
 ## TODO Deploy/Build Guide
 Stuff will happen here soon.
