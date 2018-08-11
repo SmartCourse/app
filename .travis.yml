@@ -3,4 +3,4 @@ node_js:
   - 10
 notifications:
     slack: cs4920-2018:SDt3tqEvra7QvkVy5wnY9faR
-test: node tests/test.js
+script: node tests/test.js
