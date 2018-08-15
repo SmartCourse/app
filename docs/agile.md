@@ -48,6 +48,6 @@ We'll have several releases throughout the lifetime of the project; something al
 
 ## TODO
 
-In our project plan, we should build in extra time to accomodate for tasks going over time etc...
+In our project plan, we should build in extra time to accommodate for tasks going over time etc...
 
 
