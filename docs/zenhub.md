@@ -8,7 +8,16 @@ Every sprint (assigned under milestones) we'll create issues relating to user `S
 
 This interconnectedness will allows us to properly track the progress and development of various projects, just by looking at the Zenhub board.
 
-All active issues should be connected to a sprint (milestone) at the minimum.
+### Issue Templates
+
+#### Epics
+Theme `Epics` should really only be created at the start of the project. If you are creating a Theme `Epic` however, be sure to attach it to the `Epic` pipleline, and add the `Theme` label. `Epics` should not have a sprint milestone or release directly attached to them.
+
+#### Stories
+When creating a new `Story` make sure to create it as an `Epic` issue so that it can track multiple child issues (just a ZenHub thing), then add the additional `Story` tag. The `Story` should (must) be attached to a parent `Epic` or multiple `Epics`. You need to add this yourself. It's also important to add a `Story` to a release.
+
+#### Tasks
+A task is the bitesized individual story chunk that we can most related to an implemented feature and a chunck of a work in a weekly sprint. Create a normal (non-epic) issue, add the `Task` label, attach it to a sprint milestone, and give it an estimate it hours. `Tasks` are the only things that require estimates.
 
 ## Labels
 
@@ -18,7 +27,9 @@ The following labels currently exist:
 
 #### Special Labels
 1. Epic
-2. Story
+2. Theme
+3. Story
+4. Task
 
 #### Normal Labels
 1. Security
