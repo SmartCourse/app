@@ -61,17 +61,31 @@ A student should be able to log in and log out of their account
 ### Password Recovery
 A student should be able to retrieve their password
 
-## Design and User Experience [EPIC, THEME]
+## Design & User Experience [EPIC, THEME]
 The application should make it easy for users to find what they are looking for and view it in a clear and easy fashion.
 
 ### Site Template
-The user should be able to use a consitent format for navigating the sit.
+The user should be able to use a consistent format for navigating the site.
 
 ### Devices/Viewport
 A user should be able to access the web application from a variety of devices.
 
 ### Accessibility 
 A user should be able to expect a w3c compliant website, that abides by ARIA.
+
+## Documentation, Licensing, Code of Conduct/Terms & Conditions, & EULA [EPIC, THEME]
+The application should provide adequate documentation and compliance 
+to make it clear both how the application is used, the terms of service and 
+behaviour, and any licensing or attribution requirements.
+
+### Documentation
+A user should expect basic readme, usage documentation that they can refer to if they need to.
+
+### Licensing & Attribution
+A developer should take appropriate steps to comply with licensing of software and relevant attribution of assets.
+
+### EULA & T&Cs
+A user should know the behaviour that is expected of them in using the software.
 
 ## User Profiles [EPIC, THEME]
 A user should be able to setup a custom profile for a tailored user experience.
@@ -92,31 +106,28 @@ A user should be able to moderate content by reporting offensive, inappropriate 
 Some users should be moderators, and have the power to delete offensive posts, remove irrelevant discussion etc.
 
 ### Privacy
-A user should have the right to display as little information as is required.
+A user should have the right to display as little information as is required, a user should be able to delete their data if desired.
 
-## API Access and other Data Access [EPIC, THEME]
+## Enterprise API [EPIC, THEME]
 An enterprise user should be able to get specific bespoke data from the application.
 
 ### API Endpoints
 An enterprise user should be able to request specific information from a defined endpoint.
 
-### Data Freedom
-A user should be able to delete their data
-
 ### Integrations
-A user should be able to integrate their applications
+A user should be able to integrate their applications with the API -- potentially feed back data to the application too.
 
 ## Course Reviews & Profiles [EPIC, THEME]
-A student should be able to get a general idea about past course experiences.
+A user should be able to get a general idea about past course experiences.
 
 ### Add a Review
-A student should be able to review a course they have previously taken.
+A user should be able to review a course they have previously taken.
 
 ### Comment on a Review
-A student should be able to comment on a review for further discussion.
+A user should be able to comment on a review for further discussion.
 
 ### Upvote a Review
-A student should be able to upvote a review.
+A user should be able to upvote a review.
 
 ## Data Organisation [EPIC, THEME]
 
