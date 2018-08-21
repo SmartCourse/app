@@ -69,20 +69,22 @@ A developer should be able to deploy updates to the application remotely.
 Users should be able to expect some sense of identification and authentication.
 
 #### Site visitor
-As visitor without an account, I want to be able to view most of the site content, including search
+As visitor without an account, I want to be able to view and search the site's content
 
 #### Anonymous Questions
-As visitor without an account, I want to be able to ask questions so I don't have to create an account
+As visitor without an account, I want to be able to ask questions so I don't have to create an account to do so
 
-#### Account Creation
-A student should be able to create an account with a university email address.
-An enterprise customer should be able to request an enterprise account with a univerity application form.
+#### Student Account Creation
+As a student I want to be able to create an account with a university email address.
 
-#### Login/out
-A student should be able to log in and log out of their account
+#### Enterprise Account Creation
+As an enterprise customer I should be able to request an enterprise account with a application form.
+
+#### Login and logout
+A user should be able to log in and log out of their account with a username and password
 
 #### Password Recovery
-A student should be able to retrieve their password
+A student should be able to retrieve their password via email
 
 #### Profile page
 A user should be able to set up a personal profile page that contains personal information for community interaction.
