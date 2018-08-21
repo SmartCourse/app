@@ -133,11 +133,11 @@ A user should have the right to display as little information as is required, a 
 ### 3.7 Enterprise API [EPIC, THEME]
 An enterprise user should be able to get specific bespoke data from the application.
 
-#### API Endpoints
-An enterprise user should be able to request specific information from a defined endpoint.
+#### API Endpoints for data collection
+An enterprise user should be able to request specific information from authenticated endpoints about feedback and questions related to courses offered at their institution.
 
-#### Integrations
-A user should be able to integrate their applications with the API -- potentially feed back data to the application too.
+#### API Endpoints for updating information
+An enterprise user should be able to push updated course information/offerings to SmartCourse.
 
 ### 3.8 Course Reviews & Profiles [EPIC, THEME]
 A user should be able to get a general idea about past course experiences.
