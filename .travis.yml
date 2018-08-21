@@ -9,7 +9,6 @@ install:
   - cd ../backend
   - npm install
 script: 
-  - cd frontend
   - npm test
-  - cd ../backend
+  - cd ../frontend
   - npm test
