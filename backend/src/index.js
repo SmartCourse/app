@@ -4,7 +4,7 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 
-const indexRouter = require('./controllers/index')
+const indexRouter = require('./controllers')
 const usersRouter = require('./controllers/users')
 
 const app = express()
