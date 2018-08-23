@@ -269,31 +269,43 @@ As an enterprise user, I should be able to push updated course information/offer
  * Priority: Like to Have
  * Release: Final Product
 
-## 3.0 - Releases
-# TODO - CLEARLY DEFINE MVP
+## 5.0 - Releases
 A release is when we merge code to master, and is a (at least partially) working product. The goal is to do the first release very early and then iterate.
 
 We'll have several releases throughout the lifetime of the project; something along the lines of:
 1. Prototypes (as early as possible):
-    * Minimal/incomplete features.
+    * Minimum/incomplete features.
     * Testing integration of features.
-2. Minimal Viable Product (Week 8/9):
-    * Basic minimal requirements met.
+2. Minimum Viable Product (Week 8/9):
+    * Basic minimum requirements met.
 3. Final Product (Week 12):
     * Thoroughly tested and polished.
 
-## 4.0 - Roles
+### Minimum Viable Product (MVP)
+We have defined our MVP by the following user stories (see details in section 4):
+* Ask Questions
+* Answer Questions
+* View Questions and Answers
+* Add a Review
+* Read a Review
+* Design an Appropriate Database Schema
+* Anonymous Site Visitor
+* Search by Course
+* Remote Hosting
+
+## 6.0 - Roles
+We have defined our group's agile roles as follows:
 * Scrum Master - Alex
 * Product Owner - Nuno
 * Developers - Travis, Luke, Alex and Nuno
 
-## 5.0 - Sprints & Meeting Schedule
+## 7.0 - Sprints & Meeting Schedule
 
 ### Sprints
 Each sprint is one week long (Thursday to Thursday). The goal for each sprint is to choose a subset of user stories to work on and ideally finish within that sprint. To enable this to occur in an efficient fashion, we have planeed for both standups and sprint reviews.
 
 ### Standups
-The goal of the standup is for each team member to answer the follwoing 3 questions:
+The goal of the standup is for each team member to answer the following 3 questions:
 1. What have I been working on?
 2. What am I working on next?
 3. Is anything in my way?
@@ -316,9 +328,18 @@ Every Thursday, after the lecture, we'll do a 'Sprint Review' and organise the n
     * Allocate tasks to people.
 
 ## 8.0 - Technologies
-# TODO - OUTLINE TECHNOLOGIES BEING USED
- * TRAVIS
- * GITHUB
- * ZENHUB
- * VUE
- * EXPRESS
+Management:
+* ZenHub - Agile project mangement tool.
+* GitHub - Code base hosting and organisation.
+* Slack - Discussion forum and standup location.
+
+Front End:
+* Vue.js - JavaScript framework for building UI.
+
+Back End:
+* Node.js - JavaScript run-time server environment.
+* Express.js - Web application framework for Node.js.
+* SQLite - Database for all application data.
+
+Testing:
+* Travis CI - Continuous integration service for automated testing.
