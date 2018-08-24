@@ -69,20 +69,22 @@ A developer should be able to deploy updates to the application remotely.
 Users should be able to expect some sense of identification and authentication.
 
 #### Site visitor
-As visitor without an account, I want to be able to view most of the site content, including search
+As visitor without an account, I want to be able to view and search the site's content
 
 #### Anonymous Questions
-As visitor without an account, I want to be able to ask questions so I don't have to create an account
+As visitor without an account, I want to be able to ask questions so I don't have to create an account to do so
 
-#### Account Creation
-A student should be able to create an account with a university email address.
-An enterprise customer should be able to request an enterprise account with a univerity application form.
+#### Student Account Creation
+As a student I want to be able to create an account with a university email address.
 
-#### Login/out
-A student should be able to log in and log out of their account
+#### Enterprise Account Creation
+As an enterprise customer I should be able to request an enterprise account with a application form.
+
+#### Login and logout
+A user should be able to log in and log out of their account with a username and password
 
 #### Password Recovery
-A student should be able to retrieve their password
+A student should be able to retrieve their password via email
 
 #### Profile page
 A user should be able to set up a personal profile page that contains personal information for community interaction.
@@ -131,11 +133,11 @@ A user should have the right to display as little information as is required, a 
 ### 3.7 Enterprise API [EPIC, THEME]
 An enterprise user should be able to get specific bespoke data from the application.
 
-#### API Endpoints
-An enterprise user should be able to request specific information from a defined endpoint.
+#### API Endpoints for data collection
+An enterprise user should be able to request specific information from authenticated endpoints about feedback and questions related to courses offered at their institution.
 
-#### Integrations
-A user should be able to integrate their applications with the API -- potentially feed back data to the application too.
+#### API Endpoints for updating information
+An enterprise user should be able to push updated course information/offerings to SmartCourse.
 
 ### 3.8 Course Reviews & Profiles [EPIC, THEME]
 A user should be able to get a general idea about past course experiences.

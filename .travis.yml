@@ -3,4 +3,12 @@ node_js:
   - 10
 notifications:
     slack: cs4920-2018:SDt3tqEvra7QvkVy5wnY9faR
-script: node tests/test.js
+install:
+  - cd frontend
+  - npm install
+  - cd ../backend
+  - npm install
+script: 
+  - npm test
+  - cd ../frontend
+  - npm test
