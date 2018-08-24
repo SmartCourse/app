@@ -1,17 +1,28 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Welcome to SmartCourse!"/>
+    <Feed 
+      title="Welcome to SmartCourse!"
+      :questions="feed"
+    />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import Feed from '@/components/Feed.vue'
 
 export default {
   name: 'home',
   components: {
-    HelloWorld
+    Feed
+  },
+  computed: {
+    feed() {
+      return this.$store.state.questions
+    }
+  },
+  created() {
+    this.$store.dispatch('getFeed')
   }
 }
 </script>
