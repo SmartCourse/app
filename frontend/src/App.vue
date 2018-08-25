@@ -20,7 +20,8 @@ html, body {
 }
 
 main {
-  width: 800px;
+  /* arbitrary */
+  max-width: 768px;
   margin: auto;
 }
 
