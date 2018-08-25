@@ -1,4 +1,5 @@
 import { getQuestions, getQuestion } from '@/utils/api'
+import format from 'date-fns/format'
 
 const state = {
   loading: false,
@@ -13,7 +14,8 @@ const getters = {
       id,
       title,
       body,
-      author: uid
+      author: uid,
+      published: format(Date.now(), 'DD/MM/YY')
     }))
   }
 }

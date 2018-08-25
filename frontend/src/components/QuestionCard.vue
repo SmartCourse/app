@@ -7,6 +7,9 @@
             <h2>{{question.title}}</h2>
             <p>{{ question.body }}</p>
         </div>
+        <aside class="date">
+            <time>{{ question.published }}</time>
+        </aside>
     </div>
 </template>
 
@@ -19,12 +22,19 @@ export default {
 </script>
 
 <style scoped>
+.date {
+    font-size: 0.75em;
+    color: rgba(0,0,0, 0.65);
+}
 
 .card {
     position: relative;
     display: grid;
-    grid-template-columns: 50px auto;
+    grid-template-columns: 50px auto 50px;
+    grid-gap: 10px;
     margin: 10px 0px;
+    border: 2px solid #f5f5f5;
+    padding: 10px;
 }
 
 .card div > *:first-child {
