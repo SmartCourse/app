@@ -9,7 +9,7 @@ const state = {
 
 const getters = {
   feed: ({questions}) => {
-    return questions.map(({ id, uid, title, body }) => ({
+    return questions.map(({ id, meta: {uid}, title, body }) => ({
       id,
       title,
       body,
