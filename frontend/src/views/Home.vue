@@ -10,6 +10,7 @@
 <script>
 // @ is an alias to /src
 import Feed from '@/components/Feed.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'home',
@@ -17,12 +18,12 @@ export default {
     Feed
   },
   computed: {
-    feed() {
-      return this.$store.state.questions
-    }
+    ...mapGetters('questions', {
+      feed: 'feed'
+    })
   },
   created() {
-    this.$store.dispatch('getFeed')
+    this.$store.dispatch('questions/getFeed')
   }
 }
 </script>

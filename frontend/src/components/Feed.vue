@@ -3,19 +3,21 @@
     <h1>{{ title }}</h1>
     <section class="questions">
       <ol>
-        <li :key="question.id" v-for="question in questions">{{ question }}</li>
+        <li :key="question.id" v-for="question in questions">
+          <QuestionCard :question="question"/>
+        </li>
       </ol>
     </section>
   </div>
 </template>
 
 <script>
-import Question from './Question'
+import QuestionCard from './QuestionCard'
 
 export default {
   name: 'Feed',
   components: {
-    Question
+    QuestionCard
   },
   props: {
     title: String,
