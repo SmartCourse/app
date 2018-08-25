@@ -5,7 +5,11 @@ const state = {
   loading: false,
   search: '',
   questions: [],
-  error: ''
+  questionObj: {},
+  error: {
+    code: 0,
+    message: ''
+  }
 }
 
 const getters = {
@@ -17,7 +21,9 @@ const getters = {
       author: uid,
       published: format(Date.now(), 'DD/MM/YY')
     }))
-  }
+  },
+  question: ({questionObj: {question}}) => question,
+  answers: ({questionObj: {answers}}) => answers
 }
 
 const mutations = {
@@ -26,6 +32,9 @@ const mutations = {
   },
   TOGGLE_LOADING (state, bool) {
     state.loading = bool
+  },
+  FOCUS_QUESTION (state, question) {
+    state.questionObj = question
   }
 }
 
@@ -37,7 +46,7 @@ const actions = {
   },
   async getQuestion ({commit}, id) {
     commit('TOGGLE_LOADING', true)
-    commit('REFRESH_FEED', await getQuestion(id))
+    commit('FOCUS_QUESTION', await getQuestion(id))
     commit('TOGGLE_LOADING', false)
   }
 }
