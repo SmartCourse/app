@@ -1,6 +1,7 @@
 <template>
     <div class="q">
-      <QuestionCard :question="question"/>
+      <QuestionCard :question="question" />
+      <!--AnswerForm /-->
       <ul>
           <li v-for="answer in answers" :key="answer.id">
               <AnswerCard :answer="answer"/>
@@ -10,14 +11,16 @@
 </template>
 
 <script>
-import QuestionCard from '@/components/QuestionCard.vue'
-import AnswerCard from '@/components/AnswerCard.vue'
+import QuestionCard from '@/components/QuestionCard'
+import AnswerCard from '@/components/AnswerCard'
+import AnswerForm from '@/components/AnswerForm'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     QuestionCard,
-    AnswerCard
+    AnswerCard,
+    AnswerForm
   },
   props: {
       id: String

@@ -9,7 +9,7 @@
 
 <script>
 // @ is an alias to /src
-import Feed from '@/components/Feed.vue'
+import Feed from '@/components/Feed'
 import { mapGetters } from 'vuex'
 
 export default {
