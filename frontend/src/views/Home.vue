@@ -1,17 +1,29 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Welcome to SmartCourse!"/>
+    <Feed 
+      title="Welcome to SmartCourse!"
+      :questions="feed"
+    />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import Feed from '@/components/Feed.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'home',
   components: {
-    HelloWorld
+    Feed
+  },
+  computed: {
+    ...mapGetters('questions', {
+      feed: 'feed'
+    })
+  },
+  created() {
+    this.$store.dispatch('questions/getFeed')
   }
 }
 </script>
