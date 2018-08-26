@@ -5,7 +5,10 @@ const state = {
   loading: false,
   search: '',
   questions: [],
-  questionObj: {},
+  questionObj: {
+    question: {},
+    answers: []
+  },
   error: {
     code: 0,
     message: ''
@@ -23,7 +26,8 @@ const getters = {
     }))
   },
   question: ({questionObj: {question}}) => question,
-  answers: ({questionObj: {answers}}) => answers
+  answers: ({questionObj: {answers}}) => answers,
+  loading: ({loading}) => loading
 }
 
 const mutations = {

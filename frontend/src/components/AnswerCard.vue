@@ -2,16 +2,14 @@
     <Card>
         <div class="card-content">
         <div class="meta-fields">
-            <p>{{ question.id }}</p>
+            <p>{{ answer.id }}</p>
         </div>
         <div class="content">
-            <router-link tag="h2" :to="{ name: 'question', params: { id: String(question.id) }}">
-                {{ question.title }}
-            </router-link>
-            <p>{{ question.body }}</p>
+            <h3>{{ answer.title }}</h3>
+            <p>{{ answer.body }}</p>
         </div>
         <aside class="date">
-            <time>{{ question.published }}</time>
+            <time>{{ answer.published }}</time>
         </aside>
         </div>
     </Card>
@@ -23,13 +21,12 @@ import Card from './Card'
 export default {
   components: { Card },
   props: {
-    question: Object
+    answer: Object
   }
 }
 </script>
 
 <style scoped>
 @import '../css/card.less';
-
 </style>
 

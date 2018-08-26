@@ -1,24 +1,35 @@
 <template>
-    <div>
-      <div>PARAM: {{id}}</div>
-      <div>{{ question }}</div>
-      <div v-for="answer in answers" :key="answer.id">
-          {{ answer }}
+    <section class="q">
+      <div v-if="!loading">
+        <QuestionCard :question="question"/>
+        <ul v-if="answers.length">
+            <li v-for="answer in answers" :key="answer.id">
+                <AnswerCard :answer="answer"/>
+            </li>
+        </ul>
       </div>
-    </div>
+      <!--<LoadingSpinner v-else/>-->
+    </section>
 </template>
 
 <script>
+import QuestionCard from '@/components/QuestionCard'
+import AnswerCard from '@/components/AnswerCard'
 import { mapGetters } from 'vuex'
 
 export default {
+  components: {
+    QuestionCard,
+    AnswerCard
+  },
   props: {
       id: String
   },
   computed: {
     ...mapGetters('questions', {
       question: 'question',
-      answers: 'answers'
+      answers: 'answers',
+      loading: 'loading'
     })
   },
   created() {
@@ -26,3 +37,6 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+</style>

@@ -11,7 +11,7 @@
 </template>
 
 <style lang="less">
-
+/* global styles live here */
 html, body {
   margin: 0;
   padding: 0;
@@ -30,4 +30,7 @@ ol, ul {
   padding: 0;
 }
 
+li {
+  list-style-type: none;
+}
 </style>
