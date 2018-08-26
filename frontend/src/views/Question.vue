@@ -1,7 +1,6 @@
 <template>
-    <div>
-      <div>PARAM: {{id}}</div>
-      <div>{{ question }}</div>
+    <div class="q">
+      <QuestionCard :question="question"/>
       <div v-for="answer in answers" :key="answer.id">
           {{ answer }}
       </div>
@@ -9,9 +8,13 @@
 </template>
 
 <script>
+import QuestionCard from '@/components/QuestionCard.vue'
 import { mapGetters } from 'vuex'
 
 export default {
+  components: {
+    QuestionCard
+  },
   props: {
       id: String
   },
