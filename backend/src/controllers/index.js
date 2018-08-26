@@ -13,7 +13,7 @@ router.get('*', function(req, res, next) {
 
 router.get('/', function(req, res, next) { /* eslint-disable-line */
   //res.render('index', { title: 'Express' })
-  res.send(`<h1>Da Backend</h1>`)
+  res.send('<h1>Da Backend</h1>')
 })
 
 module.exports = router
