@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, RouterLinkStub } from '@vue/test-utils'
 import QuestionCard from '@/components/QuestionCard.vue'
 
 describe('QuestionCard.vue', () => {
@@ -17,7 +17,10 @@ describe('QuestionCard.vue', () => {
         'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto'
     }
     this.wrapper = shallowMount(QuestionCard, {
-      propsData: { question: this.card }
+      propsData: { question: this.card },
+      stubs: {
+        'router-link': RouterLinkStub
+      }
     })
   })
   it('renders question data', function () {
