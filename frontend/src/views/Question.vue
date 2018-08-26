@@ -1,12 +1,14 @@
 <template>
-    <div class="q">
-      <QuestionCard :question="question"/>
-      <ul>
-          <li v-for="answer in answers" :key="answer.id">
-              <AnswerCard :answer="answer"/>
-          </li>
-      </ul>
-    </div>
+    <section class="q">
+      <div v-if="!loading">
+        <QuestionCard :question="question"/>
+        <ul v-if="answers.length">
+            <li v-for="answer in answers" :key="answer.id">
+                <AnswerCard :answer="answer"/>
+            </li>
+        </ul>
+      </div>
+    </section>
 </template>
 
 <script>
@@ -25,7 +27,8 @@ export default {
   computed: {
     ...mapGetters('questions', {
       question: 'question',
-      answers: 'answers'
+      answers: 'answers',
+      loading: 'loading'
     })
   },
   created() {

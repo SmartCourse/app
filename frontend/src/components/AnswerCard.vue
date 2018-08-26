@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <Card>
         <div class="meta-fields">
             <p>{{ answer.id }}</p>
         </div>
@@ -10,11 +10,14 @@
         <aside class="date">
             <time>{{ answer.published }}</time>
         </aside>
-    </div>
+    </Card>
 </template>
 
 <script>
+import Card from './Card'
+
 export default {
+  components: { Card },
   props: {
     answer: Object
   }
@@ -27,24 +30,9 @@ export default {
   color: rgba(0, 0, 0, 0.65);
 }
 
-.card {
-  position: relative;
-  display: grid;
-  grid-template-columns: 50px auto 50px;
-  grid-gap: 10px;
-  margin: 10px 0px;
-  border: 2px solid #f5f5f5;
-  padding: 10px;
-}
-
 h2:hover {
   cursor: pointer;
   color: rgba(0, 0, 0, 0.65);
-}
-
-.card div > *:first-child {
-  margin-top: 0;
-  line-height: 24px;
 }
 </style>
 
