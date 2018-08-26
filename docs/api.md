@@ -21,33 +21,30 @@
 ### User
 ```
 "user": {
-    "uid": <unique int>
-    "meta": {
-        "reputation": <int> // Merge meta/profile?
-    }
+    "id": <id>
     "username": <unqiue string>
     "password": <string> // NOT SENT THROUGH API (db/schema)
     "email": <unqiue string> // NOT SENT THROUGH API (db/schema)
-    "img_url" <string>
-    "profile": {
-        // Stuff for any profile data ect..
+    "meta": {
+        "reputation": <number> // Merge meta/profile?
     }
+    "img_url": <string>
 }
 ```
 
-### Universities
+### University
 ```
 "university" {
-    university_id: <unqiue int>
+    "id": <id>
     "name": <string>
-    "img_url" <string>
+    "img_url": <string>
 }
 ```
 
-### Courses
+### Course
 ```
 "course": {
-    "course_id": <unqiue int>
+    "id": <id>
     "meta": {
         "reputation/rating": <number>
         "num_questions": <number>
@@ -55,68 +52,42 @@
     }
     "code": <string> // e.g. COMP4920
     "name": <string> // e.g. Ethics and Project Management
-    "univserity_id": <key> // e.g. Searching for courses by uni
+    "parent": <key> // e.g. UNSW
     "faculty/facult_code": e.g. "COMP" // Allows refined search
+    "children": [Post] // The first page of children
 }
 ```
 
-### Questions
+### Post (Questions/Review)
 ```
-"question": {
-    "question_id": <unique int>
+"post": {
+    "id": <id>
     "meta": {
-        "user_id": <key>
-        "course_id": <key>
+        "uid": <key>
+        "parent": <key>
         "upvotes" <number>
-        "num_answers": <number> // Can be used to determine next answer id
+        "num_children": <number>
     }
+    "children": [Comment] // The first page of children
     "title": <string>
     "body": <string>
 }
 ```
 
-### Answers
+### Comment (Answers/Replies)
 ```
-"answer": {
-    "answer_id": <unique int>
+"comment": {
+    "id": <id>
     "meta": {
-        "user_id": <key>
-        "question_id": <key>
-        "upvotes" <number>
-    }
-    "title": <string>
-    "body": <string>
-}
-```
-
-### Reviews
-```
-"review": {
-    "review_id": <unique int>
-    "meta": {
-        "user_id": <key>
-        "course_id": <key>
-        "upvotes" <number>
-        "num_replies": <number> // Can be used to determine next reply id
-    }
-    "title": <string>
-    "body": <string>
-}
-```
-
-### Replies
-```
-"replies": {
-    "reply_id": <unique int>
-    "meta": {
-        "user_id": <key>
-        "review_id": <key>
+        "uid": <key>
+        "parent": <key>
         "upvotes" <number>
     }
     "title": <string>
     "body": <string>
 }
 ```
+
 ## Sample API Routes
 
 ### Users
@@ -125,14 +96,17 @@ Get the data for a specific user
 
 ### Universities
 
+Get ALL universtiies
+* /api/uni
+
 Get data for a specific university
 * /api/uni/:id
 
-Get ALL courses for a university
+REDACTED: Get ALL courses for a university
 * /api/uni/:uid/courses
 
-Get (n) courses for a university
-* /api/uni/:uid/courses?n=10
+Get page (N) courses for a university
+* /api/uni/:uid/courses?p=N
 * Top/Popular courses
 
 Get courses for a specific faulty
@@ -147,29 +121,28 @@ Get courses for a specific session
 Get the course data for a specific course id
 * /api/course/:cid
 
-Get ALL questions for a course
+REDACTED: Get ALL questions for a course
 * /api/course/:cid/questions
 
-Get (n) questions for a course
-* /api/course/:cid/questions?n=10
-* Top (n) questions ranked by reputation?
+Get page (N) questions for a course
+* /api/course/:cid/questions?p=N
 
-Get ALL reviews for a course
+REDACTED: Get ALL reviews for a course
 * /api/course/:cid/reviews
 
-Get (n) questions for a course
-* /api/course/:cid/reviews?n=10
+Get page (N) questions for a course
+* /api/course/:cid/reviews?p=N
 
 ### Questions
 
 Get the question data for a specific question id
 * /api/course/:cid/question/:qid
 
-Get ALL answers for a question
+REDACTED: Get ALL answers for a question
 * /api/course/:cid/question/:qid/answers
 
-Get (n) answers for a question
-* /api/course/:cid/questions/:qid/answers?n=10
+Get page (N) answers for a question
+* /api/course/:cid/questions/:qid/answers?p=N
 
 ### Answers (Do we ever need to get an answer directly)
 
@@ -180,11 +153,11 @@ Get (n) answers for a question
 Get the review data for a specific review id
 * /api/course/:cid/review/:rid
 
-Get ALL answers for a question
+REDACTED: Get ALL answers for a question
 * /api/course/:cid/review/:rid/answers
 
-Get (n) answers for a question
-* /api/course/:cid/review/:rid/answers?n=10
+Get page (N) answers for a question
+* /api/course/:cid/review/:rid/answers?p=N
 
 ### Replies (Do we ever need to get a reply directly)
 
