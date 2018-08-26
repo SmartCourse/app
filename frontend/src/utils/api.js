@@ -1,5 +1,5 @@
 
-const API_URL = ''
+const API_URL = 'http://localhost:3000/api'
 
 const get = (url, options = {}) =>
   fetch(url, options)
