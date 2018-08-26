@@ -4,7 +4,7 @@
     <section class="questions">
       <ol>
         <li :key="question.id" v-for="question in questions">
-          <QuestionCard :question="question"/>
+           <QuestionCard :question="question"/>
         </li>
       </ol>
     </section>
