@@ -1,19 +1,23 @@
 <template>
     <div class="q">
       <QuestionCard :question="question"/>
-      <div v-for="answer in answers" :key="answer.id">
-          {{ answer }}
-      </div>
+      <ul>
+          <li v-for="answer in answers" :key="answer.id">
+              <AnswerCard :answer="answer"/>
+          </li>
+      </ul>
     </div>
 </template>
 
 <script>
 import QuestionCard from '@/components/QuestionCard.vue'
+import AnswerCard from '@/components/AnswerCard.vue'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
-    QuestionCard
+    QuestionCard,
+    AnswerCard
   },
   props: {
       id: String
@@ -29,3 +33,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+  li {
+    list-style: none;
+  }
+</style>
