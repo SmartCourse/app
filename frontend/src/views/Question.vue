@@ -8,12 +8,13 @@
             </li>
         </ul>
       </div>
+      <!--<LoadingSpinner v-else/>-->
     </section>
 </template>
 
 <script>
-import QuestionCard from '@/components/QuestionCard.vue'
-import AnswerCard from '@/components/AnswerCard.vue'
+import QuestionCard from '@/components/QuestionCard'
+import AnswerCard from '@/components/AnswerCard'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -38,7 +39,4 @@ export default {
 </script>
 
 <style scoped>
-  li {
-    list-style: none;
-  }
 </style>

@@ -13,7 +13,7 @@ const put = (url, options = {}) =>
   fetch(url, { ...options, method: 'PUT' })
     .then(res => res.json())
 
-export const delay = (ms) => fn => setTimeout(fn, ms)
+export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /* get questions */
 export function getQuestions () {

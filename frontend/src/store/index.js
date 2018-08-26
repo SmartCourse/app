@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import questions from './modules/questions'
+import questions from './questions'
 
 Vue.use(Vuex)
 
