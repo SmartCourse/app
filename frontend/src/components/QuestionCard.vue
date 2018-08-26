@@ -1,5 +1,6 @@
 <template>
     <Card>
+        <div class="card-content">
         <div class="meta-fields">
             <p>{{ question.id }}</p>
         </div>
@@ -12,6 +13,7 @@
         <aside class="date">
             <time>{{ question.published }}</time>
         </aside>
+        </div>
     </Card>
 </template>
 
@@ -27,14 +29,7 @@ export default {
 </script>
 
 <style scoped>
-.date {
-  font-size: 0.75em;
-  color: rgba(0, 0, 0, 0.65);
-}
+@import '../css/card.less';
 
-h2:hover {
-  cursor: pointer;
-  color: rgba(0, 0, 0, 0.65);
-}
 </style>
 
