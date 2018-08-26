@@ -35,6 +35,15 @@ export function postQuestion (body) {
 }
 
 /**
+ * @param {String} id the id of the question being answered
+ * @param {object} body the data associated with the new answer
+ */
+export function postAnswer (id, body) {
+  return post(`${API_URL}/question/${id}`, { body })
+}
+
+/**
+ * @param {String} id the id of the question being edited
  * @param {object} body the data associated with the new question
  */
 export function editQuestion (id, body) {

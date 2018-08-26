@@ -1,28 +1,42 @@
 <template>
-  <div class="card">
-    <h3>Submit an Answer</h3>
-    <span>Title</span><input type=text v-model="formdata.title" />
-    <textarea v-model="formdata.body"></textarea>
-    <div>
-    {{ formdata.title }}
-    {{ formdata.body }}
-    </div>
-  </div>
+    <Card>
+        <div class="meta-fields">
+        </div>
+        <div class="content">
+            <h3>Submit an Answer</h3>
+            <p>
+              <input type=text v-model="formdata.title" /><br>
+              <textarea v-model="formdata.body"></textarea><br>
+              <button @click="$emit('submitAnswerForm', formdata)">Answer</button><br>
+              <slot></slot>
+            </p>
+        </div>
+  </Card>
 </template>
 
 <script>
+import Card from './Card'
 
 export default {
   name: 'AnswerForm',
-    data: function () {
-        return {
-          formdata: {
-            title:'',
-            body:''
+  components: {
+      Card
+  },
+  data: function () {
+          return {
+            formdata: {
+              title:'',
+              body:''
+            }
           }
-      }
-    },
-  props: {}
+  }
 }
 </script>
+
+<style scoped>
+  textarea {
+    width: 100%;
+    height: 100px;
+  }
+</style>
 

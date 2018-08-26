@@ -1,12 +1,19 @@
 <template>
     <section class="q">
       <div v-if="!loading">
+
         <QuestionCard :question="question"/>
+
+        <AnswerForm @submitAnswerForm="submitAnswer" class="answerForm">
+          <span :class="answerFormResponse.style" v-if="answerFormResponse">{{answerFormResponse.text}}</span>
+        </AnswerForm>
+
         <ul v-if="answers.length">
-            <li v-for="answer in answers" :key="answer.id">
-                <AnswerCard :answer="answer"/>
-            </li>
+          <li v-for="answer in answers" :key="answer.id">
+            <AnswerCard :answer="answer"/>
+          </li>
         </ul>
+
       </div>
     </section>
 </template>
@@ -15,6 +22,7 @@
 import QuestionCard from '@/components/QuestionCard'
 import AnswerCard from '@/components/AnswerCard'
 import AnswerForm from '@/components/AnswerForm'
+import {postAnswer} from '@/utils/api.js'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -33,6 +41,37 @@ export default {
       loading: 'loading'
     })
   },
+  data: function () {
+    return {
+      answerFormResponse: {
+        text: "",
+        style: {'form-success': false, 'form-failure': false}
+      }
+    }
+  },
+  methods: {
+    submitAnswer : function (answerForm) {
+        // check that they actually typed something
+        if (answerForm.body == "") {
+            this.answerFormResponse.text = "Please type an answer!"
+            this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
+            return
+        }
+        // post the answer to the api
+        postAnswer(this.id, answerForm).then(
+            (value) => {
+                // update the store if the response was successful
+                this.$store.dispatch('questions/getQuestion', this.id || 1)
+                this.answerFormResponse.text = "Thanks!"
+                this.answerFormResponse.style = {'form-success': true, 'form-failure': false}
+            },
+            (value) => {
+                this.answerFormResponse.text = "Error posting answer"
+                this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
+            }
+        )
+    }
+  },
   created() {
     this.$store.dispatch('questions/getQuestion', this.id || 1)
   }
@@ -42,5 +81,11 @@ export default {
 <style scoped>
   li {
     list-style: none;
+  }
+  .form-success {
+    color: green;
+  }
+  .form-failure {
+    color: red;
   }
 </style>
