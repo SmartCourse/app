@@ -11,7 +11,7 @@
 </template>
 
 <style lang="less">
-
+/* global styles live here */
 html, body {
   margin: 0;
   padding: 0;
