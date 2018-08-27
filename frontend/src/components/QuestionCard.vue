@@ -31,4 +31,3 @@ export default {
 <style scoped>
 @import '../css/card.less';
 </style>
-

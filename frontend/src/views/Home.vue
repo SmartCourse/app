@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Feed 
+    <Feed
       title="Welcome to SmartCourse!"
       :questions="feed"
     />
@@ -22,7 +22,7 @@ export default {
       feed: 'feed'
     })
   },
-  created() {
+  created () {
     this.$store.dispatch('questions/getFeed')
   }
 }

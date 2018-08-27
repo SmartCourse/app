@@ -18,13 +18,13 @@ import Card from './Card'
 export default {
   name: 'AnswerForm',
   components: {
-      Card
+    Card
   },
-  data() {
+  data () {
     return {
       formdata: {
-        title:'',
-        body:''
+        title: '',
+        body: ''
       }
     }
   }
@@ -41,4 +41,3 @@ textarea {
   height: 100px;
 }
 </style>
-

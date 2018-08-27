@@ -24,7 +24,6 @@
 import QuestionCard from '@/components/QuestionCard'
 import AnswerCard from '@/components/AnswerCard'
 import AnswerForm from '@/components/AnswerForm'
-import {postAnswer} from '@/utils/api.js'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -34,7 +33,7 @@ export default {
     AnswerForm
   },
   props: {
-      id: String
+    id: String
   },
   computed: {
     ...mapGetters('questions', {
@@ -45,20 +44,20 @@ export default {
     })
   },
   methods: {
-    submitAnswer(answerForm) {
-        // check that they actually typed something
-        if (answerForm.body == "") {
-            //this.answerFormResponse.text = "Please type an answer!"
-            //this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
-            return
-        }
-        this.$store.dispatch('questions/postAnswer', {form:answerForm, id:this.question.id})
+    submitAnswer (answerForm) {
+      // check that they actually typed something
+      if (answerForm.body === '') {
+        // this.answerFormResponse.text = "Please type an answer!"
+        // this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
+        return
+      }
+      this.$store.dispatch('questions/postAnswer', {form: answerForm, id: this.question.id})
     }
   },
-  created() {
+  created () {
     this.$store.dispatch('questions/getQuestion', this.id || 1)
   }
-};
+}
 </script>
 
 <style scoped>
