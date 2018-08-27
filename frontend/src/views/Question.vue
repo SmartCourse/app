@@ -1,28 +1,73 @@
 <template>
-    <div>
-      <div>PARAM: {{id}}</div>
-      <div>{{ question }}</div>
-      <div v-for="answer in answers" :key="answer.id">
-          {{ answer }}
+    <section class="q">
+      <div v-if="!loading">
+
+        <QuestionCard :question="question"/>
+
+        <AnswerForm @submitAnswerForm="submitAnswer" class="answerForm">
+          <span class="form-failure"
+              v-if="error.code">{{error.message}}</span>
+        </AnswerForm>
+
+        <ul v-if="answers.length">
+          <li v-for="answer in answers" :key="answer.id">
+            <AnswerCard :answer="answer"/>
+          </li>
+        </ul>
+
       </div>
-    </div>
+      <!--<LoadingSpinner v-else/>-->
+    </section>
 </template>
 
 <script>
+import QuestionCard from '@/components/QuestionCard'
+import AnswerCard from '@/components/AnswerCard'
+import AnswerForm from '@/components/AnswerForm'
 import { mapGetters } from 'vuex'
 
 export default {
+  components: {
+    QuestionCard,
+    AnswerCard,
+    AnswerForm
+  },
   props: {
-      id: String
+    id: String
   },
   computed: {
     ...mapGetters('questions', {
       question: 'question',
-      answers: 'answers'
+      answers: 'answers',
+      loading: 'loading',
+      error: 'error'
     })
   },
-  created() {
+  methods: {
+    submitAnswer (answerForm) {
+      // check that they actually typed something
+      if (answerForm.body === '') {
+        // this.answerFormResponse.text = "Please type an answer!"
+        // this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
+        return
+      }
+      this.$store.dispatch('questions/postAnswer', {form: answerForm, id: this.question.id})
+    }
+  },
+  created () {
     this.$store.dispatch('questions/getQuestion', this.id || 1)
   }
-};
+}
 </script>
+
+<style scoped>
+  li {
+    list-style: none;
+  }
+  .form-success {
+    color: green;
+  }
+  .form-failure {
+    color: red;
+  }
+</style>

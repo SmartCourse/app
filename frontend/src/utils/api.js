@@ -5,6 +5,7 @@ const get = (url, options = {}) =>
   fetch(url, options)
     .then(res => res.json())
 
+// TODO error handling n such
 const post = (url, options = {}) =>
   fetch(url, { ...options, method: 'POST' })
     .then(res => res.json())
@@ -13,7 +14,7 @@ const put = (url, options = {}) =>
   fetch(url, { ...options, method: 'PUT' })
     .then(res => res.json())
 
-export const delay = (ms) => fn => setTimeout(fn, ms)
+export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /* get questions */
 export function getQuestions () {
@@ -35,6 +36,15 @@ export function postQuestion (body) {
 }
 
 /**
+ * @param {String} id the id of the question being answered
+ * @param {object} body the data associated with the new answer {title, body}
+ */
+export function postAnswer (id, body) {
+  return post(`${API_URL}/question/${id}`, { body })
+}
+
+/**
+ * @param {String} id the id of the question being edited
  * @param {object} body the data associated with the new question
  */
 export function editQuestion (id, body) {
