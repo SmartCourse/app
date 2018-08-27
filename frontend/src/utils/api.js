@@ -5,6 +5,7 @@ const get = (url, options = {}) =>
   fetch(url, options)
     .then(res => res.json())
 
+// TODO error handling n such
 const post = (url, options = {}) =>
   fetch(url, { ...options, method: 'POST' })
     .then(res => res.json())
@@ -35,8 +36,8 @@ export function postQuestion (body) {
 }
 
 /**
- * @param {String} id the id of the question being answered
- * @param {object} body the data associated with the new answer
+ * @param String id the id of the question being answered
+ * @param object form the data associated with the new answer {title, body}
  */
 export function postAnswer (id, body) {
   return post(`${API_URL}/question/${id}`, { body })

@@ -5,7 +5,8 @@
         <QuestionCard :question="question"/>
 
         <AnswerForm @submitAnswerForm="submitAnswer" class="answerForm">
-          <span :class="answerFormResponse.style" v-if="answerFormResponse">{{answerFormResponse.text}}</span>
+          <!--span :class="answerFormResponse.style"
+              v-if="answerFormResponse">{{answerFormResponse.text}}</span-->
         </AnswerForm>
 
         <ul v-if="answers.length">
@@ -41,35 +42,16 @@ export default {
       loading: 'loading'
     })
   },
-  data: function () {
-    return {
-      answerFormResponse: {
-        text: "",
-        style: {'form-success': false, 'form-failure': false}
-      }
-    }
-  },
   methods: {
-    submitAnswer : function (answerForm) {
+    submitAnswer(answerForm) {
         // check that they actually typed something
         if (answerForm.body == "") {
-            this.answerFormResponse.text = "Please type an answer!"
-            this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
+            //this.answerFormResponse.text = "Please type an answer!"
+            //this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
             return
         }
-        // post the answer to the api
-        postAnswer(this.id, answerForm).then(
-            (value) => {
-                // update the store if the response was successful
-                this.$store.dispatch('questions/getQuestion', this.id || 1)
-                this.answerFormResponse.text = "Thanks!"
-                this.answerFormResponse.style = {'form-success': true, 'form-failure': false}
-            },
-            (value) => {
-                this.answerFormResponse.text = "Error posting answer"
-                this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
-            }
-        )
+        console.log(`this.question.id = ${this.question.id}`)
+        this.$store.dispatch('questions/postAnswer', {form:answerForm, id:this.question.id})
     }
   },
   created() {

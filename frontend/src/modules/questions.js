@@ -1,4 +1,4 @@
-import { getQuestions, getQuestion } from '@/utils/api'
+import { getQuestions, getQuestion, postAnswer } from '@/utils/api'
 import format from 'date-fns/format'
 
 const state = {
@@ -39,6 +39,10 @@ const mutations = {
   },
   FOCUS_QUESTION (state, question) {
     state.questionObj = question
+  },
+  API_ERROR(state, response) {
+    state.error.code = response.status
+    state.error.message = response.statusText
   }
 }
 
@@ -52,6 +56,24 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     commit('FOCUS_QUESTION', await getQuestion(id))
     commit('TOGGLE_LOADING', false)
+  },
+  async postAnswer ({commit}, {id, form}) {
+    console.log(`form: ${form}, id: ${id}`)
+    /*
+    commit('TOGGLE_LOADING', true)
+    // TODO consistent method for dealing with api errors
+    // post the answer to the api
+    let resp = await postAnswer(id, form)
+    if (resp.ok) {
+      // update the store if the response was successful
+      // TODO handle error here too...
+      commit('FOCUS_QUESTION', await getQuestion(id))
+    } else {
+      commit('API_ERROR', resp)
+      console.log(resp.statusText)
+    }
+    commit('TOGGLE_LOADING', false)
+    */
   }
 }
 

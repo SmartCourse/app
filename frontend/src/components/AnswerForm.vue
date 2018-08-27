@@ -7,7 +7,7 @@
             <p>
               <input type=text v-model="formdata.title" /><br>
               <textarea v-model="formdata.body"></textarea><br>
-              <button @click="$emit('submitAnswerForm', formdata)">Answer</button><br>
+              <button @click="$emit('submitAnswerForm', {title:formdata.title, body:formdata.body})">Answer</button><br>
               <slot></slot>
             </p>
         </div>
