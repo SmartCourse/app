@@ -22,13 +22,13 @@ export default {
   components: {
       Card
   },
-  data: function () {
-          return {
-            formdata: {
-              title:'',
-              body:''
-            }
-          }
+  data() {
+    return {
+      formdata: {
+        title:'',
+        body:''
+      }
+    }
   }
 }
 </script>

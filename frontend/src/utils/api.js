@@ -36,11 +36,11 @@ export function postQuestion (body) {
 }
 
 /**
- * @param String id the id of the question being answered
- * @param object form the data associated with the new answer {title, body}
+ * @param {String} id the id of the question being answered
+ * @param {object} body the data associated with the new answer {title, body}
  */
 export function postAnswer (id, body) {
-  return post(`${API_URL}/question/${id}`, { body })
+  return post(`${API_URL}/question/${id}`, body)
 }
 
 /**
