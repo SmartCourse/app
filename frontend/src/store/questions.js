@@ -27,7 +27,8 @@ const getters = {
   },
   question: ({questionObj: {question}}) => question,
   answers: ({questionObj: {answers}}) => answers,
-  loading: ({loading}) => loading
+  loading: ({loading}) => loading,
+  error: ({error}) => error
 }
 
 const mutations = {

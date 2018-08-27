@@ -5,8 +5,8 @@
         <QuestionCard :question="question"/>
 
         <AnswerForm @submitAnswerForm="submitAnswer" class="answerForm">
-          <!--span :class="answerFormResponse.style"
-              v-if="answerFormResponse">{{answerFormResponse.text}}</span-->
+          <span class="form-failure"
+              v-if="error.code">{{error.message}}</span>
         </AnswerForm>
 
         <ul v-if="answers.length">
@@ -40,7 +40,8 @@ export default {
     ...mapGetters('questions', {
       question: 'question',
       answers: 'answers',
-      loading: 'loading'
+      loading: 'loading',
+      error: 'error'
     })
   },
   methods: {
