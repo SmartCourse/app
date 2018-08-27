@@ -11,11 +11,6 @@
   border: 2px solid #f5f5f5;
   padding: 10px;
 }
-
-.card div > *:first-child {
-  margin-top: 0;
-  line-height: 24px;
-}
 </style>
 
 

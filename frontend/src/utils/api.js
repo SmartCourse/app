@@ -40,7 +40,7 @@ export function postQuestion (body) {
  * @param {object} body the data associated with the new answer {title, body}
  */
 export function postAnswer (id, body) {
-  return post(`${API_URL}/question/${id}`, body)
+  return post(`${API_URL}/question/${id}`, { body })
 }
 
 /**

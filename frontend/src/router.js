@@ -18,7 +18,7 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About')
+      component: () => import('./views/About')
     },
     {
       path: '/question/:id',
@@ -26,7 +26,7 @@ export default new Router({
       props: ({params: { id }}) => ({
         id
       }),
-      component: () => import(/* webpackChunkName: "about" */ './views/Question')
+      component: () => import('./views/Question')
     }
   ]
 })

@@ -1,4 +1,4 @@
-import { getQuestions, getQuestion, postAnswer } from '@/utils/api'
+import { getQuestions, getQuestion } from '@/utils/api'
 import format from 'date-fns/format'
 
 const state = {
@@ -41,9 +41,12 @@ const mutations = {
   FOCUS_QUESTION (state, question) {
     state.questionObj = question
   },
-  API_ERROR(state, {code, message}) {
+  API_ERROR (state, {code, message}) {
     state.error.code = code
     state.error.message = message
+  },
+  POST_ANSWER (state, answer) {
+    state.questionObj.answers.unshift(answer)
   }
 }
 
@@ -58,16 +61,18 @@ const actions = {
     commit('FOCUS_QUESTION', await getQuestion(id))
     commit('TOGGLE_LOADING', false)
   },
-  async postAnswer ({commit}, {id, form}) {
+  async postAnswer ({commit}, { id, form }) {
     // fake failure/success
+    // postAnswer() insert me later <----
+
     commit('TOGGLE_LOADING', true)
     // TODO real api request
     if (Math.random() > 0.5) {
-        commit('API_ERROR', {code:69, message:"Error posting answer"})
-        console.log("Pretending to error on posting answer!")
+      commit('API_ERROR', { code: 69, message: 'Error posting answer' })
+      console.log('Pretending to error on posting answer!')
     } else {
-        commit('API_ERROR', {code:0, message:""})
-        console.log("Pretending to successfully post answer!")
+      commit('POST_ANSWER', { id, title: form.title, body: form.body })
+      console.log('Pretending to successfully post answer!')
     }
     commit('TOGGLE_LOADING', false)
   }
