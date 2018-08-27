@@ -40,9 +40,9 @@ const mutations = {
   FOCUS_QUESTION (state, question) {
     state.questionObj = question
   },
-  API_ERROR(state, response) {
-    state.error.code = response.status
-    state.error.message = response.statusText
+  API_ERROR(state, {code, message}) {
+    state.error.code = code
+    state.error.message = message
   }
 }
 
@@ -58,22 +58,17 @@ const actions = {
     commit('TOGGLE_LOADING', false)
   },
   async postAnswer ({commit}, {id, form}) {
-    console.log(`form: ${form}, id: ${id}`)
-    /*
+    // fake failure/success
     commit('TOGGLE_LOADING', true)
-    // TODO consistent method for dealing with api errors
-    // post the answer to the api
-    let resp = await postAnswer(id, form)
-    if (resp.ok) {
-      // update the store if the response was successful
-      // TODO handle error here too...
-      commit('FOCUS_QUESTION', await getQuestion(id))
+    // TODO real api request
+    if (Math.random() > 0.5) {
+        commit('API_ERROR', {code:69, message:"Error posting answer"})
+        console.log("Pretending to error on posting answer!")
     } else {
-      commit('API_ERROR', resp)
-      console.log(resp.statusText)
+        commit('API_ERROR', {code:0, message:""})
+        console.log("Pretending to successfully post answer!")
     }
     commit('TOGGLE_LOADING', false)
-    */
   }
 }
 

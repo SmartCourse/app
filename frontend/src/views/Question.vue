@@ -50,7 +50,6 @@ export default {
             //this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
             return
         }
-        console.log(`this.question.id = ${this.question.id}`)
         this.$store.dispatch('questions/postAnswer', {form:answerForm, id:this.question.id})
     }
   },
