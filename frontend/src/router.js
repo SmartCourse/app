@@ -23,10 +23,8 @@ export default new Router({
     {
       path: '/question/:id',
       name: 'question',
-      props: ({params: { id }}) => ({
-        id
-      }),
-      component: () => import(/* webpackChunkName: "about" */ './views/Question.vue')
+      props: ({params: { id }}) => { id },
+      component: () => import('./views/Question.vue')
     }
   ]
 })
