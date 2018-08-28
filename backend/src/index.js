@@ -11,10 +11,8 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, '../public')))
 
-const indexRouter = require('./controllers')
 const apiRouter = require('./controllers/api')
 
-app.use('/', indexRouter)
 app.use('/api', apiRouter)
 
 /* 
