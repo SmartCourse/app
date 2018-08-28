@@ -153,11 +153,11 @@ Get page (N) answers for a question
 Get the review data for a specific review id
 * /api/course/:cid/review/:rid
 
-REDACTED: Get ALL answers for a question
-* /api/course/:cid/review/:rid/answers
+REDACTED: Get ALL replies for a review
+* /api/course/:cid/review/:rid/replies
 
-Get page (N) answers for a question
-* /api/course/:cid/review/:rid/answers?p=N
+Get page (N) replies for a review
+* /api/course/:cid/review/:rid/replies?p=N
 
 ### Replies (Do we ever need to get a reply directly)
 
