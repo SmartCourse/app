@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Feed 
+    <Feed
       title="Welcome to SmartCourse!"
       :questions="feed"
     />
@@ -9,7 +9,7 @@
 
 <script>
 // @ is an alias to /src
-import Feed from '@/components/Feed.vue'
+import Feed from '@/components/Feed'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -22,7 +22,7 @@ export default {
       feed: 'feed'
     })
   },
-  created() {
+  created () {
     this.$store.dispatch('questions/getFeed')
   }
 }
