@@ -29,4 +29,8 @@ router.get('/questions/:qid', function(req, res) {
   })
 })
 
+router.use('*', function(_, res) {
+  res.sendStatus(404)
+})
+
 module.exports = router

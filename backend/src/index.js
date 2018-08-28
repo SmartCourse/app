@@ -17,8 +17,13 @@ const apiRouter = require('./controllers/api')
 app.use('/', indexRouter)
 app.use('/api', apiRouter)
 
-app.use('*', function(_, resp) {
-    resp.sendFile(path.join(__dirname, '../public', 'index.html'));
+/* 
+    anything that gets here and not handled 
+    by api error handler should get index.html.
+    NB: frontend must handle actual 404s.
+*/
+app.use('*', function(_, res) {
+    res.sendFile(path.join(__dirname, '../public', 'index.html'));
 })
 
 module.exports = app
