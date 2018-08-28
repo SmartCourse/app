@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const questions = require('../../public/questions')
+const questions = require('../../fake_api/questions')
 
 /* Root API for debugging */
 router.get('/', function(req, res) {
