@@ -1,14 +1,14 @@
 const express = require('express')
-const course = express.Router({mergeParams: true})
+const router = express.Router({mergeParams: true})
 
 const questionRouter = require('./question')
 const reviewRouter = require('./review')
 
-course.use('/question', questionRouter)
-course.use('/review', reviewRouter)
+router.use('/question', questionRouter)
+router.use('/review', reviewRouter)
 
 /* Get the course data for a specific course id */
-course.get('/', function(req, res) {
+router.get('/', function(req, res) {
 
     cid = req.params.cid;
 
@@ -16,7 +16,7 @@ course.get('/', function(req, res) {
 })
 
 /* Get page (N) questions for a course */
-course.get('/questions', function(req, res) {
+router.get('/questions', function(req, res) {
 
   cid = req.params.cid;
   page_id = req.query.p;
@@ -25,7 +25,7 @@ course.get('/questions', function(req, res) {
 })
 
 /* Get page (N) reviews for a course */
-course.get('/reviews', function(req, res) {
+router.get('/reviews', function(req, res) {
 
   cid = req.params.cid;
   page_id = req.query.p;
@@ -33,4 +33,4 @@ course.get('/reviews', function(req, res) {
   res.send('<h1>Page Reviews</h1>')
 })
 
-module.exports = course
+module.exports = router
