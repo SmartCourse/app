@@ -18,7 +18,6 @@ router.get('/', function(req, res) {
 /* GET questions listing. */
 router.get('/questions', function(req, res) {
   qdb.get_all_questions({}).then((data) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:8080')
     res.json(data)
   })
 })
@@ -32,7 +31,6 @@ router.get('/questions/:qid', function(req, res) {
   qdb.get_question({}, question_id).then((data) => {
     return qdb.get_answers(data, question_id)
   }).then((data) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:8080')
     res.json(data)
   })
 })
