@@ -10,7 +10,7 @@ router.use('/review', reviewRouter)
 /* Get the course data for a specific course id */
 router.get('/', function(req, res) {
 
-    cid = req.params.cid;
+    //let cid = req.params.cid;
 
     res.send('<h1>Course Data</h1>')
 })
@@ -18,8 +18,8 @@ router.get('/', function(req, res) {
 /* Get page (N) questions for a course */
 router.get('/questions', function(req, res) {
 
-  cid = req.params.cid;
-  page_id = req.query.p;
+  //let cid = req.params.cid;
+  //let page_id = req.query.p;
 
   res.send('<h1>Page Questsions</h1>')
 })
@@ -27,8 +27,8 @@ router.get('/questions', function(req, res) {
 /* Get page (N) reviews for a course */
 router.get('/reviews', function(req, res) {
 
-  cid = req.params.cid;
-  page_id = req.query.p;
+  //let cid = req.params.cid;
+  //let page_id = req.query.p;
 
   res.send('<h1>Page Reviews</h1>')
 })
