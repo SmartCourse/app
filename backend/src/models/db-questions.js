@@ -1,29 +1,28 @@
 const sqlite3 = require('sqlite3')
 const db = new sqlite3.Database('./db/questions.db')
 
-function get_all_questions(data) {
+function getAllQuestions() {
   // Lookup all questions
   return new Promise((resolve, reject) => { 
     db.all('SELECT rowid, uid, title, body FROM questions', (err, rows) => {
     
       // Check for a qeury error
       if (err) {
-        reject(data)
+        reject()
       }
 
       // Transform the requested data into the appropriate format
-      data = rows.map(({rowid, uid, title, body}) => ({
+      resolve(rows.map(({rowid, uid, title, body}) => ({
         id: rowid,
         meta: {uid},
         title,
         body
-      }))
-      resolve(data)
+      })))
     })
   })
 }
 
-function get_question(data, question_id) {
+function getQuestion(question_id) {
   // Lookup a specific question
   return new Promise((resolve, reject) => {
     db.get(
@@ -33,23 +32,22 @@ function get_question(data, question_id) {
         
         // Check for a qeury error
         if (err) {
-          reject(data)
+          reject()
         }
 
         // Transform the requested data into the appropriate format
-        data.question = {
+        resolve({
           id: row.rowid,
           meta: {uid: row.uid},
           title: row.title,
           body: row.body
-        }
-        resolve(data)
+        })
       }
     )
   })
 }
 
- function get_answers(data, question_id) {
+ function getAnswers(question_id) {
   // Lookup answers
   return new Promise((resolve, reject) => { 
     db.all(
@@ -59,24 +57,23 @@ function get_question(data, question_id) {
 
         // Check for a qeury error
         if (err) {
-          reject(data)
+          reject()
         }
 
-        // Otherwise return the requested data in the appropriate format
-        data.answers = rows.map(({rowid, uid, title, body}) => ({
+        // Transform the requested data into the appropriate format
+        resolve(rows.map(({rowid, uid, title, body}) => ({
           meta: {uid},
           id: rowid,
           title,
           body
-        }))
-        resolve(data)
+        })))
       }
     )
   })
 }
 
 module.exports = {
-  get_all_questions,
-  get_question,
-  get_answers,
+  getAllQuestions,
+  getQuestion,
+  getAnswers,
 }

@@ -17,22 +17,15 @@ router.get('/', function(req, res) {
 
 /* GET questions listing. */
 router.get('/questions', function(req, res) {
-  qdb.get_all_questions({}).then((data) => {
-    res.json(data)
-  })
+  qdb.getAllQuestions()
+  .then(data => res.json(data))
 })
 
 /* GET question data. */
 router.get('/questions/:qid', function(req, res) {
-
-  // Lookup the question
   const question_id = req.params.qid
-  console.log(question_id)
-  qdb.get_question({}, question_id).then((data) => {
-    return qdb.get_answers(data, question_id)
-  }).then((data) => {
-    res.json(data)
-  })
+  Promise.all([qdb.getQuestion(question_id), qdb.getAnswers(question_id)])
+    .then(([questions, answers]) => res.json({ questions, answers }))
 })
 
 router.use('*', function(_, res) {
