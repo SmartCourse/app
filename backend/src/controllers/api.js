@@ -12,4 +12,8 @@ router.get('/questions', function(req, res) {
   res.json(questions)
 })
 
+router.use('*', function(_, res) {
+  res.sendStatus(404)
+})
+
 module.exports = router
