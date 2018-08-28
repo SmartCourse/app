@@ -44,7 +44,7 @@ db.serialize(() => {
     )
 
     // Check the dummy database was successfully created
-    db.each("SELECT cid, uid, likes, title, body FROM questions", function(err, row) {
+    db.each('SELECT cid, uid, likes, title, body FROM questions', function(err, row) {
         console.log(row.title+'\n'+row.body)
     })
 
