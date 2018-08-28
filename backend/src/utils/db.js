@@ -43,9 +43,51 @@ db.serialize(() => {
         }
     )
 
+    // Create the answers database
+    db.run(`CREATE TABLE answers (
+        cid INTEGER,
+        qid INTEGER,
+        uid INTEGER,
+        likes INTEGER,
+        title TEXT,
+        body TEXT)`
+    )
+
+    // Now insert some fake test data
+    db.run(`INSERT INTO answers VALUES (
+        1,
+        1,
+        3,
+        100,
+        "If Mario and Luigi had a son...",
+        "It would be Nuno")`,
+        (err) => {
+            if (err) {
+                return console.log(err.message)
+            }
+            console.log('Successfully added test data')
+        }
+    )
+    db.run(`INSERT INTO answers VALUES (
+        1,
+        2,
+        4,
+        25,
+        "Honesty Is The Best Policy (tag: Ethics)",
+        "It is important to be honest and express your feelings <3")`,
+        (err) => {
+            if (err) {
+                return console.log(err.message)
+            }
+            console.log('Successfully added test data')
+        }
+    )
+    
     // Check the dummy database was successfully created
     db.each('SELECT cid, uid, likes, title, body FROM questions', function(err, row) {
         console.log(row.title+'\n'+row.body)
     })
-
+    db.each('SELECT cid, qid, uid, likes, title, body FROM answers', function(err, row) {
+        console.log(row.title+'\n'+row.body)
+    })
 })

@@ -1,7 +1,6 @@
 const express = require('express')
-const sqlite3 = require('sqlite3')
 const router = express.Router()
-const questions = new sqlite3.Database('./db/questions.db')
+const qdb = require('../utils/db-questions.js')
 
 /* Root API for debugging */
 router.get('/', function(req, res) {
@@ -9,23 +8,23 @@ router.get('/', function(req, res) {
 })
 
 /* GET questions listing. */
-router.get('/_questions', function(req, res) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:8080')
-  questions.all('SELECT rowid, uid, title, body FROM questions', (err, rows) => {
-    
-    // Check for a qeury error
-    if (err) {
-      console.log(err.message)
-      return
-    }
+router.get('/questions', function(req, res) {
+  qdb.get_all_questions({}).then((data) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:8080')
+    res.json(data)
+  })
+})
 
-    // Otherwise return the requested data in the appropriate format
-    const data = rows.map(({rowid, uid, title, body}) => ({
-      id: rowid,
-      meta: {uid},
-      title,
-      body
-    }))
+/* GET question data. */
+router.get('/questions/:qid', function(req, res) {
+
+  // Lookup the question
+  const question_id = req.params.qid
+  console.log(question_id)
+  qdb.get_question({}, question_id).then((data) => {
+    return qdb.get_answers(data, question_id)
+  }).then((data) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:8080')
     res.json(data)
   })
 })
