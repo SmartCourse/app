@@ -11,11 +11,4 @@ router.get('*', function(req, res, next) {
   next()
 })
 
-router.get('/', function(req, res, next) { /* eslint-disable-line */
-  //res.render('index', { title: 'Express' })
-  res.send(`<h1>Hello Alex</h1>
-            <code>${req.special}</code>
-            <p>${JSON.stringify(req.user)}</p>`)
-})
-
 module.exports = router
