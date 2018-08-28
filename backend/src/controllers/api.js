@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const qdb = require('../utils/db-questions.js')
+const qdb = require('../models/db-questions.js')
 
 const userRouter = require('./user')
 const uniRouter = require('./uni')
