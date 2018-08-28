@@ -1,6 +1,7 @@
 const express = require('express')
+const sqlite3 = require('sqlite3')
 const router = express.Router()
-const questions = require('../../public/questions')
+const questions = new sqlite3.Database('./db/questions.db')
 
 /* Root API for debugging */
 router.get('/', function(req, res) {
@@ -8,8 +9,25 @@ router.get('/', function(req, res) {
 })
 
 /* GET questions listing. */
-router.get('/questions', function(req, res) {
-  res.json(questions)
+router.get('/_questions', function(req, res) {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:8080')
+  questions.all('SELECT rowid, uid, title, body FROM questions', (err, rows) => {
+    
+    // Check for a qeury error
+    if (err) {
+      console.log(err.message)
+      return
+    }
+
+    // Otherwise return the requested data in the appropriate format
+    const data = rows.map(({rowid, uid, title, body}) => ({
+      id: rowid,
+      meta: {uid},
+      title,
+      body
+    }))
+    res.json(data)
+  })
 })
 
 module.exports = router
