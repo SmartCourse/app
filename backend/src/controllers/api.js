@@ -1,6 +1,6 @@
 const express = require('express')
-const path = require('path')
 const router = express.Router()
+const questions = require('../../public/questions')
 
 /* Root API for debugging */
 router.get('/', function(req, res) {
@@ -8,8 +8,8 @@ router.get('/', function(req, res) {
 })
 
 /* GET questions listing. */
-router.get('/_questions', function(req, res) {
-  res.sendFile(path.join(__dirname, '../../public/_questions'))
+router.get('/questions', function(req, res) {
+  res.json(questions)
 })
 
 module.exports = router
