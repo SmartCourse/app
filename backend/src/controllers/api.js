@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const questions = require('../../fake_api/questions')
+const qdb = require('../utils/db-questions.js')
 
 const userRouter = require('./user')
 const uniRouter = require('./uni')
@@ -17,7 +17,28 @@ router.get('/', function(req, res) {
 
 /* GET questions listing. */
 router.get('/questions', function(req, res) {
-  res.json(questions)
+  qdb.get_all_questions({}).then((data) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:8080')
+    res.json(data)
+  })
+})
+
+/* GET question data. */
+router.get('/questions/:qid', function(req, res) {
+
+  // Lookup the question
+  const question_id = req.params.qid
+  console.log(question_id)
+  qdb.get_question({}, question_id).then((data) => {
+    return qdb.get_answers(data, question_id)
+  }).then((data) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:8080')
+    res.json(data)
+  })
+})
+
+router.use('*', function(_, res) {
+  res.sendStatus(404)
 })
 
 module.exports = router

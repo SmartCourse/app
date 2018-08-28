@@ -18,12 +18,12 @@ export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /* get questions */
 export function getQuestions () {
-  return get(`${API_URL}/_questions`)
+  return get(`${API_URL}/questions`)
 }
 
 /* get question */
 export function getQuestion (id) {
-  return get(`${API_URL}/questions/${id}.json`)
+  return get(`${API_URL}/questions/${id}`)
 }
 
 // STUBS
