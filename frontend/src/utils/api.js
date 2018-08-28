@@ -1,5 +1,5 @@
 
-const API_URL = 'http://localhost:3000/api'
+const API_URL = process && process.env ? 'http://localhost:3000/api' : 'data'
 
 const get = (url, options = {}) =>
   fetch(url, options)
