@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { shallowMount, RouterLinkStub } from '@vue/test-utils'
-import QuestionCard from '@/components/QuestionCard.vue'
+import QuestionCard from '@/components/QuestionCard'
 
 describe('QuestionCard.vue', () => {
   before(function () {
