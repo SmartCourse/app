@@ -11,25 +11,25 @@ router.use('/uni', uniRouter)
 router.use('/course/:cid', courseRouter)
 
 /* Root API for debugging */
-router.get('/', function(req, res) {
-  res.send('<h1>Welcome to the API</h1>')
+router.get('/', function (req, res) {
+    res.send('<h1>Welcome to the API</h1>')
 })
 
 /* GET questions listing. */
-router.get('/questions', function(req, res) {
-  qdb.getAllQuestions()
-  .then(data => res.json(data))
+router.get('/questions', function (req, res) {
+    qdb.getAllQuestions()
+        .then(data => res.json(data))
 })
 
 /* GET question data. */
-router.get('/questions/:qid', function(req, res) {
-  const question_id = req.params.qid
-  Promise.all([qdb.getQuestion(question_id), qdb.getAnswers(question_id)])
-    .then(([questions, answers]) => res.json({ questions, answers }))
+router.get('/questions/:qid', function (req, res) {
+    const questionID = req.params.qid
+    Promise.all([qdb.getQuestion(questionID), qdb.getAnswers(questionID)])
+        .then(([questions, answers]) => res.json({ questions, answers }))
 })
 
-router.use('*', function(_, res) {
-  res.sendStatus(404)
+router.use('*', function (_, res) {
+    res.sendStatus(404)
 })
 
 module.exports = router
