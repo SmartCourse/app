@@ -1,11 +1,15 @@
 const sqlite3 = require('sqlite3')
 const db = new sqlite3.Database('./db/questions.db')
 
+// NOTE - THIS JUST CREATES A FAKE DATABSE FOR TESTING PURPOSES
+// TODO - REFACTOR
+
 /* Used a tutorial to help get started...
  * This will be changed in the very near future.
  */
 db.serialize(() => {
 
+    // Create the courses table
     db.run(`CREATE TABLE courses (
         cid INTEGER,
         code TEXT,
@@ -32,7 +36,7 @@ db.serialize(() => {
         }
     )
 
-    // Create the questions database
+    // Create the questions table
     db.run(`CREATE TABLE questions (
         qid INTEGER,
         cid INTEGER,
@@ -72,7 +76,7 @@ db.serialize(() => {
         }
     )
 
-    // Create the answers database
+    // Create the answers table
     db.run(`CREATE TABLE answers (
         cid INTEGER,
         qid INTEGER,

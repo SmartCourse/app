@@ -27,8 +27,6 @@ function getQuestion(course_id, question_id) {
  function getAnswers(course_id, question_id, page_id) {
   // TODO - PAGING (log avoids unused variable)
   console.log(page_id)
-  console.log(course_id)
-  console.log(question_id)
   return new Promise((resolve, reject) => { 
     db.all(
       'SELECT * FROM answers WHERE cid=? AND qid=?',

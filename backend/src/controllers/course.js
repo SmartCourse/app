@@ -18,7 +18,7 @@ exports.getCourseQuestions = function(req, res) {
 
 /* Get all reviews for a course */
 exports.getCourseReviews = function(req, res) {
-    const cid = req.params.cid;
-    const page_id = req.query.p;
+    const cid = req.params.cid
+    const page_id = 0 // req.query.p
     res.send(`<h1>Page Reviews for Course #${cid} Page #${page_id}</h1>`)
 }
