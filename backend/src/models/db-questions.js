@@ -1,79 +1,45 @@
 const sqlite3 = require('sqlite3')
 const db = new sqlite3.Database('./db/questions.db')
 
-function getAllQuestions() {
-  // Lookup all questions
+function getQuestions(course_id, page_id) {
+  // TODO - PAGING (log avoids unused variable)
+  console.log(page_id)
   return new Promise((resolve, reject) => { 
-    db.all('SELECT rowid, uid, title, body FROM questions', (err, rows) => {
-    
-      // Check for a qeury error
-      if (err) {
-        reject()
-      }
-
-      // Transform the requested data into the appropriate format
-      resolve(rows.map(({rowid, uid, title, body}) => ({
-        id: rowid,
-        meta: {uid},
-        title,
-        body
-      })))
-    })
-  })
-}
-
-function getQuestion(question_id) {
-  // Lookup a specific question
-  return new Promise((resolve, reject) => {
-    db.get(
-      'SELECT rowid, uid, title, body FROM questions WHERE rowid=$qid',
-      { $qid: question_id },
-      (err, row) => {
-        
-        // Check for a qeury error
-        if (err) {
-          reject()
-        }
-
-        // Transform the requested data into the appropriate format
-        resolve({
-          id: row.rowid,
-          meta: {uid: row.uid},
-          title: row.title,
-          body: row.body
-        })
-      }
+    db.all(
+      'SELECT * FROM questions WHERE cid=?', 
+      [course_id],
+      (err, rows) => { err ? reject() : resolve(rows) }
     )
   })
 }
 
- function getAnswers(question_id) {
-  // Lookup answers
+function getQuestion(course_id, question_id) {
+  return new Promise((resolve, reject) => {
+    db.get(
+      'SELECT * FROM questions WHERE cid=? AND qid=?',
+      [course_id, question_id],
+      (err, row) => { console.log(err)
+        err ? reject() : resolve(row) }
+    )
+  })
+}
+
+ function getAnswers(course_id, question_id, page_id) {
+  // TODO - PAGING (log avoids unused variable)
+  console.log(page_id)
+  console.log(course_id)
+  console.log(question_id)
   return new Promise((resolve, reject) => { 
     db.all(
-      'SELECT uid, cid, rowid, title, body FROM answers WHERE qid=$qid',
-      { $qid: question_id },
-      (err, rows) => {
-
-        // Check for a qeury error
-        if (err) {
-          reject()
-        }
-
-        // Transform the requested data into the appropriate format
-        resolve(rows.map(({rowid, uid, title, body}) => ({
-          meta: {uid},
-          id: rowid,
-          title,
-          body
-        })))
-      }
+      'SELECT * FROM answers WHERE cid=? AND qid=?',
+      [course_id, question_id],
+      (err, rows) => { err ? reject() : resolve(rows) }
     )
   })
 }
 
 module.exports = {
-  getAllQuestions,
+  getQuestions,
   getQuestion,
   getAnswers,
 }

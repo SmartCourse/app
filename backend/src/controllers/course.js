@@ -1,36 +1,24 @@
-const express = require('express')
-const router = express.Router({mergeParams: true})
+// TODO - MOVE TO SEPERATE FILE
+const qdb = require('../models/db-questions.js')
 
-const questionRouter = require('./question')
-const reviewRouter = require('./review')
+/* Get specifc course data */
+exports.getCourse = function(req, res) {
+    const cid = req.params.cid
+    res.send(`<h1>Course Data for Course #${cid} </h1>`)
+}
 
-router.use('/question', questionRouter)
-router.use('/review', reviewRouter)
+/* Get all questions for a course */
+exports.getCourseQuestions = function(req, res) {
+    const cid = req.params.cid;
+    const page_id = req.query.p;
 
-/* Get the course data for a specific course id */
-router.get('/', function(req, res) {
+    qdb.getQuestions(cid, page_id)
+    .then(data => res.json(data))
+}
 
-    //let cid = req.params.cid;
-
-    res.send('<h1>Course Data</h1>')
-})
-
-/* Get page (N) questions for a course */
-router.get('/questions', function(req, res) {
-
-  //let cid = req.params.cid;
-  //let page_id = req.query.p;
-
-  res.send('<h1>Page Questsions</h1>')
-})
-
-/* Get page (N) reviews for a course */
-router.get('/reviews', function(req, res) {
-
-  //let cid = req.params.cid;
-  //let page_id = req.query.p;
-
-  res.send('<h1>Page Reviews</h1>')
-})
-
-module.exports = router
+/* Get all reviews for a course */
+exports.getCourseReviews = function(req, res) {
+    const cid = req.params.cid;
+    const page_id = req.query.p;
+    res.send(`<h1>Page Reviews for Course #${cid} Page #${page_id}</h1>`)
+}
