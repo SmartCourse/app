@@ -1,5 +1,5 @@
 const express = require('express')
-const router = express.Router({mergeParams: true})
+const router = express.Router({ mergeParams: true })
 const questionController = require('../controllers/question')
 
 /* Get the question data for a specific question id */

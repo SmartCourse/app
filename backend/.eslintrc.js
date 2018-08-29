@@ -4,13 +4,14 @@ module.exports = {
     node: true,
     es6: true
   },
-  extends: ['eslint:recommended'],
+  extends: ['eslint:recommended', 'standard'],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
-    semi: ['off']
+    indent: ['warn', 4],
+    semi: ['warn']
   },
   parserOptions: {
     parser: 'babel-eslint',
