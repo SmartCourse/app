@@ -1,39 +1,39 @@
 const sqlite3 = require('sqlite3')
 const db = new sqlite3.Database('./db/questions.db')
 
-function getQuestions (course_id, page_id) {
+function getQuestions (courseID, pageID) {
     // TODO - PAGING (log avoids unused variable)
-    console.log(page_id)
+    console.log(pageID)
     return new Promise((resolve, reject) => {
         db.all(
             'SELECT * FROM questions WHERE cid=?',
-            [course_id],
-            (err, rows) => { err ? reject() : resolve(rows) }
+            [courseID],
+            (err, rows) => { err ? reject(err) : resolve(rows) }
         )
     })
 }
 
-function getQuestion (course_id, question_id) {
+function getQuestion (courseID, questionID) {
     return new Promise((resolve, reject) => {
         db.get(
             'SELECT * FROM questions WHERE cid=? AND qid=?',
-            [course_id, question_id],
+            [courseID, questionID],
             (err, row) => {
                 console.log(err)
-                err ? reject() : resolve(row)
+                err ? reject(err) : resolve(row)
             }
         )
     })
 }
 
-function getAnswers (course_id, question_id, page_id) {
+function getAnswers (courseID, questionID, pageID) {
     // TODO - PAGING (log avoids unused variable)
-    console.log(page_id)
+    console.log(pageID)
     return new Promise((resolve, reject) => {
         db.all(
             'SELECT * FROM answers WHERE cid=? AND qid=?',
-            [course_id, question_id],
-            (err, rows) => { err ? reject() : resolve(rows) }
+            [courseID, questionID],
+            (err, rows) => { err ? reject(err) : resolve(rows) }
         )
     })
 }

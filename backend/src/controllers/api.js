@@ -2,9 +2,9 @@ const express = require('express')
 const router = express.Router()
 const qdb = require('../models/db-questions.js')
 
-const userRouter = require('./user')
-const uniRouter = require('./uni')
-const courseRouter = require('./course')
+const userRouter = require('../routes/user.js')
+const uniRouter = require('../controllers/uni.jsutes/uni.js')
+const courseRouter = require('../controllers/course.js')
 
 router.use('/user', userRouter)
 router.use('/uni', uniRouter)
@@ -23,8 +23,8 @@ router.get('/questions', function (req, res) {
 
 /* GET question data. */
 router.get('/questions/:qid', function (req, res) {
-    const questionID = req.params.qid
-    Promise.all([qdb.getQuestion(questionID), qdb.getAnswers(questionID)])
+    const qid = req.params.qid
+    Promise.all([qdb.getQuestion(qid), qdb.getAnswers(qid)])
         .then(([questions, answers]) => res.json({ questions, answers }))
 })
 

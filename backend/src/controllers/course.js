@@ -10,15 +10,15 @@ exports.getCourse = function (req, res) {
 /* Get all questions for a course */
 exports.getCourseQuestions = function (req, res) {
     const cid = req.params.cid
-    const page_id = req.query.p
+    const pid = req.query.pid
 
-    qdb.getQuestions(cid, page_id)
+    qdb.getQuestions(cid, pid)
         .then(data => res.json(data))
 }
 
 /* Get all reviews for a course */
 exports.getCourseReviews = function (req, res) {
     const cid = req.params.cid
-    const page_id = 0 // req.query.p
-    res.send(`<h1>Page Reviews for Course #${cid} Page #${page_id}</h1>`)
+    const pid = 0 // req.query.p
+    res.send(`<h1>Page Reviews for Course #${cid} Page #${pid}</h1>`)
 }
