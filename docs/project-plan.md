@@ -293,6 +293,12 @@ We have defined our MVP by the following user stories (see details in section 4)
 * Search by Course
 * Remote Hosting
 
+#### Mockups
+![home](https://user-images.githubusercontent.com/4468620/44793778-69c4c400-abea-11e8-8da4-04387c5fec53.png)
+![questionpage](https://user-images.githubusercontent.com/4468620/44793779-69c4c400-abea-11e8-98ea-d89407ebe4af.png)
+![courseinfo](https://user-images.githubusercontent.com/4468620/44793780-69c4c400-abea-11e8-9a75-dae0ed11a5a4.png)
+![coursequestions](https://user-images.githubusercontent.com/4468620/44793781-6a5d5a80-abea-11e8-9387-c805c22863b6.png)
+
 ## 6.0 - Roles
 We have defined our group's agile roles as follows:
 * Scrum Master - Alex
