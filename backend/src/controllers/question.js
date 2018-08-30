@@ -1,19 +1,18 @@
-const express = require('express')
-const router = express.Router({ mergeParams: true })
+const qdb = require('../models/db-questions.js')
 
-/* Get the question data for a specific question id */
-router.get('/:id', function (req, res) {
-    // let qid = req.params.id;
+/* GET question data. */
+exports.getQuestion = function ({ params }, res) {
+    const cid = params.cid
+    const qid = params.id
+    qdb.getQuestion(cid, qid)
+        .then(data => res.json(data))
+}
 
-    res.send('<h1>Question data ' + req.params.cid + '</h1>')
-})
-
-/* Get page (N) answers for a question */
-router.get('/:id/answers', function (req, res) {
-    // let qid = req.params.id;
-    // let page_id = req.query.p;
-
-    res.send('<h1>Question Pages</h1>')
-})
-
-module.exports = router
+/* GET question ansewrs. */
+exports.getQuestionAnswers = function ({ params }, res) {
+    const cid = params.cid
+    const qid = params.id
+    const pid = 0 // req.query.p
+    qdb.getAnswers(cid, qid, pid)
+        .then(data => res.json(data))
+}

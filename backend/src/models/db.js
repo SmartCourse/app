@@ -1,12 +1,43 @@
 const sqlite3 = require('sqlite3')
 const db = new sqlite3.Database('./db/questions.db')
 
+// NOTE - THIS JUST CREATES A FAKE DATABSE FOR TESTING PURPOSES
+// TODO - REFACTOR
+
 /* Used a tutorial to help get started...
  * This will be changed in the very near future.
  */
 db.serialize(() => {
-    // Create the questions database
+    // Create the courses table
+    db.run(`CREATE TABLE courses (
+        cid INTEGER,
+        code TEXT,
+        name TEXT,
+        faculty TEXT,
+        rating INTEGER,
+        uni INTEGER
+        )`
+    )
+
+    // Now insert some fake test data
+    db.run(`INSERT INTO courses VALUES (
+        1,
+        "COMP4920",
+        "Management and Ethics",
+        "COMP",
+        0,
+        1)`,
+    (err) => {
+        if (err) {
+            return console.log(err.message)
+        }
+        console.log('Successfully added course data')
+    }
+    )
+
+    // Create the questions table
     db.run(`CREATE TABLE questions (
+        qid INTEGER,
         cid INTEGER,
         uid INTEGER,
         likes INTEGER,
@@ -16,6 +47,7 @@ db.serialize(() => {
 
     // Now insert some fake test data
     db.run(`INSERT INTO questions VALUES (
+        1,
         1,
         1,
         500,
@@ -29,8 +61,9 @@ db.serialize(() => {
     }
     )
     db.run(`INSERT INTO questions VALUES (
-        1,
         2,
+        1,
+        3,
         200,
         "Help Regarding Crush on Lecturer",
         "I can't concentrate in COMP2041 because the lecturer Alex is too damn hot. What should I do?")`,
@@ -42,7 +75,7 @@ db.serialize(() => {
     }
     )
 
-    // Create the answers database
+    // Create the answers table
     db.run(`CREATE TABLE answers (
         cid INTEGER,
         qid INTEGER,
