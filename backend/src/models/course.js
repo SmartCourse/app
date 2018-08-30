@@ -1,5 +1,6 @@
-// TODO: FILL THIS IN LATER
-function getCourse (db, courseID) {
+const db = require('./db')
+
+function getCourse (courseID) {
     return new Promise((resolve, reject) => {
         db.get(
             'SELECT * FROM course WHERE courseID=?',

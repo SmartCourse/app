@@ -1,4 +1,6 @@
-function getQuestions (db, courseID, pageNumber) {
+const db = require('./db')
+
+function getQuestions (courseID, pageNumber) {
     // TODO - PAGING (log avoids unused variable)
     console.log(pageNumber)
     return new Promise((resolve, reject) => {
@@ -10,7 +12,7 @@ function getQuestions (db, courseID, pageNumber) {
     })
 }
 
-function getQuestion (db, questionID) {
+function getQuestion (questionID) {
     return new Promise((resolve, reject) => {
         db.get(
             'SELECT * FROM question WHERE questionID=?',

@@ -1,5 +1,3 @@
-const sqlDB = require('../models/db')
-
 const courseModel = require('../models/course')
 const questionModel = require('../models/question')
 
@@ -7,7 +5,7 @@ const questionModel = require('../models/question')
 exports.getCourse = function ({ params }, res) {
     const courseID = params.id
     
-    courseModel.getCourse(sqlDB.db, courseID)
+    courseModel.getCourse(courseID)
         .then(data => res.json(data))
 }
 
@@ -16,7 +14,7 @@ exports.getCourseQuestions = function ({ params, query }, res) {
     const courseID = params.id
     const pageNumber = query.p
 
-    questionModel.getQuestions(sqlDB.db, courseID, pageNumber)
+    questionModel.getQuestions(courseID, pageNumber)
         .then(data => res.json(data))
 }
 

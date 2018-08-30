@@ -1,4 +1,6 @@
-function getAnswers (db, questionID, pageNumber) {
+const db = require('./db')
+
+function getAnswers (questionID, pageNumber) {
     // TODO - PAGING (log avoids unused variable)
     console.log(pageNumber)
     return new Promise((resolve, reject) => {
