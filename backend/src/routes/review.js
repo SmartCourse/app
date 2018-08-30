@@ -1,5 +1,5 @@
 const express = require('express')
-const router = express.Router({ mergeParams: true })
+const router = express.Router()
 
 /* Get the review data for a specific review id */
 router.get('/:id', function (req, res) {
