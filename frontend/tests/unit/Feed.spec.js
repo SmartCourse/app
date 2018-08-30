@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { shallowMount } from '@vue/test-utils'
-import Feed from '@/components/Feed.vue'
+import Feed from '@/components/Feed'
 
 describe('Feed.vue', () => {
   it('renders props.title when passed', () => {

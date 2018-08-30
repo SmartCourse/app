@@ -1,4 +1,4 @@
-import { getQuestions, getQuestion } from '@/utils/api'
+import { getQuestions, getQuestion } from '@/utils/api/questions'
 import format from 'date-fns/format'
 
 const state = {
