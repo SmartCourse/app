@@ -18,18 +18,14 @@ router.get('/', function (req, res) {
 /* GET questions listing. */
 router.get('/questions', function (req, res) {
     qdb.getAllQuestions()
-        .then(data => res.json(data))
+        .then(res.json)
 })
 
 /* GET question data. */
 router.get('/questions/:qid', function (req, res) {
     const qid = req.params.qid
     Promise.all([qdb.getQuestion(qid), qdb.getAnswers(qid)])
-        .then(([questions, answers]) => res.json({ questions, answers }))
-})
-
-router.use('*', function (_, res) {
-    res.sendStatus(404)
+        .then(([question, answers]) => res.json({ question, answers }))
 })
 
 module.exports = router
