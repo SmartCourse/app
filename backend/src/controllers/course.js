@@ -4,7 +4,7 @@ const questionModel = require('../models/question')
 /* Get specifc course data */
 exports.getCourse = function ({ params }, res) {
     const courseID = params.id
-    
+
     courseModel.getCourse(courseID)
         .then(data => res.json(data))
 }

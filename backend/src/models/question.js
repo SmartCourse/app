@@ -17,10 +17,7 @@ function getQuestion (questionID) {
         db.get(
             'SELECT * FROM question WHERE questionID=?',
             [questionID],
-            (err, row) => {
-                console.log(err)
-                err ? reject(err) : resolve(row)
-            }
+            (err, row) => { err ? reject(err) : resolve(row) }
         )
     })
 }

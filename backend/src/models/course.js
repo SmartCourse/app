@@ -5,10 +5,7 @@ function getCourse (courseID) {
         db.get(
             'SELECT * FROM course WHERE courseID=?',
             [courseID],
-            (err, row) => {
-                console.log(err)
-                err ? reject(err) : resolve(row)
-            }
+            (err, row) => { err ? reject(err) : resolve(row) }
         )
     })
 }
