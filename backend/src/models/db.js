@@ -105,7 +105,6 @@ exports.createDB = function (databaseName) {
     if (databaseName === ':memory:') {
         exports.devInitDB(db)
     }
-
     return db
 }
 
@@ -166,64 +165,45 @@ exports.devInitDB = function (db) {
     }
 
     /* Insert the fake data in to the database */
-    const promises = []
-
-    // User and university inserted
-    promises.push(exports.insertDB(db, 'user', user))
-    promises.push(exports.insertDB(db, 'university', unsw))
-
-    // Course inserted
-    promises.push(Promise.all(promises)
+    // Insert user and uni
+    const userPromise = exports.insertDB(db, 'user', user)
+    const uniPromise = exports.insertDB(db, 'university', unsw)
+    return Promise.all([userPromise, uniPromise])
         .then(([userID, uniID]) => {
+            // uni dependencies
             comp4920.universityID = uniID
+
+            // user dependencies
+            question.userID = userID
+            answer.userID = userID
+            review.userID = userID
+            reply.userID = userID
+
+            // insert course
             return exports.insertDB(db, 'course', comp4920)
         })
-        .catch((err) => console.log(err))
-    )
-
-    // Questions inserted
-    promises.push(Promise.all(promises)
-        .then(function ([userID, uniID, courseID]) {
+        .then((courseID) => {
+            // course dependencies
             question.courseID = courseID
-            question.userID = userID
-            return exports.insertDB(db, 'question', question)
-        })
-        .catch((err) => console.log(err))
-    )
-
-    // Answer inserted
-    promises.push(Promise.all(promises)
-        .then(function ([userID, uniID, courseID, questionID]) {
-            answer.questionID = questionID
-            answer.userID = userID
-            return exports.insertDB(db, 'answer', answer)
-        })
-        .catch((err) => console.log(err))
-    )
-
-    // Review inserted
-    promises.push(Promise.all(promises)
-        .then(function ([userID, uniID, courseID, questionID, answerID]) {
             review.courseID = courseID
-            review.userID = userID
-            return exports.insertDB(db, 'review', review)
-        })
-        .catch((err) => console.log(err))
-    )
 
-    // Reply inserted
-    promises.push(Promise.all(promises)
-        .then(function ([userID, uniID, courseID, questionID, answerID, reviewID]) {
+            // insert question and review
+            const questionPromise = exports.insertDB(db, 'question', question)
+            const reviewPromise = exports.insertDB(db, 'review', review)
+            return Promise.all([questionPromise, reviewPromise])
+        })
+        .then(([questionID, reviewID]) => {
+            // question and review dependency
+            answer.questionID = questionID
             reply.reviewID = reviewID
-            reply.userID = userID
-            return exports.insertDB(db, 'reply', reply)
-        })
-        .catch((err) => console.log(err))
-    )
 
-    Promise.all(promises)
-        .then(() => console.log('Initialised database!'))
-        .catch((err) => console.log(err))
+            // insert answer and reply
+            const answerPromise = exports.insertDB(db, 'answer', answer)
+            const replyPromise = exports.insertDB(db, 'reply', reply)
+            return Promise.all([answerPromise, replyPromise])
+        })
+        .then(() => console.log('Test Database Initialised!'))
+        .catch(console.warn)
 }
 
 exports.db = exports.createDB(databaseName)

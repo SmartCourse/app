@@ -1,8 +1,8 @@
-const db = require('./db')
+const dbModel = require('./db')
+const db = dbModel.db
 
-function getAnswers (questionID, pageNumber) {
+exports.getAnswers = function (questionID, pageNumber) {
     // TODO - PAGING (log avoids unused variable)
-    console.log(pageNumber)
     return new Promise((resolve, reject) => {
         db.all(
             'SELECT * FROM answer WHERE questionID=?',
@@ -10,8 +10,4 @@ function getAnswers (questionID, pageNumber) {
             (err, rows) => { err ? reject(err) : resolve(rows) }
         )
     })
-}
-
-module.exports = {
-    getAnswers
 }

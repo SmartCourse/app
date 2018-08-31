@@ -17,11 +17,11 @@ const state = {
 
 const getters = {
   feed: ({questions}) => {
-    return questions.map(({ id, meta: {uid}, title, body }) => ({
-      id,
+    return questions.map(({ questionID, userID, title, body }) => ({
+      questionID,
       title,
       body,
-      author: uid,
+      author: userID,
       published: format(Date.now(), 'DD/MM/YY')
     }))
   },

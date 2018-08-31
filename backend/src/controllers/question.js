@@ -3,17 +3,13 @@ const answerModel = require('../models/answer')
 
 /* GET question data. */
 exports.getQuestion = function ({ params }, res) {
-    const questionID = params.id
-
-    questionModel.getQuestion(questionID)
+    questionModel.getQuestion(params.id)
         .then(data => res.json(data))
+        .catch(console.warn)
 }
 
 /* GET question ansewrs. */
 exports.getQuestionAnswers = function ({ params, query }, res) {
-    const questionID = params.id
-    const pageNumber = query.p
-
-    answerModel.getAnswers(questionID, pageNumber)
+    answerModel.getAnswers(params.id, query.p)
         .then(data => res.json(data))
 }

@@ -1,6 +1,7 @@
-const db = require('./db')
+const dbModel = require('./db')
+const db = dbModel.db
 
-function getQuestions (courseID, pageNumber) {
+exports.getQuestions = function (courseID, pageNumber) {
     // TODO - PAGING (log avoids unused variable)
     console.log(pageNumber)
     return new Promise((resolve, reject) => {
@@ -12,7 +13,7 @@ function getQuestions (courseID, pageNumber) {
     })
 }
 
-function getQuestion (questionID) {
+exports.getQuestion = function (questionID) {
     return new Promise((resolve, reject) => {
         db.get(
             'SELECT * FROM question WHERE questionID=?',
@@ -20,9 +21,4 @@ function getQuestion (questionID) {
             (err, row) => { err ? reject(err) : resolve(row) }
         )
     })
-}
-
-module.exports = {
-    getQuestions,
-    getQuestion
 }

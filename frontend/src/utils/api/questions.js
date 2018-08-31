@@ -4,12 +4,12 @@ import { get, post, put } from './index'
  * Get all questions relevant to a course
  */
 export function getQuestions () {
-  return get('/questions')
+  return get('/course/1/questions')
 }
 
 /* get question */
 export function getQuestion (id) {
-  return get(`/questions/${id}`)
+  return get(`/question/${id}`)
 }
 
 // STUBS

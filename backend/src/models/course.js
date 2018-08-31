@@ -1,6 +1,16 @@
-const db = require('./db')
+const dbModel = require('./db')
+const db = dbModel.db
 
-function getCourse (courseID) {
+exports.getCourses = function getCourses () {
+    return new Promise((resolve, reject) => {
+        db.all(
+            'SELECT * FROM course',
+            (err, rows) => { err ? reject(err) : resolve(rows) }
+        )
+    })
+}
+
+exports.getCourse = function (courseID) {
     return new Promise((resolve, reject) => {
         db.get(
             'SELECT * FROM course WHERE courseID=?',
@@ -24,7 +34,3 @@ function postCourse (db, courseCode) {
     })
 }
 */
-
-module.exports = {
-    getCourse
-}
