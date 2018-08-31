@@ -1,31 +1,11 @@
 const app = require('../../src')
 const supertest = require('supertest')(app)
 
-describe('Route testing', function () {
-    it('index', function (done) {
+/* TODO build out tests to also include catching expected JSON response */
+describe('Question route testing', function () {
+    it('/api/question/1', function (done) {
         supertest
-            .get('/')
-            .expect(200)
-            .end(done)
-    })
-
-    it('/api', function (done) {
-        supertest
-            .get('/api')
-            .expect(200)
-            .end(done)
-    })
-
-    it('/api/course/1/questions', function (done) {
-        supertest
-            .get('/api/course/1/questions')
-            .expect(200)
-            .end(done)
-    })
-
-    it('Test fallback for bad path', function (done) {
-        supertest
-            .get('/shizzlwazzle')
+            .get('/api/question/1')
             .expect(200)
             .end(done)
     })
