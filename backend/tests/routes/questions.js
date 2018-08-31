@@ -1,4 +1,3 @@
-process.env.NODE_ENV = 'test'
 const app = require('../../src')
 const supertest = require('supertest')(app)
 

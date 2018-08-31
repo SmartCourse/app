@@ -1,4 +1,4 @@
-const app = require('../src')
+const app = require('../../src')
 const assert = require('assert')
 
 describe('app', function () {
