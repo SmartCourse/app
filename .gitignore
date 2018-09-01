@@ -21,3 +21,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+backend/public
+frontend/public
+package-lock.json
