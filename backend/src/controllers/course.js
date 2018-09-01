@@ -1,24 +1,28 @@
-// TODO - MOVE TO SEPERATE FILE
-const qdb = require('../models/db-questions.js')
+const courseModel = require('../models/course')
+const questionModel = require('../models/question')
+
+/* Get all course data */
+exports.getCourses = function (req, res) {
+    courseModel.getCourses()
+        .then(data => res.json(data))
+        .catch(console.warn)
+}
 
 /* Get specifc course data */
-exports.getCourse = function (req, res) {
-    const cid = req.params.cid
-    res.send(`<h1>Course Data for Course #${cid} </h1>`)
+exports.getCourse = function ({ params }, res) {
+    courseModel.getCourse(params.id)
+        .then(data => res.json(data))
+        .catch(console.warn)
 }
 
 /* Get all questions for a course */
-exports.getCourseQuestions = function (req, res) {
-    const cid = req.params.cid
-    const pid = req.query.pid
-
-    qdb.getQuestions(cid, pid)
+exports.getCourseQuestions = function ({ params, query }, res) {
+    questionModel.getQuestions(params.id, query.p)
         .then(data => res.json(data))
+        .catch(console.warn)
 }
 
 /* Get all reviews for a course */
-exports.getCourseReviews = function (req, res) {
-    const cid = req.params.cid
-    const pid = 0 // req.query.p
-    res.send(`<h1>Page Reviews for Course #${cid} Page #${pid}</h1>`)
+exports.getCourseReviews = function ({ params, query }, res) {
+    res.send(`<h1>Page Reviews for Course #${params.id} Page #${query.p}</h1>`)
 }

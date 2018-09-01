@@ -1,18 +1,15 @@
-const qdb = require('../models/db-questions.js')
+const questionModel = require('../models/question')
+const answerModel = require('../models/answer')
 
 /* GET question data. */
 exports.getQuestion = function ({ params }, res) {
-    const cid = params.cid
-    const qid = params.id
-    qdb.getQuestion(cid, qid)
+    questionModel.getQuestion(params.id)
         .then(data => res.json(data))
+        .catch(console.warn)
 }
 
 /* GET question ansewrs. */
-exports.getQuestionAnswers = function ({ params }, res) {
-    const cid = params.cid
-    const qid = params.id
-    const pid = 0 // req.query.p
-    qdb.getAnswers(cid, qid, pid)
+exports.getQuestionAnswers = function ({ params, query }, res) {
+    answerModel.getAnswers(params.id, query.p)
         .then(data => res.json(data))
 }
