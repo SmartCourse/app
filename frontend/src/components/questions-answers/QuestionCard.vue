@@ -2,7 +2,9 @@
     <Card>
         <div class="card-content">
             <div class="meta-fields">
-                <p>{{ question.id }}</p>
+                <p class="arrow">&#8679;</p>
+                <p class="likes">{{ question.likes || 0 }}</p>
+                <p class="arrow">&#8681;</p>
             </div>
             <div class="content">
                 <router-link tag="h2" :to="{ name: 'question', params: { id: String(question.id) }}">
