@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import QuestionCard from '@/components/QuestionCard'
-import AnswerCard from '@/components/AnswerCard'
-import AnswerForm from '@/components/AnswerForm'
+import QuestionCard from '@/components/questions-answers/QuestionCard'
+import AnswerCard from '@/components/questions-answers/AnswerCard'
+import AnswerForm from '@/components/questions-answers/AnswerForm'
 import { mapGetters } from 'vuex'
 
 export default {

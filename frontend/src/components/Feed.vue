@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import QuestionCard from './QuestionCard'
+import QuestionCard from '@/components/questions-answers/QuestionCard'
 
 export default {
   name: 'Feed',

@@ -1,14 +1,22 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <AppNavBar/>
     <main>
       <router-view/>
     </main>
+    <AppFooter/>
   </div>
 </template>
+
+<script>
+import AppNavBar from '@/components/AppNavBar'
+import AppFooter from '@/components/AppFooter'
+
+export default {
+  components: { AppNavBar, AppFooter }
+}
+</script>
+
 
 <style lang="less">
 /* global styles live here */

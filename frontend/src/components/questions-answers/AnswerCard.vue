@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Card from './Card'
+import Card from '@/components/Card'
 
 export default {
   components: { Card },
@@ -27,5 +27,5 @@ export default {
 </script>
 
 <style scoped>
-@import '../css/card.less';
+@import '../../css/card.less';
 </style>
