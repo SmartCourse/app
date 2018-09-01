@@ -1,5 +1,9 @@
-import { getQuestions, getQuestion } from '@/utils/api/questions'
-import format from 'date-fns/format'
+import {
+  questionMapper,
+  answerMapper
+} from '@/utils/api/questions'
+
+import { REQUEST, COMMITS, ACTIONS } from './constants'
 
 const state = {
   loading: false,
@@ -16,17 +20,9 @@ const state = {
 }
 
 const getters = {
-  feed: ({questions}) => {
-    return questions.map(({ questionID, userID, title, body }) => ({
-      questionID,
-      title,
-      body,
-      author: userID,
-      published: format(Date.now(), 'DD/MM/YY')
-    }))
-  },
-  question: ({questionObj: {question}}) => question,
-  answers: ({questionObj: {answers}}) => answers,
+  questions: ({questions}) => questions.map(questionMapper),
+  question: ({questionObj: {question}}) => questionMapper(question),
+  answers: ({questionObj: {answers}}) => answers.map(answerMapper),
   loading: ({loading}) => loading,
   error: ({error}) => error
 }
@@ -39,7 +35,10 @@ const mutations = {
     state.loading = bool
   },
   FOCUS_QUESTION (state, question) {
-    state.questionObj = question
+    state.questionObj.question = question
+  },
+  FOCUS_ANSWERS (state, answers) {
+    state.questionObj.answers = answers
   },
   API_ERROR (state, {code, message}) {
     state.error.code = code
@@ -51,15 +50,25 @@ const mutations = {
 }
 
 const actions = {
-  async getFeed ({commit}) {
+  async doRequest({commit}, {action, args}) {
     commit('TOGGLE_LOADING', true)
-    commit('REFRESH_FEED', await getQuestions())
-    commit('TOGGLE_LOADING', false)
+    try {
+      const data = await REQUEST[action](...args)
+      commit(COMMITS[action], data)
+    } catch (e) {
+      commit('API_ERROR', e)
+    } finally {
+      commit('TOGGLE_LOADING', false)
+    }
   },
-  async getQuestion ({commit}, id) {
-    commit('TOGGLE_LOADING', true)
-    commit('FOCUS_QUESTION', await getQuestion(id))
-    commit('TOGGLE_LOADING', false)
+  async getQuestions ({dispatch}) {
+    return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, args: [] })
+  },
+  async getQuestion ({dispatch}, id) {
+    return dispatch('doRequest', { action: ACTIONS.GET_QUESTION, args: [id] })
+  },
+  async getAnswers ({dispatch}, id) {
+    return dispatch('doRequest', { action: ACTIONS.GET_ANSWERS, args: [id] })
   },
   async postAnswer ({commit}, { id, form }) {
     // fake failure/success

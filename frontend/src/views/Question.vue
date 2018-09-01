@@ -55,7 +55,8 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('questions/getQuestion', this.id || 1)
+    this.$store.dispatch('questions/getAnswers', this.id)
+    this.$store.dispatch('questions/getQuestion', this.id)
   }
 }
 </script>

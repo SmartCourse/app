@@ -19,11 +19,11 @@ export default {
   },
   computed: {
     ...mapGetters('questions', {
-      feed: 'feed'
+      feed: 'questions'
     })
   },
   created () {
-    this.$store.dispatch('questions/getFeed')
+    this.$store.dispatch('questions/getQuestions')
   }
 }
 </script>

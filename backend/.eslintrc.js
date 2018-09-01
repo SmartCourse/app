@@ -11,7 +11,8 @@ module.exports = {
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
     indent: ['warn', 4],
-    semi: ['warn']
+    semi: ['warn'],
+    'space-before-function-paren': 'off'
   },
   parserOptions: {
     parser: 'babel-eslint',
