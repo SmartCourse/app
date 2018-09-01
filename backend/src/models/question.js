@@ -1,5 +1,4 @@
-const dbModel = require('./db')
-const db = dbModel.db
+const db = require('./db')
 
 exports.getQuestions = function (courseID, pageNumber) {
     // TODO - PAGING (log avoids unused variable)

@@ -86,7 +86,9 @@ function createReplyTable (db) {
     )
 }
 
-exports.createDB = function (databaseName) {
+/* INTERFACE FUNCTIONS */
+
+function createDB (databaseName) {
     // Create the database object
     const db = new sqlite3.Database(databaseName)
 
@@ -103,7 +105,7 @@ exports.createDB = function (databaseName) {
 
     // If in memory databse, intialise it
     if (databaseName === ':memory:') {
-        exports.devInitDB(db)
+        devInitDB(db)
     }
     return db
 }
@@ -114,21 +116,21 @@ exports.createDB = function (databaseName) {
 // TODO - FIX ISSUE WHERE this.lastID != user/uni/course/question/answerID
 //        THIS IS DUE TO THE FACT THAT WE CAN ONLY RETURN THE ROW_ID AFTER
 //        INSERTION WITHOUT A LOOKUP... TOO TIRED TO SOLVE RN
-exports.insertDB = function (db, table, data) {
+function insertDB (db, table, data) {
     return new Promise((resolve, reject) => {
         const columns = Object.keys(data)
-        const placeholders = columns.map((column) => '?').join()
+        const placeholders = columns.map(_ => '?').join()
         const query = `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`
         console.log(query)
         db.run(
             query,
             Object.values(data),
-            function (err, row) { err ? reject(err) : resolve(this.lastID) }
+            function (err) { err ? reject(err) : resolve(this.lastID) }
         )
     })
 }
 
-exports.devInitDB = function (db) {
+function devInitDB (db) {
     /* Fake data objects */
     const user = {
         firstName: 'Walker',
@@ -166,9 +168,7 @@ exports.devInitDB = function (db) {
 
     /* Insert the fake data in to the database */
     // Insert user and uni
-    const userPromise = exports.insertDB(db, 'user', user)
-    const uniPromise = exports.insertDB(db, 'university', unsw)
-    return Promise.all([userPromise, uniPromise])
+    return Promise.all([insertDB(db, 'user', user), insertDB(db, 'university', unsw)])
         .then(([userID, uniID]) => {
             // uni dependencies
             comp4920.universityID = uniID
@@ -180,7 +180,7 @@ exports.devInitDB = function (db) {
             reply.userID = userID
 
             // insert course
-            return exports.insertDB(db, 'course', comp4920)
+            return insertDB(db, 'course', comp4920)
         })
         .then((courseID) => {
             // course dependencies
@@ -188,9 +188,7 @@ exports.devInitDB = function (db) {
             review.courseID = courseID
 
             // insert question and review
-            const questionPromise = exports.insertDB(db, 'question', question)
-            const reviewPromise = exports.insertDB(db, 'review', review)
-            return Promise.all([questionPromise, reviewPromise])
+            return Promise.all([insertDB(db, 'question', question), insertDB(db, 'review', review)])
         })
         .then(([questionID, reviewID]) => {
             // question and review dependency
@@ -198,12 +196,14 @@ exports.devInitDB = function (db) {
             reply.reviewID = reviewID
 
             // insert answer and reply
-            const answerPromise = exports.insertDB(db, 'answer', answer)
-            const replyPromise = exports.insertDB(db, 'reply', reply)
-            return Promise.all([answerPromise, replyPromise])
+            return Promise.all([insertDB(db, 'answer', answer), insertDB(db, 'reply', reply)])
         })
         .then(() => console.log('Test Database Initialised!'))
         .catch(console.warn)
 }
 
-exports.db = exports.createDB(databaseName)
+exports.createDB = createDB
+exports.insertDB = insertDB
+exports.devInitDB = devInitDB
+
+module.exports = createDB(databaseName)
