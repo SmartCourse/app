@@ -1,25 +1,23 @@
 const app = require('../../src')
 const supertest = require('supertest')(app)
 
-describe('API route testing', function () {
-    it('index', function (done) {
+describe('API route testing', () => {
+    it('index', () =>
         supertest
             .get('/')
+            .set('Accept', 'text/html')
             .expect(200)
-            .end(done)
-    })
+    )
 
-    it('/api', function (done) {
+    it('/api', () =>
         supertest
             .get('/api')
             .expect(200)
-            .end(done)
-    })
+    )
 
-    it('Test fallback for bad path', function (done) {
+    it('Test fallback for bad path', () =>
         supertest
             .get('/shizzlwazzle')
             .expect(200)
-            .end(done)
-    })
+    )
 })

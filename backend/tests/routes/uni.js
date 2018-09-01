@@ -2,10 +2,19 @@ const app = require('../../src')
 const supertest = require('supertest')(app)
 
 describe('Uni route testing', function () {
-    it('uni index', function (done) {
+    it('uni index', () =>
         supertest
             .get('/api/uni')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
             .expect(200)
-            .end(done)
-    })
+    )
+
+    it('uni index', () =>
+        supertest
+            .get('/api/uni/1')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+    )
 })
