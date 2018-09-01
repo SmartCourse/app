@@ -1,5 +1,6 @@
-
-const API_URL = process && process.env ? 'http://localhost:3000/api' : 'data'
+// TODO eventually second URL should be set to deploy url
+const API_URL = process && process.env
+  ? 'http://localhost:3000/api' : 'http://127.0.0.1:3000/api'
 
 /**
  * A GET request
@@ -8,7 +9,7 @@ const API_URL = process && process.env ? 'http://localhost:3000/api' : 'data'
  * @returns {Promise}       The relevant request
  */
 export const get = (path, options = {}) =>
-  fetch(`${API_URL}${path}`, {...options})
+  fetch(`${API_URL}${path}`, options)
     .then(res => res.json())
 
 /**

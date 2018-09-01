@@ -20,7 +20,7 @@ const state = {
 }
 
 const getters = {
-  feed: ({questions}) => questions.map(questionMapper),
+  questions: ({questions}) => questions.map(questionMapper),
   question: ({questionObj: {question}}) => questionMapper(question),
   answers: ({questionObj: {answers}}) => answers.map(answerMapper),
   loading: ({loading}) => loading,
@@ -61,8 +61,8 @@ const actions = {
       commit('TOGGLE_LOADING', false)
     }
   },
-  async getFeed ({dispatch}) {
-    return dispatch('doRequest', { action: ACTIONS.GET_FEED, args: [] })
+  async getQuestions ({dispatch}) {
+    return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, args: [] })
   },
   async getQuestion ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_QUESTION, args: [id] })

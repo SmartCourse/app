@@ -174,7 +174,7 @@ function devInitDB (db) {
             comp4920.universityID = uniID
 
             ;[question, answer, review, reply]
-                .reduce((_, curr) => { curr.userID = userID }, question)
+                .forEach(item => { item.userID = userID })
 
             // insert course
             return insertDB(db, 'course', comp4920)
@@ -182,7 +182,7 @@ function devInitDB (db) {
         .then((courseID) => {
             // course dependencies
             [question, review]
-                .reduce((_, curr) => { curr.courseID = courseID }, question)
+                .forEach(item => { item.courseID = courseID }, question)
 
             // insert question and review
             return Promise.all([insertDB(db, 'question', question), insertDB(db, 'review', review)])

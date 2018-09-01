@@ -13,7 +13,7 @@ export function getQuestion(id) {
   return get(`/question/${id}`)
 }
 
-export function answerMapper({ answerID, userID, title, body }) {
+export function answerMapper({ answerID, userID, body }) {
   return {
     id: answerID,
     body,
