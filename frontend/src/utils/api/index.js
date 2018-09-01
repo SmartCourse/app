@@ -8,7 +8,7 @@ const API_URL = process && process.env ? 'http://localhost:3000/api' : 'data'
  * @returns {Promise}       The relevant request
  */
 export const get = (path, options = {}) =>
-  fetch(`${API_URL}${path}`, options)
+  fetch(`${API_URL}${path}`, {...options})
     .then(res => res.json())
 
 /**

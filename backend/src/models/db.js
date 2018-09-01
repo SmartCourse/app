@@ -173,14 +173,16 @@ function devInitDB (db) {
             // uni dependencies
             comp4920.universityID = uniID
 
-            ;[question, answer, review, reply].reduce((_, curr) => { curr.userID = userID })
+            ;[question, answer, review, reply]
+                .reduce((_, curr) => { curr.userID = userID }, question)
 
             // insert course
             return insertDB(db, 'course', comp4920)
         })
         .then((courseID) => {
             // course dependencies
-            [question, review].reduce((_, curr) => { curr.courseID = courseID })
+            [question, review]
+                .reduce((_, curr) => { curr.courseID = courseID }, question)
 
             // insert question and review
             return Promise.all([insertDB(db, 'question', question), insertDB(db, 'review', review)])
