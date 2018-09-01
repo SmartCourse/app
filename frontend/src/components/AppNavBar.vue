@@ -4,7 +4,7 @@
       <div class="links">
         <router-link class="link-item" tag="h2" to="/">Home</router-link> |
         <router-link class="link-item" tag="h2" to="/about">About</router-link>
-      </div>  
+      </div>
     </div>
 </template>
 
@@ -22,7 +22,6 @@
 .links {
     h2 {
         display: inline-block;
-    } 
+    }
 }
 </style>
-

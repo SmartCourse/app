@@ -1,16 +1,12 @@
 import { expect } from 'chai'
 import { shallowMount, RouterLinkStub } from '@vue/test-utils'
-import QuestionCard from '@/components/QuestionCard'
+import QuestionCard from '@/components/questions-answers/QuestionCard'
 
 describe('QuestionCard.vue', () => {
   before(function () {
     this.card = {
       id: 1,
-      meta: {
-        uid: 1,
-        cid: 10,
-        likes: 10
-      },
+      likes: 10,
       title:
         'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
       body:
@@ -24,7 +20,7 @@ describe('QuestionCard.vue', () => {
     })
   })
   it('renders question data', function () {
-    expect(this.wrapper.findAll('p').at(0).text()).to.include(this.card.id)
+    expect(this.wrapper.findAll('p').at(1).text()).to.include(this.card.likes)
   })
 
   it('renders question title', function () {
@@ -32,6 +28,6 @@ describe('QuestionCard.vue', () => {
   })
 
   it('renders question description', function () {
-    expect(this.wrapper.findAll('p').at(1).text()).to.include(this.card.body)
+    expect(this.wrapper.findAll('p').at(3).text()).to.include(this.card.body)
   })
 })

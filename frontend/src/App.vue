@@ -17,7 +17,6 @@ export default {
 }
 </script>
 
-
 <style lang="less">
 /* global styles live here */
 html, body {
