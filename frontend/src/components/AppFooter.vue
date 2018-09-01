@@ -4,7 +4,9 @@
     </footer>
 </template>
 
-<style scoped>
+<style scoped lang='less'>
+@import '../css/colors';
+
 footer {
     color: white;
     width: 100%;

@@ -8,7 +8,7 @@
 .card {
   position: relative;
   margin: 10px 0px;
-  border: 2px solid #f5f5f5;
+  border: var(--border);
   padding: 20px 10px;
 }
 </style>

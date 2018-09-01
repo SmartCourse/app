@@ -27,6 +27,10 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+* {
+  --border: 2px solid #f5f5f5;
+}
+
 main {
   /* arbitrary */
   max-width: 768px;

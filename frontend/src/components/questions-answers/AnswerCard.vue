@@ -3,7 +3,7 @@
         <div class="card-content">
         <div class="meta-fields">
             <p class="arrow">&#8679;</p>
-            <p class="likes">{{ answer.likes || 0 }}</p>
+            <p class="likes">{{ answer.likes }}</p>
             <p class="arrow">&#8681;</p>
         </div>
         <div class="content">

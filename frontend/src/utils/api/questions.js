@@ -4,8 +4,8 @@ import format from 'date-fns/format'
 /**
  * Get all questions relevant to a course
  */
-export function getQuestions() {
-  return get('/course/1/questions')
+export function getQuestions(course = 1) {
+  return get(`/course/${course}/questions`)
 }
 
 /* get question */
@@ -13,22 +13,24 @@ export function getQuestion(id) {
   return get(`/question/${id}`)
 }
 
-export function answerMapper({ answerID, userID, body }) {
+export function answerMapper({ answerID, likes, userID, body, timestamp }) {
   return {
     id: answerID,
     body,
+    likes,
     author: userID,
-    published: format(Date.now(), 'DD/MM/YY')
+    published: format(timestamp, 'DD/MM/YY')
   }
 }
 
-export function questionMapper({ questionID, userID, title, body }) {
+export function questionMapper({ questionID, likes, userID, title, body, timestamp }) {
   return {
     id: questionID,
     title,
     body,
+    likes,
     author: userID,
-    published: format(Date.now(), 'DD/MM/YY')
+    published: format(timestamp, 'DD/MM/YY')
   }
 }
 

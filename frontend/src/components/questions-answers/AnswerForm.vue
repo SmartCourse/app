@@ -3,9 +3,9 @@
       <div class="content">
           <h3>Submit an Answer</h3>
           <p>
-            <input type=text v-model="formdata.title" /><br>
-            <textarea v-model="formdata.body"></textarea><br>
-            <button @click="$emit('submitAnswerForm', {title:formdata.title, body:formdata.body})">Answer</button><br>
+            <textarea v-model="body"></textarea><br>
+            <button class="standard-button" @click="$emit('submitAnswerForm', {body})">Answer</button><br>
+            <!-- errors will be injected here -->
             <slot></slot>
           </p>
       </div>
@@ -22,21 +22,24 @@ export default {
   },
   data () {
     return {
-      formdata: {
-        title: '',
-        body: ''
-      }
+      body: ''
     }
   }
 }
 </script>
 
 <style scoped lang='less'>
+@import '../../css/button';
+
 .content {
-  padding-left: 60px;
+  padding: 0px 60px;
 }
 
 textarea {
+  border: var(--border);
+  font: inherit;
+  resize: none;
+  margin: 10px 0px;
   width: 100%;
   height: 100px;
 }

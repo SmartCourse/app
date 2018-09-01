@@ -1,0 +1,15 @@
+@import './colors';
+
+.standard-button {
+    background-color: @theme;
+    color: white;
+    font: inherit;
+    padding: 10px 20px;
+    outline: none;
+    border-radius: 4px;
+    border: none;
+}
+
+.standard-button:hover {
+    background-color: lighten(@theme, 5%);
+}
