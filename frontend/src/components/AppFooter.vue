@@ -10,7 +10,7 @@ footer {
     color: white;
     width: 100%;
     background-color: var(--theme);
-    padding: 20px 0px;
+    padding: 10px 0px;
     position: fixed;
     bottom: 0;
     min-height: 50px;
