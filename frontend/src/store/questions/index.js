@@ -80,7 +80,7 @@ const actions = {
       commit('API_ERROR', { code: 69, message: 'Error posting answer' })
       console.log('Pretending to error on posting answer!')
     } else {
-      commit('POST_ANSWER', { id, title: form.title, body: form.body })
+      commit('POST_ANSWER', { id, likes: 0, published: Date.now(), body: form.body })
       console.log('Pretending to successfully post answer!')
     }
     commit('TOGGLE_LOADING', false)

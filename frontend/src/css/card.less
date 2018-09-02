@@ -4,9 +4,30 @@
   grid-gap: 10px;
 }
 
-.card-content *:first-child {
+.content *:first-child {
   margin-top: 0;
   line-height: 24px;
+}
+
+.meta-fields {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.meta-fields .arrow {
+  font-size: 16px;
+  margin: 0;
+}
+
+.arrow:first-of-type {
+  color: rgba(48, 179, 48, 0.637);
+}
+
+.arrow:last-of-type {
+  color: rgba(224, 79, 79, 0.74);
 }
 
 .date {
