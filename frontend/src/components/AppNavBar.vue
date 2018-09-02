@@ -16,7 +16,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 2px solid #f5f5f5;
+    border-bottom: var(--border);
 }
 
 .links {

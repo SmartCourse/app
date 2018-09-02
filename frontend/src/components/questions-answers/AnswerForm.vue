@@ -5,7 +5,7 @@
           <p>
             <textarea placeholder="Your answer here.." v-model="body"></textarea><br>
             <!-- should probs be a separate component -->
-            <button class="standard-button" @click="$emit('submitAnswerForm', {body})">Answer</button><br>
+            <AppButton @click.native="$emit('submitAnswerForm', {body})">Answer</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </p>
@@ -15,11 +15,13 @@
 
 <script>
 import Card from '@/components/Card'
+import AppButton from '@/components/AppButton'
 
 export default {
   name: 'AnswerForm',
   components: {
-    Card
+    Card,
+    AppButton
   },
   data () {
     return {
@@ -30,7 +32,6 @@ export default {
 </script>
 
 <style scoped lang='less'>
-@import '../../css/button';
 
 .content {
   padding: 0px 60px;
@@ -48,7 +49,7 @@ textarea {
   transition: 0.3s border ease-in-out;
 }
 
-textarea:focus {
+textarea:focus, textarea:active {
   border: var(--border-dark);
 }
 </style>
