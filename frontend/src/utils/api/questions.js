@@ -51,8 +51,8 @@ export function getAnswers(id) {
  * @param {String} id the id of the question being answered
  * @param {object} body the data associated with the new answer {title, body}
  */
-export function postAnswer(id, body) {
-  return post(`/question/${id}`, { body })
+export function postAnswer(id, form) {
+  return post(`/question/${id}/answers`, form)
 }
 
 /**

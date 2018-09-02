@@ -12,14 +12,14 @@ exports.getAnswers = function (questionID, pageNumber) {
 }
 
 exports.postAnswer = function (questionID, {body}) {
-    return new Promise((resolve, reject) => {
+    new Promise((resolve, reject) => {
         const columns = ['userID', 'questionID', 'body']
         const placeholders = columns.map(_ => '?').join()
         const query = `INSERT INTO answer (${columns}) VALUES (${placeholders})`
         db.run(
             query,
             [0, questionID, body], // TODO user id is a placeholder obviously, but it can't be null so...
-            function (err) { err ? reject(err) : resolve(err) }
+            function (err) { err ? reject(err) : resolve(exports.getAnswers(questionID, 1)) }
         )
     })
 }
