@@ -11,3 +11,14 @@ describe('Question route testing', () => {
             .expect(200)
     )
 })
+
+describe('Answer route testing', () => {
+    it('/api/question/1/answers', () =>
+        supertest
+            .post('/api/question/1/answers')
+            .send({body:"testu"})
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+    )
+})

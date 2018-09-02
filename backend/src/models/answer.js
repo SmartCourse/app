@@ -13,13 +13,14 @@ exports.getAnswers = function (questionID, pageNumber) {
 
 exports.postAnswer = function (questionID, {body}) {
     return new Promise((resolve, reject) => {
-        const columns = ['questionID', 'body']
+        const columns = ['userID', 'questionID', 'body']
         const placeholders = columns.map(_ => '?').join()
         const query = `INSERT INTO answer (${columns}) VALUES (${placeholders})`
         console.log(query)
+        console.log(body)
         db.run(
             query,
-            [questionID, body],
+            [0, questionID, body],
             function (err) { err ? reject(err) : resolve(err) }
         )
     })
