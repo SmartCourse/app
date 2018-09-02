@@ -40,6 +40,7 @@ html, body {
 main {
   /* arbitrary */
   max-width: 768px;
+  min-height: 80vh;
   margin: auto;
 }
 

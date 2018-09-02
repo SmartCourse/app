@@ -1,6 +1,6 @@
 <template>
     <footer id="footer">
-        <h2>Copyright &copy; SmartCourse 2018</h2>
+        <p>Copyright &copy; SmartCourse 2018</p>
     </footer>
 </template>
 
@@ -10,8 +10,13 @@ footer {
     color: white;
     width: 100%;
     background-color: var(--theme);
-    padding: 0px 20px;
+    padding: 20px 0px;
     position: fixed;
     bottom: 0;
+    min-height: 50px;
+}
+
+p {
+    text-align: center;
 }
 </style>
