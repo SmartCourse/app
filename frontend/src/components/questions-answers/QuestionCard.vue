@@ -2,7 +2,9 @@
     <Card>
         <div class="card-content">
             <div class="meta-fields">
-                <p>{{ question.id }}</p>
+                <p class="arrow">&#8679;</p>
+                <p class="likes">{{ question.likes }}</p>
+                <p class="arrow">&#8681;</p>
             </div>
             <div class="content">
                 <router-link tag="h2" :to="{ name: 'question', params: { id: String(question.id) }}">
@@ -18,7 +20,7 @@
 </template>
 
 <script>
-import Card from './Card'
+import Card from '@/components/Card'
 
 export default {
   components: { Card },
@@ -29,5 +31,5 @@ export default {
 </script>
 
 <style scoped>
-@import '../css/card.less';
+@import '../../css/card.less';
 </style>
