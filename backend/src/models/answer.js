@@ -16,11 +16,9 @@ exports.postAnswer = function (questionID, {body}) {
         const columns = ['userID', 'questionID', 'body']
         const placeholders = columns.map(_ => '?').join()
         const query = `INSERT INTO answer (${columns}) VALUES (${placeholders})`
-        console.log(query)
-        console.log(body)
         db.run(
             query,
-            [0, questionID, body],
+            [0, questionID, body], // TODO user id is a placeholder obviously, but it can't be null so...
             function (err) { err ? reject(err) : resolve(err) }
         )
     })
