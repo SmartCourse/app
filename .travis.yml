@@ -6,9 +6,16 @@ notifications:
 install:
   - cd frontend
   - npm install
+  - npm run build
   - cd ../backend
   - npm install
 script: 
   - npm test
   - cd ../frontend
   - npm test
+after_script:
+  - cd ../backend
+  - npm run coverage
+cache:
+  directories:
+    - node_modules

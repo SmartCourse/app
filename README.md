@@ -1,5 +1,6 @@
 # SmartCourse (working title)
 [![Build Status](https://travis-ci.com/SmartCourse/app.svg?branch=dev)](https://travis-ci.com/SmartCourse/app)
+[![Coverage Status](https://coveralls.io/repos/github/SmartCourse/app/badge.svg?branch=dev)](https://coveralls.io/github/SmartCourse/app?branch=dev)
 
 ## TODO Deploy/Build Guide
 Stuff will happen here soon.
