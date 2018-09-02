@@ -33,16 +33,16 @@ button {
 }
 
 .standard-button:hover {
-    box-shadow: 0px 0px 0px 1.5px var(--theme-light);
+    box-shadow: 0px 0px 0px 1px var(--theme-light);
 }
 
 .alt-button {
     color: var(--theme);
-    border: var(--border-thin);
+    border: var(--border-dark);
 }
 
 .alt-button:hover {
-    box-shadow: 0px 0px 0px 1.5px var(--theme);
+    box-shadow: var(--box-shadow-active);
 }
 </style>
 

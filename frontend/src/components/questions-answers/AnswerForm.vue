@@ -39,6 +39,7 @@ export default {
 
 textarea {
   border: var(--border);
+  border-radius: 2px;
   font: inherit;
   resize: none;
   padding: 5px;
@@ -46,10 +47,10 @@ textarea {
   margin: 10px 0px;
   width: 100%;
   height: 100px;
-  transition: 0.3s border ease-in-out;
+  transition: 0.2s border ease-in-out;
 }
 
 textarea:focus, textarea:active {
-  border: var(--border-dark);
+  border: 1px solid #acc;
 }
 </style>

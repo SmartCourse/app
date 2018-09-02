@@ -29,11 +29,12 @@ html, body {
 :root {
   --color-gray: #d5d5d5;
   --color-light-gray: #eaeaea;
-  --border-thin: 1px solid var(--color-gray);
+  --border-dark: 1px solid var(--color-gray);
   --border: 1px solid var(--color-light-gray);
-  --border-dark: 1px solid rgba(160, 178, 178, 0.5);
+  --border-thick: 2px solid rgba(160, 178, 178, 0.5);
+  --box-shadow-active: 0px 0px 0px 1px #ddd;
   --theme: #00a99d;
-  --theme-light: rgba(#00a99d, 0.9);
+  --theme-light: rgba(#00a99d, 0.6);
 }
 
 main {
