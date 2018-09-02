@@ -11,8 +11,8 @@ exports.getAnswers = function (questionID, pageNumber) {
     })
 }
 
-exports.postAnswer = function (questionID, {body}) {
-    new Promise((resolve, reject) => {
+exports.postAnswer = function (questionID, { body }) {
+    return new Promise((resolve, reject) => {
         const columns = ['userID', 'questionID', 'body']
         const placeholders = columns.map(_ => '?').join()
         const query = `INSERT INTO answer (${columns}) VALUES (${placeholders})`
