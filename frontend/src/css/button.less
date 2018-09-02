@@ -1,7 +1,5 @@
-@import './colors';
-
 .standard-button {
-    background-color: @theme;
+    background-color: var(--theme);
     color: white;
     font: inherit;
     padding: 10px 20px;
@@ -11,5 +9,5 @@
 }
 
 .standard-button:hover {
-    background-color: lighten(@theme, 5%);
+    background-color: var(--theme-light);;
 }

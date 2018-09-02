@@ -3,7 +3,8 @@
       <div class="content">
           <h3>Submit an Answer</h3>
           <p>
-            <textarea v-model="body"></textarea><br>
+            <textarea placeholder="Your answer here.." v-model="body"></textarea><br>
+            <!-- should probs be a separate component -->
             <button class="standard-button" @click="$emit('submitAnswerForm', {body})">Answer</button><br>
             <!-- errors will be injected here -->
             <slot></slot>
@@ -39,8 +40,15 @@ textarea {
   border: var(--border);
   font: inherit;
   resize: none;
+  padding: 5px;
+  outline: none;
   margin: 10px 0px;
   width: 100%;
   height: 100px;
+  transition: 0.3s border ease-in-out;
+}
+
+textarea:focus {
+  border: var(--border-dark);
 }
 </style>

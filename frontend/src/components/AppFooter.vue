@@ -5,12 +5,11 @@
 </template>
 
 <style scoped lang='less'>
-@import '../css/colors';
 
 footer {
     color: white;
     width: 100%;
-    background-color: #00a99d;
+    background-color: var(--theme);
     padding: 0px 20px;
     position: fixed;
     bottom: 0;
