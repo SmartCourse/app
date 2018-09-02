@@ -49,10 +49,12 @@ export function getAnswers(id) {
 
 /**
  * @param {String} id the id of the question being answered
- * @param {object} body the data associated with the new answer {title, body}
+ * @param {object} body the data associated with the new answer
  */
 export function postAnswer(id, form) {
-  return post(`/question/${id}/answers`, form)
+  const ctypeHeaders = new Headers();
+  ctypeHeaders.append('Content-Type', 'application/json');
+  return post(`/question/${id}/answers`, {headers:ctypeHeaders, body:JSON.stringify(form)})
 }
 
 /**
