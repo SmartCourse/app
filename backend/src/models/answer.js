@@ -1,6 +1,6 @@
-const db = require('./db')
+const db = require('./db')._db
 
-exports.getAnswers = function (questionID, pageNumber) {
+function getAnswers(questionID, pageNumber) {
     // TODO - PAGING
     return new Promise((resolve, reject) => {
         db.all(
@@ -10,3 +10,21 @@ exports.getAnswers = function (questionID, pageNumber) {
         )
     })
 }
+
+function postAnswer (questionID, { body }) {
+    return new Promise((resolve, reject) => {
+        const columns = ['userID', 'questionID', 'body']
+        const placeholders = columns.map(_ => '?').join()
+        const query = `INSERT INTO answer (${columns}) VALUES (${placeholders})`
+        db.run(
+            query,
+            [0, questionID, body], // TODO user id is a placeholder obviously, but it can't be null so...
+            // TODO meaningful error message/code based on sql error
+            // TODO proper error handling for all the endpoints :/
+            function (err) { err ? reject(Error('Error adding answer')) : resolve(getAnswers(questionID, 1)) }
+        )
+    })
+}
+
+exports.getAnswers = getAnswers
+exports.postAnswer = postAnswer

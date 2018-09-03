@@ -10,7 +10,7 @@ describe('Uni route testing', function () {
             .expect(200)
     )
 
-    it('uni index', () =>
+    it('uni id 1', () =>
         supertest
             .get('/api/uni/1')
             .set('Accept', 'application/json')

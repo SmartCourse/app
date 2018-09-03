@@ -1,7 +1,5 @@
 const sqlite3 = require('sqlite3')
 
-const databaseName = process.env === 'test' ? ':memory:' : ':memory:'
-
 // TODO - STUB USER TABLE (REFACTOR FOR AUTH)
 function createUserTable (db) {
     db.run(`CREATE TABLE user (
@@ -86,51 +84,8 @@ function createReplyTable (db) {
     )
 }
 
-/* INTERFACE FUNCTIONS */
-
-function createDB (databaseName) {
-    // Create the database object
-    const db = new sqlite3.Database(databaseName)
-
-    // Create the database tables
-    db.serialize(() => {
-        createUserTable(db)
-        createUniversityTable(db)
-        createCourseTable(db)
-        createQuestionTable(db)
-        createAnswerTable(db)
-        createReviewTable(db)
-        createReplyTable(db)
-    })
-
-    // If in memory databse, intialise it
-    if (databaseName === ':memory:') {
-        devInitDB(db)
-    }
-    return db
-}
-
-// Insert given JSON object into database table.
-// data = { column : value }
-// For security reasons, column inputs can NEVER be user defined.
-// TODO - FIX ISSUE WHERE this.lastID != user/uni/course/question/answerID
-//        THIS IS DUE TO THE FACT THAT WE CAN ONLY RETURN THE ROW_ID AFTER
-//        INSERTION WITHOUT A LOOKUP... TOO TIRED TO SOLVE RN
-function insertDB (db, table, data) {
-    return new Promise((resolve, reject) => {
-        const columns = Object.keys(data)
-        const placeholders = columns.map(_ => '?').join()
-        const query = `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`
-        console.log(query)
-        db.run(
-            query,
-            Object.values(data),
-            function (err) { err ? reject(err) : resolve(this.lastID) }
-        )
-    })
-}
-
-function devInitDB (db) {
+/* No longer exporting this shouldn't really do this directly */
+function devInitDB(db) {
     /* Fake data objects */
     const user = {
         firstName: 'Walker',
@@ -199,8 +154,50 @@ function devInitDB (db) {
         .catch(console.warn)
 }
 
-exports.createDB = createDB
-exports.insertDB = insertDB
-exports.devInitDB = devInitDB
+/**
+ * Initiates a new SQL database from the given param
+ * @param {string} databaseName A db name, if not :memory: initiates a .db file
+ * @returns {object} SQLObject
+ */
+function createDB(databaseName) {
+    // Create the database object
+    const db = new sqlite3.Database(databaseName)
 
-module.exports = createDB(databaseName)
+    // Create the database tables
+    db.serialize(() => {
+        createUserTable(db)
+        createUniversityTable(db)
+        createCourseTable(db)
+        createQuestionTable(db)
+        createAnswerTable(db)
+        createReviewTable(db)
+        createReplyTable(db)
+    })
+
+    return db
+}
+
+// Insert given JSON object into database table.
+// data = { column : value }
+// For security reasons, column inputs can NEVER be user defined.
+// TODO - FIX ISSUE WHERE this.lastID != user/uni/course/question/answerID
+//        THIS IS DUE TO THE FACT THAT WE CAN ONLY RETURN THE ROW_ID AFTER
+//        INSERTION WITHOUT A LOOKUP... TOO TIRED TO SOLVE RN
+function insertDB (db, table, data) {
+    return new Promise((resolve, reject) => {
+        const columns = Object.keys(data)
+        const placeholders = columns.map(_ => '?').join()
+        const query = `INSERT INTO ${table} (${columns}) VALUES (${placeholders})`
+        db.run(
+            query,
+            Object.values(data),
+            function (err) { err ? reject(err) : resolve(this.lastID) }
+        )
+    })
+}
+
+module.exports = {
+    devInitDB,
+    createDB,
+    insertDB
+}

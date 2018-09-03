@@ -1,4 +1,4 @@
-const db = require('./db')
+const db = require('./db')._db
 
 exports.getCourses = function getCourses () {
     return new Promise((resolve, reject) => {
