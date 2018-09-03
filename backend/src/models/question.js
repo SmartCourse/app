@@ -1,30 +1,29 @@
 const db = require('./db')
 
-function getQuestions (courseID, pageNumber) { /* eslint-disable-line */
+/* All inputs should be validated in this class that are question related */
+class Question {
+    constructor(db) {
+        console.log('initialising question ORM object')
+        this.db = db
+    }
+
     // TODO - PAGING (log avoids unused variable)
-    return new Promise((resolve, reject) => {
-        db._db.all(
-            'SELECT * FROM question WHERE courseID=?',
-            [courseID],
-            (err, rows) => { err ? reject(err) : resolve(rows) }
-        )
-    })
+    getQuestions(courseID, pageNumber) {
+        return this.db
+            .queryAll('SELECT * FROM question WHERE courseID=?', [courseID])
+    }
+
+    getQuestion(questionID) {
+        return this.db
+            .query('SELECT * FROM question WHERE questionID=?', [questionID])
+    }
+
+    // TODO - clean up way params are passed
+    postQuestion(courseID, userID, { title, body }) {
+        return db.insert('question', { courseID, userID, title, body })
+    }
 }
 
-function getQuestion (questionID) {
-    return new Promise((resolve, reject) => {
-        db._db.get(
-            'SELECT * FROM question WHERE questionID=?',
-            [questionID],
-            (err, row) => { err ? reject(err) : resolve(row) }
-        )
-    })
-}
-
-function postQuestion (courseID = 1, userID = 1, { title, body }) {
-    return db.insert('question', { courseID, userID, title, body })
-}
-
-exports.getQuestion = getQuestion
-exports.postQuestion = postQuestion
-exports.getQuestions = getQuestions
+module.exports = (function(db) {
+    return new Question(db)
+})(db)
