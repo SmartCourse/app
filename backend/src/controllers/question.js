@@ -13,3 +13,11 @@ exports.getQuestionAnswers = function ({ params, query }, res) {
     answerModel.getAnswers(params.id, query.p)
         .then(data => res.json(data))
 }
+
+/* POST new answer. */
+exports.postAnswer = function ({ params, body }, res) {
+    answerModel.postAnswer(params.id, body)
+        .then(data => res.json(data))
+        // TODO potentially more meaningful error code or something
+        .catch(error => res.status(400).json({ code: 400, message: error.message }))
+}
