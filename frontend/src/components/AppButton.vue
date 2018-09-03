@@ -6,21 +6,20 @@
 
 <script>
 export default {
-    props: {
-        alt: {
-            type: Boolean,
-            default: true
-        }
+  props: {
+    alt: {
+      type: Boolean,
+      default: true
     }
+  }
 }
 </script>
-
 
 <style scoped>
 button {
     cursor: pointer;
     padding: 10px 20px;
-    font: inherit;    
+    font: inherit;
     outline: none;
     border-radius: 4px;
     transition: 0.2s ease-in-out box-shadow;
@@ -45,4 +44,3 @@ button {
     box-shadow: var(--box-shadow-active);
 }
 </style>
-
