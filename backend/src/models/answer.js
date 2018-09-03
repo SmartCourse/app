@@ -1,6 +1,6 @@
 const db = require('./db')
 
-exports.getAnswers = function (questionID, pageNumber) {
+function getAnswers(questionID, pageNumber) {
     // TODO - PAGING
     return new Promise((resolve, reject) => {
         db.all(
@@ -11,7 +11,7 @@ exports.getAnswers = function (questionID, pageNumber) {
     })
 }
 
-exports.postAnswer = function (questionID, { body }) {
+function postAnswer (questionID, { body }) {
     return new Promise((resolve, reject) => {
         const columns = ['userID', 'questionID', 'body']
         const placeholders = columns.map(_ => '?').join()
@@ -19,7 +19,10 @@ exports.postAnswer = function (questionID, { body }) {
         db.run(
             query,
             [0, questionID, body], // TODO user id is a placeholder obviously, but it can't be null so...
-            function (err) { err ? reject(err) : resolve(exports.getAnswers(questionID, 1)) }
+            function (err) { err ? reject(err) : resolve(getAnswers(questionID, 1)) }
         )
     })
 }
+
+exports.getAnswers = getAnswers
+exports.postAnswer = postAnswer
