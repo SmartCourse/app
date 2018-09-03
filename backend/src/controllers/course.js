@@ -31,9 +31,5 @@ exports.postQuestion = function ({ params, body }, res) {
     questionModel.postQuestion(params.id, body)
         .then(data => res.json(data))
         // TODO potentially more meaningful error code or something
-        .catch(error => {
-            console.log(error)
-            res.json({ code: 400, message: error.message })
-        })
-        .finally(() => console.log('here'))
+        .catch(error => res.json({ code: 400, message: error.message }))
 }

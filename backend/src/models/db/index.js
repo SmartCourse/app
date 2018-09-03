@@ -1,7 +1,5 @@
 
-const createDB = require('./tables').createDB
-const devInitDB = require('./tables').devInitDB
-const insertDB = require('./tables').insertDB
+const { createDB, devInitDB, insertDB } = require('./tables')
 
 const DB_NAME = process.env === 'test' ? ':memory:' : ':memory:'
 

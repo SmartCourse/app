@@ -38,7 +38,7 @@ describe('dev db starts', () => {
             return new Promise(
                 (resolve, reject) => {
                     db.get(
-                        'SELECT * FROM question WHERE courseID=?',
+                        'SELECT * FROM question WHERE questionID=?',
                         [0],
                         (err, row) => { err ? reject(err) : resolve(row) }
                     )
@@ -50,7 +50,7 @@ describe('dev db starts', () => {
             return new Promise(
                 (resolve, reject) => {
                     db.get(
-                        'SELECT * FROM course WHERE courseID=?',
+                        'SELECT * FROM question WHERE questionID=?',
                         [22],
                         (err, row) => { err ? reject(err) : resolve(row) }
                     )
