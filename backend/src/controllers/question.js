@@ -18,5 +18,6 @@ exports.getQuestionAnswers = function ({ params, query }, res) {
 exports.postAnswer = function ({ params, body }, res) {
     answerModel.postAnswer(params.id, body)
         .then(data => res.json(data))
-        .catch(console.warn)
+        // TODO potentially more meaningful error code or something
+        .catch(message => res.status(400).json({code:400, message}))
 }

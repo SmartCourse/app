@@ -19,7 +19,9 @@ function postAnswer (questionID, { body }) {
         db.run(
             query,
             [0, questionID, body], // TODO user id is a placeholder obviously, but it can't be null so...
-            function (err) { err ? reject(err) : resolve(getAnswers(questionID, 1)) }
+            // TODO meaningful error message/code based on sql error
+            // TODO proper error handling for all the endpoints :/
+            function (err) { err ? reject("Error adding answer") : resolve(getAnswers(questionID, 1)) }
         )
     })
 }
