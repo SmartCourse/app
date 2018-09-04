@@ -23,5 +23,4 @@ yarn-error.log*
 *.sw*
 
 backend/public
-frontend/public
 package-lock.json

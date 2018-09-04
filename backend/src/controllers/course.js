@@ -26,3 +26,11 @@ exports.getCourseQuestions = function ({ params, query }, res) {
 exports.getCourseReviews = function ({ params, query }, res) {
     res.send(`<h1>Page Reviews for Course #${params.id} Page #${query.p}</h1>`)
 }
+
+exports.postQuestion = function ({ params, body }, res) {
+    body.userID = 1
+    questionModel.postQuestion(params.id, body)
+        .then(data => res.json(data))
+        // TODO potentially more meaningful error code or something
+        .catch(error => res.json({ code: 400, message: error.message }))
+}
