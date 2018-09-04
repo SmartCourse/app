@@ -3,7 +3,7 @@ const db = require('./db')
 /* All inputs should be validated in this class that are answer related */
 class Answer {
     constructor(db) {
-        console.log('initialising ORM Answer object')
+        console.log('initialising ORM answer object')
         this.db = db
     }
 
@@ -24,8 +24,14 @@ class Answer {
         })
     }
 
-    getAnswers(questionID, pageNumber) {
-        // TODO - PAGING
+    /**
+     * // TODO - PAGING
+     * Get all of dem answers for a specific question
+     * @param   {id}     questionID
+     * @param   {number} pageNumber
+     * @returns {Array}
+     */
+    getAnswers(questionID, pageNumber = 1) {
         return this.db
             .queryAll('SELECT * FROM answer WHERE questionID=?', [questionID])
     }

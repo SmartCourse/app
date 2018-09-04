@@ -7,11 +7,19 @@ class Course {
         this.db = db
     }
 
+    /**
+     * TODO add 'uni' param, add paging
+     * @returns a list of courses
+     */
     getCourses() {
         return this.db
             .queryAll('SELECT * FROM course')
     }
 
+    /**
+     * TODO add 'uni' param, add paging
+     * @returns info specific to single course.
+     */
     getCourse(courseID) {
         return this.db
             .query('SELECT * FROM course WHERE courseID=?', [courseID])
