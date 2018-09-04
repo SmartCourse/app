@@ -17,7 +17,7 @@ describe('Course route testing', () => {
             .expect('Content-Type', /json/)
             .expect(200)
     )
-/* Doesn't work :-/
+
     it('POST /api/course/1/question', () =>
         supertest
             .post('/api/course/1/question')
@@ -26,5 +26,4 @@ describe('Course route testing', () => {
             .expect('Content-Type', /json/)
             .expect(200)
     )
-*/
 })

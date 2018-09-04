@@ -28,6 +28,7 @@ exports.getCourseReviews = function ({ params, query }, res) {
 }
 
 exports.postQuestion = function ({ params, body }, res) {
+    body.userID = 1
     questionModel.postQuestion(params.id, body)
         .then(data => res.json(data))
         // TODO potentially more meaningful error code or something

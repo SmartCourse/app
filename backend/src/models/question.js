@@ -19,7 +19,7 @@ class Question {
     }
 
     // TODO - clean up way params are passed
-    postQuestion(courseID, userID, { title, body }) {
+    postQuestion(courseID, { userID, title, body }) {
         return db.insert('question', { courseID, userID, title, body })
     }
 }
