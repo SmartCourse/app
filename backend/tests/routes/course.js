@@ -8,10 +8,6 @@ describe('Course route testing', () => {
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200)
-            .expect(response => {
-                const res = JSON.parse(response.text)
-                console.log(res)
-            })
     )
 
     it('GET /api/course/1/questions', () =>
