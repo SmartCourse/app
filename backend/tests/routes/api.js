@@ -18,6 +18,6 @@ describe('API route testing', () => {
     it('Test fallback for bad path', () =>
         supertest
             .get('/shizzlwazzle')
-            .expect(200)
+            .expect(404)
     )
 })
