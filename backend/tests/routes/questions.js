@@ -25,12 +25,13 @@ describe('Answer route testing', () => {
     it('POST /api/question/1/answers', () =>
         supertest
             .post('/api/question/1/answers')
-            .send({ body: 'testu' })
+            .send({ body: 'superruuu____testu' })
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200)
             .then(response => {
                 assert(response.body.length === 2)
+                assert(response.body.filter(it => it.body == 'superruuu____testu').length == 1)
             })
     )
 })
