@@ -15,6 +15,12 @@ describe('API route testing', () => {
             .expect(200)
     )
 
+    it('/api/bad/path', () =>
+        supertest
+            .get('/api/bad/path')
+            .expect(404)
+    )
+
     it('Test fallback for bad path', () =>
         supertest
             .get('/shizzlwazzle')
