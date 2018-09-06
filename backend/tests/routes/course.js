@@ -21,15 +21,37 @@ describe('Course route testing', () => {
             })
     )
 
-    it('GET /api/course/1', () =>
-        supertest
-            .get('/api/course/1')
-            .expect((req) => {
-                expect(req.body.courseID).to.equal(1)
-                expect(req.body.courseCode).to.equal('COMP4920')
-                expect(req.body.courseName).to.equal('Ethics and Management')
+    describe('GET /api/course/1', () => {
+        let request
+
+        before(() => {
+            request = supertest
+                .get('/api/course/1')
+                .expect(200)
+            return request
+        })
+
+        it('has the correct courseID', () =>
+            request.then(({ body }) =>
+                expect(body.courseID).to.equal(1))
+        )
+
+        it('has the correct courseName', () =>
+            request.then(({ body }) =>
+                expect(body.courseName).to.equal('Ethics and Management'))
+        )
+
+        it('has the correct courseCode', () =>
+            request.then(({ body }) =>
+                expect(body.courseCode).to.equal('COMP4920'))
+        )
+
+        it('Debugging', () =>
+            request.then(({ body }) => {
+                console.log(body)
             })
-    )
+        )
+    })
 
     it('GET /api/course/1/questions', () =>
         supertest
