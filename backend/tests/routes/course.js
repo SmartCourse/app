@@ -5,14 +5,10 @@ const { expect } = require('chai')
 describe('Course route testing', () => {
     it('GET course index', () =>
         supertest
-            .get('/api/course/1')
+            .get('/api/course')
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200)
-            .expect(response => {
-                const res = JSON.parse(response.text)
-                console.log(res)
-            })
     )
 
     describe('GET /api/course/1', () => {
