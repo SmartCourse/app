@@ -1,5 +1,3 @@
-const db = require('./db')
-
 /* All inputs should be validated in this class that are course related */
 class Course {
     constructor(db) {
@@ -26,6 +24,11 @@ class Course {
     }
 }
 
-module.exports = (function(db) {
-    return new Course(db)
-})(db)
+let Singleton = null
+
+/**
+ * @param {object} db defaults to the db instance
+ */
+module.exports = function(db = require('./db')) {
+    return (Singleton = Singleton ? Singleton : new Course(db)) // eslint-disable-line
+}

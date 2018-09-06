@@ -1,5 +1,3 @@
-const db = require('./db')
-
 /* All inputs should be validated in this class that are question related */
 class Question {
     constructor(db) {
@@ -35,10 +33,16 @@ class Question {
      *                       contain the user data (probs eventually from an auth token)
      */
     postQuestion(courseID, { userID, title, body }) {
-        return db.insert('question', { courseID, userID, title, body })
+        return this.db
+            .insert('question', { courseID, userID, title, body })
     }
 }
 
-module.exports = (function(db) {
-    return new Question(db)
-})(db)
+let Singleton = null
+
+/**
+ * @param {object} db defaults to the db instance
+ */
+module.exports = function(db = require('./db')) {
+    return (Singleton = Singleton ? Singleton : new Question(db)) // eslint-disable-line
+}
