@@ -24,4 +24,10 @@
         display: inline-block;
     }
 }
+
+@media screen and (max-width: 768px) {
+    #nav {
+        font-size: small;
+    }
+}
 </style>

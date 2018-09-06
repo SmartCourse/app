@@ -2,6 +2,18 @@
 const API_URL = process && process.env
   ? 'http://localhost:3000/api' : 'http://127.0.0.1:3000/api'
 
+async function responseCheck(res) {
+  if (res.ok) {
+    return res.json()
+  } else if (res.status >= 500) {
+    const err = {code: res.status, message: 'Server Error'}
+    throw err
+  } else {
+    const err = await res.json()
+    throw err
+  }
+}
+
 /**
  * A GET request
  * @param {string} path      The relative path for the api call.
@@ -10,7 +22,7 @@ const API_URL = process && process.env
  */
 export const get = (path, options = {}) =>
   fetch(`${API_URL}${path}`, options)
-    .then(res => res.json())
+    .then(responseCheck)
 
 /**
  * A POST request
@@ -20,7 +32,7 @@ export const get = (path, options = {}) =>
  */
 export const post = (path, options = {}) =>
   fetch(`${API_URL}${path}`, { ...options, method: 'POST' })
-    .then(res => res.json())
+    .then(responseCheck)
 
 /**
  * A PUT request
@@ -30,6 +42,6 @@ export const post = (path, options = {}) =>
  */
 export const put = (path, options = {}) =>
   fetch(`${API_URL}${path}`, { ...options, method: 'PUT' })
-    .then(res => res.json())
+    .then(responseCheck)
 
 export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
