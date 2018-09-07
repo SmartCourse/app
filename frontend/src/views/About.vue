@@ -5,7 +5,6 @@
   </div>
 </template>
 
-
 <style scoped>
 
 .about {
@@ -25,4 +24,3 @@
 }
 
 </style>
-
