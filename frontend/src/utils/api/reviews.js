@@ -44,7 +44,7 @@ export function postQuestion(body) {
 }
 
 export function getReplies(id) {
-  return get(`/review/${id}/Replies`)
+  return get(`/review/${id}/replies`)
 }
 
 /**
@@ -54,7 +54,7 @@ export function getReplies(id) {
 export function postReply(id, form) {
   const headers = new Headers()
   headers.append('Content-Type', 'application/json')
-  return post(`/review/${id}/Replies`, {headers, body: JSON.stringify(form)})
+  return post(`/review/${id}/replies`, {headers, body: JSON.stringify(form)})
 }
 
 /**

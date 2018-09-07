@@ -32,15 +32,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  li {
-    list-style: none;
-  }
-  .form-success {
-    color: green;
-  }
-  .form-failure {
-    color: red;
-  }
-</style>
