@@ -1,29 +1,55 @@
 <template>
   <div class="home">
-    <Feed
-      title="Welcome to SmartCourse!"
-      :questions="feed"
-    />
+    <h1><span>Smart</span><span class="course">Course</span></h1>
+    <p>Making the most of your degree.</p>
+    <Search/>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import Feed from '@/components/Feed'
-import { mapGetters } from 'vuex'
+import Search from '@/components/AppSearch'
 
 export default {
-  name: 'home',
-  components: {
-    Feed
-  },
-  computed: {
-    ...mapGetters('questions', {
-      feed: 'questions'
-    })
-  },
-  created () {
-    this.$store.dispatch('questions/getQuestions')
-  }
+  components: { Search }  
 }
 </script>
+
+
+<style scoped>
+
+.home {
+  font-size: 40px;
+  margin: 0 auto;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  padding: 10px 0px;
+  border: 1px solid var(--theme-light);
+}
+
+h1 span {
+    padding: 10px;
+}
+
+p {
+  margin: 10px auto;
+}
+
+.course {
+  color: white;
+  background-color: var(--theme);
+}
+
+@media screen and (max-width: 768px) {
+  .home {
+   font-size: 24px;
+  }
+}
+
+</style>
+

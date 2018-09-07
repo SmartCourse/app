@@ -13,12 +13,22 @@ export default new Router({
       component: Home
     },
     {
-      path: '/about',
-      name: 'about',
+      path: '/course',
+      name: 'course',
       // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
+      // this generates a separate chunk (course.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('./views/About')
+      component: () => import('./views/Course')
+    },
+    {
+      path: '/course/:id',
+      props: ({params: { id }}) => ({
+        id
+      }),
+      // route level code-splitting
+      // this generates a separate chunk (course.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('./views/Course')
     },
     {
       path: '/question/:id',

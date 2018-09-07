@@ -58,8 +58,8 @@ const actions = {
       commit('TOGGLE_LOADING', false)
     }
   },
-  async getQuestions ({dispatch}) {
-    return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, args: [] })
+  async getQuestions ({dispatch}, id) {
+    return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, args: [id] })
   },
   async getQuestion ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_QUESTION, args: [id] })

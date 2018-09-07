@@ -2,8 +2,8 @@
     <div id="nav">
       <AppLogo/>
       <div class="links">
-        <router-link class="link-item" tag="h2" to="/">Home</router-link> |
-        <router-link class="link-item" tag="h2" to="/about">About</router-link>
+        <router-link class="link-item" tag="h2" to="/">Home</router-link> | 
+        <router-link class="link-item" tag="h2" to="/course">Course</router-link>
       </div>
     </div>
 </template>
