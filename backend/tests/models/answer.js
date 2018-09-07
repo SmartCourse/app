@@ -1,9 +1,9 @@
-const assert = require('assert')
+const { expect } = require('chai')
 const answerModel = require('../../src/models/answer')(require('./stub-db'))
 
-describe('dev db starts', () => {
+describe('Answer Model', () => {
     it('compiles', function () {
-        assert(answerModel)
+        expect(answerModel)
     })
 
     /* Eventually test correct args, and
@@ -13,16 +13,13 @@ describe('dev db starts', () => {
         it('it gets answers', () => {
             return answerModel
                 .getAnswers()
-                .then(answers => assert(answers))
+                .then(answers => expect(answers))
         })
 
         it('it posts an answer', () => {
-            assert(true)
-            /* NB Test fails because not properly abstracted in answer model (yet)
             return answerModel
-                .postAnswer()
-                .then(answers => assert(answers))
-            */
+                .postAnswer(1, { body: 'Hey again, Nuno', userID: 1 })
+                .then(answers => expect(answers))
         })
     })
 })
