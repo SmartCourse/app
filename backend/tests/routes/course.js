@@ -3,13 +3,39 @@ const supertest = require('supertest')(app)
 const { expect } = require('chai')
 
 describe('Course route testing', () => {
-    it('GET course index', () =>
-        supertest
-            .get('/api/course')
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .expect(200)
-    )
+
+    describe('GET /api/course', () => {
+        let request
+        before(() => {
+            request = supertest
+                .get('/api/course')
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(200)
+            return request
+        })
+
+        it('returns a list', () =>
+            request.then(({ body }) =>
+                expect(body.length).to.be.a('number'))
+        )
+        describe('contains a valid course', () => {
+            it('has the correct courseID', () =>
+                request.then(({ body }) =>
+                    expect(body[0].courseID).to.equal(1))
+            )
+
+            it('has the correct courseName', () =>
+                request.then(({ body }) =>
+                    expect(body[0].courseName).to.equal('Ethics and Management'))
+            )
+
+            it('has the correct courseCode', () =>
+                request.then(({ body }) =>
+                    expect(body[0].courseCode).to.equal('COMP4920'))
+            )
+        })
+    })
 
     describe('GET /api/course/1', () => {
         let request

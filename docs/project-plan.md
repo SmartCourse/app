@@ -10,6 +10,7 @@
 6. Roles
 7. Sprints & Meeting Schedule
 8. Technologies
+9. Stories and Tasks in ZenHub
 
 ## 1.0 - Problem Hypothesis
 University is full of hard work and tough challenges. Unfortunately, this experience is made more difficult without a centralised source for course information. The current solution that students have adopted is combining online spreadsheets, rare and vague university released evaluations and word of mouth.
@@ -349,3 +350,29 @@ Back End:
 
 Testing:
 * Travis CI - Continuous integration service for automated testing.
+
+## 9.0 - Stories and Tasks in ZenHub
+### All User Stories
+We have added all the stories from section 4 into ZenHub, as seen in the image below.
+![All Stories](https://user-images.githubusercontent.com/26681270/45141680-ea428080-b1f9-11e8-9b9f-966f5f794de7.png)
+
+### Sprint Stories and Tasks
+At the start of a sprint, we select what stories we are going to work on and break them down into tasks. Here is an example from the start of our current sprint (Sprint 4).
+![Board](https://user-images.githubusercontent.com/26681270/45141691-f29abb80-b1f9-11e8-8e80-2b271d1eae8c.png)
+![List](https://user-images.githubusercontent.com/26681270/45141683-ee6e9e00-b1f9-11e8-8e7d-cdfca4349535.png)
+
+### Story Tile
+A story contains:
+- A description in the form "As a ___ I want to be able to ___ to ___."
+- Acceptance criteria determined at the start of a sprint.
+- Tasks associated with the user story, each with corresponding estimates.
+![Story](https://user-images.githubusercontent.com/26681270/45141674-e31b7280-b1f9-11e8-984f-70731a829283.png)
+
+### Task Tile
+A task contains:
+- A task description, which clearly states what is being addressed.
+- The people assigned to the task, which is generally determined by equally splitting tasks so everyone has the same total estimate of work for the sprint.
+- The sprint it is a part of.
+- An estimate, which is determined at the start of each sprint, as a part of a team discussion. We consider factors like the experience of the assigned developers and overall difficulty.
+- A feed of all events associated with the task. This includes things like task detail updates, pull requests and general discussion.
+![Task](https://user-images.githubusercontent.com/26681270/45141677-e7479000-b1f9-11e8-86d8-77f489481a01.png)
