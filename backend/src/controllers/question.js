@@ -1,5 +1,5 @@
-const questionModel = require('../models/question')
-const answerModel = require('../models/answer')
+const questionModel = require('../models/question')()
+const answerModel = require('../models/answer')()
 
 /* GET question data. */
 exports.getQuestion = function ({ params }, res) {

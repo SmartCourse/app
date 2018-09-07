@@ -1,5 +1,5 @@
-const courseModel = require('../models/course')
-const questionModel = require('../models/question')
+const courseModel = require('../models/course')()
+const questionModel = require('../models/question')()
 
 /* Get all course data */
 exports.getCourses = function (req, res) {
