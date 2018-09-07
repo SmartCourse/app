@@ -27,6 +27,14 @@ export default new Router({
         id
       }),
       component: () => import('./views/Question')
+    },
+    {
+      path: '/review/:id',
+      name: 'review',
+      props: ({params: { id }}) => ({
+        id
+      }),
+      component: () => import('./views/Review')
     }
   ]
 })
