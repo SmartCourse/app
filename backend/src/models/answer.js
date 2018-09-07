@@ -40,6 +40,11 @@ let Singleton = null
 /**
  * @param {object} db defaults to the db instance
  */
-module.exports = function(db = require('./db')) {
-    return (Singleton = Singleton ? Singleton : new Answer(db)) // eslint-disable-line
+module.exports = function(db) {
+    if (!db) {
+        /* app environment, dev or prod */
+        return (Singleton = Singleton ? Singleton : new Answer(require('./db'))) // eslint-disable-line
+    }
+    /* to allow injection */
+    return new Answer(db)
 }
