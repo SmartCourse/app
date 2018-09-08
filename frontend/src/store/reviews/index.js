@@ -3,6 +3,8 @@ import {
   replyMapper
 } from '@/utils/api/reviews'
 
+import { doRequestFactory } from '@/store/utils'
+
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
 const state = {
@@ -47,17 +49,7 @@ const mutations = {
 }
 
 const actions = {
-  async doRequest({commit}, {action, args}) {
-    commit('TOGGLE_LOADING', true)
-    try {
-      const data = await REQUEST[action](...args)
-      commit(COMMITS[action], data)
-    } catch (e) {
-      commit('API_ERROR', e)
-    } finally {
-      commit('TOGGLE_LOADING', false)
-    }
-  },
+  doRequest: doRequestFactory(REQUEST, COMMITS),
   async getReviews ({dispatch}) {
     return dispatch('doRequest', { action: ACTIONS.GET_REVIEWS, args: [] })
   },

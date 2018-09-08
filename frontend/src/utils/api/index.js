@@ -1,3 +1,4 @@
+import APIError from './errors'
 // TODO eventually second URL should be set to deploy url
 const API_URL = process && process.env
   ? 'http://localhost:3000/api' : 'http://127.0.0.1:3000/api'
@@ -6,11 +7,10 @@ async function responseCheck(res) {
   if (res.ok) {
     return res.json()
   } else if (res.status >= 500) {
-    const err = {code: res.status, message: 'Server Error'}
-    throw err
+    throw new APIError('Server Error')
   } else {
     const err = await res.json()
-    throw err
+    throw new APIError(err.message, err.code)
   }
 }
 
