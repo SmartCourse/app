@@ -16,7 +16,7 @@ describe('Course route testing', () => {
 
         it('returns a list', () =>
             request.then(({ body }) =>
-                expect(body.length).to.be.equal(1565))
+                expect(body.length).to.be.equal(1566))
         )
         describe('contains a valid course', () => {
             it('has the correct courseID', () =>
