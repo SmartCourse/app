@@ -1,9 +1,9 @@
 <template>
     <div id="nav">
-      <AppLogo/>
+      <AppLogo :first="'S'" :last="'C'"/>
       <div class="links">
-        <router-link class="link-item" tag="h2" to="/">Home</router-link> |
-        <router-link class="link-item" tag="h2" to="/about">About</router-link>
+        <router-link class="link-item" tag="h2" to="/">Home</router-link> | 
+        <router-link class="link-item" tag="h2" to="/course">Course</router-link>
       </div>
     </div>
 </template>
@@ -27,7 +27,7 @@
 
 @media screen and (max-width: 768px) {
     #nav {
-        font-size: small;
+        font-size: var(--font-small-mobile);
     }
 }
 </style>

@@ -3,6 +3,8 @@ import {
   answerMapper
 } from '@/utils/api/questions'
 
+import { doRequestFactory } from '@/store/utils'
+
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
 const state = {
@@ -47,19 +49,9 @@ const mutations = {
 }
 
 const actions = {
-  async doRequest({commit}, {action, args}) {
-    commit('TOGGLE_LOADING', true)
-    try {
-      const data = await REQUEST[action](...args)
-      commit(COMMITS[action], data)
-    } catch (e) {
-      commit('API_ERROR', e)
-    } finally {
-      commit('TOGGLE_LOADING', false)
-    }
-  },
-  async getQuestions ({dispatch}) {
-    return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, args: [] })
+  doRequest: doRequestFactory(REQUEST, COMMITS),
+  async getQuestions ({dispatch}, id) {
+    return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, args: [id] })
   },
   async getQuestion ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_QUESTION, args: [id] })

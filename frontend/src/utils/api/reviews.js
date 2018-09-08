@@ -34,13 +34,11 @@ export function reviewMapper({ reviewID, likes, userID, title, body, timestamp }
   }
 }
 
-// STUBS
-
 /**
- * @param {object} body the data associated with the new review
+ * @param {object} data the data associated with the new review
  */
-export function postQuestion(body) {
-  return post('/review', { body })
+export function postQuestion(data) {
+  return post('/review', { data })
 }
 
 export function getReplies(id) {
@@ -48,19 +46,17 @@ export function getReplies(id) {
 }
 
 /**
- * @param {String} id the id of the review being replied
+ * @param {string} id the id of the review being replied
  * @param {object} body the data associated with the new reply
  */
-export function postReply(id, form) {
-  const headers = new Headers()
-  headers.append('Content-Type', 'application/json')
-  return post(`/review/${id}/replies`, {headers, body: JSON.stringify(form)})
+export function postReply(id, data) {
+  return post(`/review/${id}/replies`, { data })
 }
 
 /**
- * @param {String} id the id of the review being edited
+ * @param {string} id the id of the review being edited
  * @param {object} body the data associated with the new review
  */
-export function editReview(id, body) {
-  return put(`/review/${id}`, { body })
+export function editReview(id, data) {
+  return put(`/review/${id}`, { data })
 }
