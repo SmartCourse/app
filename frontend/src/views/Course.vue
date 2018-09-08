@@ -2,6 +2,7 @@
   <div class="course">
     <div class="course-header">
         <h1>{{ courseInfo.name }}</h1>
+        <h2>{{ courseInfo.code }}</h2>
         <button @click="$store.dispatch('course/changeTab', 'info')" class="tab-button tab-button-active">info</button>
         <button @click="$store.dispatch('course/changeTab', 'questions')" class="tab-button">questions</button>
         <button @click="$store.dispatch('course/changeTab', 'reviews')" class="tab-button">reviews</button>
