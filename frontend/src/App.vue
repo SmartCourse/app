@@ -35,6 +35,10 @@ html, body {
   --box-shadow-active: 0px 0px 0px 1px #ddd;
   --theme: #00a99d;
   --theme-light: rgba(#00a99d, 0.6);
+  --font-large: 40px;
+  --font-large-mobile: 24px;
+  --font-small: 16px;
+  --font-small-mobile: 12px;
 }
 
 main {

@@ -1,4 +1,5 @@
 const sqlite3 = require('sqlite3')
+const courseData = require('./courses')
 
 // TODO - STUB USER TABLE (REFACTOR FOR AUTH)
 function createUserTable (db) {
@@ -98,12 +99,6 @@ function devInitDB(db) {
         universityName: 'Univerity of New South Wales'
     }
 
-    const comp4920 = {
-        courseCode: 'COMP4920',
-        courseName: 'Ethics and Management',
-        facultyCode: 'COMP'
-    }
-
     const question = {
         title: 'Question creation help!',
         body: 'I am struggling to create a meme question, wud shud I rite?'
@@ -124,20 +119,20 @@ function devInitDB(db) {
     /* Insert the fake data in to the database */
     // Insert user and uni
     return Promise.all([insertDB(db, 'user', user), insertDB(db, 'university', unsw)])
-        .then(([userID, uniID]) => {
+        .then(([userID, universityID]) => {
             // uni dependencies
-            comp4920.universityID = uniID
-
-            ;[question, answer, review, reply]
+            [question, answer, review, reply]
                 .forEach(item => { item.userID = userID })
 
             // insert course
-            return insertDB(db, 'course', comp4920)
+            return Promise.all(courseData.map(course => {
+                return insertDB(db, 'course', { universityID, ...course })
+            }))
         })
         .then((courseID) => {
             // course dependencies
             [question, review]
-                .forEach(item => { item.courseID = courseID }, question)
+                .forEach(item => { item.courseID = 1 }, question)
 
             // insert question and review
             return Promise.all([insertDB(db, 'question', question), insertDB(db, 'review', review)])
