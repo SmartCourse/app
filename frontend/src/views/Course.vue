@@ -2,9 +2,15 @@
   <div class="course">
     <Feed
       title="Latest Questions"
-      :questions="feed"
+      feedType="QuestionCard"
+      :items="questionFeed"
     />
-  </div>
+    <Feed
+      title="Latest Reviews"
+      feedType="ReviewCard"
+      :items="reviewFeed"
+      />
+    </div>
 </template>
 
 <script>
@@ -22,11 +28,15 @@ export default {
   },
   computed: {
     ...mapGetters('questions', {
-      feed: 'questions'
+      questionFeed: 'questions'
+    }),
+    ...mapGetters('reviews', {
+      reviewFeed: 'reviews'
     })
   },
   created () {
     this.$store.dispatch('questions/getQuestions', this.id)
+    this.$store.dispatch('reviews/getReviews', this.id)
   }
 }
 </script>

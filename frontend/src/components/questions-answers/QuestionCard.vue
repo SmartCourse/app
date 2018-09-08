@@ -3,17 +3,17 @@
         <div class="card-content">
             <div class="meta-fields">
                 <p class="arrow">&#8679;</p>
-                <p class="likes">{{ question.likes }}</p>
+                <p class="likes">{{ likes }}</p>
                 <p class="arrow">&#8681;</p>
             </div>
             <div class="content">
-                <router-link tag="h2" :to="{ name: 'question', params: { id: String(question.id) }}">
-                    {{ question.title }}
+                <router-link tag="h2" :to="{ name: 'question', params: { id: String(id) }}">
+                    {{ title }}
                 </router-link>
-                <p>{{ question.body }}</p>
+                <p>{{ body }}</p>
             </div>
             <aside class="date">
-                <time>{{ question.published }}</time>
+                <time>{{ published }}</time>
             </aside>
         </div>
     </Card>
@@ -25,7 +25,12 @@ import Card from '@/components/Card'
 export default {
   components: { Card },
   props: {
-    question: Object
+    id: Number,
+    author: Number,
+    likes: Number,
+    title: String,
+    body: String,
+    published: Date
   }
 }
 </script>

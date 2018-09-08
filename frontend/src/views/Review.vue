@@ -2,7 +2,7 @@
     <section class="q">
       <div v-if="!loading">
 
-        <ReviewCard :review="review"/>
+        <ReviewCard v-bind="review"/>
 
       </div>
       <!--<LoadingSpinner v-else/>-->

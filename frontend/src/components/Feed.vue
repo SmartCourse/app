@@ -3,8 +3,8 @@
     <h1>{{ title }}</h1>
     <section class="questions">
       <ol>
-        <li :key="question.id" v-for="question in questions">
-          <QuestionCard :question="question"/>
+        <li :key="item.id" v-for="item in items">
+          <component :is="feedType" v-bind="item"/>
         </li>
       </ol>
     </section>
@@ -13,15 +13,18 @@
 
 <script>
 import QuestionCard from '@/components/questions-answers/QuestionCard'
+import ReviewCard from '@/components/reviews-replies/ReviewCard'
 
 export default {
   name: 'Feed',
   components: {
-    QuestionCard
+    QuestionCard,
+    ReviewCard
   },
   props: {
     title: String,
-    questions: Array
+    feedType: String,
+    items: Array
   }
 }
 </script>

@@ -2,7 +2,7 @@
     <section class="q">
       <div v-if="!loading">
 
-        <QuestionCard :question="question"/>
+        <QuestionCard v-bind="question"/>
 
         <AnswerForm @submitAnswerForm="submitAnswer" class="answerForm">
           <span class="form-failure"

@@ -24,7 +24,7 @@ exports.getCourseQuestions = function ({ params, query }, res) {
 
 /* Get all reviews for a course */
 exports.getCourseReviews = function ({ params, query }, res) {
-    res.send(`<h1>Page Reviews for Course #${params.id} Page #${query.p}</h1>`)
+    res.send([{id:1, title:'placeholder', body:'placeholder', author:1, likes:10}])
 }
 
 exports.postQuestion = function ({ params, body }, res) {
