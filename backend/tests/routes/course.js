@@ -108,9 +108,15 @@ describe('Course route testing', () => {
             return request
         })
 
-        it('Successfully provides a new question ID', () =>
+        it('has the right number of questions', () =>
+            request.then(({ body }) =>
+                expect(body.length >= 1))
+        )
+
+        it('has the question we POSTed', () =>
             request.then(({ body }) => {
-                expect(body).to.be.a('number')
+                expect(body.filter(question => question.title === 'jeff').length).to.equal(1)
+                expect(body.filter(question => question.body === 'testu').length).to.equal(1)
             })
         )
     })
