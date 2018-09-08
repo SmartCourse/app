@@ -39,14 +39,12 @@ export default {
       if (questionForm.body === '') {
         return
       }
-
-      const form = {
-        title: 'TEST QUESTION',
-        body: questionForm.body
-      }
-
       // this.$store.dispatch('questions/postQuestion', {form: questionForm, id: this.course.id})
-      this.$store.dispatch('questions/postQuestion', { id: this.id, form })
+      this.$store.dispatch('questions/postQuestion',
+        {
+          id: this.id,
+          form: questionForm
+        })
     }
   },
   created () {

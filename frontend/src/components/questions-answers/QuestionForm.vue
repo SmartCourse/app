@@ -3,9 +3,10 @@
       <div class="content">
           <h3>Submit a Question</h3>
           <p>
+            <input type="text" placeholder="Question title..." v-model="title"><br>
             <textarea placeholder="Your question here.." v-model="body"></textarea><br>
             <!-- should probs be a separate component -->
-            <AppButton @click.native="$emit('submitQuestionForm', {body})">Ask</AppButton>
+            <AppButton @click.native="$emit('submitQuestionForm', {title, body})">Ask</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </p>
@@ -25,6 +26,7 @@ export default {
   },
   data () {
     return {
+      title: '',
       body: ''
     }
   }
@@ -35,6 +37,19 @@ export default {
 
 .content {
   padding: 0px 60px;
+}
+
+input[type=text] {
+  border: var(--border);
+  border-radius: 2px;
+  font: inherit;
+  resize: none;
+  padding: 5px;
+  outline: none;
+  margin: 10px 0px;
+  width: 100%;
+  height: 20px;
+  transition: 0.2s border ease-in-out;
 }
 
 textarea {
