@@ -20,6 +20,6 @@ describe('AnswerForm.vue', () => {
 
   it('button event fired once with correct answer body', function () {
     expect(this.wrapper.emitted().submitAnswerForm.length).to.equal(1)
-    expect(this.wrapper.emitted().submitAnswerForm[0][0].body).to.equal(this.answer.body)
+    expect(this.wrapper.emitted().submitAnswerForm[0][0]).to.deep.equal(this.answer)
   })
 })
