@@ -7,6 +7,7 @@ describe('QuestionCard.vue', () => {
     this.card = {
       id: 1,
       likes: 10,
+      published: Date.now(),
       title:
         'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
       body:
@@ -27,7 +28,11 @@ describe('QuestionCard.vue', () => {
     expect(this.wrapper.find('h2').text()).to.include(this.card.title)
   })
 
-  it('renders question description', function () {
+  it('renders question publish time', function () {
+    expect(this.wrapper.find('time').text()).to.include(this.card.published)
+  })
+
+  it('renders question body', function () {
     expect(this.wrapper.findAll('p').at(3).text()).to.include(this.card.body)
   })
 })

@@ -5,7 +5,15 @@ const router = express.Router()
 router.get('/:id', function (req, res) {
     // let rid = req.params.id;
 
-    res.json({ data: '<h1>Review Page</h1>' })
+    res.json({
+        reviewID: 1,
+        courseID: 1,
+        userID: 1,
+        title: 'Best course I\'ve ever done!',
+        body: 'This course was great WOWOW',
+        timestamp: '2018-09-06 08:14:10',
+        likes: 10
+    })
 })
 
 /* Get page (N) answers for a question */
