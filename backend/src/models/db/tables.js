@@ -27,7 +27,7 @@ function createCourseTable (db) {
         courseName TEXT NOT NULL,
         facultyCode TEXT NOT NULL,
         rating INTEGER DEFAULT '0.00',
-        FOREIGN KEY (universityID) REFERENCES universities(universityID)
+        FOREIGN KEY (universityID) REFERENCES university(universityID)
         )`
     )
 }
@@ -41,21 +41,24 @@ function createQuestionTable (db) {
         body TEXT NOT NULL,
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (courseID) REFERENCES courses(courseID),
-        FOREIGN KEY (userID) REFERENCES users(userID))`
+        FOREIGN KEY (courseID) REFERENCES course(courseID),
+        FOREIGN KEY (userID) REFERENCES user(userID))`
     )
 }
 
-function createAnswerTable (db) {
-    db.run(`CREATE TABLE answer (
-        answerID INTEGER PRIMARY KEY AUTOINCREMENT,
-        questionID INTEGER NOT NULL,
+function createCommentTable (db) {
+    db.run(`CREATE TABLE comment (
+        commentID INTEGER PRIMARY KEY AUTOINCREMENT,
+        questionID INTEGER,
+        reviewID INTEGER,
+        commentParent INTEGER,
         userID INTEGER NOT NULL,
         body TEXT NOT NULL,
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (questionID) REFERENCES questions(courseID),
-        FOREIGN KEY (userID) REFERENCES users(userID))`
+        FOREIGN KEY (questionID) REFERENCES question(questionID),
+        FOREIGN KEY (reviewID) REFERENCES review(reviewID),
+        FOREIGN KEY (userID) REFERENCES user(userID))`
     )
 }
 
@@ -67,21 +70,8 @@ function createReviewTable (db) {
         body TEXT NOT NULL,
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (courseID) REFERENCES courses(courseID),
-        FOREIGN KEY (userID) REFERENCES users(userID))`
-    )
-}
-
-function createReplyTable (db) {
-    db.run(`CREATE TABLE reply (
-        answerID INTEGER PRIMARY KEY AUTOINCREMENT,
-        reviewID INTEGER NOT NULL,
-        userID INTEGER NOT NULL,
-        body TEXT NOT NULL,
-        timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (reviewID) REFERENCES reviews(courseID),
-        FOREIGN KEY (userID) REFERENCES users(userID))`
+        FOREIGN KEY (courseID) REFERENCES course(courseID),
+        FOREIGN KEY (userID) REFERENCES user(userID))`
     )
 }
 
@@ -104,7 +94,7 @@ function devInitDB(db) {
         body: 'I am struggling to create a meme question, wud shud I rite?'
     }
 
-    const answer = {
+    const comment = {
         body: 'Knock. Knock... Who is there?... Pivotal... Pivotal Who?... lol jks it is Trello!'
     }
 
@@ -121,13 +111,13 @@ function devInitDB(db) {
     return Promise.all([insertDB(db, 'user', user), insertDB(db, 'university', unsw)])
         .then(([userID, universityID]) => {
             // uni dependencies
-            [question, answer, review, reply]
+            [question, comment, review, reply]
                 .forEach(item => { item.userID = userID })
 
             // insert course
-            return Promise.all(courseData.map(course => {
-                return insertDB(db, 'course', { universityID, ...course })
-            }))
+            return Promise.all(courseData.map(course =>
+                insertDB(db, 'course', { universityID, ...course })
+            ))
         })
         .then((courseID) => {
             // course dependencies
@@ -139,11 +129,11 @@ function devInitDB(db) {
         })
         .then(([questionID, reviewID]) => {
             // question and review dependency
-            answer.questionID = questionID
+            comment.questionID = questionID
             reply.reviewID = reviewID
 
-            // insert answer and reply
-            return Promise.all([insertDB(db, 'answer', answer), insertDB(db, 'reply', reply)])
+            // insert different comments
+            return Promise.all([insertDB(db, 'comment', comment), insertDB(db, 'comment', reply)])
         })
         .then(() => console.log('Test Database Initialised!'))
         .catch(console.warn)
@@ -151,7 +141,7 @@ function devInitDB(db) {
 
 /**
  * Initiates a new SQL database from the given param
- * @param {string} databaseName A db name, if not :memory: initiates a .db file
+ * @param   {string} databaseName A db name, if not :memory: initiates a .db file
  * @returns {object} SQLObject
  */
 function createDB(databaseName) {
@@ -164,9 +154,8 @@ function createDB(databaseName) {
         createUniversityTable(db)
         createCourseTable(db)
         createQuestionTable(db)
-        createAnswerTable(db)
         createReviewTable(db)
-        createReplyTable(db)
+        createCommentTable(db)
     })
 
     return db

@@ -1,25 +1,25 @@
 const { expect } = require('chai')
-const answerModel = require('../../src/models/answer')(require('./stub-db'))
+const commentModel = require('../../src/models/comment')(require('./stub-db'))
 
-describe('Answer Model', () => {
+describe('Comment Model', () => {
     it('compiles', function () {
-        expect(answerModel)
+        expect(commentModel)
     })
 
     /* Eventually test correct args, and
      * correct behaviour with absence of args
      */
-    describe('answer', () => {
-        it('it gets answers', () => {
-            return answerModel
-                .getAnswers()
-                .then(answers => expect(answers))
+    describe('Comment', () => {
+        it('it gets Comments', () => {
+            return commentModel
+                .getComments({ questionID: 1 })
+                .then(comments => expect(comments))
         })
 
-        it('it posts an answer', () => {
-            return answerModel
-                .postAnswer(1, { body: 'Hey again, Nuno', userID: 1 })
-                .then(answers => expect(answers))
+        it('it posts a Comment', () => {
+            return commentModel
+                .postComment({ questionID: 1 }, { body: 'Hey again, Nuno', userID: 1 })
+                .then(comments => expect(comments))
         })
     })
 })

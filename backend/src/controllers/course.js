@@ -1,5 +1,6 @@
 const courseModel = require('../models/course')()
 const questionModel = require('../models/question')()
+const reviewModel = require('../models/review')()
 
 /* Get all course data */
 exports.getCourses = function (req, res) {
@@ -24,13 +25,23 @@ exports.getCourseQuestions = function ({ params, query }, res) {
 
 /* Get all reviews for a course */
 exports.getCourseReviews = function ({ params, query }, res) {
-    res.send(`<h1>Page Reviews for Course #${params.id} Page #${query.p}</h1>`)
+    reviewModel.getReviews(params.id, query.p)
+        .then(data => res.json(data))
+        .catch(console.warn)
 }
 
 exports.postQuestion = function ({ params, body }, res) {
     // TODO fix userID
     body.userID = 1
     questionModel.postQuestion(params.id, body)
+        .then(data => res.json(data))
+        // TODO potentially more meaningful error code or something
+        .catch(error => res.status(400).json({ code: 400, message: error.message }))
+}
+
+/* POST new review */
+exports.postReview = function ({ params, body }, res) {
+    reviewModel.postReview(params.id, body)
         .then(data => res.json(data))
         // TODO potentially more meaningful error code or something
         .catch(error => res.status(400).json({ code: 400, message: error.message }))
