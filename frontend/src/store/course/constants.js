@@ -1,5 +1,5 @@
-import { getQuestions } from '@/utils/api/questions'
-import { getReviews } from '@/utils/api/reviews'
+import { getQuestions } from '@/utils/api/course'
+import { getReviews } from '@/utils/api/course'
 import { getCourse } from '@/utils/api/course'
 
 export const ACTIONS = {
