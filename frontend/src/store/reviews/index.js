@@ -10,7 +10,6 @@ import { REQUEST, COMMITS, ACTIONS } from './constants'
 const state = {
   loading: false,
   search: '',
-  reviews: [],
   reviewObj: {
     review: {},
     replies: []
@@ -22,7 +21,6 @@ const state = {
 }
 
 const getters = {
-  reviews: ({reviews}) => reviews.map(reviewMapper),
   review: ({reviewObj: {review}}) => reviewMapper(review),
   replies: ({reviewObj: {replies}}) => replies.map(replyMapper),
   loading: ({loading}) => loading,
@@ -30,9 +28,6 @@ const getters = {
 }
 
 const mutations = {
-  REFRESH_FEED (state, reviews) {
-    state.reviews = reviews
-  },
   TOGGLE_LOADING (state, bool) {
     state.loading = bool
   },
@@ -50,9 +45,6 @@ const mutations = {
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
-  async getReviews ({dispatch}) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REVIEWS, args: [] })
-  },
   async getReview ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_REVIEW, args: [id] })
   },

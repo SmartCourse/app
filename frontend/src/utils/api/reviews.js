@@ -1,13 +1,6 @@
 import { get, post, put } from './index'
 import format from 'date-fns/format'
 
-/**
- * Get all reviews relevant to a course
- */
-export function getReviews(course = 1) {
-  return get(`/course/${course}/reviews`)
-}
-
 /* get review */
 export function getReview(id) {
   return get(`/review/${id}`)

@@ -1,15 +1,15 @@
 <template>
     <div class="search">
-        <input 
-            type='text' 
-            v-model='search' 
-            name='search' 
+        <input
+            type='text'
+            v-model='search'
+            name='search'
             placeholder='Search...'
         />
         <ul v-if="search && suggestions.length">
-            <router-link 
+            <router-link
                 :key="item.id"
-                tag="li" 
+                tag="li"
                 v-for="item in suggestions"
                 :to="{ path: `/course/${item.id}`}"
             >
@@ -19,35 +19,34 @@
     </div>
 </template>
 
-
 <script>
 export default {
-    data() {
-        return {
-            search: '',
-            courses: []
-        }
-    },
-
-    computed: {
-        suggestions() {
-            return this.courses
-                .filter(item => item.name.match(this.search) || item.code.match(this.search))
-                .slice(0, 5)
-        }
-    },
-
-    created() {
-        fetch('course-names.json')
-            .then(response => response.json())
-            .then(data => {
-                this.courses = data.map((name, id) => ({
-                    id,
-                    name: name.split(' - ')[1],
-                    code: name.split(' - ')[0]
-                }))
-            })
+  data() {
+    return {
+      search: '',
+      courses: []
     }
+  },
+
+  computed: {
+    suggestions() {
+      return this.courses
+        .filter(item => item.name.match(this.search) || item.code.match(this.search))
+        .slice(0, 5)
+    }
+  },
+
+  created() {
+    fetch('course-names.json')
+      .then(response => response.json())
+      .then(data => {
+        this.courses = data.map((name, id) => ({
+          id,
+          name: name.split(' - ')[1],
+          code: name.split(' - ')[0]
+        }))
+      })
+  }
 }
 </script>
 
@@ -98,10 +97,7 @@ li:hover {
     input {
         width: 310px;
     }
-    
+
 }
 
-
 </style>
-
-

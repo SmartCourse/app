@@ -1,13 +1,6 @@
 import { get, post, put } from './index'
 import format from 'date-fns/format'
 
-/**
- * Get all questions relevant to a course
- */
-export function getQuestions(course = 1) {
-  return get(`/course/${course}/questions`)
-}
-
 /* get question */
 export function getQuestion(id) {
   return get(`/question/${id}`)

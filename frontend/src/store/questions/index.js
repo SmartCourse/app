@@ -9,8 +9,6 @@ import { REQUEST, COMMITS, ACTIONS } from './constants'
 
 const state = {
   loading: false,
-  search: '',
-  questions: [],
   questionObj: {
     question: {},
     answers: []
@@ -22,7 +20,6 @@ const state = {
 }
 
 const getters = {
-  questions: ({questions}) => questions.map(questionMapper),
   question: ({questionObj: {question}}) => questionMapper(question),
   answers: ({questionObj: {answers}}) => answers.map(answerMapper),
   loading: ({loading}) => loading,
@@ -30,9 +27,6 @@ const getters = {
 }
 
 const mutations = {
-  REFRESH_FEED (state, questions) {
-    state.questions = questions
-  },
   TOGGLE_LOADING (state, bool) {
     state.loading = bool
   },
@@ -50,9 +44,6 @@ const mutations = {
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
-  async getQuestions ({dispatch}, id) {
-    return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, args: [id] })
-  },
   async getQuestion ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_QUESTION, args: [id] })
   },

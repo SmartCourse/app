@@ -10,10 +10,9 @@
 import Search from '@/components/AppSearch'
 
 export default {
-  components: { Search } 
+  components: { Search }
 }
 </script>
-
 
 <style scoped>
 
@@ -38,4 +37,3 @@ p {
 }
 
 </style>
-
