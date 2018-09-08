@@ -3,7 +3,6 @@ const supertest = require('supertest')(app)
 const { expect } = require('chai')
 
 describe('Course route testing', () => {
-
     describe('GET /api/course', () => {
         let request
         before(() => {
@@ -17,7 +16,7 @@ describe('Course route testing', () => {
 
         it('returns a list', () =>
             request.then(({ body }) =>
-                expect(body.length).to.be.a('number'))
+                expect(body.length).to.be.equal(1565))
         )
         describe('contains a valid course', () => {
             it('has the correct courseID', () =>
@@ -27,12 +26,12 @@ describe('Course route testing', () => {
 
             it('has the correct courseName', () =>
                 request.then(({ body }) =>
-                    expect(body[0].courseName).to.equal('Ethics and Management'))
+                    expect(body[0].courseName).to.equal('Accounting & Financial Mgt 1A'))
             )
 
             it('has the correct courseCode', () =>
                 request.then(({ body }) =>
-                    expect(body[0].courseCode).to.equal('COMP4920'))
+                    expect(body[0].courseCode).to.equal('ACCT1501'))
             )
         })
     })
@@ -54,12 +53,12 @@ describe('Course route testing', () => {
 
         it('has the correct courseName', () =>
             request.then(({ body }) =>
-                expect(body.courseName).to.equal('Ethics and Management'))
+                expect(body.courseName).to.equal('Accounting & Financial Mgt 1A'))
         )
 
         it('has the correct courseCode', () =>
             request.then(({ body }) =>
-                expect(body.courseCode).to.equal('COMP4920'))
+                expect(body.courseCode).to.equal('ACCT1501'))
         )
     })
 
