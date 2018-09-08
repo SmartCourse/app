@@ -80,4 +80,23 @@ describe('Test answer routes', () => {
                 expect(body.filter(ans => ans.body === 'superruuu____testu').length).to.equal(1))
         )
     })
+
+    describe('POST /api/question/1/answers (ERROR)', () => {
+        let request
+
+        before(() => {
+            request = supertest
+                .post('/api/question/1/answers')
+                .send({ badBody: 'superruuu____testu' })
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(400)
+            return request
+        })
+
+        it('returns an error message', () =>
+            request.then(({ body }) =>
+                assert(body.message))
+        )
+    })
 })

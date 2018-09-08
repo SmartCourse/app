@@ -7,33 +7,38 @@ class Comment {
 
     /**
      * Post a new comment
-     * @param   {object} queryID
+     * @param   {object} queryObject   Contains the type of id and its value
      * @param   {number} pageNumber
      * @returns {Array}
      */
-    postComment(queryID, { body, userID = 1 }) {
-        const [ key, value ] = Object.entries(queryID)[0]
+    postComment(queryObject, { body, userID = 1 }) {
+        const [ key, value ] = Object.entries(queryObject)[0]
         return this.db
             .insert('comment', { [key]: value, body, userID })
             /* Still not sure on this, seems wasteful to send all new data */
-            .then(() => this.getComments(queryID, 1))
+            .then(() => this.getComments(queryObject, 1))
     }
 
     /**
      * // TODO - PAGING
      * Get all of dem comments for a specific question
-     * @param   {object} queryID
+     * @param   {object} queryObject
      * @param   {number} pageNumber
      * @returns {Array}
      */
-    getComments(queryID, pageNumber = 1) {
-        const [ key, value ] = Object.entries(queryID)[0]
+    getComments(queryObject, pageNumber = 1) {
+        const [ key, value ] = Object.entries(queryObject)[0]
         return this.db
             .queryAll(`SELECT * FROM comment WHERE ${key}=?`, [value])
     }
 
-    editComment() {
-        return Promise.resolve(true)
+    /**
+     * Edit a comment
+     * @param {number} commentID    Id of the comment to be edited
+     * @param {*}      data         Relevant fields that need to be updated
+     */
+    editComment(commentID, data) {
+        return Promise.resolve({ commentID, data })
     }
 }
 

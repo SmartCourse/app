@@ -6,7 +6,7 @@ class Review {
     }
 
     /**
-     * Post a question.
+     * Post a review.
      * @param {id} courseID  The id from the route param
      * @param {*}  data      controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
@@ -19,9 +19,9 @@ class Review {
     }
 
     /**
-     * Gets specific question corresponding to an id.
+     * Gets specific review corresponding to an id.
      * @param   {number}  reviewID   Required id param.
-     * @returns {object}             Single question
+     * @returns {object}
      */
     getReview(reviewID) {
         return this.db
@@ -30,9 +30,9 @@ class Review {
 
     /**
      * // TODO - PAGING
-     * Get all of dem reviews for a specific question
-     * @param   {number}  courseID
-     * @param   {number}  pageNumber
+     * Get all of dem reviews for a specific course
+     * @param   {number}  courseID      The courseID the review corresponds to
+     * @param   {number}  pageNumber    The page of the reviews list
      * @returns {Array}
      */
     getReviews(courseID, pageNumber = 1) {
