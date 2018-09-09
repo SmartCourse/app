@@ -32,8 +32,8 @@ export function questionMapper({ questionID, likes, userID, title, body, timesta
 /**
  * @param {object} data the data associated with the new question
  */
-export function postQuestion(data) {
-  return post('/question', { data })
+export function postQuestion(id, data) {
+  return post(`/course/${id}/question`, { data })
 }
 
 export function getAnswers(id) {

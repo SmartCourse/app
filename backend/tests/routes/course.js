@@ -107,9 +107,10 @@ describe('Course route testing', () => {
             return request
         })
 
-        it('Successfully provides a new question ID', () =>
+        it('returns the question we POSTed', () =>
             request.then(({ body }) => {
-                expect(body).to.be.a('number')
+                expect(body.title).to.equal('jeff')
+                expect(body.body).to.equal('testu')
             })
         )
     })
