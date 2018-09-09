@@ -70,7 +70,7 @@ export default {
           id: this.courseID
         })
         .then(() =>
-          this.$router.push({ name: 'question', params: { qid: String(this.question.id) }}))
+          this.$router.push({ name: 'question', params: { id: String(this.question.id) }}))
     },
     submitAnswer (answerForm) {
       // check that they actually typed something
