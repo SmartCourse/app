@@ -84,8 +84,8 @@ export default {
   },
   created () {
     if (this.questionID) {
-      this.$store.dispatch('questions/getAnswers', this.id)
-      this.$store.dispatch('questions/getQuestion', this.id)
+      this.$store.dispatch('questions/getAnswers', this.questionID)
+      this.$store.dispatch('questions/getQuestion', this.questionID)
     }
   }
 }
