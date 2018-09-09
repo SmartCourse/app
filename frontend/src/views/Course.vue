@@ -23,7 +23,9 @@
 
       <div v-if="courseTab=='questions'">
         <div class='button-container'>
-            <AppButton @click.native="newQuestion">Ask Question</AppButton>
+            <router-link :to="{name: 'home'}">
+                <AppButton>Ask Question</AppButton>
+            </router-link>
         </div>
         <Feed
           feedType="QuestionCard"
@@ -33,7 +35,9 @@
 
       <div v-if="courseTab=='reviews'">
         <div class='button-container'>
-            <AppButton @click.native="newReview">Ask Question</AppButton>
+            <router-link :to="{name: 'home'}">
+                <AppButton>Add Review</AppButton>
+            </router-link>
         </div>
         <Feed
             feedType="ReviewCard"
@@ -68,17 +72,6 @@ export default {
       courseTab: 'courseTab',
       courseInfo: 'course'
     })
-  },
-  methods: {
-    newQuestion () {
-      // TODO testing only
-      this.$router.push({path: '/'})
-      // this.$router.push({path: `/course/${courseInfo.id}/question`})
-    },
-    newReview () {
-      // TODO testing only
-      this.$router.push({path: '/'})
-    }
   },
   created () {
     this.$store.dispatch('course/getCourse', this.id)
