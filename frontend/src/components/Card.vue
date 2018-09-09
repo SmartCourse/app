@@ -11,5 +11,6 @@
   border: var(--border);
   border-radius: 2px;
   padding: 10px 10px;
+  background-color:white;
 }
 </style>

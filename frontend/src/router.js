@@ -31,10 +31,18 @@ export default new Router({
       component: () => import('./views/Course')
     },
     {
+      path: '/question',
+      name: 'newQuestion',
+      props: ({query: { cid }}) => ({
+        courseID: cid
+      }),
+      component: () => import('./views/Question')
+    },
+    {
       path: '/question/:id',
       name: 'question',
       props: ({params: { id }}) => ({
-        id
+        questionID: id
       }),
       component: () => import('./views/Question')
     },

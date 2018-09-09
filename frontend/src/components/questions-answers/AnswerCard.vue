@@ -29,6 +29,5 @@ export default {
 }
 </script>
 
-<style scoped>
-@import '../../css/card.less';
+<style scoped src='../../css/card.less'>
 </style>

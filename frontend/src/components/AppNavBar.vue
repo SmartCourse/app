@@ -2,7 +2,7 @@
     <div id="nav">
       <AppLogo :first="'S'" :last="'C'"/>
       <div class="links">
-        <router-link class="link-item" tag="h2" to="/">Home</router-link> | 
+        <router-link class="link-item" tag="h2" to="/">Home</router-link> |
         <router-link class="link-item" tag="h2" to="/course">Course</router-link>
       </div>
     </div>
@@ -17,6 +17,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: var(--border);
+    background-color: white;
 }
 
 .links {

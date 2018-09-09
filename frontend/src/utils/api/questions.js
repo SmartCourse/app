@@ -1,13 +1,6 @@
 import { get, post, put } from './index'
 import format from 'date-fns/format'
 
-/**
- * Get all questions relevant to a course
- */
-export function getQuestions(course = 1) {
-  return get(`/course/${course}/questions`)
-}
-
 /* get question */
 export function getQuestion(id) {
   return get(`/question/${id}`)
@@ -39,8 +32,8 @@ export function questionMapper({ questionID, likes, userID, title, body, timesta
 /**
  * @param {object} data the data associated with the new question
  */
-export function postQuestion(data) {
-  return post('/question', { data })
+export function postQuestion(id, data) {
+  return post(`/course/${id}/question`, { data })
 }
 
 export function getAnswers(id) {

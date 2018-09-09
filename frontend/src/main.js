@@ -8,6 +8,7 @@ import LoadingSpinner from '@/components/LoadingSpinner'
 import AppLogo from '@/components/AppLogo'
 
 Vue.config.productionTip = false
+Vue.config.devtools = true
 Vue.component('LoadingSpinner', LoadingSpinner)
 Vue.component('AppLogo', AppLogo)
 

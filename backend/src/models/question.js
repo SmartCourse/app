@@ -35,6 +35,7 @@ class Question {
     postQuestion(courseID, { userID, title, body }) {
         return this.db
             .insert('question', { courseID, userID, title, body })
+            .then((questionID) => this.getQuestion(questionID))
     }
 }
 
