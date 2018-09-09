@@ -1,6 +1,6 @@
 <template>
   <div class="course">
-    <router-link :to="{ name: 'newQuestion', params: { id } }">
+    <router-link :to="{ name: 'question', query: { cid: id } }">
       <AppButton>Ask A Question</AppButton>
     </router-link>
     <Feed

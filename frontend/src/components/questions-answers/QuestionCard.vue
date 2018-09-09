@@ -7,7 +7,7 @@
                 <p class="arrow">&#8681;</p>
             </div>
             <div class="content">
-                <router-link tag="h2" :to="{ name: 'question', params: { id: String(question.id) }}">
+                <router-link tag="h2" :to="{ name: 'question', query: { qid: String(question.id) }}">
                     {{ question.title }}
                 </router-link>
                 <p>{{ question.body }}</p>
