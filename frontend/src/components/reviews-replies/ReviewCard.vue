@@ -29,7 +29,8 @@ export default {
     author: Number,
     title: String,
     body: String,
-    published: Date
+    published: Date,
+    likes: Number
   }
 }
 </script>

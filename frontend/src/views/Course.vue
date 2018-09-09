@@ -72,12 +72,12 @@ export default {
   methods: {
     newQuestion () {
       // TODO testing only
-      this.$router.push({path: "/"})
+      this.$router.push({path: '/'})
       // this.$router.push({path: `/course/${courseInfo.id}/question`})
     },
     newReview () {
       // TODO testing only
-      this.$router.push({path: "/"})
+      this.$router.push({path: '/'})
     }
   },
   created () {
