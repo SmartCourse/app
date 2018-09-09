@@ -22,6 +22,9 @@
       </div>
 
       <div v-if="courseTab=='questions'">
+        <div class='button-container'>
+            <AppButton @click.native="newQuestion">Ask Question</AppButton>
+        </div>
         <Feed
           feedType="QuestionCard"
           :items="questions"
@@ -29,6 +32,9 @@
       </div>
 
       <div v-if="courseTab=='reviews'">
+        <div class='button-container'>
+            <AppButton @click.native="newReview">Ask Question</AppButton>
+        </div>
         <Feed
             feedType="ReviewCard"
             :items="reviews"
@@ -42,6 +48,7 @@
 // @ is an alias to /src
 import Feed from '@/components/course/Feed'
 import TabButton from '@/components/course/TabButton'
+import AppButton from '@/components/AppButton'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -51,7 +58,8 @@ export default {
   },
   components: {
     Feed,
-    TabButton
+    TabButton,
+    AppButton
   },
   computed: {
     ...mapGetters('course', {
@@ -60,6 +68,17 @@ export default {
       courseTab: 'courseTab',
       courseInfo: 'course'
     })
+  },
+  methods: {
+    newQuestion () {
+      // TODO testing only
+      this.$router.push({path: "/"})
+      // this.$router.push({path: `/course/${courseInfo.id}/question`})
+    },
+    newReview () {
+      // TODO testing only
+      this.$router.push({path: "/"})
+    }
   },
   created () {
     this.$store.dispatch('course/getCourse', this.id)
@@ -72,6 +91,11 @@ export default {
 <style scoped>
 h2 {
     margin:0;
+}
+
+h2:hover {
+    /* TODO fix this in card.less */
+    color:black;
 }
 
 .course-header {
@@ -94,6 +118,10 @@ h2 {
 .course-info {
     padding-left:20px;
     padding-right:20px;
+}
+
+.button-container {
+    text-align:right;
 }
 
 </style>

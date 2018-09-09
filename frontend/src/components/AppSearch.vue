@@ -83,6 +83,7 @@ ul {
 
 li {
     font-size: 0.55em;
+    background: white;
 }
 
 li:hover {

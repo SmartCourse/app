@@ -34,7 +34,8 @@ html, body {
   --border-thick: 2px solid rgba(160, 178, 178, 0.5);
   --box-shadow-active: 0px 0px 0px 1px #ddd;
   --theme: #00a99d;
-  --theme-light: rgba(#00a99d, 0.6);
+  /*--theme-light: rgba(#00a99d, 0.6);*/
+  --theme-light: rgba(102, 203, 196);
   --font-large: 40px;
   --font-large-mobile: 24px;
   --font-small: 16px;
