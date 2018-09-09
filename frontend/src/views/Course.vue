@@ -3,9 +3,15 @@
     <div class="course-header">
         <h1>{{ courseInfo.name }}</h1>
         <h2>{{ courseInfo.code }}</h2>
-        <button @click="$store.dispatch('course/changeTab', 'info')" class="tab-button tab-button-active">info</button>
-        <button @click="$store.dispatch('course/changeTab', 'questions')" class="tab-button">questions</button>
-        <button @click="$store.dispatch('course/changeTab', 'reviews')" class="tab-button">reviews</button>
+        <TabButton @click.native="$store.dispatch('course/changeTab', 'info')" :active="courseTab=='info'">
+            info
+        </TabButton>
+        <TabButton @click.native="$store.dispatch('course/changeTab', 'questions')" :active="courseTab=='questions'">
+            questions
+        </TabButton>
+        <TabButton @click.native="$store.dispatch('course/changeTab', 'reviews')" :active="courseTab=='reviews'">
+            reviews
+        </TabButton>
     </div>
     <div class="course-content">
       <div v-if="courseTab=='info'" class="course-tab">
@@ -35,7 +41,8 @@
 
 <script>
 // @ is an alias to /src
-import Feed from '@/components/Feed'
+import Feed from '@/components/course/Feed'
+import TabButton from '@/components/course/TabButton'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -44,7 +51,8 @@ export default {
     id: String
   },
   components: {
-    Feed
+    Feed,
+    TabButton
   },
   computed: {
     ...mapGetters('course', {
