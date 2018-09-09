@@ -86,11 +86,6 @@ h2 {
     margin:0;
 }
 
-h2:hover {
-    /* TODO fix this in card.less */
-    color:black;
-}
-
 .course-header {
     margin-top:20px;
     background-color:white;
