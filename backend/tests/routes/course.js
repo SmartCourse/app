@@ -107,15 +107,10 @@ describe('Course route testing', () => {
             return request
         })
 
-        it('has the right number of questions', () =>
-            request.then(({ body }) =>
-                expect(body.length >= 1))
-        )
-
-        it('has the question we POSTed', () =>
+        it('returns the question we POSTed', () =>
             request.then(({ body }) => {
-                expect(body.filter(question => question.title === 'jeff').length).to.equal(1)
-                expect(body.filter(question => question.body === 'testu').length).to.equal(1)
+                expect(body.title).to.equal('jeff')
+                expect(body.body).to.equal('testu')
             })
         )
     })

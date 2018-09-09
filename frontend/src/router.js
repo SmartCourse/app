@@ -31,6 +31,14 @@ export default new Router({
       component: () => import('./views/Course')
     },
     {
+      path: '/question',
+      name: 'newQuestion',
+      props: ({params: { id }}) => ({
+        id
+      }),
+      component: () => import('./views/NewQuestion')
+    },
+    {
       path: '/question/:id',
       name: 'question',
       props: ({params: { id }}) => ({
