@@ -29,7 +29,7 @@ describe('QuestionCard.vue', () => {
   })
 
   it('renders question publish time', function () {
-    expect(new Date(this.wrapper.find('time').text()).toDateString()).to.deep.equal(this.card.published)
+    expect(this.wrapper.find('time').text()).to.equal(this.card.published)
   })
 
   it('renders question body', function () {
