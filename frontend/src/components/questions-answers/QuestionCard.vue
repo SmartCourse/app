@@ -30,7 +30,7 @@ export default {
     likes: Number,
     title: String,
     body: String,
-    published: Date
+    published: String
   }
 }
 </script>

@@ -29,7 +29,7 @@ export default {
     author: Number,
     title: String,
     body: String,
-    published: Date,
+    published: String,
     likes: Number
   }
 }

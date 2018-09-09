@@ -3,7 +3,7 @@
       <div v-if="!loading">
 
         <!-- No question to render, show question form-->
-        <div v-if="!questionID">
+        <div v-if="courseID">
           <QuestionForm @submitQuestionForm="submitQuestion" class="questionForm">
             <span class="form-failure"
               v-if="error.code">{{error.message}}
@@ -70,7 +70,7 @@ export default {
           id: this.courseID
         })
         .then(() =>
-          this.$router.push({name: 'question', query: { qid: String(this.question.id) }}))
+          this.$router.push({ name: 'question', params: { qid: String(this.question.id) }}))
     },
     submitAnswer (answerForm) {
       // check that they actually typed something
