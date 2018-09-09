@@ -15,8 +15,8 @@ class Course {
     }
 
     /**
-     * TODO add 'uni' param, add paging
-     * @returns info specific to single course.
+     * Gets a course instance from the DB.
+     * @returns {object}    Info specific to single course.
      */
     getCourse(courseID) {
         return this.db

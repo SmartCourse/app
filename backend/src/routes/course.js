@@ -17,4 +17,7 @@ router.post('/:id/question', courseController.postQuestion)
 /* Get page (N) reviews for a course */
 router.get('/:id/reviews', courseController.getCourseReviews)
 
+/* create a new review for course */
+router.post('/:id/review', courseController.postReview)
+
 module.exports = router

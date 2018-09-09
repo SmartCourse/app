@@ -1,11 +1,14 @@
 const express = require('express')
 const router = express.Router()
 
-/* Get data for a specific university */
-router.get('/:id', function (req, res) {
-    // let uid = req.params.id;
-
-    res.send('<h1></h1>')
+/* Get data for a specific user */
+router.get('/:id', function (_, res) {
+    res.json({
+        userID: 1,
+        firstName: 'Walker',
+        lastName: 'Francis',
+        email: 'alnuno-das-hinds@gmail.com'
+    })
 })
 
 module.exports = router
