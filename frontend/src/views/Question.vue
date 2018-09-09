@@ -2,18 +2,30 @@
     <section class="q">
       <div v-if="!loading">
 
-        <QuestionCard :question="question"/>
+        <!-- No question to render, show question form-->
+        <div v-if="!questionID">
+          <QuestionForm @submitQuestionForm="submitQuestion" class="questionForm">
+            <span class="form-failure"
+              v-if="error.code">{{error.message}}
+            </span>
+          </QuestionForm>
+        </div>
 
-        <AnswerForm @submitAnswerForm="submitAnswer" class="answerForm">
-          <span class="form-failure"
-              v-if="error.code">{{error.message}}</span>
-        </AnswerForm>
+        <!-- Otherwise render the specified question-->
+        <div v-else>
+          <QuestionCard :question="question"/>
 
-        <ul v-if="answers.length">
-          <li v-for="answer in answers" :key="answer.id">
-            <AnswerCard :answer="answer"/>
-          </li>
-        </ul>
+          <AnswerForm @submitAnswerForm="submitAnswer" class="answerForm">
+            <span class="form-failure"
+                v-if="error.code">{{error.message}}</span>
+          </AnswerForm>
+
+          <ul v-if="answers.length">
+            <li v-for="answer in answers" :key="answer.id">
+              <AnswerCard :answer="answer"/>
+            </li>
+          </ul>
+        </div>
 
       </div>
       <!--<LoadingSpinner v-else/>-->
@@ -22,6 +34,7 @@
 
 <script>
 import QuestionCard from '@/components/questions-answers/QuestionCard'
+import QuestionForm from '@/components/questions-answers/QuestionForm'
 import AnswerCard from '@/components/questions-answers/AnswerCard'
 import AnswerForm from '@/components/questions-answers/AnswerForm'
 import { mapGetters } from 'vuex'
@@ -29,11 +42,13 @@ import { mapGetters } from 'vuex'
 export default {
   components: {
     QuestionCard,
+    QuestionForm,
     AnswerCard,
     AnswerForm
   },
   props: {
-    id: String
+    courseID: String,
+    questionID: String
   },
   computed: {
     ...mapGetters('questions', {
@@ -44,6 +59,19 @@ export default {
     })
   },
   methods: {
+    submitQuestion (questionForm) {
+      // check that they actually typed something
+      if (questionForm.title === '' || questionForm.body === '') {
+        return
+      }
+      this.$store.dispatch('questions/postQuestion',
+        {
+          form: questionForm,
+          id: this.courseID
+        })
+        .then(() =>
+          this.$router.push({name: 'question', query: { qid: String(this.question.id) }}))
+    },
     submitAnswer (answerForm) {
       // check that they actually typed something
       if (answerForm.body === '') {
@@ -55,8 +83,10 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('questions/getAnswers', this.id)
-    this.$store.dispatch('questions/getQuestion', this.id)
+    if (this.questionID) {
+      this.$store.dispatch('questions/getAnswers', this.questionID)
+      this.$store.dispatch('questions/getQuestion', this.questionID)
+    }
   }
 }
 </script>
