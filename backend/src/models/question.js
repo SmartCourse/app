@@ -6,7 +6,7 @@ class Question {
     }
 
     /**
-     * TODO - PAGING (log avoids unused variable)
+     * TODO - PAGING
      * @param   {id}     courseID    The id of the couse we're getting questions for.
      * @param   {number} pageNumber  The pageNumber, defaults to 1?, if higher than max should just give max.
      * @returns {object}
