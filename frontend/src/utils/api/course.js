@@ -1,5 +1,4 @@
-import { get, post, put } from './index'
-import format from 'date-fns/format'
+import { get } from './index'
 
 /**
  * Get all questions relevant to a course

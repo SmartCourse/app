@@ -41,10 +41,14 @@ html, body {
   --font-small-mobile: 12px;
 }
 
-main {
+#app {
+  background-color: var(--color-light-gray);
+}
+
+.main-content {
   /* arbitrary */
+  min-height: 80vh;
   max-width: 768px;
-  min-height: 100vh;
   margin: auto;
 }
 

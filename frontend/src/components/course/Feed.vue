@@ -1,6 +1,5 @@
 <template>
   <div class="Feed">
-    <h1>{{ title }}</h1>
     <section class="questions">
       <ol>
         <li :key="item.id" v-for="item in items">
@@ -22,7 +21,6 @@ export default {
     ReviewCard
   },
   props: {
-    title: String,
     feedType: String,
     items: Array
   }
@@ -31,5 +29,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="less">
+h4 {
 
+}
 </style>

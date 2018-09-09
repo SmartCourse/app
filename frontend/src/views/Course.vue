@@ -1,8 +1,9 @@
 <template>
-  <div class="course">
+  <div class="main-content course">
     <div class="course-header">
-        <h1>{{ courseInfo.name }}</h1>
-        <h2>{{ courseInfo.code }}</h2>
+        <div class="course-header-title">
+            <h2>{{ courseInfo.code }} - {{ courseInfo.name }}</h2>
+        </div>
         <TabButton @click.native="$store.dispatch('course/changeTab', 'info')" :active="courseTab=='info'">
             info
         </TabButton>
@@ -14,23 +15,21 @@
         </TabButton>
     </div>
     <div class="course-content">
-      <div v-if="courseTab=='info'" class="course-tab">
+      <div v-if="courseTab=='info'" class="course-info">
         <p>
           Additional stuff goes here mebe.
         </p>
       </div>
 
-      <div v-if="courseTab=='questions'" class="course-tab">
+      <div v-if="courseTab=='questions'">
         <Feed
-          title="Latest Questions"
           feedType="QuestionCard"
           :items="questions"
         />
       </div>
 
-      <div v-if="courseTab=='reviews'" class="course-tab">
+      <div v-if="courseTab=='reviews'">
         <Feed
-          title="Latest Reviews"
             feedType="ReviewCard"
             :items="reviews"
           />
@@ -69,3 +68,32 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+h2 {
+    margin:0;
+}
+
+.course-header {
+    margin-top:20px;
+    background-color:white;
+}
+
+.course-header-title {
+    padding:20px;
+    padding-bottom:0px;
+}
+
+.course-content {
+    background-color:white;
+    margin-top:2px;
+    padding:10px;
+    min-height:50vh;
+}
+
+.course-info {
+    padding-left:20px;
+    padding-right:20px;
+}
+
+</style>

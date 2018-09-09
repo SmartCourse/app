@@ -1,6 +1,4 @@
-import { getQuestions } from '@/utils/api/course'
-import { getReviews } from '@/utils/api/course'
-import { getCourse } from '@/utils/api/course'
+import { getQuestions, getReviews, getCourse } from '@/utils/api/course'
 
 export const ACTIONS = {
   GET_QUESTIONS: Symbol('getQuestions'),

@@ -26,7 +26,6 @@ button {
     transition: 0.2s ease-in-out box-shadow;
 }
 
-
 .tab-button-active {
     border-bottom: solid 5px var(--theme);
 }

@@ -1,5 +1,5 @@
 <template>
-    <section class="q">
+    <section class="main-content">
       <div v-if="!loading">
 
         <QuestionCard v-bind="question"/>

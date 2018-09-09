@@ -17,6 +17,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: var(--border);
+    background-color: white;
 }
 
 .links {

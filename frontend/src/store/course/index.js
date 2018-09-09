@@ -66,7 +66,7 @@ const actions = {
     return dispatch('doRequest', { action: ACTIONS.GET_COURSE, args: [id] })
   },
   changeTab ({commit}, tab) {
-    commit('FOCUS_TAB',tab)
+    commit('FOCUS_TAB', tab)
   }
 }
 
