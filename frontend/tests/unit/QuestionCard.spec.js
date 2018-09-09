@@ -7,7 +7,7 @@ describe('QuestionCard.vue', () => {
     this.card = {
       id: 1,
       likes: 10,
-      published: new Date(),
+      published: new Date().toDateString(),
       title:
         'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
       body:
@@ -29,7 +29,7 @@ describe('QuestionCard.vue', () => {
   })
 
   it('renders question publish time', function () {
-    expect(new Date(this.wrapper.find('time').text().slice(1, -1))).to.deep.equal(this.card.published)
+    expect(new Date(this.wrapper.find('time').text()).toDateString()).to.deep.equal(this.card.published)
   })
 
   it('renders question body', function () {
