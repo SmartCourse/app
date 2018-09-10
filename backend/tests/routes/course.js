@@ -150,7 +150,7 @@ describe('Course route testing', () => {
             request = supertest
                 .post('/api/course/1/review')
                 .set('Accept', 'application/json')
-                .send({ body: 'barry is good' })
+                .send({ title: 'I\'m a real boy', body: 'barry is good' })
                 .expect('Content-Type', /json/)
                 .expect(200)
             return request
