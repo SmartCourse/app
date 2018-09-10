@@ -1,9 +1,9 @@
 <template>
-    <section class="q">
+    <section class="main-content">
       <div v-if="!loading">
 
         <!-- No question to render, show question form-->
-        <div v-if="!questionID">
+        <div v-if="courseID">
           <QuestionForm @submitQuestionForm="submitQuestion" class="questionForm">
             <span class="form-failure"
               v-if="error.code">{{error.message}}
@@ -13,7 +13,7 @@
 
         <!-- Otherwise render the specified question-->
         <div v-else>
-          <QuestionCard :question="question"/>
+          <QuestionCard v-bind="question"/>
 
           <AnswerForm @submitAnswerForm="submitAnswer" class="answerForm">
             <span class="form-failure"
@@ -47,8 +47,8 @@ export default {
     AnswerForm
   },
   props: {
-    courseID: String,
-    questionID: String
+    courseID: String, // This is a query
+    questionID: String // This is a param
   },
   computed: {
     ...mapGetters('questions', {
@@ -70,7 +70,7 @@ export default {
           id: this.courseID
         })
         .then(() =>
-          this.$router.push({name: 'question', query: { qid: String(this.question.id) }}))
+          this.$router.push({ name: 'question', params: { id: String(this.question.id) } }))
     },
     submitAnswer (answerForm) {
       // check that they actually typed something
@@ -86,6 +86,9 @@ export default {
     if (this.questionID) {
       this.$store.dispatch('questions/getAnswers', this.questionID)
       this.$store.dispatch('questions/getQuestion', this.questionID)
+    } else {
+      // stop old answers showing up after creating a new question
+      this.$store.dispatch('questions/resetState')
     }
   }
 }

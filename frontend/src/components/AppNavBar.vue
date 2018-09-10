@@ -1,9 +1,10 @@
 <template>
     <div id="nav">
-      <AppLogo :first="'S'" :last="'C'"/>
+      <router-link class="link-item" to="/">
+          <AppLogo :first="'S'" :last="'C'"/>
+      </router-link>
       <div class="links">
-        <router-link class="link-item" tag="h2" to="/">Home</router-link> |
-        <router-link class="link-item" tag="h2" to="/course">Course</router-link>
+        <!--router-link class="link-item" to="/">Login</router-link-->
       </div>
     </div>
 </template>
@@ -17,6 +18,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: var(--border);
+    background-color: white;
 }
 
 .links {

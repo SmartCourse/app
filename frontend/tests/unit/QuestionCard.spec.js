@@ -7,14 +7,14 @@ describe('QuestionCard.vue', () => {
     this.card = {
       id: 1,
       likes: 10,
-      published: Date.now(),
+      published: new Date().toDateString(),
       title:
         'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
       body:
         'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto'
     }
     this.wrapper = shallowMount(QuestionCard, {
-      propsData: { question: this.card },
+      propsData: { ...this.card },
       stubs: {
         'router-link': RouterLinkStub
       }
@@ -29,7 +29,7 @@ describe('QuestionCard.vue', () => {
   })
 
   it('renders question publish time', function () {
-    expect(this.wrapper.find('time').text()).to.include(this.card.published)
+    expect(this.wrapper.find('time').text()).to.equal(this.card.published)
   })
 
   it('renders question body', function () {

@@ -1,8 +1,8 @@
 <template>
-    <section class="q">
+    <section class="main-content">
       <div v-if="!loading">
 
-        <ReviewCard :review="review"/>
+        <ReviewCard v-bind="review"/>
 
       </div>
       <!--<LoadingSpinner v-else/>-->

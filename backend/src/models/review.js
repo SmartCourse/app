@@ -11,9 +11,9 @@ class Review {
      * @param {*}  data      controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
-    postReview(courseID, { body, userID = 1 }) {
+    postReview(courseID, { title, body, userID = 1 }) {
         return this.db
-            .insert('review', { courseID, body, userID })
+            .insert('review', { courseID, body, title, userID })
             /* Still not sure on this, seems wasteful to send all new data */
             .then(() => this.getReviews(courseID, 1))
     }

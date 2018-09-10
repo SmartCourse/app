@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="main-content home">
     <AppLogo :first="'Smart'" :last="'Course'"/>
     <p>Making the most of your degree.</p>
     <Search/>
@@ -19,11 +19,14 @@ export default {
 .home {
   font-size: var(--font-large);
   margin: 0 auto;
-  height: 80vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color:white;
+  /* override main-content width */
+  max-width: none;
+  width:100%;
 }
 
 p {
