@@ -49,7 +49,7 @@ html, body {
 
 .main-content {
   /* arbitrary */
-  min-height: 80vh;
+  min-height: calc(100vh - 150px);
   max-width: 768px;
   margin: auto;
 }
