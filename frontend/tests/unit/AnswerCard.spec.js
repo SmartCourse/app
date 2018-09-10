@@ -7,7 +7,7 @@ describe('AnswerCard.vue', () => {
     this.card = {
       id: 1,
       likes: 10,
-      published: Date.now(),
+      published: new Date().toDateString(),
       body:
         'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto'
     }

@@ -29,6 +29,7 @@ html, body {
 :root {
   --color-gray: #d5d5d5;
   --color-light-gray: #eaeaea;
+  --color-very-light-gray: #f2f2f2;
   --border-dark: 1px solid var(--color-gray);
   --border: 1px solid var(--color-light-gray);
   --border-thick: 2px solid rgba(160, 178, 178, 0.5);
@@ -43,14 +44,25 @@ html, body {
 }
 
 #app {
-  background-color: var(--color-light-gray);
+  background-color: var(--color-very-light-gray);
 }
 
 .main-content {
   /* arbitrary */
-  min-height: 80vh;
+  min-height: calc(100vh - 150px);
   max-width: 768px;
   margin: auto;
+}
+
+a {
+  color:inherit;
+  text-decoration:inherit;
+}
+
+a:hover {
+  color:inherit;
+  text-decoration:inherit;
+  cursor:pointer;
 }
 
 ol, ul {

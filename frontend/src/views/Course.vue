@@ -23,7 +23,7 @@
 
       <div v-if="courseTab=='questions'">
         <div class='button-container'>
-            <router-link :to="{ name: 'question', query: {cid: courseInfo.id} }">
+            <router-link :to="{ name: 'newQuestion', query: {cid: courseInfo.id} }">
                 <AppButton>Ask Question</AppButton>
             </router-link>
         </div>
@@ -35,7 +35,7 @@
 
       <div v-if="courseTab=='reviews'">
         <div class='button-container'>
-            <router-link :to="{ name: 'review', query: {cid: courseInfo.id} }">
+            <router-link :to="{ name: 'newReview', query: {cid: courseInfo.id} }">
                 <AppButton>Add Review</AppButton>
             </router-link>
         </div>
