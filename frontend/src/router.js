@@ -26,7 +26,7 @@ export default new Router({
       path: '/question',
       name: 'newQuestion',
       props: ({query: { cid }}) => ({
-        courseID: cid
+        courseID: String(cid)
       }),
       component: () => import('./views/Question')
     },
