@@ -67,6 +67,7 @@ function createReviewTable (db) {
         reviewID INTEGER PRIMARY KEY AUTOINCREMENT,
         courseID INTEGER NOT NULL,
         userID INTEGER NOT NULL,
+        title TEXT NOT NULL,
         body TEXT NOT NULL,
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         likes INTEGER DEFAULT '0.00',
@@ -99,6 +100,7 @@ function devInitDB(db) {
     }
 
     const review = {
+        title: 'title',
         body: 'Would bang out of 10!'
     }
 
