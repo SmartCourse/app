@@ -32,4 +32,3 @@ export function RESET_STATE (state, propStrings) {
     state[prop] = JSON.parse(propStrings[prop])
   }
 }
-

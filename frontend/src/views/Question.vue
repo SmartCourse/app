@@ -47,8 +47,8 @@ export default {
     AnswerForm
   },
   props: {
-    courseID: String,   // This is a query
-    questionID: String  // This is a param
+    courseID: String, // This is a query
+    questionID: String // This is a param
   },
   computed: {
     ...mapGetters('questions', {
