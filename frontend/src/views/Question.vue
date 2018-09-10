@@ -87,8 +87,8 @@ export default {
       this.$store.dispatch('questions/getAnswers', this.questionID)
       this.$store.dispatch('questions/getQuestion', this.questionID)
     } else {
-      // hack to stop old answers showing up after creating a new question
-      this.$store.dispatch('questions/getAnswers', "-1")
+      // stop old answers showing up after creating a new question
+      this.$store.dispatch('questions/resetState')
     }
   }
 }

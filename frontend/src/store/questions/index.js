@@ -3,11 +3,11 @@ import {
   answerMapper
 } from '@/utils/api/questions'
 
-import { doRequestFactory } from '@/store/utils'
+import { doRequestFactory, resetStateFactory, RESET_STATE } from '@/store/utils'
 
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
-const state = {
+const initialState = {
   loading: false,
   questionObj: {
     question: {},
@@ -18,6 +18,7 @@ const state = {
     message: ''
   }
 }
+const state = JSON.parse(JSON.stringify(initialState))
 
 const getters = {
   question: ({questionObj: {question}}) => questionMapper(question),
@@ -39,11 +40,13 @@ const mutations = {
   API_ERROR (state, {code, message}) {
     state.error.code = code
     state.error.message = message
-  }
+  },
+  RESET_STATE
 }
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
+  resetState: resetStateFactory(initialState),
   async getQuestion ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_QUESTION, args: [id] })
   },
