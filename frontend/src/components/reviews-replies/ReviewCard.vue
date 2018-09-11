@@ -22,8 +22,7 @@
 
 <script>
 import Card from '@/components/Card'
-// Is UserSummary only for questions/answers???
-import User from '../questions-answers/UserSummary'
+import User from '@/components/UserSummary'
 
 export default {
   components: { Card, User },

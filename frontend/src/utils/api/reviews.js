@@ -35,7 +35,7 @@ export function postReview(id, data) {
 }
 
 export function getReplies(id) {
-  return get(`/review/${id}/replies`)
+  return get(`/review/${id}/comments`)
 }
 
 /**
@@ -43,7 +43,7 @@ export function getReplies(id) {
  * @param {object} body the data associated with the new reply
  */
 export function postReply(id, data) {
-  return post(`/review/${id}/replies`, { data })
+  return post(`/review/${id}/comments`, { data })
 }
 
 /**

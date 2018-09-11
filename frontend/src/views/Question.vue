@@ -4,7 +4,7 @@
 
         <!-- No question to render, show question form-->
         <div v-if="courseID">
-          <QuestionForm @submitQuestionForm="submitQuestion" class="questionForm">
+          <QuestionForm @submitQuestionForm="submitQuestion">
             <span class="form-failure"
               v-if="error.code">{{error.message}}
             </span>
@@ -15,14 +15,14 @@
         <div v-else>
           <QuestionCard v-bind="question"/>
 
-          <AnswerForm @submitAnswerForm="submitAnswer" class="answerForm">
+          <AnswerForm @submitCommentForm="submitAnswer" :type="commentType">
             <span class="form-failure"
                 v-if="error.code">{{error.message}}</span>
           </AnswerForm>
 
           <ul v-if="answers.length">
             <li v-for="answer in answers" :key="answer.id">
-              <AnswerCard :answer="answer"/>
+              <AnswerCard :comment="answer"/>
             </li>
           </ul>
         </div>
@@ -35,8 +35,8 @@
 <script>
 import QuestionCard from '@/components/questions-answers/QuestionCard'
 import QuestionForm from '@/components/questions-answers/QuestionForm'
-import AnswerCard from '@/components/questions-answers/AnswerCard'
-import AnswerForm from '@/components/questions-answers/AnswerForm'
+import AnswerCard from '@/components/comments/CommentCard'
+import AnswerForm from '@/components/comments/CommentForm'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -49,6 +49,11 @@ export default {
   props: {
     courseID: String, // This is a query
     questionID: String // This is a param
+  },
+  data() {
+    return {
+      commentType: 'Answer'
+    }
   },
   computed: {
     ...mapGetters('questions', {

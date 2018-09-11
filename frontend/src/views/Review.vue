@@ -14,6 +14,17 @@
         <!-- Otherwise render the specified review-->
         <div v-else>
           <ReviewCard v-bind="review"/>
+
+          <ReplyForm @submitCommentForm="submitReply" :type="commentType">
+            <span class="form-failure"
+                v-if="error.code">{{error.message}}</span>
+          </ReplyForm>
+
+          <ul v-if="replies.length">
+            <li v-for="answer in replies" :key="answer.id">
+              <ReplyCard :comment="answer"/>
+            </li>
+          </ul>
         </div>
 
       </div>
@@ -24,16 +35,33 @@
 <script>
 import ReviewCard from '@/components/reviews-replies/ReviewCard'
 import ReviewForm from '@/components/reviews-replies/ReviewForm'
+import ReplyCard from '@/components/comments/CommentCard'
+import ReplyForm from '@/components/comments/CommentForm'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     ReviewCard,
-    ReviewForm
+    ReviewForm,
+    ReplyCard,
+    ReplyForm
   },
   props: {
     courseID: String, // This is a query
     reviewID: String // This is a param
+  },
+  data() {
+    return {
+      commentType: 'Reply'
+    }
+  },
+  computed: {
+    ...mapGetters('reviews', {
+      review: 'review',
+      replies: 'replies',
+      loading: 'loading',
+      error: 'error'
+    })
   },
   methods: {
     submitReview (reviewForm) {
@@ -48,20 +76,23 @@ export default {
         })
         .then(() =>
           this.$router.push({ name: 'review', params: { id: String(this.review.id) } }))
+    },
+    submitReply (replyForm) {
+      // check that they actually typed something
+      if (replyForm.body === '') {
+        // this.answerFormResponse.text = "Please type an answer!"
+        // this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
+        return
+      }
+      this.$store.dispatch('reviews/postReply', {form: replyForm, id: this.review.id})
     }
-  },
-  computed: {
-    ...mapGetters('reviews', {
-      review: 'review',
-      loading: 'loading',
-      error: 'error'
-    })
   },
   created () {
     if (this.reviewID) {
       this.$store.dispatch('reviews/getReview', this.reviewID)
+      this.$store.dispatch('reviews/getReplies', this.reviewID)
     } else {
-      // future proof (see Question.vue)
+      // future proof (see Review.vue)
       this.$store.dispatch('reviews/resetState')
     }
   }

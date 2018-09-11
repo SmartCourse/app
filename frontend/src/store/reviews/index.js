@@ -59,6 +59,9 @@ const actions = {
   },
   async postReview ({dispatch}, { id, form }) {
     return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, args: [id, form] })
+  },
+  async postReply ({dispatch}, { id, form }) {
+    return dispatch('doRequest', { action: ACTIONS.POST_REPLY, args: [id, form] })
   }
 }
 

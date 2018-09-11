@@ -22,7 +22,7 @@
 
 <script>
 import Card from '@/components/Card'
-import User from './UserSummary'
+import User from '@/components/UserSummary'
 
 export default {
   components: { Card, User },
