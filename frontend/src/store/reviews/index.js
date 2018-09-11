@@ -3,7 +3,7 @@ import {
   replyMapper
 } from '@/utils/api/reviews'
 
-import { doRequestFactory } from '@/store/utils'
+import { doRequestFactory, resetStateFactory, RESET_STATE } from '@/store/utils'
 
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
@@ -40,19 +40,21 @@ const mutations = {
   API_ERROR (state, {code, message}) {
     state.error.code = code
     state.error.message = message
-  }
+  },
+  RESET_STATE
 }
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
+  resetState: resetStateFactory(state),
   async getReview ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_REVIEW, args: [id] })
   },
   async getReplies ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, args: [id] })
   },
-  async postReply ({dispatch}, { id, form }) {
-    return dispatch('doRequest', { action: ACTIONS.POST_REPLY, args: [id, form] })
+  async postReview ({dispatch}, { id, form }) {
+    return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, args: [id, form] })
   }
 }
 

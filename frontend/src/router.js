@@ -39,6 +39,13 @@ export default new Router({
       component: () => import('./views/Question')
     },
     {
+      path: '/review',
+      name: 'newReview',
+      props: ({query: { cid }}) => ({
+        courseID: String(cid)
+      })
+    },
+    {
       path: '/review/:id',
       name: 'review',
       props: ({params: { id }}) => ({

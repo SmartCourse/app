@@ -30,8 +30,8 @@ export function reviewMapper({ reviewID, likes, userID, title, body, timestamp }
 /**
  * @param {object} data the data associated with the new review
  */
-export function postQuestion(data) {
-  return post('/review', { data })
+export function postReview(id, data) {
+  return post(`/course/${id}/review`, { data })
 }
 
 export function getReplies(id) {
