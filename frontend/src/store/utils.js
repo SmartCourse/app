@@ -25,8 +25,7 @@ export function resetStateFactory(initialState) {
   }
 }
 
-// mutations
-
+// This is bad (JSON.parse is quite expensive)
 export function RESET_STATE (state, propStrings) {
   for (let prop in propStrings) {
     state[prop] = JSON.parse(propStrings[prop])

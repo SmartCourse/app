@@ -7,7 +7,7 @@ import { doRequestFactory, resetStateFactory, RESET_STATE } from '@/store/utils'
 
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
-const initialState = {
+const state = {
   loading: false,
   questionObj: {
     question: {},
@@ -18,7 +18,6 @@ const initialState = {
     message: ''
   }
 }
-const state = JSON.parse(JSON.stringify(initialState))
 
 const getters = {
   question: ({questionObj: {question}}) => questionMapper(question),
@@ -46,7 +45,7 @@ const mutations = {
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
-  resetState: resetStateFactory(initialState),
+  resetState: resetStateFactory(state),
   async getQuestion ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_QUESTION, args: [id] })
   },
