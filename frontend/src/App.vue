@@ -51,6 +51,7 @@ html, body {
   /* arbitrary */
   min-height: calc(100vh - 150px);
   max-width: 768px;
+  min-height: 100vh;
   margin: auto;
 }
 
@@ -58,6 +59,7 @@ a {
   color:inherit;
   text-decoration:inherit;
 }
+
 a:hover {
   color:inherit;
   text-decoration:inherit;
