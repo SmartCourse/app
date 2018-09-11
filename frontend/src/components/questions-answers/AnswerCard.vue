@@ -12,7 +12,7 @@
             <aside class="user">
                 <User :image="'https://travis-ci.com/images/logos/TravisCI-Mascot-3.png'"/>
                 <p class="date">Answered: <time>{{ answer.published }}</time></p>
-            </aside> 
+            </aside>
         </div>
     </Card>
 </template>

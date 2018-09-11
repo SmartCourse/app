@@ -14,3 +14,9 @@ exports.getReviewComments = function ({ params, query }, res) {
     responseHandler(commentModel.getComments({ reviewID: params.id }, query.p), res)
         .catch(errorHandler(res))
 }
+
+/* POST new comment. */
+exports.postComment = function ({ params, body }, res) {
+    responseHandler(commentModel.postComment({ reviewID: params.id }, body), res)
+        .catch(errorHandler(res))
+}

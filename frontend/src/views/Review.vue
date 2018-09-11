@@ -2,7 +2,7 @@
     <section class="main-content">
       <div v-if="!loading">
 
-        <!-- No question to render, show review form-->
+        <!-- No review to render, show review form-->
         <div v-if="courseID">
           <ReviewForm @submitReviewForm="submitReview">
             <span class="form-failure"

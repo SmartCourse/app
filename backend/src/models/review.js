@@ -15,7 +15,7 @@ class Review {
         return this.db
             .insert('review', { courseID, body, title, userID })
             /* Still not sure on this, seems wasteful to send all new data */
-            .then(() => this.getReviews(courseID, 1))
+            .then((reviewID) => this.getReview(reviewID))
     }
 
     /**
