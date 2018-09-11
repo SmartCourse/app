@@ -34,7 +34,7 @@ export default new Router({
       path: '/question/:id',
       name: 'question',
       props: ({params: { id }}) => ({
-        questionID: id
+        questionID: String(id)
       }),
       component: () => import('./views/Question')
     },
@@ -43,13 +43,14 @@ export default new Router({
       name: 'newReview',
       props: ({query: { cid }}) => ({
         courseID: String(cid)
-      })
+      }),
+      component: () => import('./views/Review')
     },
     {
       path: '/review/:id',
       name: 'review',
       props: ({params: { id }}) => ({
-        id
+        reviewID: String(id)
       }),
       component: () => import('./views/Review')
     }

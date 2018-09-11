@@ -7,7 +7,7 @@
                 <p class="arrow">&#8681;</p>
             </div>
             <div class="content">
-                <router-link tag="h2" :to="{ name: 'review', params: { id: String(id) }}">
+                <router-link tag="h2" :to="{ name: 'review', params: { id }}">
                     {{ title }}
                 </router-link>
                 <p>{{ body }}</p>
