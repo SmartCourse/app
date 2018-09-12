@@ -89,7 +89,7 @@ export default {
     this.$store.dispatch('course/getQuestions', id)
     this.$store.dispatch('course/getReviews', id)
     next()
-  },
+  }
 }
 </script>
 

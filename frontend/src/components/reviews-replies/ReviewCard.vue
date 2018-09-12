@@ -7,7 +7,7 @@
                 <p class="vote">&minus;</p>
             </div>
             <div class="content">
-                <router-link tag="h2" :to="{ name: 'review', param: { id: String(id) }}">
+                <router-link tag="h2" :to="{ name: 'review', params: { id: String(id) }}">
                     {{ title }}
                 </router-link>
                 <p>{{ body }}</p>
