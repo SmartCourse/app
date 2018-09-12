@@ -4,10 +4,20 @@
           <AppLogo :first="'S'" :last="'C'"/>
       </router-link>
       <div class="links">
+          <Search class="mini"/>
         <!--router-link class="link-item" to="/">Login</router-link-->
       </div>
     </div>
 </template>
+
+<script>
+import Search from '@/components/AppSearch'
+
+export default {
+    components: { Search }
+}
+</script>
+
 
 <style lang="less" scoped>
 
@@ -19,6 +29,7 @@
     justify-content: space-between;
     border-bottom: var(--border);
     background-color: white;
+    font-size: var(--font-small);
 }
 
 .links {

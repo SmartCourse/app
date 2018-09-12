@@ -29,7 +29,7 @@ html, body {
 :root {
   --color-gray: #d5d5d5;
   --color-light-gray: #eaeaea;
-  --color-very-light-gray: #f2f2f2;
+  --color-very-light-gray: #f4f4f4;
   --border-dark: 1px solid var(--color-gray);
   --border: 1px solid var(--color-light-gray);
   --border-thick: 2px solid rgba(160, 178, 178, 0.5);
@@ -39,6 +39,8 @@ html, body {
   --theme-light: rgba(102, 203, 196);
   --font-large: 40px;
   --font-large-mobile: 24px;
+  --font-medium: 20px;
+  --font-medium-mobile: 16px;
   --font-small: 16px;
   --font-small-mobile: 12px;
 }
