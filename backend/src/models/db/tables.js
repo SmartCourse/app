@@ -23,10 +23,11 @@ function createCourseTable (db) {
     db.run(`CREATE TABLE course (
         courseID INTEGER PRIMARY KEY AUTOINCREMENT,
         universityID INTEGER NOT NULL,
-        courseCode TEXT NOT NULL,
-        courseName TEXT NOT NULL,
+        code TEXT NOT NULL,
+        name TEXT NOT NULL,
         facultyCode TEXT NOT NULL,
         rating INTEGER DEFAULT '0.00',
+        tags   TEXT,
         FOREIGN KEY (universityID) REFERENCES university(universityID)
         )`
     )

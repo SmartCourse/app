@@ -21,11 +21,11 @@ export function getCourse(course = 1) {
   return get(`/course/${course}`)
 }
 
-export function courseMapper({courseID, courseCode, courseName, rating}) {
+export function courseMapper({courseID, code, name, rating}) {
   return {
     id: courseID,
-    code: courseCode,
-    name: courseName,
+    code,
+    name,
     rating
   }
 }

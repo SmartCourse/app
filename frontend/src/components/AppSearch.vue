@@ -8,10 +8,11 @@
         />
         <ul v-if="search && suggestions.length">
             <router-link
-                :key="item.id"
+                @click.native="resetSearch()"
+                :key="item.courseID"
                 tag="li"
                 v-for="item in suggestions"
-                :to="{ path: `/course/${item.id}`}"
+                :to="{ path: `/course/${item.courseID}` }"
             >
                 {{ item.name }} ({{ item.code }})
             </router-link>
@@ -30,31 +31,33 @@ export default {
 
   computed: {
     suggestions() {
+      const lower = this.search.toLowerCase()
       return this.courses
-        .filter(item => item.name.match(this.search) || item.code.match(this.search))
+        .filter(item => item.tags.match(lower))
         .slice(0, 5)
     }
   },
 
+  methods: {
+      resetSearch() { this.search = '' }
+  },
+
   created() {
-    fetch('course-names.json')
+    fetch('http://localhost:3000/api/course')
       .then(response => response.json())
       .then(data => {
-        this.courses = data.map((name, id) => ({
-          id,
-          name: name.split(' - ')[1],
-          code: name.split(' - ')[0]
-        }))
+          this.courses = data
       })
+      .catch(err => console.warn(err))
   }
 }
 </script>
 
-<style scoped>
+<style lang='less' scoped>
 
 .search {
     position: relative;
-    font-size: 0.8em;
+    font-size: 0.7em;
     margin: 20px auto;
 }
 
@@ -63,6 +66,18 @@ input {
     outline: none;
     font: inherit;
     width: 500px;
+}
+
+.mini {
+    font-size: 1em;
+
+    & input {
+        width: 240px;
+    }
+
+    & ul {
+        width: 280px;
+    }
 }
 
 ul, input {
@@ -82,7 +97,7 @@ ul {
 }
 
 li {
-    font-size: 0.55em;
+    font-size: 0.8em;
     background: white;
 }
 
