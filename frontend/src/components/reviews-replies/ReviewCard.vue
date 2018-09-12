@@ -37,5 +37,5 @@ export default {
 }
 </script>
 
-<style scoped src='../../css/card.less'>
+<style scoped src='../../css/card.less' lang='less'>
 </style>

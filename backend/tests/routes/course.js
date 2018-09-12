@@ -26,12 +26,12 @@ describe('Course route testing', () => {
 
         it('has the correct courseName', () =>
             request.then(({ body }) =>
-                expect(body[0].courseName).to.equal('Accounting & Financial Mgt 1A'))
+                expect(body[0].name).to.equal('Accounting & Financial Mgt 1A'))
         )
 
         it('has the correct courseCode', () =>
             request.then(({ body }) =>
-                expect(body[0].courseCode).to.equal('ACCT1501'))
+                expect(body[0].code).to.equal('ACCT1501'))
         )
     })
 
@@ -52,12 +52,12 @@ describe('Course route testing', () => {
 
         it('has the correct courseName', () =>
             request.then(({ body }) =>
-                expect(body.courseName).to.equal('Accounting & Financial Mgt 1A'))
+                expect(body.name).to.equal('Accounting & Financial Mgt 1A'))
         )
 
         it('has the correct courseCode', () =>
             request.then(({ body }) =>
-                expect(body.courseCode).to.equal('ACCT1501'))
+                expect(body.code).to.equal('ACCT1501'))
         )
     })
 

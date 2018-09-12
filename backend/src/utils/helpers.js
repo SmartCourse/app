@@ -8,3 +8,5 @@
 exports.responseHandler = function(fn, response) {
     return fn.then(data => response.json(data))
 }
+
+exports.toLowerCase = str => str.toLowerCase()
