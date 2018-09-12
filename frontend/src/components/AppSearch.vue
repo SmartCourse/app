@@ -39,14 +39,14 @@ export default {
   },
 
   methods: {
-    resetSearch() { this.search = '' }
+      resetSearch() { this.search = '' }
   },
 
   created() {
     fetch('http://localhost:3000/api/course')
       .then(response => response.json())
       .then(data => {
-        this.courses = data
+          this.courses = data
       })
       .catch(err => console.warn(err))
   }
