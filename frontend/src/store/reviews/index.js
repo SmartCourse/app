@@ -10,7 +10,6 @@ import { REQUEST, COMMITS, ACTIONS } from './constants'
 const state = {
   loading: false,
   search: '',
-  reviews: [],
   reviewObj: {
     review: {},
     replies: []
@@ -29,9 +28,6 @@ const getters = {
 }
 
 const mutations = {
-  REFRESH_FEED (state, reviews) {
-    state.reviews = reviews
-  },
   TOGGLE_LOADING (state, bool) {
     state.loading = bool
   },
