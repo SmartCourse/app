@@ -6,6 +6,8 @@ Vue.use(Router)
 
 const questionView = () => import('./views/Question')
 const reviewView = () => import('./views/Review')
+const newQuestionView = () => import('./views/NewQuestion')
+const newReviewView = () => import('./views/NewReview')
 
 export default new Router({
   mode: 'history',
@@ -31,13 +33,13 @@ export default new Router({
       props: ({query: { cid }}) => ({
         courseID: String(cid)
       }),
-      component: questionView
+      component: newQuestionView
     },
     {
       path: '/question/:id',
       name: 'question',
       props: ({params: { id }}) => ({
-        questionID: String(id)
+        id: String(id)
       }),
       component: questionView
     },
@@ -47,13 +49,13 @@ export default new Router({
       props: ({query: { cid }}) => ({
         courseID: String(cid)
       }),
-      component: reviewView
+      component: newReviewView
     },
     {
       path: '/review/:id',
       name: 'review',
       props: ({params: { id }}) => ({
-        reviewID: String(id)
+        id: String(id)
       }),
       component: reviewView
     }

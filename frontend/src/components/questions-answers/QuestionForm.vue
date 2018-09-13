@@ -5,8 +5,7 @@
           <p>
             <input type="text" placeholder="Question title..." v-model="title"><br>
             <textarea placeholder="Your question here.." v-model="body"></textarea><br>
-            <!-- should probs be a separate component -->
-            <AppButton @click.native="$emit('submitQuestionForm', {title, body})">Ask</AppButton>
+            <AppButton @click.native="callback({title, body})">Ask</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </p>
@@ -29,6 +28,9 @@ export default {
       title: '',
       body: ''
     }
+  },
+  props: {
+    callback: Function
   }
 }
 </script>

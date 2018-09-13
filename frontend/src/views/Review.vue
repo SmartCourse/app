@@ -1,40 +1,22 @@
 <template>
     <section class="main-content">
-      <div v-if="!loading">
+      <ReviewCard v-bind="review"/>
 
-        <!-- No review to render, show review form-->
-        <div v-if="courseID">
-          <ReviewForm @submitReviewForm="submitReview">
-            <span class="form-failure"
-              v-if="error.code">{{error.message}}
-            </span>
-          </ReviewForm>
-        </div>
+      <ReplyForm @submitCommentForm="submitReply" :type="commentType" :callback="submitReply">
+        <span class="form-failure"
+            v-if="error.code">{{error.message}}</span>
+      </ReplyForm>
 
-        <!-- Otherwise render the specified review-->
-        <div v-else>
-          <ReviewCard v-bind="review"/>
-
-          <ReplyForm @submitCommentForm="submitReply" :type="commentType">
-            <span class="form-failure"
-                v-if="error.code">{{error.message}}</span>
-          </ReplyForm>
-
-          <ul v-if="replies.length">
-            <li v-for="answer in replies" :key="answer.id">
-              <ReplyCard :comment="answer"/>
-            </li>
-          </ul>
-        </div>
-
-      </div>
-      <!--<LoadingSpinner v-else/>-->
+      <transition-group name='fade' tag='ul' v-if="replies.length">
+        <li v-for="answer in replies" :key="answer.id">
+          <ReplyCard :comment="answer" />
+        </li>
+      </transition-group>
     </section>
 </template>
 
 <script>
 import ReviewCard from '@/components/reviews-replies/ReviewCard'
-import ReviewForm from '@/components/reviews-replies/ReviewForm'
 import ReplyCard from '@/components/comments/CommentCard'
 import ReplyForm from '@/components/comments/CommentForm'
 import { mapGetters } from 'vuex'
@@ -42,13 +24,11 @@ import { mapGetters } from 'vuex'
 export default {
   components: {
     ReviewCard,
-    ReviewForm,
     ReplyCard,
     ReplyForm
   },
   props: {
-    courseID: String, // This is a query
-    reviewID: String // This is a param
+    id: String // This is a param
   },
   data() {
     return {
@@ -64,19 +44,6 @@ export default {
     })
   },
   methods: {
-    submitReview (reviewForm) {
-      // check that they actually typed something
-      if (reviewForm.title === '' || reviewForm.body === '') {
-        return
-      }
-      this.$store.dispatch('reviews/postReview',
-        {
-          form: reviewForm,
-          id: this.courseID
-        })
-        .then(() => this.$router.push({ name: 'review', params: { id: String(this.review.id) } }))
-        .then(() => this.$store.dispatch('reviews/getReplies', this.reviewID))
-    },
     submitReply (replyForm) {
       // check that they actually typed something
       if (replyForm.body === '') {
@@ -88,10 +55,17 @@ export default {
     }
   },
   created () {
-    if (this.reviewID) {
-      this.$store.dispatch('reviews/getReview', this.reviewID)
-      this.$store.dispatch('reviews/getReplies', this.reviewID)
-    }
+    this.$store.dispatch('reviews/getReview', this.id)
+    this.$store.dispatch('reviews/getReplies', this.id)
   }
 }
 </script>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>
