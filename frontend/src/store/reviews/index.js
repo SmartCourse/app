@@ -41,6 +41,9 @@ const mutations = {
     state.error.code = code
     state.error.message = message
   },
+  APPEND_REPLY(state, reply) {
+    state.reviewObj.replies.unshift(replyMapper(reply))
+  },
   RESET_STATE
 }
 

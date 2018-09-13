@@ -16,7 +16,7 @@ class Comment {
         return this.db
             .insert('comment', { [key]: value, body, userID })
             /* Still not sure on this, seems wasteful to send all new data */
-            .then(() => this.getComments(queryObject, 1))
+            .then((commentID) => ({ body, userID, commentID, timestamp:Date.now() }))
     }
 
     /**

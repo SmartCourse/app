@@ -41,6 +41,9 @@ const mutations = {
     state.error.code = code
     state.error.message = message
   },
+  APPEND_ANSWER(state, answer) {
+    state.questionObj.answers.unshift(answerMapper(answer))
+  },
   RESET_STATE
 }
 
