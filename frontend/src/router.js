@@ -4,6 +4,9 @@ import Home from './views/Home'
 
 Vue.use(Router)
 
+const questionView = () => import('./views/Question')
+const reviewView = () => import('./views/Review')
+
 export default new Router({
   mode: 'history',
   routes: [
@@ -28,7 +31,7 @@ export default new Router({
       props: ({query: { cid }}) => ({
         courseID: String(cid)
       }),
-      component: () => import('./views/Question')
+      component: questionView
     },
     {
       path: '/question/:id',
@@ -36,7 +39,7 @@ export default new Router({
       props: ({params: { id }}) => ({
         questionID: String(id)
       }),
-      component: () => import('./views/Question')
+      component: questionView
     },
     {
       path: '/review',
@@ -44,7 +47,7 @@ export default new Router({
       props: ({query: { cid }}) => ({
         courseID: String(cid)
       }),
-      component: () => import('./views/Review')
+      component: reviewView
     },
     {
       path: '/review/:id',
@@ -52,7 +55,7 @@ export default new Router({
       props: ({params: { id }}) => ({
         reviewID: String(id)
       }),
-      component: () => import('./views/Review')
+      component: reviewView
     }
   ]
 })

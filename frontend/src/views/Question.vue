@@ -1,7 +1,5 @@
 <template>
     <section class="main-content">
-      <div v-if="!loading">
-
         <!-- No question to render, show question form-->
         <div v-if="courseID">
           <QuestionForm @submitQuestionForm="submitQuestion">
@@ -19,15 +17,12 @@
             <span class="form-failure"
                 v-if="error.code">{{error.message}}</span>
           </AnswerForm>
-
-          <ul v-if="answers.length">
+          <transition-group name='fade' tag='ul' v-if="answers.length">
             <li v-for="answer in answers" :key="answer.id">
               <AnswerCard :comment="answer"/>
             </li>
-          </ul>
+          </transition-group>
         </div>
-
-      </div>
       <!--<LoadingSpinner v-else/>-->
     </section>
 </template>
@@ -74,8 +69,6 @@ export default {
           form: questionForm,
           id: this.courseID
         })
-        .then(() =>
-          this.$router.push({ name: 'question', params: { id: this.question.id } }))
     },
     submitAnswer (answerForm) {
       // check that they actually typed something
@@ -87,7 +80,7 @@ export default {
       this.$store.dispatch('questions/postAnswer', {form: answerForm, id: this.question.id})
     }
   },
-  created () {
+  created() {
     if (this.questionID) {
       this.$store.dispatch('questions/getAnswers', this.questionID)
       this.$store.dispatch('questions/getQuestion', this.questionID)
@@ -109,4 +102,11 @@ export default {
   .form-failure {
     color: red;
   }
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 </style>

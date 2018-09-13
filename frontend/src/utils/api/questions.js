@@ -6,9 +6,9 @@ export function getQuestion(id) {
   return get(`/question/${id}`)
 }
 
-export function answerMapper({ answerID, likes, userID, body, timestamp }) {
+export function answerMapper({ id, likes, userID, body, timestamp }) {
   return {
-    id: answerID,
+    id,
     body,
     likes,
     author: userID,
