@@ -17,13 +17,13 @@
     <div class="course-content">
       <div v-if="courseTab=='info'" class="course-info">
         <p>
-          Additional stuff goes here mebe.
+          {{ courseInfo.description }}
         </p>
       </div>
 
       <div v-if="courseTab=='questions'">
         <div class='button-container'>
-            <router-link :to="{ name: 'newQuestion', query: {cid: courseInfo.id} }">
+            <router-link :to="{ name: 'newQuestion', params: {code} }">
                 <AppButton>Ask Question</AppButton>
             </router-link>
         </div>
@@ -35,7 +35,7 @@
 
       <div v-if="courseTab=='reviews'">
         <div class='button-container'>
-            <router-link :to="{ name: 'newReview', query: {cid: courseInfo.id} }">
+            <router-link :to="{ name: 'newReview', params: {code} }">
                 <AppButton>Add Review</AppButton>
             </router-link>
         </div>
@@ -58,7 +58,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'course',
   props: {
-    id: String
+    code: String
   },
   components: {
     Feed,
@@ -74,20 +74,20 @@ export default {
     })
   },
   created () {
-    this.$store.dispatch('course/getCourse', this.id)
-    this.$store.dispatch('course/getQuestions', this.id)
-    this.$store.dispatch('course/getReviews', this.id)
+    this.$store.dispatch('course/getCourse', this.code)
+    this.$store.dispatch('course/getQuestions', this.code)
+    this.$store.dispatch('course/getReviews', this.code)
   },
-  beforeRouteUpdate ({ params: { id } }, from, next) {
+  beforeRouteUpdate ({ params: { code } }, from, next) {
     // called when the route that renders this component has changed,
     // but this component is reused in the new route.
-    // For example, for a route with dynamic params `/foo/:id`, when we
+    // For example, for a route with dynamic params `/foo/:code`, when we
     // navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
     // will be reused, and this hook will be called when that happens.
     // has access to `this` component instance.
-    this.$store.dispatch('course/getCourse', id)
-    this.$store.dispatch('course/getQuestions', id)
-    this.$store.dispatch('course/getReviews', id)
+    this.$store.dispatch('course/getCourse', code)
+    this.$store.dispatch('course/getQuestions', code)
+    this.$store.dispatch('course/getReviews', code)
     next()
   }
 }
