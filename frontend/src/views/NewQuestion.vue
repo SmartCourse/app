@@ -1,8 +1,8 @@
 <template>
     <section class="main-content">
-      <QuestionForm @submitQuestionForm="submitQuestion">
-        <span class="form-failure"
-          v-if="error.code">{{error.message}}
+      <QuestionForm :callback="submitQuestion">
+        <span class="form-failure" v-if="error.code">
+          {{error.message}}
         </span>
       </QuestionForm>
     </section>

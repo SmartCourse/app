@@ -5,7 +5,7 @@
           <p>
             <textarea placeholder="Your input here.." v-model="body"></textarea><br>
             <!-- should probs be a separate component -->
-            <AppButton @click.native="$emit('submitCommentForm', {body})">{{ type }}</AppButton>
+            <AppButton @click.native="callback({body})">{{ type }}</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </p>
@@ -24,7 +24,8 @@ export default {
     AppButton
   },
   props: {
-    type: String
+    type: String,
+    callback: Function
   },
   data () {
     return {

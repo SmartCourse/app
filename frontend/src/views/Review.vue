@@ -2,14 +2,14 @@
     <section class="main-content">
       <ReviewCard v-bind="review"/>
 
-      <ReplyForm @submitCommentForm="submitReply" :type="commentType">
+      <ReplyForm @submitCommentForm="submitReply" :type="commentType" :callback="submitReply">
         <span class="form-failure"
             v-if="error.code">{{error.message}}</span>
       </ReplyForm>
 
       <transition-group name='fade' tag='ul' v-if="replies.length">
         <li v-for="answer in replies" :key="answer.id">
-          <ReplyCard :comment="answer"/>
+          <ReplyCard :comment="answer" />
         </li>
       </transition-group>
     </section>

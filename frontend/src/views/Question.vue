@@ -2,14 +2,14 @@
     <section class="main-content">
       <QuestionCard v-bind="question"/>
 
-      <AnswerForm @submitCommentForm="submitAnswer" :type="commentType">
+      <AnswerForm @submitCommentForm="submitAnswer" :type="commentType" :callback="submitAnswer">
         <span class="form-failure"
             v-if="error.code">{{error.message}}</span>
       </AnswerForm>
 
       <transition-group name='fade' tag='ul' v-if="answers.length">
         <li v-for="answer in answers" :key="answer.id">
-          <AnswerCard :comment="answer"/>
+          <AnswerCard :comment="answer" />
         </li>
       </transition-group>
     </section>
@@ -54,7 +54,7 @@ export default {
       this.$store.dispatch('questions/postAnswer', {form: answerForm, id: this.question.id})
     }
   },
-  created() {
+  created () {
     this.$store.dispatch('questions/getAnswers', this.id)
     this.$store.dispatch('questions/getQuestion', this.id)
   }
