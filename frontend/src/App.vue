@@ -2,7 +2,7 @@
   <div id="app">
     <AppNavBar/>
     <main>
-      <router-view/>
+      <router-view :key="$route.path"/>
     </main>
     <AppFooter/>
   </div>
@@ -13,8 +13,9 @@ import AppNavBar from '@/components/AppNavBar'
 import AppFooter from '@/components/AppFooter'
 
 export default {
-  components: { AppNavBar, AppFooter }
+  components: { AppNavBar, AppFooter },
 }
+
 </script>
 
 <style lang="less">
@@ -51,7 +52,7 @@ html, body {
 
 .main-content {
   /* arbitrary */
-  min-height: calc(100vh - 150px);
+  min-height: 100vh;
   max-width: 768px;
   margin: auto;
 }
