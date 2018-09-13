@@ -4,46 +4,48 @@ const courseData = require('./courses')
 // TODO - STUB USER TABLE (REFACTOR FOR AUTH)
 function createUserTable (db) {
     db.run(`CREATE TABLE user (
-        userID INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         firstName TEXT NOT NULL,
         lastName TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL)`
+        password TEXT NOT NULL
+        )`
     )
 }
 
 function createUniversityTable (db) {
     db.run(`CREATE TABLE university (
-        universityID INTEGER PRIMARY KEY AUTOINCREMENT,
-        universityName TEXT NOT NULL)`
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL
+        )`
     )
 }
 
 function createCourseTable (db) {
     db.run(`CREATE TABLE course (
-        courseID INTEGER PRIMARY KEY AUTOINCREMENT,
+        code TEXT PRIMARY KEY NOT NULL,
         universityID INTEGER NOT NULL,
-        code TEXT NOT NULL,
         name TEXT NOT NULL,
         facultyCode TEXT NOT NULL,
+        description TEXT NOT NULL,
         rating INTEGER DEFAULT '0.00',
         tags   TEXT,
-        FOREIGN KEY (universityID) REFERENCES university(universityID)
+        FOREIGN KEY (universityID) REFERENCES university(id)
         )`
     )
 }
 
 function createQuestionTable (db) {
     db.run(`CREATE TABLE question (
-        questionID INTEGER PRIMARY KEY AUTOINCREMENT,
-        courseID INTEGER NOT NULL,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        code TEXT NOT NULL,
         userID INTEGER NOT NULL,
         title TEXT NOT NULL,
         body TEXT NOT NULL,
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (courseID) REFERENCES course(courseID),
-        FOREIGN KEY (userID) REFERENCES user(userID))`
+        FOREIGN KEY (code) REFERENCES course(code),
+        FOREIGN KEY (userID) REFERENCES user(id))`
     )
 }
 
@@ -57,23 +59,23 @@ function createCommentTable (db) {
         body TEXT NOT NULL,
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (questionID) REFERENCES question(questionID),
-        FOREIGN KEY (reviewID) REFERENCES review(reviewID),
-        FOREIGN KEY (userID) REFERENCES user(userID))`
+        FOREIGN KEY (questionID) REFERENCES question(id),
+        FOREIGN KEY (reviewID) REFERENCES review(id),
+        FOREIGN KEY (userID) REFERENCES user(id))`
     )
 }
 
 function createReviewTable (db) {
     db.run(`CREATE TABLE review (
-        reviewID INTEGER PRIMARY KEY AUTOINCREMENT,
-        courseID INTEGER NOT NULL,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        code TEXT NOT NULL,
         userID INTEGER NOT NULL,
         title TEXT NOT NULL,
         body TEXT NOT NULL,
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (courseID) REFERENCES course(courseID),
-        FOREIGN KEY (userID) REFERENCES user(userID))`
+        FOREIGN KEY (code) REFERENCES course(code),
+        FOREIGN KEY (userID) REFERENCES user(id))`
     )
 }
 
@@ -88,7 +90,7 @@ function devInitDB(db) {
     }
 
     const unsw = {
-        universityName: 'Univerity of New South Wales'
+        name: 'Univerity of New South Wales'
     }
 
     const question = {
@@ -125,7 +127,7 @@ function devInitDB(db) {
         .then((courseID) => {
             // course dependencies
             [question, review]
-                .forEach(item => { item.courseID = 1 }, question)
+                .forEach(item => { item.code = 'COMP4920' }, question)
 
             // insert question and review
             return Promise.all([insertDB(db, 'question', question), insertDB(db, 'review', review)])

@@ -20,9 +20,9 @@ describe('Review route testing', function () {
                 expect(body.body).is.a('string'))
         )
 
-        it('review has a course id', () =>
+        it('review has a course code', () =>
             request.then(({ body }) =>
-                expect(body.courseID).to.equal(1))
+                expect(body.code).to.equal('COMP4920'))
         )
     })
 

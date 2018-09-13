@@ -26,9 +26,9 @@ describe('Test question routes', () => {
                 expect(body.body).is.a('string'))
         )
 
-        it('question has a course id', () =>
+        it('question has a course code', () =>
             request.then(({ body }) =>
-                expect(body.courseID).is.a('number'))
+                expect(body.code).is.a('string'))
         )
     })
 })

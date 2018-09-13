@@ -7,13 +7,13 @@ class Question {
 
     /**
      * TODO - PAGING
-     * @param   {id}     courseID    The id of the couse we're getting questions for.
+     * @param   {string} code        The code of the couse we're getting questions for.
      * @param   {number} pageNumber  The pageNumber, defaults to 1?, if higher than max should just give max.
      * @returns {object}
      */
-    getQuestions(courseID, pageNumber = 1) {
+    getQuestions(code, pageNumber = 1) {
         return this.db
-            .queryAll('SELECT * FROM question WHERE courseID=?', [courseID])
+            .queryAll('SELECT * FROM question WHERE code=?', [code])
     }
 
     /**
@@ -23,18 +23,18 @@ class Question {
      */
     getQuestion(questionID) {
         return this.db
-            .query('SELECT * FROM question WHERE questionID=?', [questionID])
+            .query('SELECT * FROM question WHERE id=?', [questionID])
     }
 
     /**
      * Post a question.
-     * @param {id} courseID  The id from the route param
-     * @param {*}  data      controller passed in object which should
+     * @param {string} code  The id from the route param
+     * @param {object}  data      controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
-    postQuestion(courseID, { userID, title, body }) {
+    postQuestion(code, { userID, title, body }) {
         return this.db
-            .insert('question', { courseID, userID, title, body })
+            .insert('question', { code, userID, title, body })
             .then((questionID) => this.getQuestion(questionID))
     }
 }

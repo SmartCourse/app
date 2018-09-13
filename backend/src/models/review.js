@@ -7,37 +7,36 @@ class Review {
 
     /**
      * Post a review.
-     * @param {id} courseID  The id from the route param
-     * @param {*}  data      controller passed in object which should
+     * @param {string} code  The id from the route param
+     * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
-    postReview(courseID, { title, body, userID = 1 }) {
+    postReview(code, { title, body, userID = 1 }) {
         return this.db
-            .insert('review', { courseID, body, title, userID })
-            /* Still not sure on this, seems wasteful to send all new data */
+            .insert('review', { code, body, title, userID })
             .then((reviewID) => this.getReview(reviewID))
     }
 
     /**
      * Gets specific review corresponding to an id.
-     * @param   {number}  reviewID   Required id param.
+     * @param   {number}  id   Required id param.
      * @returns {object}
      */
-    getReview(reviewID) {
+    getReview(id) {
         return this.db
-            .query('SELECT * FROM review WHERE reviewID=?', [reviewID])
+            .query('SELECT * FROM review WHERE id=?', [id])
     }
 
     /**
      * // TODO - PAGING
      * Get all of dem reviews for a specific course
-     * @param   {number}  courseID      The courseID the review corresponds to
+     * @param   {string}  code          The code the review corresponds to
      * @param   {number}  pageNumber    The page of the reviews list
      * @returns {Array}
      */
-    getReviews(courseID, pageNumber = 1) {
+    getReviews(code, pageNumber = 1) {
         return this.db
-            .queryAll('SELECT * FROM review WHERE courseID=?', [courseID])
+            .queryAll('SELECT * FROM review WHERE code=?', [code])
     }
 }
 

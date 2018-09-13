@@ -11,6 +11,7 @@ module.exports = data.map(item => {
         code: courseCode,
         name: courseName,
         facultyCode,
-        tags
+        tags,
+        description: 'Offering 60 years of excellence in developing socially engaged engineers, developing new technologies and solutioning problems of global relevance.'
     }
 })
