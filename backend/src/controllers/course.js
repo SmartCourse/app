@@ -18,20 +18,25 @@ exports.getCourse = function ({ params }, res) {
 
 /* Get all questions for a course */
 exports.getCourseQuestions = function ({ params, query }, res) {
-    if (typeof query.p !== 'number') {
-        throw Error
+    // If query 'p' is not given just use p=1
+    let pageNumber = typeof query.p === 'undefined' ? 1 : parseInt(query.p)
+    // Check that pageNumber is an integer
+    if (isNaN(pageNumber)) {
+        throw Error('Page Number is not a number')
     }
-    responseHandler(questionModel.getQuestions(params.id, query.p), res)
+    responseHandler(questionModel.getQuestions(params.id, pageNumber), res)
         .catch(errorHandler(res))
 }
 
 /* Get all reviews for a course */
 exports.getCourseReviews = function ({ params, query }, res) {
-    // Check that p is an integer
-    if (typeof query.p !== 'number') {
-        throw Error
+    // If query 'p' is not given just use p=1
+    let pageNumber = typeof query.p === 'undefined' ? 1 : parseInt(query.p)
+    // Check that pageNumber is an integer
+    if (isNaN(pageNumber)) {
+        throw Error('Page Number is not a number')
     }
-    responseHandler(reviewModel.getReviews(params.id, query.p), res)
+    responseHandler(reviewModel.getReviews(params.id, pageNumber), res)
         .catch(errorHandler(res))
 }
 
