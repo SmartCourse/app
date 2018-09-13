@@ -1,5 +1,3 @@
-const db = require('./db')
-
 /* All inputs should be validated in this class that are course related */
 class Course {
     constructor(db) {
@@ -17,8 +15,8 @@ class Course {
     }
 
     /**
-     * TODO add 'uni' param, add paging
-     * @returns info specific to single course.
+     * Gets a course instance from the DB.
+     * @returns {object}    Info specific to single course.
      */
     getCourse(courseID) {
         return this.db
@@ -26,6 +24,16 @@ class Course {
     }
 }
 
-module.exports = (function(db) {
+let Singleton = null
+
+/**
+ * @param {object} db defaults to the db instance
+ */
+module.exports = function(db) {
+    if (!db) {
+        /* app environment, dev or prod */
+        return (Singleton = Singleton ? Singleton : new Course(require('./db'))) // eslint-disable-line
+    }
+    /* to allow injection */
     return new Course(db)
-})(db)
+}

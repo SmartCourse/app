@@ -1,36 +1,42 @@
-const courseModel = require('../models/course')
-const questionModel = require('../models/question')
+const courseModel = require('../models/course')()
+const questionModel = require('../models/question')()
+const reviewModel = require('../models/review')()
+const errorHandler = require('./error')
+const { responseHandler } = require('../utils/helpers')
 
 /* Get all course data */
-exports.getCourses = function (req, res) {
-    courseModel.getCourses()
-        .then(data => res.json(data))
-        .catch(console.warn)
+exports.getCourses = function (_, res) {
+    responseHandler(courseModel.getCourses(), res)
+        .catch(errorHandler(res))
 }
 
 /* Get specifc course data */
 exports.getCourse = function ({ params }, res) {
-    courseModel.getCourse(params.id)
-        .then(data => res.json(data))
-        .catch(console.warn)
+    responseHandler(courseModel.getCourse(params.id), res)
+        .catch(errorHandler(res))
 }
 
 /* Get all questions for a course */
 exports.getCourseQuestions = function ({ params, query }, res) {
-    questionModel.getQuestions(params.id, query.p)
-        .then(data => res.json(data))
-        .catch(console.warn)
+    responseHandler(questionModel.getQuestions(params.id, query.p), res)
+        .catch(errorHandler(res))
 }
 
 /* Get all reviews for a course */
 exports.getCourseReviews = function ({ params, query }, res) {
-    res.send(`<h1>Page Reviews for Course #${params.id} Page #${query.p}</h1>`)
+    responseHandler(reviewModel.getReviews(params.id, query.p), res)
+        .catch(errorHandler(res))
 }
 
 exports.postQuestion = function ({ params, body }, res) {
+    // TODO fix userID
     body.userID = 1
-    questionModel.postQuestion(params.id, body)
-        .then(data => res.json(data))
-        // TODO potentially more meaningful error code or something
-        .catch(error => res.json({ code: 400, message: error.message }))
+    responseHandler(questionModel.postQuestion(params.id, body), res)
+        .catch(errorHandler(res))
+}
+
+/* POST new review */
+exports.postReview = function ({ params, body }, res) {
+    responseHandler(reviewModel.postReview(params.id, body), res)
+        .catch(errorHandler(res))
 }

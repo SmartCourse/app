@@ -1,21 +1,14 @@
 import { get, post, put } from './index'
 import format from 'date-fns/format'
 
-/**
- * Get all questions relevant to a course
- */
-export function getQuestions(course = 1) {
-  return get(`/course/${course}/questions`)
-}
-
 /* get question */
 export function getQuestion(id) {
   return get(`/question/${id}`)
 }
 
-export function answerMapper({ answerID, likes, userID, body, timestamp }) {
+export function answerMapper({ id, likes, userID, body, timestamp }) {
   return {
-    id: answerID,
+    id,
     body,
     likes,
     author: userID,
@@ -37,10 +30,10 @@ export function questionMapper({ questionID, likes, userID, title, body, timesta
 // STUBS
 
 /**
- * @param {object} body the data associated with the new question
+ * @param {object} data the data associated with the new question
  */
-export function postQuestion(body) {
-  return post('/question', { body })
+export function postQuestion(id, data) {
+  return post(`/course/${id}/question`, { data })
 }
 
 export function getAnswers(id) {
@@ -48,19 +41,17 @@ export function getAnswers(id) {
 }
 
 /**
- * @param {String} id the id of the question being answered
- * @param {object} body the data associated with the new answer
+ * @param {string} id the id of the question being answered
+ * @param {object} data the data associated with the new answer
  */
-export function postAnswer(id, form) {
-  const headers = new Headers()
-  headers.append('Content-Type', 'application/json')
-  return post(`/question/${id}/answers`, {headers, body: JSON.stringify(form)})
+export function postAnswer(id, data) {
+  return post(`/question/${id}/answers`, { data })
 }
 
 /**
- * @param {String} id the id of the question being edited
- * @param {object} body the data associated with the new question
+ * @param {string} id the id of the question being edited
+ * @param {object} data the data associated with the new question
  */
-export function editQuestion(id, body) {
-  return put(`/question/${id}`, { body })
+export function editQuestion(id, data) {
+  return put(`/question/${id}`, { data })
 }

@@ -22,7 +22,7 @@ class DB {
     }
 
     deleteDB () {
-        return 0
+        return Promise.resolve(false)
     }
 
     query(query, params = []) {

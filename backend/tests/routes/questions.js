@@ -70,14 +70,28 @@ describe('Test answer routes', () => {
             return request
         })
 
-        it('has the right number of answers', () =>
+        it('returns the answer we POSTed', () =>
             request.then(({ body }) =>
-                assert(body.length >= 1))
+                expect(body.body).to.equal('superruuu____testu'))
         )
+    })
 
-        it('has the answer we POSTed', () =>
+    describe('POST /api/question/1/answers (ERROR)', () => {
+        let request
+
+        before(() => {
+            request = supertest
+                .post('/api/question/1/answers')
+                .send({ badBody: 'superruuu____testu' })
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(400)
+            return request
+        })
+
+        it('returns an error message', () =>
             request.then(({ body }) =>
-                expect(body.filter(ans => ans.body === 'superruuu____testu').length).to.equal(1))
+                assert(body.message))
         )
     })
 })

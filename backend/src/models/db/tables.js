@@ -1,4 +1,5 @@
 const sqlite3 = require('sqlite3')
+const courseData = require('./courses')
 
 // TODO - STUB USER TABLE (REFACTOR FOR AUTH)
 function createUserTable (db) {
@@ -22,11 +23,12 @@ function createCourseTable (db) {
     db.run(`CREATE TABLE course (
         courseID INTEGER PRIMARY KEY AUTOINCREMENT,
         universityID INTEGER NOT NULL,
-        courseCode TEXT NOT NULL,
-        courseName TEXT NOT NULL,
+        code TEXT NOT NULL,
+        name TEXT NOT NULL,
         facultyCode TEXT NOT NULL,
         rating INTEGER DEFAULT '0.00',
-        FOREIGN KEY (universityID) REFERENCES universities(universityID)
+        tags   TEXT,
+        FOREIGN KEY (universityID) REFERENCES university(universityID)
         )`
     )
 }
@@ -40,21 +42,24 @@ function createQuestionTable (db) {
         body TEXT NOT NULL,
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (courseID) REFERENCES courses(courseID),
-        FOREIGN KEY (userID) REFERENCES users(userID))`
+        FOREIGN KEY (courseID) REFERENCES course(courseID),
+        FOREIGN KEY (userID) REFERENCES user(userID))`
     )
 }
 
-function createAnswerTable (db) {
-    db.run(`CREATE TABLE answer (
-        answerID INTEGER PRIMARY KEY AUTOINCREMENT,
-        questionID INTEGER NOT NULL,
+function createCommentTable (db) {
+    db.run(`CREATE TABLE comment (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        questionID INTEGER,
+        reviewID INTEGER,
+        commentParent INTEGER,
         userID INTEGER NOT NULL,
         body TEXT NOT NULL,
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (questionID) REFERENCES questions(courseID),
-        FOREIGN KEY (userID) REFERENCES users(userID))`
+        FOREIGN KEY (questionID) REFERENCES question(questionID),
+        FOREIGN KEY (reviewID) REFERENCES review(reviewID),
+        FOREIGN KEY (userID) REFERENCES user(userID))`
     )
 }
 
@@ -63,24 +68,12 @@ function createReviewTable (db) {
         reviewID INTEGER PRIMARY KEY AUTOINCREMENT,
         courseID INTEGER NOT NULL,
         userID INTEGER NOT NULL,
+        title TEXT NOT NULL,
         body TEXT NOT NULL,
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (courseID) REFERENCES courses(courseID),
-        FOREIGN KEY (userID) REFERENCES users(userID))`
-    )
-}
-
-function createReplyTable (db) {
-    db.run(`CREATE TABLE reply (
-        answerID INTEGER PRIMARY KEY AUTOINCREMENT,
-        reviewID INTEGER NOT NULL,
-        userID INTEGER NOT NULL,
-        body TEXT NOT NULL,
-        timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (reviewID) REFERENCES reviews(courseID),
-        FOREIGN KEY (userID) REFERENCES users(userID))`
+        FOREIGN KEY (courseID) REFERENCES course(courseID),
+        FOREIGN KEY (userID) REFERENCES user(userID))`
     )
 }
 
@@ -98,22 +91,17 @@ function devInitDB(db) {
         universityName: 'Univerity of New South Wales'
     }
 
-    const comp4920 = {
-        courseCode: 'COMP4920',
-        courseName: 'Ethics and Management',
-        facultyCode: 'COMP'
-    }
-
     const question = {
         title: 'Question creation help!',
         body: 'I am struggling to create a meme question, wud shud I rite?'
     }
 
-    const answer = {
+    const comment = {
         body: 'Knock. Knock... Who is there?... Pivotal... Pivotal Who?... lol jks it is Trello!'
     }
 
     const review = {
+        title: 'title',
         body: 'Would bang out of 10!'
     }
 
@@ -124,31 +112,31 @@ function devInitDB(db) {
     /* Insert the fake data in to the database */
     // Insert user and uni
     return Promise.all([insertDB(db, 'user', user), insertDB(db, 'university', unsw)])
-        .then(([userID, uniID]) => {
+        .then(([userID, universityID]) => {
             // uni dependencies
-            comp4920.universityID = uniID
-
-            ;[question, answer, review, reply]
+            [question, comment, review, reply]
                 .forEach(item => { item.userID = userID })
 
             // insert course
-            return insertDB(db, 'course', comp4920)
+            return Promise.all(courseData.map(course =>
+                insertDB(db, 'course', { universityID, ...course })
+            ))
         })
         .then((courseID) => {
             // course dependencies
             [question, review]
-                .forEach(item => { item.courseID = courseID }, question)
+                .forEach(item => { item.courseID = 1 }, question)
 
             // insert question and review
             return Promise.all([insertDB(db, 'question', question), insertDB(db, 'review', review)])
         })
         .then(([questionID, reviewID]) => {
             // question and review dependency
-            answer.questionID = questionID
+            comment.questionID = questionID
             reply.reviewID = reviewID
 
-            // insert answer and reply
-            return Promise.all([insertDB(db, 'answer', answer), insertDB(db, 'reply', reply)])
+            // insert different comments
+            return Promise.all([insertDB(db, 'comment', comment), insertDB(db, 'comment', reply)])
         })
         .then(() => console.log('Test Database Initialised!'))
         .catch(console.warn)
@@ -156,7 +144,7 @@ function devInitDB(db) {
 
 /**
  * Initiates a new SQL database from the given param
- * @param {string} databaseName A db name, if not :memory: initiates a .db file
+ * @param   {string} databaseName A db name, if not :memory: initiates a .db file
  * @returns {object} SQLObject
  */
 function createDB(databaseName) {
@@ -169,9 +157,8 @@ function createDB(databaseName) {
         createUniversityTable(db)
         createCourseTable(db)
         createQuestionTable(db)
-        createAnswerTable(db)
         createReviewTable(db)
-        createReplyTable(db)
+        createCommentTable(db)
     })
 
     return db

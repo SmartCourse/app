@@ -2,7 +2,7 @@
   <div id="app">
     <AppNavBar/>
     <main>
-      <router-view/>
+      <router-view :key="$route.path"/>
     </main>
     <AppFooter/>
   </div>
@@ -13,8 +13,9 @@ import AppNavBar from '@/components/AppNavBar'
 import AppFooter from '@/components/AppFooter'
 
 export default {
-  components: { AppNavBar, AppFooter }
+  components: { AppNavBar, AppFooter },
 }
+
 </script>
 
 <style lang="less">
@@ -29,19 +30,42 @@ html, body {
 :root {
   --color-gray: #d5d5d5;
   --color-light-gray: #eaeaea;
+  --color-very-light-gray: #f4f4f4;
   --border-dark: 1px solid var(--color-gray);
   --border: 1px solid var(--color-light-gray);
   --border-thick: 2px solid rgba(160, 178, 178, 0.5);
   --box-shadow-active: 0px 0px 0px 1px #ddd;
   --theme: #00a99d;
-  --theme-light: rgba(#00a99d, 0.6);
+  /*--theme-light: rgba(#00a99d, 0.6);*/
+  --theme-light: rgba(102, 203, 196);
+  --font-large: 40px;
+  --font-large-mobile: 24px;
+  --font-medium: 20px;
+  --font-medium-mobile: 16px;
+  --font-small: 16px;
+  --font-small-mobile: 12px;
 }
 
-main {
+#app {
+  background-color: var(--color-very-light-gray);
+}
+
+.main-content {
   /* arbitrary */
+  min-height: 100vh;
   max-width: 768px;
-  min-height: 80vh;
   margin: auto;
+}
+
+a {
+  color:inherit;
+  text-decoration:inherit;
+}
+
+a:hover {
+  color:inherit;
+  text-decoration:inherit;
+  cursor:pointer;
 }
 
 ol, ul {

@@ -2,18 +2,19 @@
     <Card>
         <div class="card-content">
             <div class="meta-fields">
-                <p class="arrow">&#8679;</p>
-                <p class="likes">{{ question.likes }}</p>
-                <p class="arrow">&#8681;</p>
+                <p class="vote">&plus;</p>
+                <p class="likes">{{ likes }}</p>
+                <p class="vote">&minus;</p>
             </div>
             <div class="content">
-                <router-link tag="h2" :to="{ name: 'question', params: { id: String(question.id) }}">
-                    {{ question.title }}
+                <router-link tag="h2" :to="{ name: 'question', params: { id: String(id) }}">
+                    {{ title }}
                 </router-link>
-                <p>{{ question.body }}</p>
+                <p>{{ body }}</p>
             </div>
-            <aside class="date">
-                <time>{{ question.published }}</time>
+            <aside class="user">
+                <User :image="'https://travis-ci.com/images/logos/TravisCI-Mascot-1.png'"/>
+                <p class="date">Asked: <time>{{ published }}</time></p>
             </aside>
         </div>
     </Card>
@@ -21,15 +22,20 @@
 
 <script>
 import Card from '@/components/Card'
+import User from '@/components/UserSummary'
 
 export default {
-  components: { Card },
+  components: { Card, User },
   props: {
-    question: Object
+    id: Number,
+    author: Number,
+    likes: Number,
+    title: String,
+    body: String,
+    published: String
   }
 }
 </script>
 
-<style scoped>
-@import '../../css/card.less';
+<style scoped src='../../css/card.less' lang='less'>
 </style>

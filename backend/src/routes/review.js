@@ -1,19 +1,14 @@
 const express = require('express')
 const router = express.Router()
+const reviewController = require('../controllers/review')
 
 /* Get the review data for a specific review id */
-router.get('/:id', function (req, res) {
-    // let rid = req.params.id;
-
-    res.json({ data: '<h1>Review Page</h1>' })
-})
+router.get('/:id', reviewController.getReview)
 
 /* Get page (N) answers for a question */
-router.get('/:id/replies', function (req, res) {
-    // let rid = req.params.id;
-    // let page_id = req.query.p;
+router.get('/:id/comments', reviewController.getReviewComments)
 
-    res.json({ data: '<h1>Review Page</h1>' })
-})
+/* Post a comment for a given review */
+router.post('/:id/comments', reviewController.postComment)
 
 module.exports = router
