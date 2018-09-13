@@ -3,12 +3,13 @@ import {
   answerMapper
 } from '@/utils/api/questions'
 
-import { doRequestFactory, resetStateFactory, RESET_STATE } from '@/store/utils'
+import { doRequestFactory } from '@/store/utils'
 
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
 const state = {
   loading: false,
+  search: '',
   questionObj: {
     question: {},
     answers: []
@@ -20,8 +21,8 @@ const state = {
 }
 
 const getters = {
-  question: ({questionObj: {question}}) => questionMapper(question),
-  answers: ({questionObj: {answers}}) => answers.map(answerMapper),
+  question: ({questionObj: {question}}) => question,
+  answers: ({questionObj: {answers}}) => answers,
   loading: ({loading}) => loading,
   error: ({error}) => error
 }
@@ -31,21 +32,22 @@ const mutations = {
     state.loading = bool
   },
   FOCUS_QUESTION (state, question) {
-    state.questionObj.question = question
+    state.questionObj.question = questionMapper(question)
   },
   FOCUS_ANSWERS (state, answers) {
-    state.questionObj.answers = answers
+    state.questionObj.answers = answers.map(answerMapper)
   },
   API_ERROR (state, {code, message}) {
     state.error.code = code
     state.error.message = message
   },
-  RESET_STATE
+  APPEND_ANSWER(state, answer) {
+    state.questionObj.answers.unshift(answerMapper(answer))
+  }
 }
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
-  resetState: resetStateFactory(state),
   async getQuestion ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_QUESTION, args: [id] })
   },

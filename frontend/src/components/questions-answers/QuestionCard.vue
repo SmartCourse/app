@@ -7,7 +7,7 @@
                 <p class="vote">&minus;</p>
             </div>
             <div class="content">
-                <router-link tag="h2" :to="{ name: 'question', param: { id: String(id) }}">
+                <router-link tag="h2" :to="{ name: 'question', params: { id: String(id) }}">
                     {{ title }}
                 </router-link>
                 <p>{{ body }}</p>
@@ -22,7 +22,7 @@
 
 <script>
 import Card from '@/components/Card'
-import User from './UserSummary'
+import User from '@/components/UserSummary'
 
 export default {
   components: { Card, User },

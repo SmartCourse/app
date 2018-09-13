@@ -11,20 +11,20 @@
 
 <script>
 export default {
-    name: 'user',
-    props: {
-        image: String
-    },
-    data() {
-        return {
-            name: 'Jeff Daniels',
-            description: 'The baddest bad guy out there, since that time at the pub.',
-            reputation: 'verified',
-            degree: 'B. Sc.',
-            year: 2010
-        }
+  name: 'user',
+  props: {
+    image: String
+  },
+  data() {
+    return {
+      name: 'Jeff Daniels',
+      description: 'The baddest bad guy out there, since that time at the pub.',
+      reputation: 'verified',
+      degree: 'B. Sc.',
+      year: 2010
     }
-    
+  }
+
 }
 </script>
 
@@ -59,7 +59,7 @@ figure {
 }
 
 @media screen and (max-width: 400px) {
-    
+
     .bio {
         font-size: var(--font-small-mobile);
         display: flex;
@@ -86,5 +86,3 @@ figure {
 }
 
 </style>
-
-

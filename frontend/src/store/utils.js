@@ -14,20 +14,3 @@ export function doRequestFactory(REQUEST, COMMITS) {
     }
   }
 }
-
-export function resetStateFactory(initialState) {
-  const propStrings = {}
-  for (let prop in initialState) {
-    propStrings[prop] = JSON.stringify(initialState[prop])
-  }
-  return function({commit, state}) {
-    commit('RESET_STATE', propStrings)
-  }
-}
-
-// This is bad (JSON.parse is quite expensive)
-export function RESET_STATE (state, propStrings) {
-  for (let prop in propStrings) {
-    state[prop] = JSON.parse(propStrings[prop])
-  }
-}

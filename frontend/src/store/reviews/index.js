@@ -21,8 +21,8 @@ const state = {
 }
 
 const getters = {
-  review: ({reviewObj: {review}}) => reviewMapper(review),
-  replies: ({reviewObj: {replies}}) => replies.map(replyMapper),
+  review: ({reviewObj: {review}}) => review,
+  replies: ({reviewObj: {replies}}) => replies,
   loading: ({loading}) => loading,
   error: ({error}) => error
 }
@@ -32,14 +32,17 @@ const mutations = {
     state.loading = bool
   },
   FOCUS_REVIEW (state, review) {
-    state.reviewObj.review = review
+    state.reviewObj.review = reviewMapper(review)
   },
   FOCUS_REPLIES (state, replies) {
-    state.reviewObj.replies = replies
+    state.reviewObj.replies = replies.map(replyMapper)
   },
   API_ERROR (state, {code, message}) {
     state.error.code = code
     state.error.message = message
+  },
+  APPEND_REPLY(state, reply) {
+    state.reviewObj.replies.unshift(replyMapper(reply))
   }
 }
 
@@ -50,6 +53,9 @@ const actions = {
   },
   async getReplies ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, args: [id] })
+  },
+  async postReview ({dispatch}, { id, form }) {
+    return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, args: [id, form] })
   },
   async postReply ({dispatch}, { id, form }) {
     return dispatch('doRequest', { action: ACTIONS.POST_REPLY, args: [id, form] })

@@ -70,14 +70,9 @@ describe('Test answer routes', () => {
             return request
         })
 
-        it('has the right number of answers', () =>
+        it('returns the answer we POSTed', () =>
             request.then(({ body }) =>
-                assert(body.length >= 1))
-        )
-
-        it('has the answer we POSTed', () =>
-            request.then(({ body }) =>
-                expect(body.filter(ans => ans.body === 'superruuu____testu').length).to.equal(1))
+                expect(body.body).to.equal('superruuu____testu'))
         )
     })
 

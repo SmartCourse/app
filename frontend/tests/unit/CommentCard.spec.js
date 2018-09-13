@@ -1,8 +1,8 @@
 import { expect } from 'chai'
 import { shallowMount } from '@vue/test-utils'
-import AnswerCard from '@/components/questions-answers/AnswerCard'
+import CommentCard from '@/components/comments/CommentCard'
 
-describe('AnswerCard.vue', () => {
+describe('CommentCard.vue', () => {
   before(function () {
     this.card = {
       id: 1,
@@ -11,21 +11,21 @@ describe('AnswerCard.vue', () => {
       body:
         'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto'
     }
-    this.wrapper = shallowMount(AnswerCard, {
-      propsData: { answer: this.card },
+    this.wrapper = shallowMount(CommentCard, {
+      propsData: { comment: this.card },
       stubs: {}
     })
   })
 
-  it('renders answer data', function () {
+  it('renders comment data', function () {
     expect(this.wrapper.findAll('p').at(1).text()).to.include(this.card.likes)
   })
 
-  it('renders answer publish time', function () {
+  it('renders comment publish time', function () {
     expect(this.wrapper.find('time').text()).to.include(this.card.published)
   })
 
-  it('renders answer body', function () {
+  it('renders comment body', function () {
     expect(this.wrapper.findAll('p').at(3).text()).to.include(this.card.body)
   })
 })

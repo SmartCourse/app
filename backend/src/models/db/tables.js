@@ -49,7 +49,7 @@ function createQuestionTable (db) {
 
 function createCommentTable (db) {
     db.run(`CREATE TABLE comment (
-        commentID INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         questionID INTEGER,
         reviewID INTEGER,
         commentParent INTEGER,

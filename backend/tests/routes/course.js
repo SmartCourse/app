@@ -157,8 +157,10 @@ describe('Course route testing', () => {
         })
 
         it('review has a body', () =>
-            request.then(({ body }) =>
-                expect(body).to.be.a('array'))
+            request.then(({ body }) => {
+                expect(body.title).to.equal('I\'m a real boy')
+                expect(body.body).to.equal('barry is good')
+            })
         )
     })
 })

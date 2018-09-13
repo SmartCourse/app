@@ -8,7 +8,7 @@ router.get('/:id', questionController.getQuestion)
 /* Get page (N) answers for a question */
 router.get('/:id/answers', questionController.getQuestionAnswers)
 
-/* Get page (N) answers for a question */
+/* Post an answer for a given question */
 router.post('/:id/answers', questionController.postAnswer)
 
 module.exports = router

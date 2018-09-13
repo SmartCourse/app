@@ -16,7 +16,7 @@ class Comment {
         return this.db
             .insert('comment', { [key]: value, body, userID })
             /* Still not sure on this, seems wasteful to send all new data */
-            .then(() => this.getComments(queryObject, 1))
+            .then((id) => ({ body, userID, id, timestamp: Date.now() }))
     }
 
     /**
@@ -34,11 +34,11 @@ class Comment {
 
     /**
      * Edit a comment
-     * @param {number} commentID    Id of the comment to be edited
+     * @param {number} id           Id of the comment to be edited
      * @param {*}      data         Relevant fields that need to be updated
      */
-    editComment(commentID, data) {
-        return Promise.resolve({ commentID, data })
+    editComment(id, data) {
+        return Promise.resolve({ id, data })
     }
 }
 

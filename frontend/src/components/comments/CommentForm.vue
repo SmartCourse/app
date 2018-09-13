@@ -1,11 +1,11 @@
 <template>
     <Card>
       <div class="content">
-          <h3>Submit an Answer</h3>
+          <h3>Submit {{ type }}</h3>
           <p>
-            <textarea placeholder="Your answer here.." v-model="body"></textarea><br>
+            <textarea placeholder="Your input here.." v-model="body"></textarea><br>
             <!-- should probs be a separate component -->
-            <AppButton @click.native="$emit('submitAnswerForm', {body})">Answer</AppButton>
+            <AppButton @click.native="$emit('submitCommentForm', {body})">{{ type }}</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </p>
@@ -18,10 +18,13 @@ import Card from '@/components/Card'
 import AppButton from '@/components/AppButton'
 
 export default {
-  name: 'AnswerForm',
+  name: 'CommentForm',
   components: {
     Card,
     AppButton
+  },
+  props: {
+    type: String
   },
   data () {
     return {
