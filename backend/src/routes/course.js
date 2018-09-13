@@ -6,18 +6,18 @@ const courseController = require('../controllers/course')
 router.get('/', courseController.getCourses)
 
 /* Get the course data for a specific course id */
-router.get('/:id', courseController.getCourse)
+router.get('/:code', courseController.getCourse)
 
 /* Get page (N) questions for a course */
-router.get('/:id/questions', courseController.getCourseQuestions)
+router.get('/:code/questions', courseController.getCourseQuestions)
 
 /* post a new question to a course page */
-router.post('/:id/question', courseController.postQuestion)
+router.post('/:code/question', courseController.postQuestion)
 
 /* Get page (N) reviews for a course */
-router.get('/:id/reviews', courseController.getCourseReviews)
+router.get('/:code/reviews', courseController.getCourseReviews)
 
 /* create a new review for course */
-router.post('/:id/review', courseController.postReview)
+router.post('/:code/review', courseController.postReview)
 
 module.exports = router
