@@ -1,35 +1,22 @@
 <template>
     <section class="main-content">
-        <!-- No question to render, show question form-->
-        <div v-if="courseID">
-          <QuestionForm @submitQuestionForm="submitQuestion">
-            <span class="form-failure"
-              v-if="error.code">{{error.message}}
-            </span>
-          </QuestionForm>
-        </div>
+      <QuestionCard v-bind="question"/>
 
-        <!-- Otherwise render the specified question-->
-        <div v-else>
-          <QuestionCard v-bind="question"/>
+      <AnswerForm @submitCommentForm="submitAnswer" :type="commentType" :callback="submitAnswer">
+        <span class="form-failure"
+            v-if="error.code">{{error.message}}</span>
+      </AnswerForm>
 
-          <AnswerForm @submitCommentForm="submitAnswer" :type="commentType">
-            <span class="form-failure"
-                v-if="error.code">{{error.message}}</span>
-          </AnswerForm>
-          <transition-group name='fade' tag='ul' v-if="answers.length">
-            <li v-for="answer in answers" :key="answer.id">
-              <AnswerCard :comment="answer"/>
-            </li>
-          </transition-group>
-        </div>
-      <!--<LoadingSpinner v-else/>-->
+      <transition-group name='fade' tag='ul' v-if="answers.length">
+        <li v-for="answer in answers" :key="answer.id">
+          <AnswerCard :comment="answer" />
+        </li>
+      </transition-group>
     </section>
 </template>
 
 <script>
 import QuestionCard from '@/components/questions-answers/QuestionCard'
-import QuestionForm from '@/components/questions-answers/QuestionForm'
 import AnswerCard from '@/components/comments/CommentCard'
 import AnswerForm from '@/components/comments/CommentForm'
 import { mapGetters } from 'vuex'
@@ -37,13 +24,11 @@ import { mapGetters } from 'vuex'
 export default {
   components: {
     QuestionCard,
-    QuestionForm,
     AnswerCard,
     AnswerForm
   },
   props: {
-    courseID: String, // This is a query
-    questionID: String // This is a param
+    id: String // This is a param
   },
   data() {
     return {
@@ -59,20 +44,6 @@ export default {
     })
   },
   methods: {
-    submitQuestion (questionForm) {
-      // check that they actually typed something
-      if (questionForm.title === '' || questionForm.body === '') {
-        return
-      }
-      this.$store.dispatch('questions/postQuestion',
-        {
-          form: questionForm,
-          id: this.courseID
-        })
-        /* ?????????? */
-        .then(() => this.$router.push({ name: 'question', params: { id: this.question.id } }))
-        .then(() => this.$store.dispatch('questions/getAnswers', this.questionID))
-    },
     submitAnswer (answerForm) {
       // check that they actually typed something
       if (answerForm.body === '') {
@@ -83,26 +54,14 @@ export default {
       this.$store.dispatch('questions/postAnswer', {form: answerForm, id: this.question.id})
     }
   },
-  created() {
-    if (this.questionID) {
-      this.$store.dispatch('questions/getAnswers', this.questionID)
-      this.$store.dispatch('questions/getQuestion', this.questionID)
-    }
+  created () {
+    this.$store.dispatch('questions/getAnswers', this.id)
+    this.$store.dispatch('questions/getQuestion', this.id)
   }
 }
 </script>
 
 <style scoped>
-  li {
-    list-style: none;
-  }
-  .form-success {
-    color: green;
-  }
-  .form-failure {
-    color: red;
-  }
-
 .fade-enter-active, .fade-leave-active {
   transition: opacity 1s;
 }

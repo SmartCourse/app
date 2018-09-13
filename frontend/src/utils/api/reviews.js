@@ -6,9 +6,9 @@ export function getReview(id) {
   return get(`/review/${id}`)
 }
 
-export function replyMapper({ replyID, likes, userID, body, timestamp }) {
+export function replyMapper({ id, likes, userID, body, timestamp }) {
   return {
-    id: replyID,
+    id,
     body,
     likes,
     author: userID,
