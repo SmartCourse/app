@@ -12,8 +12,11 @@ class Question {
      * @returns {object}
      */
     getQuestions(courseID, pageNumber = 1) {
+        let pageSize = 10
+        let offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll('SELECT * FROM question WHERE courseID=?', [courseID])
+            .queryAll('SELECT * FROM question WHERE courseID=? ORDER BY timestamp DESC LIMIT ?, ?',
+                [courseID, offset, pageNumber])
     }
 
     /**

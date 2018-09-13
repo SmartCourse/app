@@ -36,8 +36,11 @@ class Review {
      * @returns {Array}
      */
     getReviews(courseID, pageNumber = 1) {
+        let pageSize = 10
+        let offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll('SELECT * FROM review WHERE courseID=?', [courseID])
+            .queryAll('SELECT * FROM review WHERE courseID=? ORDER BY timestamp DESC LIMIT ?, ?',
+                [courseID, offset, pageSize])
     }
 }
 
