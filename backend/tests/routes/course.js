@@ -138,12 +138,12 @@ describe('Course route testing', () => {
         )
     })
 
-    describe('POST /api/course/1/review', () => {
+    describe('POST /api/course/COMP4920/review', () => {
         let request
 
         before(() => {
             request = supertest
-                .post('/api/course/1/review')
+                .post('/api/course/COMP4920/review')
                 .set('Accept', 'application/json')
                 .send({ title: 'I\'m a real boy', body: 'barry is good' })
                 .expect('Content-Type', /json/)

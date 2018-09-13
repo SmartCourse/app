@@ -45,7 +45,8 @@ function createQuestionTable (db) {
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         likes INTEGER DEFAULT '0.00',
         FOREIGN KEY (code) REFERENCES course(code),
-        FOREIGN KEY (userID) REFERENCES user(id))`
+        FOREIGN KEY (userID) REFERENCES user(id)
+        )`
     )
 }
 
@@ -61,7 +62,8 @@ function createCommentTable (db) {
         likes INTEGER DEFAULT '0.00',
         FOREIGN KEY (questionID) REFERENCES question(id),
         FOREIGN KEY (reviewID) REFERENCES review(id),
-        FOREIGN KEY (userID) REFERENCES user(id))`
+        FOREIGN KEY (userID) REFERENCES user(id)
+        )`
     )
 }
 
@@ -75,7 +77,8 @@ function createReviewTable (db) {
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         likes INTEGER DEFAULT '0.00',
         FOREIGN KEY (code) REFERENCES course(code),
-        FOREIGN KEY (userID) REFERENCES user(id))`
+        FOREIGN KEY (userID) REFERENCES user(id)
+        )`
     )
 }
 

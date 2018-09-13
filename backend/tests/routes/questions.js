@@ -4,12 +4,12 @@ const supertest = require('supertest')(app)
 const { expect } = require('chai')
 
 describe('Test question routes', () => {
-    describe('GET /api/question/1', () => {
+    describe('GET /api/course/COMP4920/question/1', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/question/1')
+                .get('/api/course/COMP4920/question/1')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -34,12 +34,12 @@ describe('Test question routes', () => {
 })
 
 describe('Test answer routes', () => {
-    describe('GET /api/question/1/answers', () => {
+    describe('GET /api/course/COMP4920/question/1/answers', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/question/1/answers')
+                .get('/api/course/COMP4920/question/1/answers')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -57,12 +57,12 @@ describe('Test answer routes', () => {
         )
     })
 
-    describe('POST /api/question/1/answers', () => {
+    describe('POST /api/course/COMP4920/question/1/answers', () => {
         let request
 
         before(() => {
             request = supertest
-                .post('/api/question/1/answers')
+                .post('/api/course/COMP4920/question/1/answers')
                 .send({ body: 'superruuu____testu' })
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
@@ -76,12 +76,12 @@ describe('Test answer routes', () => {
         )
     })
 
-    describe('POST /api/question/1/answers (ERROR)', () => {
+    describe('POST /api/course/COMP4920/question/1/answers (ERROR)', () => {
         let request
 
         before(() => {
             request = supertest
-                .post('/api/question/1/answers')
+                .post('/api/course/COMP4920/question/1/answers')
                 .send({ badBody: 'superruuu____testu' })
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)

@@ -3,12 +3,12 @@ const supertest = require('supertest')(app)
 const { expect } = require('chai')
 
 describe('Review route testing', function () {
-    describe('GET /api/review/1', () => {
+    describe('GET /api/course/COMP4920/review/1', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/review/1')
+                .get('/api/course/COMP4920/review/1')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -26,12 +26,12 @@ describe('Review route testing', function () {
         )
     })
 
-    describe('GET /api/review/1/comments', () => {
+    describe('GET /api/course/COMP4920/review/1/comments', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/review/1/comments')
+                .get('/api/course/COMP4920/review/1/comments')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
