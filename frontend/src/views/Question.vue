@@ -69,6 +69,9 @@ export default {
           form: questionForm,
           id: this.courseID
         })
+        /* ?????????? */
+        .then(() => this.$router.push({ name: 'question', params: { id: this.question.id } }))
+        .then(() => this.$store.dispatch('questions/getAnswers', this.questionID))
     },
     submitAnswer (answerForm) {
       // check that they actually typed something
@@ -84,9 +87,6 @@ export default {
     if (this.questionID) {
       this.$store.dispatch('questions/getAnswers', this.questionID)
       this.$store.dispatch('questions/getQuestion', this.questionID)
-    } else {
-      // stop old answers showing up after creating a new question
-      this.$store.dispatch('questions/resetState')
     }
   }
 }

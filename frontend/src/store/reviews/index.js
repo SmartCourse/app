@@ -3,7 +3,7 @@ import {
   replyMapper
 } from '@/utils/api/reviews'
 
-import { doRequestFactory, resetStateFactory, RESET_STATE } from '@/store/utils'
+import { doRequestFactory } from '@/store/utils'
 
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
@@ -43,13 +43,11 @@ const mutations = {
   },
   APPEND_REPLY(state, reply) {
     state.reviewObj.replies.unshift(replyMapper(reply))
-  },
-  RESET_STATE
+  }
 }
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
-  resetState: resetStateFactory(state),
   async getReview ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_REVIEW, args: [id] })
   },

@@ -3,7 +3,7 @@ import {
   answerMapper
 } from '@/utils/api/questions'
 
-import { doRequestFactory, resetStateFactory, RESET_STATE } from '@/store/utils'
+import { doRequestFactory } from '@/store/utils'
 
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
@@ -43,13 +43,11 @@ const mutations = {
   },
   APPEND_ANSWER(state, answer) {
     state.questionObj.answers.unshift(answerMapper(answer))
-  },
-  RESET_STATE
+  }
 }
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
-  resetState: resetStateFactory(state),
   async getQuestion ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_QUESTION, args: [id] })
   },
