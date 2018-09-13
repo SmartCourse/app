@@ -21,8 +21,8 @@ const state = {
 }
 
 const getters = {
-  question: ({questionObj: {question}}) => questionMapper(question),
-  answers: ({questionObj: {answers}}) => answers.map(answerMapper),
+  question: ({questionObj: {question}}) => question,
+  answers: ({questionObj: {answers}}) => answers,
   loading: ({loading}) => loading,
   error: ({error}) => error
 }
@@ -32,10 +32,10 @@ const mutations = {
     state.loading = bool
   },
   FOCUS_QUESTION (state, question) {
-    state.questionObj.question = question
+    state.questionObj.question = questionMapper(question)
   },
   FOCUS_ANSWERS (state, answers) {
-    state.questionObj.answers = answers
+    state.questionObj.answers = answers.map(answerMapper)
   },
   API_ERROR (state, {code, message}) {
     state.error.code = code
