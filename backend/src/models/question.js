@@ -11,12 +11,12 @@ class Question {
      * @param   {number} pageNumber  The pageNumber, defaults to 1?, if higher than max should just give max.
      * @returns {object}
      */
-    getQuestions(courseID, pageNumber = 1) {
+    getQuestions(courseID, pageNumber) {
         let pageSize = 10
         let offset = (pageSize * pageNumber) - pageSize
         return this.db
             .queryAll('SELECT * FROM question WHERE courseID=? ORDER BY timestamp DESC LIMIT ?, ?',
-                [courseID, offset, pageNumber])
+                [courseID, offset, pageSize])
     }
 
     /**

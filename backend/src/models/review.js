@@ -35,7 +35,7 @@ class Review {
      * @param   {number}  pageNumber    The page of the reviews list
      * @returns {Array}
      */
-    getReviews(courseID, pageNumber = 1) {
+    getReviews(courseID, pageNumber) {
         let pageSize = 10
         let offset = (pageSize * pageNumber) - pageSize
         return this.db

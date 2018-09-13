@@ -18,12 +18,19 @@ exports.getCourse = function ({ params }, res) {
 
 /* Get all questions for a course */
 exports.getCourseQuestions = function ({ params, query }, res) {
+    if (typeof query.p !== 'number') {
+        throw Error
+    }
     responseHandler(questionModel.getQuestions(params.id, query.p), res)
         .catch(errorHandler(res))
 }
 
 /* Get all reviews for a course */
 exports.getCourseReviews = function ({ params, query }, res) {
+    // Check that p is an integer
+    if (typeof query.p !== 'number') {
+        throw Error
+    }
     responseHandler(reviewModel.getReviews(params.id, query.p), res)
         .catch(errorHandler(res))
 }
