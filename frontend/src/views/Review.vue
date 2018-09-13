@@ -74,8 +74,8 @@ export default {
           form: reviewForm,
           id: this.courseID
         })
-        .then(() =>
-          this.$router.push({ name: 'review', params: { id: String(this.review.id) } }))
+        .then(() => this.$router.push({ name: 'review', params: { id: String(this.review.id) } }))
+        .then(() => this.$store.dispatch('reviews/getReplies', this.reviewID))
     },
     submitReply (replyForm) {
       // check that they actually typed something
@@ -91,9 +91,6 @@ export default {
     if (this.reviewID) {
       this.$store.dispatch('reviews/getReview', this.reviewID)
       this.$store.dispatch('reviews/getReplies', this.reviewID)
-    } else {
-      // future proof (see Review.vue)
-      this.$store.dispatch('reviews/resetState')
     }
   }
 }
