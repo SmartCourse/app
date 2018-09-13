@@ -1,15 +1,17 @@
 <template>
     <section class="main-content">
-        <QuestionCard v-bind="question"/>
-        <AnswerForm @submitCommentForm="submitAnswer" :type="commentType">
-          <span class="form-failure"
-              v-if="error.code">{{error.message}}</span>
-        </AnswerForm>
-        <transition-group name='fade' tag='ul' v-if="answers.length">
-          <li v-for="answer in answers" :key="answer.id">
-            <AnswerCard :comment="answer"/>
-          </li>
-        </transition-group>
+      <QuestionCard v-bind="question"/>
+
+      <AnswerForm @submitCommentForm="submitAnswer" :type="commentType">
+        <span class="form-failure"
+            v-if="error.code">{{error.message}}</span>
+      </AnswerForm>
+
+      <transition-group name='fade' tag='ul' v-if="answers.length">
+        <li v-for="answer in answers" :key="answer.id">
+          <AnswerCard :comment="answer"/>
+        </li>
+      </transition-group>
     </section>
 </template>
 
@@ -60,16 +62,6 @@ export default {
 </script>
 
 <style scoped>
-  li {
-    list-style: none;
-  }
-  .form-success {
-    color: green;
-  }
-  .form-failure {
-    color: red;
-  }
-
 .fade-enter-active, .fade-leave-active {
   transition: opacity 1s;
 }

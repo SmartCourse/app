@@ -1,10 +1,10 @@
 <template>
     <section class="main-content">
-        <QuestionForm @submitQuestionForm="submitQuestion">
-          <span class="form-failure"
-            v-if="error.code">{{error.message}}
-          </span>
-        </QuestionForm>
+      <QuestionForm @submitQuestionForm="submitQuestion">
+        <span class="form-failure"
+          v-if="error.code">{{error.message}}
+        </span>
+      </QuestionForm>
     </section>
 </template>
 
@@ -17,11 +17,7 @@ export default {
     QuestionForm
   },
   props: {
-    courseID: String, // This is a query
-  },
-  data() {
-    return {
-    }
+    courseID: String // This is a query
   },
   computed: {
     ...mapGetters('questions', {
@@ -47,15 +43,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-  li {
-    list-style: none;
-  }
-  .form-success {
-    color: green;
-  }
-  .form-failure {
-    color: red;
-  }
-</style>

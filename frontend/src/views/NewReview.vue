@@ -17,11 +17,7 @@ export default {
     ReviewForm
   },
   props: {
-    courseID: String, // This is a query
-  },
-  data() {
-    return {
-    }
+    courseID: String // This is a query
   },
   computed: {
     ...mapGetters('reviews', {

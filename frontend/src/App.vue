@@ -13,7 +13,7 @@ import AppNavBar from '@/components/AppNavBar'
 import AppFooter from '@/components/AppFooter'
 
 export default {
-  components: { AppNavBar, AppFooter },
+  components: { AppNavBar, AppFooter }
 }
 
 </script>
@@ -44,6 +44,13 @@ html, body {
   --font-medium-mobile: 16px;
   --font-small: 16px;
   --font-small-mobile: 12px;
+}
+
+.form-success {
+  color: green;
+}
+.form-failure {
+  color: red;
 }
 
 #app {

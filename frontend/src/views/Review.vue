@@ -1,16 +1,17 @@
 <template>
     <section class="main-content">
       <ReviewCard v-bind="review"/>
-        <ReplyForm @submitCommentForm="submitReply" :type="commentType">
-          <span class="form-failure"
-              v-if="error.code">{{error.message}}</span>
-        </ReplyForm>
 
-        <ul v-if="replies.length">
-          <li v-for="answer in replies" :key="answer.id">
-            <ReplyCard :comment="answer"/>
-          </li>
-        </ul>
+      <ReplyForm @submitCommentForm="submitReply" :type="commentType">
+        <span class="form-failure"
+            v-if="error.code">{{error.message}}</span>
+      </ReplyForm>
+
+      <transition-group name='fade' tag='ul' v-if="replies.length">
+        <li v-for="answer in replies" :key="answer.id">
+          <ReplyCard :comment="answer"/>
+        </li>
+      </transition-group>
     </section>
 </template>
 
@@ -59,3 +60,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 1s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>
