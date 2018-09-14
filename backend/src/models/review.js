@@ -6,15 +6,14 @@ class Review {
     }
 
     /**
-     * Post a review.
-     * @param {string} code  The id from the route param
-     * @param {object} data  controller passed in object which should
-     *                       contain the user data (probs eventually from an auth token)
+     * TODO - PAGING
+     * @param   {string}  code          The code the review corresponds to
+     * @param   {number}  pageNumber    The page of the reviews list
+     * @returns {Array}
      */
-    postReview(code, { title, body, userID = 1 }) {
+    getReviews(code, pageNumber = 1) {
         return this.db
-            .insert('review', { code, body, title, userID })
-            .then((reviewID) => this.getReview(reviewID))
+            .queryAll('SELECT * FROM review WHERE code=?', [code])
     }
 
     /**
@@ -28,15 +27,15 @@ class Review {
     }
 
     /**
-     * // TODO - PAGING
-     * Get all of dem reviews for a specific course
-     * @param   {string}  code          The code the review corresponds to
-     * @param   {number}  pageNumber    The page of the reviews list
-     * @returns {Array}
+     * Post a review.
+     * @param {string} code  The id from the route param
+     * @param {object} data  controller passed in object which should
+     *                       contain the user data (probs eventually from an auth token)
      */
-    getReviews(code, pageNumber = 1) {
+    postReview(code, { title, body, userID = 1 }) {
         return this.db
-            .queryAll('SELECT * FROM review WHERE code=?', [code])
+            .insert('review', { code, body, title, userID })
+            .then((reviewID) => this.getReview(reviewID))
     }
 }
 

@@ -48,17 +48,17 @@ const mutations = {
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
-  async getReview ({dispatch}, id) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REVIEW, args: [id] })
+  async getReview ({dispatch}, { code, id }) {
+    return dispatch('doRequest', { action: ACTIONS.GET_REVIEW, args: [code, id] })
   },
-  async getReplies ({dispatch}, id) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, args: [id] })
+  async postReview ({dispatch}, { code, form }) {
+    return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, args: [code, form] })
   },
-  async postReview ({dispatch}, { id, form }) {
-    return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, args: [id, form] })
+  async getReplies ({dispatch}, { code, id }) {
+    return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, args: [code, id] })
   },
-  async postReply ({dispatch}, { id, form }) {
-    return dispatch('doRequest', { action: ACTIONS.POST_REPLY, args: [id, form] })
+  async postReply ({dispatch}, { code, id, form }) {
+    return dispatch('doRequest', { action: ACTIONS.POST_REPLY, args: [code, id, form] })
   }
 }
 

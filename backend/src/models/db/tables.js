@@ -108,7 +108,8 @@ function devInitDB(db) {
 
     const review = {
         title: 'title',
-        body: 'Would bang out of 10!'
+        body: 'Would bang out of 10!',
+        code: 'COMP4920'
     }
 
     const reply = {

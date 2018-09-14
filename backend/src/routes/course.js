@@ -17,6 +17,7 @@ course.get('/:code', courseController.getCourse)
 /* Get page (N) questions for a course */
 course.get('/:code/questions', courseController.getCourseQuestions)
 
+// TODO: validate course code for post requests! (currently not checked anywhere)
 /* post a new question to a course page */
 course.post('/:code/question', courseController.postQuestion)
 
