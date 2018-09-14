@@ -5,7 +5,7 @@ import QuestionCard from '@/components/questions-answers/QuestionCard'
 describe('QuestionCard.vue', () => {
   before(function () {
     this.card = {
-      id: 1,
+      id: '1',
       likes: 10,
       published: new Date().toDateString(),
       title:
@@ -14,7 +14,7 @@ describe('QuestionCard.vue', () => {
         'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto'
     }
     this.wrapper = shallowMount(QuestionCard, {
-      propsData: { ...this.card },
+      propsData: { ...this.card, code: 'COMP4920' },
       stubs: {
         'router-link': RouterLinkStub
       }

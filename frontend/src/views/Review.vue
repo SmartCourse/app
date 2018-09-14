@@ -62,8 +62,8 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('reviews/getReview', { id:this.id, code:this.code })
-    this.$store.dispatch('reviews/getReplies', { id:this.id, code:this.code })
+    this.$store.dispatch('reviews/getReview', { id: this.id, code: this.code })
+    this.$store.dispatch('reviews/getReplies', { id: this.id, code: this.code })
   }
 }
 </script>
