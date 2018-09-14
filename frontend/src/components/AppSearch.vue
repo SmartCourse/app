@@ -9,10 +9,10 @@
         <ul v-if="search && suggestions.length">
             <router-link
                 @click.native="resetSearch()"
-                :key="item.courseID"
+                :key="item.code"
                 tag="li"
                 v-for="item in suggestions"
-                :to="{ path: `/course/${item.courseID}` }"
+                :to="{ path: `/course/${item.code}` }"
             >
                 {{ item.name }} ({{ item.code }})
             </router-link>

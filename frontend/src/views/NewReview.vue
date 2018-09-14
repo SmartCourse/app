@@ -17,7 +17,10 @@ export default {
     ReviewForm
   },
   props: {
-    courseID: String // This is a query
+    code: {
+      type: String,
+      required: true
+    }
   },
   computed: {
     ...mapGetters('reviews', {
@@ -36,9 +39,9 @@ export default {
       this.$store.dispatch('reviews/postReview',
         {
           form: reviewForm,
-          id: this.courseID
+          code: this.code
         })
-        .then(() => this.$router.push({ name: 'review', params: { id: String(this.review.id) } }))
+        .then(() => this.$router.push({ name: 'review', params: { code: this.code, id: this.review.id } }))
     }
   }
 }

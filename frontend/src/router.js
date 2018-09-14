@@ -18,9 +18,9 @@ export default new Router({
       component: Home
     },
     {
-      path: '/course/:id',
-      props: ({params: { id }}) => ({
-        id
+      path: '/course/:code',
+      props: ({params: { code }}) => ({
+        code
       }),
       // route level code-splitting
       // this generates a separate chunk (course.[hash].js) for this route
@@ -28,34 +28,36 @@ export default new Router({
       component: () => import('./views/Course')
     },
     {
-      path: '/question',
+      path: '/course/:code/question/new',
       name: 'newQuestion',
-      props: ({query: { cid }}) => ({
-        courseID: String(cid)
+      props: ({params: { code }}) => ({
+        code
       }),
       component: newQuestionView
     },
     {
-      path: '/question/:id',
+      path: '/course/:code/question/:id',
       name: 'question',
-      props: ({params: { id }}) => ({
-        id: String(id)
+      props: ({params: { code, id }}) => ({
+        code,
+        id
       }),
       component: questionView
     },
     {
-      path: '/review',
+      path: '/course/:code/review/new',
       name: 'newReview',
-      props: ({query: { cid }}) => ({
-        courseID: String(cid)
+      props: ({params: { code }}) => ({
+        code
       }),
       component: newReviewView
     },
     {
-      path: '/review/:id',
+      path: '/course/:code/review/:id',
       name: 'review',
-      props: ({params: { id }}) => ({
-        id: String(id)
+      props: ({params: { code, id }}) => ({
+        code,
+        id
       }),
       component: reviewView
     }

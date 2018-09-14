@@ -2,13 +2,13 @@ import { get, post, put } from './index'
 import format from 'date-fns/format'
 
 /* get question */
-export function getQuestion(id) {
-  return get(`/question/${id}`)
+export function getQuestion(course, id) {
+  return get(`/course/${course}/question/${id}`)
 }
 
 export function answerMapper({ id, likes, userID, body, timestamp }) {
   return {
-    id,
+    id: String(id),
     body,
     likes,
     author: userID,
@@ -16,9 +16,10 @@ export function answerMapper({ id, likes, userID, body, timestamp }) {
   }
 }
 
-export function questionMapper({ questionID, likes, userID, title, body, timestamp }) {
+export function questionMapper({ id, code, likes, userID, title, body, timestamp }) {
   return {
-    id: questionID,
+    id: String(id),
+    code,
     title,
     body,
     likes,
@@ -27,31 +28,31 @@ export function questionMapper({ questionID, likes, userID, title, body, timesta
   }
 }
 
-// STUBS
-
 /**
  * @param {object} data the data associated with the new question
  */
-export function postQuestion(id, data) {
-  return post(`/course/${id}/question`, { data })
+export function postQuestion(course, data) {
+  return post(`/course/${course}/question`, { data })
 }
 
-export function getAnswers(id) {
-  return get(`/question/${id}/answers`)
-}
-
-/**
- * @param {string} id the id of the question being answered
- * @param {object} data the data associated with the new answer
- */
-export function postAnswer(id, data) {
-  return post(`/question/${id}/answers`, { data })
+export function getAnswers(course, id) {
+  return get(`/course/${course}/question/${id}/answers`)
 }
 
 /**
- * @param {string} id the id of the question being edited
- * @param {object} data the data associated with the new question
+ * @param {string} course  the course code of the course
+ * @param {string} id      the id of the question being answered
+ * @param {object} data    the data associated with the new answer
  */
-export function editQuestion(id, data) {
-  return put(`/question/${id}`, { data })
+export function postAnswer(course, id, data) {
+  return post(`/course/${course}/question/${id}/answers`, { data })
+}
+
+/**
+ * @param {string} course  the course code of the course
+ * @param {string} id      the id of the question being edited
+ * @param {object} data    the data associated with the new question
+ */
+export function editQuestion(course, id, data) {
+  return put(`/course/${course}/question/${id}`, { data })
 }

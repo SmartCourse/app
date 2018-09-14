@@ -19,54 +19,49 @@ describe('Course route testing', () => {
                 expect(body.length).to.be.equal(1566))
         )
 
-        it('has the correct courseID', () =>
+        it('has the correct code', () =>
             request.then(({ body }) =>
-                expect(body[0].courseID).to.equal(1))
+                expect(body[0].code).to.equal('ACCT1501'))
         )
 
         it('has the correct courseName', () =>
             request.then(({ body }) =>
                 expect(body[0].name).to.equal('Accounting & Financial Mgt 1A'))
         )
-
-        it('has the correct courseCode', () =>
-            request.then(({ body }) =>
-                expect(body[0].code).to.equal('ACCT1501'))
-        )
     })
 
-    describe('GET /api/course/1', () => {
+    describe('GET /api/course/ACCT1501', () => {
         let request
         before(() => {
             request = supertest
-                .get('/api/course/1')
+                .get('/api/course/ACCT1501')
                 .set('Accept', 'application/json')
                 .expect(200)
             return request
         })
 
-        it('has the correct courseID', () =>
-            request.then(({ body }) =>
-                expect(body.courseID).to.equal(1))
-        )
-
-        it('has the correct courseName', () =>
-            request.then(({ body }) =>
-                expect(body.name).to.equal('Accounting & Financial Mgt 1A'))
-        )
-
         it('has the correct courseCode', () =>
             request.then(({ body }) =>
                 expect(body.code).to.equal('ACCT1501'))
         )
+
+        it('has the correct name', () =>
+            request.then(({ body }) =>
+                expect(body.name).to.equal('Accounting & Financial Mgt 1A'))
+        )
+
+        it('has the correct tag', () =>
+            request.then(({ body }) =>
+                expect(body.tags).to.equal('acct1501,accounting & financial mgt 1a,acct'))
+        )
     })
 
-    describe('GET /api/course/1/questions', () => {
+    describe('GET /api/course/COMP4920/questions', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/course/1/questions')
+                .get('/api/course/COMP4920/questions')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -90,16 +85,16 @@ describe('Course route testing', () => {
 
         it('question has a course id', () =>
             request.then(({ body }) =>
-                expect(body[0].courseID).is.a('number'))
+                expect(body[0].code).is.a('string'))
         )
     })
 
-    describe('POST /api/course/1/question', () => {
+    describe('POST /api/course/ACCT1501/question', () => {
         let request
 
         before(() => {
             request = supertest
-                .post('/api/course/1/question')
+                .post('/api/course/ACCT1501/question')
                 .set('Accept', 'application/json')
                 .send({ body: 'testu', title: 'jeff' })
                 .expect('Content-Type', /json/)
@@ -115,12 +110,12 @@ describe('Course route testing', () => {
         )
     })
 
-    describe('GET /api/course/1/reviews', () => {
+    describe('GET /api/course/COMP4920/reviews', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/course/1/reviews')
+                .get('/api/course/COMP4920/reviews')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -139,16 +134,16 @@ describe('Course route testing', () => {
 
         it('review[0] has a course id', () =>
             request.then(({ body }) =>
-                expect(body[0].courseID).is.a('number'))
+                expect(body[0].code).is.a('string'))
         )
     })
 
-    describe('POST /api/course/1/review', () => {
+    describe('POST /api/course/COMP4920/review', () => {
         let request
 
         before(() => {
             request = supertest
-                .post('/api/course/1/review')
+                .post('/api/course/COMP4920/review')
                 .set('Accept', 'application/json')
                 .send({ title: 'I\'m a real boy', body: 'barry is good' })
                 .expect('Content-Type', /json/)

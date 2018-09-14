@@ -17,7 +17,10 @@ export default {
     QuestionForm
   },
   props: {
-    courseID: String // This is a query
+    code: {
+      type: String,
+      required: true
+    }
   },
   computed: {
     ...mapGetters('questions', {
@@ -36,9 +39,9 @@ export default {
       this.$store.dispatch('questions/postQuestion',
         {
           form: questionForm,
-          id: this.courseID
+          code: this.code
         })
-        .then(() => this.$router.push({ name: 'question', params: { id: this.question.id } }))
+        .then(() => this.$router.push({ name: 'question', params: { code: this.code, id: this.question.id } }))
     }
   }
 }

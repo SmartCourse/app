@@ -35,7 +35,7 @@ class Comment {
     /**
      * Edit a comment
      * @param {number} id           Id of the comment to be edited
-     * @param {*}      data         Relevant fields that need to be updated
+     * @param {object} data         Relevant fields that need to be updated
      */
     editComment(id, data) {
         return Promise.resolve({ id, data })

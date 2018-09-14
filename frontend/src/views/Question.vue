@@ -28,7 +28,14 @@ export default {
     AnswerForm
   },
   props: {
-    id: String // This is a param
+    code: {
+      type: String,
+      required: true
+    },
+    id: {
+      type: String,
+      required: true
+    }
   },
   data() {
     return {
@@ -55,8 +62,8 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('questions/getAnswers', this.id)
-    this.$store.dispatch('questions/getQuestion', this.id)
+    this.$store.dispatch('questions/getAnswers', { id: this.id, code: this.code })
+    this.$store.dispatch('questions/getQuestion', { id: this.id, code: this.code })
   }
 }
 </script>
@@ -65,7 +72,7 @@ export default {
 .fade-enter-active, .fade-leave-active {
   transition: opacity 1s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter, .fade-leave-to {
   opacity: 0;
 }
 </style>

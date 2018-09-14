@@ -18,9 +18,9 @@ class Course {
      * Gets a course instance from the DB.
      * @returns {object}    Info specific to single course.
      */
-    getCourse(courseID) {
+    getCourse(code) {
         return this.db
-            .query('SELECT * FROM course WHERE courseID=?', [courseID])
+            .query('SELECT * FROM course WHERE code=?', [code])
     }
 }
 

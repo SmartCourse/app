@@ -12,31 +12,31 @@ exports.getCourses = function (_, res) {
 
 /* Get specifc course data */
 exports.getCourse = function ({ params }, res) {
-    responseHandler(courseModel.getCourse(params.id), res)
+    responseHandler(courseModel.getCourse(params.code), res)
         .catch(errorHandler(res))
 }
 
 /* Get all questions for a course */
 exports.getCourseQuestions = function ({ params, query }, res) {
-    responseHandler(questionModel.getQuestions(params.id, query.p), res)
+    responseHandler(questionModel.getQuestions(params.code, query.p), res)
         .catch(errorHandler(res))
 }
 
 /* Get all reviews for a course */
 exports.getCourseReviews = function ({ params, query }, res) {
-    responseHandler(reviewModel.getReviews(params.id, query.p), res)
+    responseHandler(reviewModel.getReviews(params.code, query.p), res)
         .catch(errorHandler(res))
 }
 
 exports.postQuestion = function ({ params, body }, res) {
     // TODO fix userID
     body.userID = 1
-    responseHandler(questionModel.postQuestion(params.id, body), res)
+    responseHandler(questionModel.postQuestion(params.code, body), res)
         .catch(errorHandler(res))
 }
 
 /* POST new review */
 exports.postReview = function ({ params, body }, res) {
-    responseHandler(reviewModel.postReview(params.id, body), res)
+    responseHandler(reviewModel.postReview(params.code, body), res)
         .catch(errorHandler(res))
 }
