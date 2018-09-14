@@ -7,7 +7,8 @@
                 <p class="vote">&minus;</p>
             </div>
             <div class="content">
-                <router-link tag="h2" :to="{ name: 'question', params: { code, id }}">
+                <!-- v-if here just stops router error due to async data -->
+                <router-link v-if="code" tag="h2" :to="{ name: 'question', params: { code, id }}">
                     {{ title }}
                 </router-link>
                 <p>{{ body }}</p>
@@ -28,7 +29,7 @@ export default {
   components: { Card, User },
   props: {
     code: String,
-    id: Number,
+    id: String,
     author: Number,
     likes: Number,
     title: String,

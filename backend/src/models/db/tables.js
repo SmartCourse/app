@@ -98,7 +98,8 @@ function devInitDB(db) {
 
     const question = {
         title: 'Question creation help!',
-        body: 'I am struggling to create a meme question, wud shud I rite?'
+        body: 'I am struggling to create a meme question, wud shud I rite?',
+        code: 'COMP4920'
     }
 
     const comment = {

@@ -8,7 +8,7 @@ export function getQuestion(course, id) {
 
 export function answerMapper({ id, likes, userID, body, timestamp }) {
   return {
-    id,
+    id: String(id),
     body,
     likes,
     author: userID,
@@ -18,7 +18,7 @@ export function answerMapper({ id, likes, userID, body, timestamp }) {
 
 export function questionMapper({ id, code, likes, userID, title, body, timestamp }) {
   return {
-    id,
+    id: String(id),
     code,
     title,
     body,
