@@ -44,7 +44,7 @@ html, body {
   // borders
   --color-gray: #d5d5d5;
   --color-light-gray: #eaeaea;
-  --color-very-light-gray: #f4f4f4;
+  --color-very-light-gray: #f5f5f5;
   --border-dark: 1px solid var(--color-gray);
   --border: 1px solid var(--color-light-gray);
   --border-thick: 2px solid rgba(160, 178, 178, 0.5);
