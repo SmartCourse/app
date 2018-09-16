@@ -14,6 +14,7 @@
             reviews
         </TabButton>
     </div>
+
     <div class="course-content">
       <div v-if="courseTab=='info'" class="course-info">
         <p>
@@ -30,6 +31,8 @@
         <Feed
           feedType="QuestionCard"
           :items="questions"
+          :prevPage="prevPage"
+          :nextPage="nextPage"
         />
       </div>
 
@@ -42,8 +45,11 @@
         <Feed
             feedType="ReviewCard"
             :items="reviews"
+            :prevPage="prevPage"
+            :nextPage="nextPage"
           />
       </div>
+      
     </div>
   </div>
 </template>
@@ -57,6 +63,12 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'course',
+data () {
+    return {
+      questionPage: 1,
+      reviewPage: 1
+    }
+  },
   props: {
     code: String
   },
@@ -73,10 +85,51 @@ export default {
       courseInfo: 'course'
     })
   },
+  methods: {
+    update() {
+        this.$store.dispatch('course/getCourse', this.code)
+        this.refreshQuestions()
+        this.refreshReviews()
+    },
+    refreshQuestions() {
+        this.$store.dispatch('course/getQuestions',
+        {
+            id: this.code,
+            pageNumber: this.questionPage
+        })
+    }, 
+    refreshReviews() {
+        this.$store.dispatch('course/getReviews',
+        {
+            id: this.code,
+            pageNumber: this.reviewPage
+        })
+    },
+    nextPage (feedType) {
+        if (feedType == 'QuestionCard') {
+            this.questionPage += 1
+            this.refreshQuestions()
+        } else if (feedType == 'ReviewCard') {
+            this.reviewPage += 1
+            this.refreshReviews()
+        }
+    },
+    prevPage (feedType) {
+        if (feedType == 'QuestionCard') {
+            if (this.questionPage > 1) {
+                this.questionPage -= 1
+            }
+            this.refreshQuestions()
+        } else if (feedType == 'ReviewCard') {
+            if (this.reviewPage > 1) {
+                this.reviewPage -= 1
+            }
+            this.refreshReviews()
+        }
+    }
+  },
   created () {
-    this.$store.dispatch('course/getCourse', this.code)
-    this.$store.dispatch('course/getQuestions', this.code)
-    this.$store.dispatch('course/getReviews', this.code)
+      this.update()
   },
   beforeRouteUpdate ({ params: { code } }, from, next) {
     // called when the route that renders this component has changed,
@@ -85,9 +138,7 @@ export default {
     // navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
     // will be reused, and this hook will be called when that happens.
     // has access to `this` component instance.
-    this.$store.dispatch('course/getCourse', code)
-    this.$store.dispatch('course/getQuestions', code)
-    this.$store.dispatch('course/getReviews', code)
+    this.update()
     next()
   }
 }

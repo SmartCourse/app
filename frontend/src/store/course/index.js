@@ -56,11 +56,12 @@ const mutations = {
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
-  async getQuestions ({dispatch}, id) {
-    return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, args: [id] })
+  async getQuestions ({dispatch}, {id, pageNumber}) {
+    console.log(id)
+    return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, args: [id, pageNumber] })
   },
-  async getReviews ({dispatch}, id) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REVIEWS, args: [id] })
+  async getReviews ({dispatch}, {id, pageNumber}) {
+    return dispatch('doRequest', { action: ACTIONS.GET_REVIEWS, args: [id, pageNumber] })
   },
   async getCourse ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_COURSE, args: [id] })
