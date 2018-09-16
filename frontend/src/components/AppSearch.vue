@@ -72,11 +72,11 @@ input {
     font-size: 1em;
 
     & input {
-        width: 240px;
+        width: 300px;
     }
 
     & ul {
-        width: 280px;
+        width: 340px;
     }
 }
 
@@ -105,13 +105,24 @@ li:hover {
     background: var(--theme-light);
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 740px) {
     ul {
         width: 350px;
     }
 
     input {
         width: 310px;
+    }
+
+    .mini {
+
+        & input {
+            width: 100px;
+        }
+
+        & ul {
+            width: 140px;
+        }
     }
 
 }
