@@ -49,7 +49,7 @@
             :nextPage="nextPage"
           />
       </div>
-      
+
     </div>
   </div>
 </template>
@@ -63,7 +63,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'course',
-data () {
+  data () {
     return {
       questionPage: 1,
       reviewPage: 1
@@ -87,49 +87,49 @@ data () {
   },
   methods: {
     update() {
-        this.$store.dispatch('course/getCourse', this.code)
-        this.refreshQuestions()
-        this.refreshReviews()
+      this.$store.dispatch('course/getCourse', this.code)
+      this.refreshQuestions()
+      this.refreshReviews()
     },
     refreshQuestions() {
-        this.$store.dispatch('course/getQuestions',
+      this.$store.dispatch('course/getQuestions',
         {
-            id: this.code,
-            pageNumber: this.questionPage
+          id: this.code,
+          pageNumber: this.questionPage
         })
-    }, 
+    },
     refreshReviews() {
-        this.$store.dispatch('course/getReviews',
+      this.$store.dispatch('course/getReviews',
         {
-            id: this.code,
-            pageNumber: this.reviewPage
+          id: this.code,
+          pageNumber: this.reviewPage
         })
     },
     nextPage (feedType) {
-        if (feedType == 'QuestionCard') {
-            this.questionPage += 1
-            this.refreshQuestions()
-        } else if (feedType == 'ReviewCard') {
-            this.reviewPage += 1
-            this.refreshReviews()
-        }
+      if (feedType === 'QuestionCard') {
+        this.questionPage += 1
+        this.refreshQuestions()
+      } else if (feedType === 'ReviewCard') {
+        this.reviewPage += 1
+        this.refreshReviews()
+      }
     },
     prevPage (feedType) {
-        if (feedType == 'QuestionCard') {
-            if (this.questionPage > 1) {
-                this.questionPage -= 1
-            }
-            this.refreshQuestions()
-        } else if (feedType == 'ReviewCard') {
-            if (this.reviewPage > 1) {
-                this.reviewPage -= 1
-            }
-            this.refreshReviews()
+      if (feedType === 'QuestionCard') {
+        if (this.questionPage > 1) {
+          this.questionPage -= 1
         }
+        this.refreshQuestions()
+      } else if (feedType === 'ReviewCard') {
+        if (this.reviewPage > 1) {
+          this.reviewPage -= 1
+        }
+        this.refreshReviews()
+      }
     }
   },
   created () {
-      this.update()
+    this.update()
   },
   beforeRouteUpdate ({ params: { code } }, from, next) {
     // called when the route that renders this component has changed,
