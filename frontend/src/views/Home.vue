@@ -7,33 +7,38 @@
     </section>
     <section class="homepage-section">
       <article class="content">
-        <h2>Best in class.</h2>
         <div class="why">
           <div class="why-card">
-            <h3>For you.</h3>
-            <p><i class="material-icons">person</i></p>
-            <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+            <p class="why-icon"><i class="material-icons theme">person</i></p>
+            <h3>Individual Value</h3>
+            <p>SmartCourse is primarily driven by a desire to give you a richer university experience.
+               Figure out the courses that best suit you based on our rich archives of feedback and reviews.</p>
           </div>
           <div class="why-card">
-            <h3>By you.</h3>
-            <p>Thing B</p>
-            <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+            <p class="why-icon"><i class="material-icons pink">people</i></p>
+            <h3>Community Driven</h3>
+            <p>SmartCourse lives off its community. We don't overthink things. We're just reflecting 
+              what you say to help as many people as possible. </p>
           </div>
           <div class="why-card">
-            <h3>For a better you.</h3>
-            <p>Thing B</p>
-            <p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+            <p class="why-icon"><i class="material-icons orange">school</i></p>
+            <h3>Helping Universities</h3>
+            <p>Universities rely on SmartCourse to provide the
+              organic feedback that student surveys stuggle to deliver.
+              Could your university benefit from SmartCourse? Get in touch.</p>
           </div>
         </div>
       </article>
     </section>
     <section class="homepage-section who">
       <article class="content">
-        <p>Our story.</p>
+        <div>Our story.</div>
       </article>
     </section>
     <section class="homepage-section offer">
-      <p>Sign up today.</p>
+      <article class="content">
+        <div>Sign up today.</div>
+      </article>
     </section>
   </div>
 </template>
@@ -62,7 +67,7 @@ export default {
 }
 
 .homepage-section {
-  margin: 20px 0;
+  padding: 20px 0;
   display: grid;
   min-height: 400px;
 }
@@ -70,7 +75,6 @@ export default {
 .content {
   justify-self: center;
   margin: auto;
-  width: 800px;
 }
 
 .why {
@@ -82,18 +86,43 @@ export default {
 }
 
 .why-card {
-  padding: 10px;
-  background-color: var(--theme-light);
+  border-radius: 4px;
+  text-align: center;
+  padding: 10px 20px;
+  background-color: var(--white);
   width: 250px;
   min-height: 300px;
 }
 
-.homepage-section:nth-child(odd) {
+.why-card p {
+  color: var(--soft-black);
+}
+
+.why-icon .material-icons {
+  color: var(--white);
+  padding: 0.5em;
+  font-size: var(--font-large);
+  border-radius: 100%;
+}
+
+.why-icon .orange {
+  background-color: #ff9800;
+}
+
+.why-icon .theme {
+  background-color: var(--theme);
+}
+
+.why-icon .pink {
+  background-color: pink;
+}
+
+.offer {
   background-color: var(--white);
 }
 
-.homepage-section:nth-child(odd) {
-  background-color: #fcfcfc;
+.who {
+  background-color: var(--theme);
 }
 
 p {
