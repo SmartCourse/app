@@ -59,7 +59,7 @@ html, body {
 
 .main-content {
   /* arbitrary */
-  min-height: 100vh;
+  min-height: calc(100vh - 148px);
   max-width: 768px;
   margin: auto;
 }

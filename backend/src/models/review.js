@@ -6,41 +6,40 @@ class Review {
     }
 
     /**
-     * Post a review.
-     * @param {id} courseID  The id from the route param
-     * @param {*}  data      controller passed in object which should
-     *                       contain the user data (probs eventually from an auth token)
-     */
-    postReview(courseID, { title, body, userID = 1 }) {
-        return this.db
-            .insert('review', { courseID, body, title, userID })
-            /* Still not sure on this, seems wasteful to send all new data */
-            .then((reviewID) => this.getReview(reviewID))
-    }
-
-    /**
      * Gets specific review corresponding to an id.
-     * @param   {number}  reviewID   Required id param.
+     * @param   {number}  id   Required id param.
      * @returns {object}
      */
-    getReview(reviewID) {
+    getReview(id) {
         return this.db
-            .query('SELECT * FROM review WHERE reviewID=?', [reviewID])
+            .query('SELECT * FROM review WHERE id=?', [id])
     }
 
     /**
-     * // TODO - PAGING
-     * Get all of dem reviews for a specific course
-     * @param   {number}  courseID      The courseID the review corresponds to
+     * TODO - PAGING
+     * @param   {string}  code          The code the review corresponds to
      * @param   {number}  pageNumber    The page of the reviews list
      * @returns {Array}
      */
-    getReviews(courseID, pageNumber) {
-        let pageSize = 10
+    getReviews(code, pageNumber) {
+        let pageSize = 2
         let offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll('SELECT * FROM review WHERE courseID=? ORDER BY timestamp DESC LIMIT ?, ?',
-                [courseID, offset, pageSize])
+            .queryAll('SELECT * FROM review WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
+                [code, offset, pageSize])
+    }
+
+    /**
+     * Post a review.        let pageSize = 10
+        let offset = (pageSize * pageNumber) - pageSize
+     * @param {string} code  The id from the route param
+     * @param {object} data  controller passed in object which should
+     *                       contain the user data (probs eventually from an auth token)
+     */
+    postReview(code, { title, body, userID = 1 }) {
+        return this.db
+            .insert('review', { code, body, title, userID })
+            .then((reviewID) => this.getReview(reviewID))
     }
 }
 
