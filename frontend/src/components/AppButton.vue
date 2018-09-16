@@ -19,7 +19,9 @@ export default {
 button {
     cursor: pointer;
     padding: 10px 20px;
+    margin: 0 10px;
     font: inherit;
+    font-weight: bold;
     outline: none;
     border-radius: 4px;
     transition: 0.2s ease-in-out box-shadow;

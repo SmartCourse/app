@@ -37,7 +37,7 @@ html, body {
 
 :root {
   // for text
-  --white: snow;
+  --white: #fefefe;
   --soft-white: #aaa;
   --black: #111;
   --soft-black: rgba(#111, 0.65);
