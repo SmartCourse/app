@@ -31,6 +31,8 @@ def scrape_subject_areas():
 def scrape_courses(area_code):
     courses = []
 
+    sys.stderr.write("adding courses in {}\n".format(area_code))
+
     for i in range(0,300,PAGE_SIZE):
         url = URL.format(code=area_code, offset=i)
         r = requests.get(url)
@@ -39,32 +41,54 @@ def scrape_courses(area_code):
         if len(courses_array) == 0:
             break
 
-        time.sleep(0.5)
+        time.sleep(0.2)
 
 
         for course in courses_array:
-            desc_soup = BeautifulSoup(course['description'], 'html.parser')
+
+            # skip courses that don't fit our schema
+            if any([it not in course for it in ['study_level', 'code', 'name']]):
+                continue
+
+            # some courses are missing description
+            if 'description' in course:
+                desc_soup = BeautifulSoup(course['description'], 'html.parser')
+                description = desc_soup.get_text().replace('\\n', '\n')
+            else:
+                description = ""
+
             study_level = course['study_level'].lower()
             course_url = COURSE_URL.format(study_level=study_level, code=course['code'])
 
             # get course outline link
             course_req = requests.get(course_url)
-            time.sleep(0.5)
+            time.sleep(0.2)
             course_html = BeautifulSoup(course_req.text, 'html.parser')
-            course_outline = course_html.find(id='subject-outline').find('a')['href']
+            o = course_html.find(id='subject-outline')
+
+            # some courses are missing a link to outline
+            if o is None:
+                course_outline = ""
+            else:
+                course_outline = o.find('a')['href']
+
+            # I'm not sure but probably some courses are missing keywords
+            if 'keywords' in course:
+                keywords = course['keywords']
+            else:
+                keywords = ""
 
             courses.append({
                 'name'          : course['name'],
                 'study_level'   : study_level,
                 'code'          : course['code'],
-                'keywords'      : course['keywords'],
-                'description'   : desc_soup.get_text().replace('\\n', '\n'),
+                'keywords'      : keywords,
+                'description'   : description,
                 'handbook_url'  : course_url,
                 'outline_url'   : course_outline
                 })
-            print(courses[-1])
-            print("course {} added".format(course['code']))
-    print (courses)
+
+            sys.stderr.write("added {}\n".format(course['name']))
 
     return courses
 
@@ -78,7 +102,7 @@ def main():
             'name'      : area['name'],
             'url'       : BASE_URL+area['url'],
             'courses'   : scrape_courses(code)})
-    #print(json.dumps(areas))
+    print(json.dumps(areas))
 
 
 if __name__=='__main__':
