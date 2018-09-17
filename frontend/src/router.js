@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home'
+import Design from './views/Design'
 
 Vue.use(Router)
 
@@ -60,6 +61,10 @@ export default new Router({
         id
       }),
       component: reviewView
+    },
+    {
+      path: '/fonts',
+      component: Design
     }
   ]
 })

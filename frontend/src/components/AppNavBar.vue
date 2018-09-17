@@ -4,8 +4,9 @@
           <AppLogo :first="'S'" :last="'C'"/>
       </router-link>
       <div class="links">
-          <Search class="mini"/>
-        <!--router-link class="link-item" to="/">Login</router-link-->
+        <Search class="mini"/>
+        <h3><router-link class="link-item" to="/">Login</router-link></h3>
+        <h3><router-link class="link-item" to="/">Sign Up</router-link></h3>
       </div>
     </div>
 </template>
@@ -27,19 +28,31 @@ export default {
     align-items: center;
     justify-content: space-between;
     border-bottom: var(--border);
-    background-color: white;
+    background-color: var(--white);
     font-size: var(--font-small);
 }
 
 .links {
-    h2 {
+    display: grid;
+    grid-column-gap: 5px;
+    grid-template-columns:  5fr 1fr 1fr;
+    h3 {
+        text-align: center;
+        align-self: center;
         display: inline-block;
+    }
+    h3:first-of-type {
+        color: var(--theme);
     }
 }
 
 @media screen and (max-width: 768px) {
     #nav {
         font-size: var(--font-small-mobile);
+    }
+
+    .links {
+        grid-template-columns:  3fr 1fr 1fr;
     }
 }
 </style>
