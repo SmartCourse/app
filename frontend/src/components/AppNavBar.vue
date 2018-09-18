@@ -5,17 +5,22 @@
       </router-link>
       <div class="links">
         <Search class="mini"/>
-        <h3><router-link class="link-item" to="/">Login</router-link></h3>
-        <h3><router-link class="link-item" to="/">Sign Up</router-link></h3>
+        <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/login">Login</router-link></h3>
+        <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/signup">Sign Up</router-link></h3>
+        <h3 v-else><router-link class="link-item" to="/">Logout</router-link></h3>
       </div>
     </div>
 </template>
 
 <script>
 import Search from '@/components/AppSearch'
+import {mapGetters} from 'vuex'
 
 export default {
-  components: { Search }
+  components: { Search },
+  computed: {
+      ...mapGetters('auth', ['isLoggedIn'])
+  }
 }
 </script>
 

@@ -9,6 +9,8 @@ const questionView = () => import('./views/Question')
 const reviewView = () => import('./views/Review')
 const newQuestionView = () => import('./views/NewQuestion')
 const newReviewView = () => import('./views/NewReview')
+const SignUp = () => import('./views/SignUp')
+const Login = () => import('./views/Login')
 
 export default new Router({
   mode: 'history',
@@ -61,6 +63,14 @@ export default new Router({
         id
       }),
       component: reviewView
+    },
+    {
+      path: '/signup',
+      component: SignUp
+    },
+    {
+      path: '/login',
+      component: Login
     },
     {
       path: '/fonts',
