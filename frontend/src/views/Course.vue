@@ -26,9 +26,7 @@
           <p>
             <b>Description:</b>
           </p>
-          <p>
-            {{ courseInfo.description }}
-          </p>
+          <p v-html="courseInfo.description"></p> <!-- description may contain <p> tags -->
         </div>
         <div v-if="courseInfo.requirements">
           <p>
@@ -123,7 +121,7 @@ h4 {
     margin-bottom:5px;
 }
 h4 > a {
-    color:blue;
+    color:var(--theme);
 }
 
 .course-header {

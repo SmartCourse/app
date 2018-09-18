@@ -37,7 +37,7 @@ module.exports = (() => {
                     subjectCode,
                     handbookURL: course.handbook_url,
                     outlineURL: course.outline_url,
-                    description: course.description,
+                    description: course.description.replace("\n", "<p></p>"), // \n newline isn't parsed by sqlite, so replace it with html
                     tags
                 })
             })
