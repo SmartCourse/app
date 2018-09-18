@@ -140,8 +140,6 @@ function devInitDB(db) {
             [question, comment, review, reply]
                 .forEach(item => { item.userID = userID })
 
-
-
             // insert course
             return Promise.all(
                 courseData.map(course => insertDB(db, 'course', { universityID, ...course }))
