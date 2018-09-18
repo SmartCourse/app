@@ -28,11 +28,17 @@ exports.decodeutf8 = function (s) {
   return decodeURIComponent(escape(s));
 }
 
-exports.safeDecodeutf8 = function(s) {
+/**
+ * Converts a utf-8 string to regular string, doesn't throw errors
+ * This is used for description, name and requirements text fields
+ */
+exports.decodeutf8Text = function(s) {
     try {
         return decodeURIComponent(escape(s))
     } catch (e) {
         console.warn(e.message)
-        return s.replace(/[^\x00-\x7F]/g, "");
+        console.warn(s)
+        // replacing non ascii characters with spaces seems to work. We could just return s too
+        return s.replace(/[^\x00-\x7F]/g, " ");
     }
 }
