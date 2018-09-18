@@ -1,14 +1,10 @@
 const data = require('../../../data/course_data_2019.json')
-const { toLowerCase, decodeutf8Text } = require('../../utils/helpers')
+const { toLowerCase, decodeUTF8Text } = require('../../utils/helpers')
 
-module.exports = (() => {
-        let subjects = []
-        data.forEach(function(subj) {
-            subjects.push({
+module.exports = data.map((subj) => {
+            return {
                 code: subj.code,
-                name: decodeutf8Text(subj.name),
+                name: decodeUTF8Text(subj.name),
                 handbookURL: subj.url
-            })
+            }
         })
-        return subjects
-    })()

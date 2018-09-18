@@ -142,12 +142,10 @@ function devInitDB(db) {
                 .forEach(item => { item.userID = userID })
 
             // insert course
-            return Promise.all(
-                courseData.map(course => insertDB(db, 'course', { universityID, ...course }))
-                .concat(
-                    subjectData.map(subj => insertDB(db, 'subject', { universityID, ...subj }))
-                )
-            )
+            return Promise.all([
+                ...courseData.map(course => insertDB(db, 'course', { universityID, ...course })),
+                ...subjectData.map(subj => insertDB(db, 'subject', { universityID, ...subj }))
+            ])
         })
         .then((courseID) => {
             // course dependencies

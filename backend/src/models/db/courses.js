@@ -1,5 +1,5 @@
 const data = require('../../../data/course_data_2019.json')
-const { toLowerCase, decodeutf8Text } = require('../../utils/helpers')
+const { toLowerCase, decodeUTF8Text } = require('../../utils/helpers')
 
 module.exports = (() => {
 
@@ -11,16 +11,16 @@ module.exports = (() => {
         data.forEach(function(subj) {
 
             const subjectCode = subj.code;
-            const subjectName = decodeutf8Text(subj.name);
+            const subjectName = decodeUTF8Text(subj.name);
 
             subj.courses.forEach(function(course) {
 
                 const studyLevel = course.study_level
 
-                const keywords = decodeutf8Text(course.keywords)
-                const description = decodeutf8Text(course.description)
-                const requirements = decodeutf8Text(course.requirements)
-                const name = decodeutf8Text(course.name)
+                const keywords = decodeUTF8Text(course.keywords)
+                const description = decodeUTF8Text(course.description)
+                const requirements = decodeUTF8Text(course.requirements)
+                const name = decodeUTF8Text(course.name)
 
                 const tags = [
                     course.code,
