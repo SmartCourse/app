@@ -1,5 +1,5 @@
 const data = require('../../../data/course_data_2019.json')
-const { toLowerCase, decodeutf8 } = require('../../utils/helpers')
+const { toLowerCase, safeDecodeutf8 } = require('../../utils/helpers')
 
 module.exports = (() => {
 
@@ -10,30 +10,37 @@ module.exports = (() => {
 
         data.forEach(function(subj) {
 
-            const subjectCode = decodeutf8(subj.code);
-            const subjectName = decodeutf8(subj.name);
+            const subjectCode = subj.code;
+            const subjectName = safeDecodeutf8(subj.name);
 
             subj.courses.forEach(function(course) {
 
                 const studyLevel = course.study_level
 
+                const keywords = safeDecodeutf8(course.keywords)
+                const description = safeDecodeutf8(course.description)
+                const requirements = safeDecodeutf8(course.requirements)
+                const name = safeDecodeutf8(course.name)
+
                 const tags = [
                     course.code,
-                    decodeutf8(course.name),
+                    name,
                     subjectCode,
                     subjectName,
                     studyLevel,
-                    ...decodeutf8(course.keywords).split(',')]
+                    ...keywords.split(',')]
                     .map(toLowerCase).join(',')
 
                 courses.push({
                     code: course.code,
-                    name: decodeutf8(course.name),
+                    name,
                     studyLevel,
                     subjectCode,
                     handbookURL: course.handbook_url,
                     outlineURL: course.outline_url,
-                    description: decodeutf8(course.description).replace("\n", "<p></p>"), // \n newline isn't parsed by sqlite, so replace it with html
+                    // \n newline isn't parsed by sqlite, so replace it with html
+                    description: description.replace("\n", "<p></p>"),
+                    requirements: requirements.replace("\n", "<p></p>"),
                     tags
                 })
             })

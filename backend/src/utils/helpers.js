@@ -27,3 +27,12 @@ exports.encodeutf8 = function (s) {
 exports.decodeutf8 = function (s) {
   return decodeURIComponent(escape(s));
 }
+
+exports.safeDecodeutf8 = function(s) {
+    try {
+        return decodeURIComponent(escape(s))
+    } catch (e) {
+        console.warn(e.message)
+        return s.replace(/[^\x00-\x7F]/g, "");
+    }
+}

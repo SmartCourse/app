@@ -43,6 +43,7 @@ function createCourseTable (db) {
         handbookURL TEXT NOT NULL,
         outlineURL TEXT,
         description TEXT NOT NULL,
+        requirements TEXT,
         rating INTEGER DEFAULT '0.00',
         tags TEXT,
         FOREIGN KEY (universityID) REFERENCES university(id),
