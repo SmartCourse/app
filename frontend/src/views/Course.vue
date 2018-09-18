@@ -32,9 +32,7 @@
           <p>
             <b>Requirements:</b>
           </p>
-          <p>
-            {{ courseInfo.requirements }}
-          </p>
+          <p v-html="courseInfo.requirements"></p> <!-- requirements may contain <p> tags -->
         </div>
       </div>
 

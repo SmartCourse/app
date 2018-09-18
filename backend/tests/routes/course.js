@@ -16,7 +16,7 @@ describe('Course route testing', () => {
 
         it('returns a list', () =>
             request.then(({ body }) =>
-                expect(body.length).to.be.equal(2961))
+                expect(body.length).to.be.equal(3006))
         )
 
         it('has the correct code', () =>

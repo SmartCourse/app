@@ -14,6 +14,8 @@ BASE_URL = 'https://www.handbook.unsw.edu.au'
 URL = BASE_URL+"/api/content/query/+contentType:subject%20-subject.active:0%20+subject.implementation_year:***%20+subject.code:*{code}*%20+subject.study_level:undergraduate%20+deleted:false%20+working:true/offset/{offset}/limit/"+str(PAGE_SIZE)+"/orderby/subject.code%20asc"
 COURSE_URL = BASE_URL+"/{study_level}/courses/"+str(YEAR)+"/{code}"
 
+seen_courses = set()
+
 def scrape_subject_areas():
     r = requests.get(BASE_URL)
     html = BeautifulSoup(r.text, 'html.parser')
@@ -50,10 +52,15 @@ def scrape_courses(area_code):
             if any([it not in course for it in ['study_level', 'code', 'name']]):
                 continue
 
+            # avoid duplicate courses
+            if course['code'] in seen_courses:
+                continue
+            seen_courses.add(course['code'])
+
             # some courses are missing description
             if 'description' in course:
                 desc_soup = BeautifulSoup(course['description'], 'html.parser')
-                description = desc_soup.get_text().replace('\\n', '\n')
+                description = desc_soup.get_text()
             else:
                 description = ""
 
@@ -62,11 +69,18 @@ def scrape_courses(area_code):
 
             # get course outline link
             course_req = requests.get(course_url)
-            time.sleep(0.2)
+            time.sleep(0.1)
             course_html = BeautifulSoup(course_req.text, 'html.parser')
-            o = course_html.find(id='subject-outline')
+
+            # get prerequesites if they exist
+            p = course_html.find(id='readMoreSubjectConditions')
+            if p is None:
+                prereqs = ""
+            else:
+                prereqs = p.find('div').find('div').string
 
             # some courses are missing a link to outline
+            o = course_html.find(id='subject-outline')
             if o is None:
                 course_outline = ""
             else:
@@ -85,7 +99,8 @@ def scrape_courses(area_code):
                 'keywords'      : keywords,
                 'description'   : description,
                 'handbook_url'  : course_url,
-                'outline_url'   : course_outline
+                'outline_url'   : course_outline,
+                'requirements'  : prereqs
                 })
 
             sys.stderr.write("added {}\n".format(course['name']))

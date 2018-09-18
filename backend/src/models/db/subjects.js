@@ -5,9 +5,9 @@ module.exports = (() => {
         let subjects = []
         data.forEach(function(subj) {
             subjects.push({
-                code: decodeutf8(subj.code),
+                code: subj.code,
                 name: decodeutf8(subj.name),
-                handbookURL: decodeutf8(subj.url)
+                handbookURL: subj.url
             })
         })
         return subjects
