@@ -3,7 +3,7 @@
        <section class="links">
         <div class="logo-container">
             <AppLogo/>
-        </div> 
+        </div>
         <ul class="navigation">
             <li class="links-header">Navigation</li>
             <li>Home</li>
@@ -83,7 +83,6 @@ p {
         border: none;
         border-bottom: var(--border);
     }
-
 
     .logo-container > h1 {
         margin: auto;

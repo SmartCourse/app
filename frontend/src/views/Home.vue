@@ -17,7 +17,7 @@
           <div class="why-card">
             <p class="why-icon"><i class="material-icons pink">people</i></p>
             <h3>Community Driven</h3>
-            <p>SmartCourse lives off its community. We don't overthink things. We're just reflecting 
+            <p>SmartCourse lives off its community. We don't overthink things. We're just reflecting
               what you say to help as many people as possible. </p>
           </div>
           <div class="why-card">
