@@ -1,17 +1,40 @@
-const data = require('../../../../frontend/public/course-names.json')
+const data = require('../../../data/course_data_2019.json')
 const { toLowerCase } = require('../../utils/helpers')
 
-module.exports = data.map(item => {
-    const [courseCode, courseName] = item.split(' - ')
+module.exports = (() => {
 
-    const facultyCode = courseCode.substr(0, 4)
-    const tags = [courseCode, courseName, facultyCode].map(toLowerCase).join(',')
+        // unfortunately there are duplicate courses in the data set, so we must filter them
+        const set = new Set()
 
-    return {
-        code: courseCode,
-        name: courseName,
-        facultyCode,
-        tags,
-        description: 'Offering 60 years of excellence in developing socially engaged engineers, developing new technologies and solutioning problems of global relevance.'
-    }
-})
+        // list of courses to return
+        const courses = []
+
+        data.forEach(function(subj) {
+
+            const subjectCode = subj.code;
+            const subjectName = subj.name;
+
+            subj.courses.forEach(function(course) {
+
+                if (set.has(course.code)) {
+                    return
+                }
+                set.add(course.code)
+
+                const studyLevel = course.study_level
+                const tags = [course.code, course.name, subjectCode, subjectName, studyLevel, ...course.keywords.split(',')].map(toLowerCase).join(',')
+
+                courses.push({
+                    code: course.code,
+                    name: course.name,
+                    studyLevel,
+                    subjectCode,
+                    handbookURL: course.handbook_url,
+                    outlineURL: course.outline_url,
+                    description: course.description,
+                    tags
+                })
+            })
+        })
+        return courses
+    })()
