@@ -1,5 +1,5 @@
 const data = require('../../../data/course_data_2019.json')
-const { toLowerCase } = require('../../utils/helpers')
+const { toLowerCase, decodeutf8 } = require('../../utils/helpers')
 
 module.exports = (() => {
 
@@ -11,11 +11,17 @@ module.exports = (() => {
 
         data.forEach(function(subj) {
 
-            const subjectCode = subj.code;
-            const subjectName = subj.name;
+            const subjectCode = decodeutf8(subj.code);
+            const subjectName = decodeutf8(subj.name);
 
             subj.courses.forEach(function(course) {
 
+                // decode the utf-8 strings
+                for (const prop in course) {
+                    course[prop] = decodeutf8(course[prop])
+                }
+
+                // ignore duplicate courses TODO (should be fixed in next data set)
                 if (set.has(course.code)) {
                     return
                 }
