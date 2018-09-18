@@ -3,6 +3,12 @@
     <div class="course-header">
         <div class="course-header-title">
             <h2>{{ courseInfo.code }} - {{ courseInfo.name }}</h2>
+            <h4>
+                <a target=_blank :href="courseInfo.handbookURL">Handbook</a>
+            </h4>
+            <h4 v-if="courseInfo.outlineURL">
+                <a target=_blank :href="courseInfo.outlineURL">Course Outline</a>
+            </h4>
         </div>
         <TabButton @click.native="$store.dispatch('course/changeTab', 'info')" :active="courseTab=='info'">
             info
@@ -16,9 +22,22 @@
     </div>
     <div class="course-content">
       <div v-if="courseTab=='info'" class="course-info">
-        <p>
-          {{ courseInfo.description }}
-        </p>
+        <div>
+          <p>
+            <b>Description:</b>
+          </p>
+          <p>
+            {{ courseInfo.description }}
+          </p>
+        </div>
+        <div v-if="courseInfo.requirements">
+          <p>
+            <b>Requirements:</b>
+          </p>
+          <p>
+            {{ courseInfo.requirements }}
+          </p>
+        </div>
       </div>
 
       <div v-if="courseTab=='questions'">
@@ -95,7 +114,16 @@ export default {
 
 <style scoped>
 h2 {
+    margin: 0;
+    margin-bottom:10px;
+}
+
+h4 {
     margin:0;
+    margin-bottom:5px;
+}
+h4 > a {
+    color:blue;
 }
 
 .course-header {
@@ -105,7 +133,6 @@ h2 {
 
 .course-header-title {
     padding:20px;
-    padding-bottom:0px;
 }
 
 .course-content {
