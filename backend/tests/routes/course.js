@@ -21,12 +21,12 @@ describe('Course route testing', () => {
 
         it('has the correct code', () =>
             request.then(({ body }) =>
-                expect(body[0].code).to.equal('ACCT1501'))
+                expect(body.filter(c => c.code === 'ACCT1501').length).to.equal(1))
         )
 
         it('has the correct courseName', () =>
             request.then(({ body }) =>
-                expect(body[0].name).to.equal('Accounting and Financial Management 1A'))
+                expect(body.filter(c => c.name === 'Accounting and Financial Management 1A').length).to.equal(1))
         )
     })
 

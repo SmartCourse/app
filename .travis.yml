@@ -5,10 +5,10 @@ notifications:
     slack: cs4920-2018:SDt3tqEvra7QvkVy5wnY9faR
 install:
   - cd frontend
-  - travis_wait npm install
+  - npm install
   - npm run build
   - cd ../backend
-  - travis_wait npm install
+  - npm install
 script: 
   - npm test
   - cd ../frontend
