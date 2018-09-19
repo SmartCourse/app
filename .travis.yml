@@ -23,5 +23,6 @@ deploy:
   provider: azure_web_apps
   site: smartcourse-test
   on: s5-deployment
-  - cd ../
-  - ./deploy.sh
+  script:
+    - cd ../
+    - ./deploy.sh
