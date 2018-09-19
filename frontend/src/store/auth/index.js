@@ -6,33 +6,40 @@ import config from './config'
 firebase.initializeApp(config)
 
 const auth = firebase.auth
-console.log(firebase, auth)
 
 const state = {
   loading: false,
   error: '',
-  success: ''
+  success: '',
+  user: null
 }
 
 const getters = {
   loading: ({ loading }) => loading,
-  isLoggedIn: () => !!auth().currentUser,
+  isLoggedIn: state => () => !!auth().currentUser,
   error: ({ error }) => error,
-  user: () => auth().currentUser
+  user: state => () => auth().currentUser
 }
 
 const mutations = {
   ERROR(state, message) {
+    alert(message)
     state.error = message
   },
   SIGN_UP(state, user) {
     // on successful signup communicate with backend to update database.
-    // else think of what state we need to keep on record
+    // If by email, new users are signed in by default
     console.log('SIGN UP', user)
     state.success = 'Your account has been successfully created!'
+    state.user = user
   },
   LOGIN(state, user) {
+    // login happens in indexedDB in chrome, localStorage in other browsers
     console.log('LOGIN', user)
+    state.user = user
+  },
+  LOGOUT(state) {
+    console.log('LOGOUT EVENT')
   }
 }
 

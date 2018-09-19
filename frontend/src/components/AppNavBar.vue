@@ -9,7 +9,7 @@
         <div v-else/>
         <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/login">Login</router-link></h3>
         <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/signup">Sign Up</router-link></h3>
-        <h3 v-else><router-link class="link-item" to="/">Logout</router-link></h3>
+        <h3 v-else @click="this.$store.dispatch('auth/logout')" class="link-item">Logout</h3>
       </div>
     </div>
 </template>
@@ -22,7 +22,7 @@ export default {
   components: { Search },
   computed: {
       ...mapGetters('auth', ['isLoggedIn'])
-  }
+  },
 }
 </script>
 
@@ -40,6 +40,7 @@ export default {
 }
 
 .links {
+    /* should be flex will require less hacks */
     display: grid;
     grid-column-gap: 5px;
     grid-template-columns:  5fr 1fr 1fr;
