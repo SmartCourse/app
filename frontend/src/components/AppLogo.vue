@@ -12,7 +12,7 @@ export default {
     last: {
       type: String,
       default: 'Course'
-    },
+    }
   }
 }
 </script>

@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3')
 const courseData = require('./courses')
+const subjectData = require('./subjects')
 
 // TODO - STUB USER TABLE (REFACTOR FOR AUTH)
 function createUserTable (db) {
@@ -21,16 +22,32 @@ function createUniversityTable (db) {
     )
 }
 
+function createSubjectTable(db) {
+    db.run(`CREATE TABLE subject (
+        code TEXT PRIMARY KEY NOT NULL,
+        universityID INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        handbookURL TEXT NOT NULL,
+        FOREIGN KEY (universityID) REFERENCES university(id)
+        )`
+    )
+}
+
 function createCourseTable (db) {
     db.run(`CREATE TABLE course (
         code TEXT PRIMARY KEY NOT NULL,
         universityID INTEGER NOT NULL,
         name TEXT NOT NULL,
-        facultyCode TEXT NOT NULL,
+        studyLevel TEXT NOT NULL,
+        subjectCode TEXT NOT NULL,
+        handbookURL TEXT NOT NULL,
+        outlineURL TEXT,
         description TEXT NOT NULL,
+        requirements TEXT,
         rating INTEGER DEFAULT '0.00',
-        tags   TEXT,
-        FOREIGN KEY (universityID) REFERENCES university(id)
+        tags TEXT,
+        FOREIGN KEY (universityID) REFERENCES university(id),
+        FOREIGN KEY (subjectCode) REFERENCES subject(code)
         )`
     )
 }
@@ -125,9 +142,10 @@ function devInitDB(db) {
                 .forEach(item => { item.userID = userID })
 
             // insert course
-            return Promise.all(courseData.map(course =>
-                insertDB(db, 'course', { universityID, ...course })
-            ))
+            return Promise.all([
+                ...courseData.map(course => insertDB(db, 'course', { universityID, ...course })),
+                ...subjectData.map(subj => insertDB(db, 'subject', { universityID, ...subj }))
+            ])
         })
         .then((courseID) => {
             // course dependencies
@@ -162,6 +180,7 @@ function createDB(databaseName) {
     db.serialize(() => {
         createUserTable(db)
         createUniversityTable(db)
+        createSubjectTable(db)
         createCourseTable(db)
         createQuestionTable(db)
         createReviewTable(db)
