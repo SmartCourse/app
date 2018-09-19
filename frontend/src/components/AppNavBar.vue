@@ -41,12 +41,13 @@ export default {
 
 .links {
     /* should be flex will require less hacks */
-    display: grid;
-    grid-column-gap: 5px;
-    grid-template-columns:  5fr 1fr 1fr;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
     h3 {
+        margin: auto 10px;
         text-align: center;
-        align-self: center;
         display: inline-block;
     }
     h3:first-of-type {
@@ -57,10 +58,6 @@ export default {
 @media screen and (max-width: 768px) {
     #nav {
         font-size: var(--font-small-mobile);
-    }
-
-    .links {
-        grid-template-columns:  3fr 1fr 1fr;
     }
 }
 </style>
