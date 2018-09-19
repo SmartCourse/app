@@ -1,20 +1,91 @@
 <template>
     <footer id="footer">
-        <p>Copyright &copy; SmartCourse 2018</p>
+       <section class="links">
+        <div class="logo-container">
+            <AppLogo/>
+        </div>
+        <ul class="navigation">
+            <li class="links-header">Navigation</li>
+            <li>Home</li>
+            <li>Courses</li>
+            <li>About</li>
+        </ul>
+        <ul class="information">
+            <li class="links-header">Information</li>
+            <li>Legal</li>
+            <li>Help</li>
+            <li>UNSW Handbook</li>
+        </ul>
+        <ul class="socials">
+            <li class="links-header">Social</li>
+            <li>twitter</li>
+            <li>facebook</li>
+        </ul>
+       </section>
+      <p>Copyright &copy; SmartCourse 2018</p>
     </footer>
 </template>
 
 <style scoped lang='less'>
-
 footer {
-    color: white;
-    width: 100%;
-    background-color: var(--theme);
-    padding: 10px 0px;
-    min-height: 50px;
+  color: var(--soft-white);
+  width: 100%;
+  background-color: var(--black);
+  min-height: 50px;
+}
+
+.logo-container {
+    color: var(--white);
+}
+
+.logo-container > h1 {
+    margin: 40px auto;
+}
+
+.links {
+    padding: 40px 0;
+    margin: 0 auto;
+    max-width: 800px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-auto-rows: auto;
+    grid-gap: 40px;
+}
+
+.links-header {
+    color: var(--white);
+    font-weight: bold;
+}
+
+.links > * {
+    line-height: 2;
+    padding-bottom: 20px;
+}
+
+.links ul:nth-of-type(-n + 2) {
+    border-right: var(--border);
 }
 
 p {
-    text-align: center;
+  font: var(--body-copy-2);
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+@media screen and (max-width: 600px){
+    .links {
+        width: 300px;
+        grid-template-columns: 1fr;
+    }
+
+    .links ul:nth-of-type(-n + 2) {
+        border: none;
+        border-bottom: var(--border);
+    }
+
+    .logo-container > h1 {
+        margin: auto;
+    }
 }
 </style>

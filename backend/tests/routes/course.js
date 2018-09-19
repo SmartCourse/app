@@ -16,17 +16,17 @@ describe('Course route testing', () => {
 
         it('returns a list', () =>
             request.then(({ body }) =>
-                expect(body.length).to.be.equal(1566))
+                expect(body.length).to.be.equal(3006))
         )
 
         it('has the correct code', () =>
             request.then(({ body }) =>
-                expect(body[0].code).to.equal('ACCT1501'))
+                expect(body.filter(c => c.code === 'ACCT1501').length).to.equal(1))
         )
 
         it('has the correct courseName', () =>
             request.then(({ body }) =>
-                expect(body[0].name).to.equal('Accounting & Financial Mgt 1A'))
+                expect(body.filter(c => c.name === 'Accounting and Financial Management 1A').length).to.equal(1))
         )
     })
 
@@ -47,12 +47,12 @@ describe('Course route testing', () => {
 
         it('has the correct name', () =>
             request.then(({ body }) =>
-                expect(body.name).to.equal('Accounting & Financial Mgt 1A'))
+                expect(body.name).to.equal('Accounting and Financial Management 1A'))
         )
 
         it('has the correct tag', () =>
             request.then(({ body }) =>
-                expect(body.tags).to.equal('acct1501,accounting & financial mgt 1a,acct'))
+                expect(body.tags).to.equal('acct1501,accounting and financial management 1a,acct,accounting,undergraduate,accounting'))
         )
     })
 

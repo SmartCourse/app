@@ -24,3 +24,6 @@ yarn-error.log*
 
 backend/public
 package-lock.json
+
+__pycache__
+*.pyc

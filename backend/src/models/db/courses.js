@@ -1,17 +1,38 @@
-const data = require('../../../../frontend/public/course-names.json')
-const { toLowerCase } = require('../../utils/helpers')
+const data = require('../../../data/course_data_2019.json')
+const { toLowerCase, decodeUTF8Text } = require('../../utils/helpers')
 
-module.exports = data.map(item => {
-    const [courseCode, courseName] = item.split(' - ')
+module.exports = data.map(subj => {
+        const subjectCode = subj.code
+        const subjectName = decodeUTF8Text(subj.name)
 
-    const facultyCode = courseCode.substr(0, 4)
-    const tags = [courseCode, courseName, facultyCode].map(toLowerCase).join(',')
+        return subj.courses.map(course => {
+            const studyLevel = course.study_level
 
-    return {
-        code: courseCode,
-        name: courseName,
-        facultyCode,
-        tags,
-        description: 'Offering 60 years of excellence in developing socially engaged engineers, developing new technologies and solutioning problems of global relevance.'
-    }
-})
+            const keywords = decodeUTF8Text(course.keywords)
+            const description = decodeUTF8Text(course.description)
+            const requirements = decodeUTF8Text(course.requirements)
+            const name = decodeUTF8Text(course.name)
+
+            const tags = [
+                course.code,
+                name,
+                subjectCode,
+                subjectName,
+                studyLevel,
+                ...keywords.split(',')]
+                .map(toLowerCase).join(',')
+
+            return ({
+                code: course.code,
+                name,
+                studyLevel,
+                subjectCode,
+                handbookURL: course.handbook_url,
+                outlineURL: course.outline_url,
+                // \n newline isn't parsed by sqlite, so replace it with html
+                description: description.replace('\n', '<p></p>'),
+                requirements: requirements.replace('\n', '<p></p>'),
+                tags
+            })
+        })
+    }).reduce((curr, acc) => [...curr, ...acc], [])
