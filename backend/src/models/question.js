@@ -16,13 +16,13 @@ class Question {
     }
 
     /**
-     * @param   {string} code        The code of the couse we're getting questions for.
-     * @param   {number} pageNumber  The pageNumber, defaults to 1?, if higher than max should just give max.
+     * @param   {string} code        The code of the course
+     * @param   {number} pageNumber  The page number for which we want to get questions.
      * @returns {object}
      */
     getQuestions(code, pageNumber) {
-        let pageSize = 2
-        let offset = (pageSize * pageNumber) - pageSize
+        const pageSize = 10
+        const offset = (pageSize * pageNumber) - pageSize
         return this.db
             .queryAll('SELECT * FROM question WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
                 [code, offset, pageSize])
@@ -30,7 +30,7 @@ class Question {
 
     /**
      * Post a question.
-     * @param {string} code  The id from the route param
+     * @param {string} code  The code of the course
      * @param {object}  data      controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */

@@ -16,23 +16,20 @@ class Review {
     }
 
     /**
-     * TODO - PAGING
-     * @param   {string}  code          The code the review corresponds to
-     * @param   {number}  pageNumber    The page of the reviews list
+     * @param   {string}  code          The code of the course
+     * @param   {number}  pageNumber    The page number for which we want to get questions.
      * @returns {Array}
      */
     getReviews(code, pageNumber) {
-        let pageSize = 2
-        let offset = (pageSize * pageNumber) - pageSize
+        const pageSize = 10
+        const offset = (pageSize * pageNumber) - pageSize
         return this.db
             .queryAll('SELECT * FROM review WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
                 [code, offset, pageSize])
     }
 
     /**
-     * Post a review.        let pageSize = 10
-        let offset = (pageSize * pageNumber) - pageSize
-     * @param {string} code  The id from the route param
+     * @param {string} code  The code of the course.
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
