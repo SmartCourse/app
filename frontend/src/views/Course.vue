@@ -46,8 +46,7 @@
         <Feed
           feedType="QuestionCard"
           :items="questions"
-          :prevPage="prevPage"
-          :nextPage="nextPage"
+          :update="refreshQuestions"
         />
       </div>
 
@@ -60,8 +59,7 @@
         <Feed
             feedType="ReviewCard"
             :items="reviews"
-            :prevPage="prevPage"
-            :nextPage="nextPage"
+            :update="refreshReviews"
           />
       </div>
 
@@ -78,12 +76,6 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'course',
-  data () {
-    return {
-      questionPage: 1,
-      reviewPage: 1
-    }
-  },
   props: {
     code: String
   },
@@ -103,44 +95,22 @@ export default {
   methods: {
     update() {
       this.$store.dispatch('course/getCourse', this.code)
-      this.refreshQuestions()
-      this.refreshReviews()
+      this.refreshQuestions(1)
+      this.refreshReviews(1)
     },
-    refreshQuestions() {
+    refreshQuestions(pageNumber) {
       this.$store.dispatch('course/getQuestions',
         {
           id: this.code,
-          pageNumber: this.questionPage
+          pageNumber: pageNumber
         })
     },
-    refreshReviews() {
+    refreshReviews(pageNumber) {
       this.$store.dispatch('course/getReviews',
         {
           id: this.code,
-          pageNumber: this.reviewPage
+          pageNumber: pageNumber
         })
-    },
-    nextPage (feedType) {
-      if (feedType === 'QuestionCard') {
-        this.questionPage += 1
-        this.refreshQuestions()
-      } else if (feedType === 'ReviewCard') {
-        this.reviewPage += 1
-        this.refreshReviews()
-      }
-    },
-    prevPage (feedType) {
-      if (feedType === 'QuestionCard') {
-        if (this.questionPage > 1) {
-          this.questionPage -= 1
-        }
-        this.refreshQuestions()
-      } else if (feedType === 'ReviewCard') {
-        if (this.reviewPage > 1) {
-          this.reviewPage -= 1
-        }
-        this.refreshReviews()
-      }
     }
   },
   created () {

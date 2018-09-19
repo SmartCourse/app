@@ -7,38 +7,26 @@
         </li>
       </ol>
     </section>
-    <div class='button-container'>
-      <AppButton @click.native="prevPage(feedType)">Prev</AppButton>
-      <AppButton @click.native="nextPage(feedType)">Next</AppButton>
-    </div>
+    <PageSelector :update="update"></PageSelector>
   </div>
 </template>
 
 <script>
 import QuestionCard from '@/components/questions-answers/QuestionCard'
 import ReviewCard from '@/components/reviews-replies/ReviewCard'
-import AppButton from '@/components/AppButton'
+import PageSelector from '@/components/PageSelector'
 
 export default {
   name: 'Feed',
   components: {
     QuestionCard,
     ReviewCard,
-    AppButton
+    PageSelector
   },
   props: {
     feedType: String,
     items: Array,
-    prevPage: Function,
-    nextPage: Function
-  }
+    update: Function,
+  },
 }
 </script>
-
-<style>
-
-.button-container {
-    text-align:center;
-}
-
-</style>
