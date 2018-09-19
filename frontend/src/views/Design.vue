@@ -33,11 +33,11 @@
                 <h2 style="font: var(--header-2);">Header (header-2)</h2>
                 <h2 style="font: var(--header-3);">SubHeader (header-3)</h2>
                 <p style="font: var(--body-copy-1);">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-            </div> 
+            </div>
         </section>
         <section class="meta">
             <h1>Meta Elements</h1>
-            <p> 
+            <p>
                 Other standard reusable components, spinners, buttons.
             </p>
             <LoadingSpinner/>
@@ -54,10 +54,9 @@
 import AppButton from '@/components/AppButton'
 
 export default {
-    components: { AppButton }
+  components: { AppButton }
 }
 </script>
-
 
 <style scoped>
     section {
@@ -80,4 +79,3 @@ export default {
     }
 
 </style>
-
