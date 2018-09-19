@@ -13,7 +13,10 @@ import AppNavBar from '@/components/AppNavBar'
 import AppFooter from '@/components/AppFooter'
 
 export default {
-  components: { AppNavBar, AppFooter }
+  components: { AppNavBar, AppFooter },
+  created() {
+    this.$store.dispatch('auth/checkAuth')
+  }
 }
 
 </script>

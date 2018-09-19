@@ -16,9 +16,9 @@ const state = {
 
 const getters = {
   loading: ({ loading }) => loading,
-  isLoggedIn: () => !!auth().currentUser,
+  isLoggedIn: ({ user }) => !!user,
   error: ({ error }) => error,
-  user: state => () => auth().currentUser
+  user: ({ user }) => user
 }
 
 setInterval(() => {
@@ -28,6 +28,7 @@ setInterval(() => {
 
 const mutations = {
   ERROR(state, message) {
+    console.log('ERROR', message)
     state.error = message
   },
   SIGN_UP(state, user) {
@@ -43,7 +44,13 @@ const mutations = {
     state.user = user
   },
   LOGOUT(state) {
+    state.user = null
     console.log('LOGOUT EVENT')
+  },
+  UPDATE(state, user) {
+    // useful for intial boot
+    console.log(user)
+    state.user = user
   }
 }
 
@@ -72,8 +79,20 @@ const actions = {
     return auth().createUserWithEmailAndPassword(email, password)
       .then(user => commit('SIGN_UP', user))
       .catch(error => commit('ERROR', error.message))
-  }
+  },
 
+  checkAuth({commit}) {
+    return new Promise((resolve, reject) => {
+      const unsubscribe = auth().onAuthStateChanged(user => {
+        unsubscribe()
+        resolve(user)
+      }, reject)
+    })
+      .then(user => {
+        commit('UPDATE', user)
+      })
+      .catch(error => commit('ERROR', error.message))
+  }
 }
 
 export default {
