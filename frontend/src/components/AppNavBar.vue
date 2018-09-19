@@ -9,7 +9,7 @@
         <div v-else/>
         <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/login">Login</router-link></h3>
         <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/signup">Sign Up</router-link></h3>
-        <h3 v-else @click="this.$store.dispatch('auth/logout')" class="link-item">Logout</h3>
+        <h3 v-else @click="$store.dispatch('auth/logout')" class="link-item">Logout</h3>
       </div>
     </div>
 </template>

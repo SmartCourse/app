@@ -16,14 +16,18 @@ const state = {
 
 const getters = {
   loading: ({ loading }) => loading,
-  isLoggedIn: state => () => !!auth().currentUser,
+  isLoggedIn: () => !!auth().currentUser,
   error: ({ error }) => error,
   user: state => () => auth().currentUser
 }
 
+setInterval(() => {
+  console.log('Auth state: ')
+  console.log(!!auth().currentUser)
+}, 5000)
+
 const mutations = {
   ERROR(state, message) {
-    alert(message)
     state.error = message
   },
   SIGN_UP(state, user) {
@@ -56,6 +60,7 @@ const actions = {
 
   logout({commit}) {
     return auth().signOut()
+      .then(() => commit('LOGOUT'))
       .catch(error => commit('ERROR', error.message))
   },
 
