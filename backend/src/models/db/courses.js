@@ -39,7 +39,7 @@ module.exports = (() => {
                 tags
             })
         })
-    })
-    console.log(courses)
+    }).reduce((curr, acc) => [...curr, ...acc], [])
+
     return courses
 })()
