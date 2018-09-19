@@ -28,7 +28,7 @@ export default {
       this.update(this.pageNumber)
     },
     prevPage() {
-      if(this.pageNumber > 1) {
+      if (this.pageNumber > 1) {
         this.pageNumber--
         this.update(this.pageNumber)
       }

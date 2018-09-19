@@ -26,7 +26,7 @@ export default {
   props: {
     feedType: String,
     items: Array,
-    update: Function,
-  },
+    update: Function
+  }
 }
 </script>
