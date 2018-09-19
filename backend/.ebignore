@@ -1,0 +1,16 @@
+# Ignore test files
+.coveralls.yml
+.eslintrc.js
+.eslintignore
+tests/*
+db/*
+GemFile
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+
+# Node files
+package-lock.json
+node_modules/*
