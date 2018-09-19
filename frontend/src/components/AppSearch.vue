@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { API_URL } from '@/utils/api/index'
 export default {
   data() {
     return {
@@ -43,7 +44,7 @@ export default {
   },
 
   created() {
-    fetch('http://localhost:3000/api/course')
+    fetch(`${API_URL}/course`)
       .then(response => response.json())
       .then(data => {
         this.courses = data

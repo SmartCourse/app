@@ -10,45 +10,25 @@ if [[ "$type" != "staging" && "$type" != "prod" ]]; then
     echo "Type must be either 'staging' or 'prod'"
 fi
 
-# Deploy the given environment
+# Compile the front end
 cd frontend
 npm install
 npm run build
 
+# Zip the web app files
 cd ../backend
-npm install
+rm -f smartcourse.zip
+zip -r smartcourse.zip package.json web.config data public src
 
-eb use "smartcourse-$type"
-eb list
-eb deploy
+# Deploy the site
+curl -u $AZURE_USER:$AZURE_PASS \
+    --request POST \
+    --data-binary @smartcourse.zip https://smartcourse-test.scm.azurewebsites.net/api/zipdeploy
 
-## Iterate through all the arguments provided
-#while test $#;
-#do
-#    # The back end
-#    cd ./backend
-#    if [[ "$1" == "-i" ]]; then
-#        npm install
-#    elif [[ "$1" == "--start" ]]; then
-#        npm start > /dev/null 2>&1 &
-#        echo "Back end started."
-#    fi
-#
-#    # The front end 
-#    cd ../frontend
-#    if [[ "$1" == "-i" ]]; then
-#        npm install
-#    elif [[ "$1" == "--start" ]]; then
-#        npm run serve > /dev/null 2>&1 &
-#        echo "Front end started."
-#    fi
-#
-#    # Kill the processes if requested
-#    if [[ "$1" == "--stop" ]]; then
-#        killall node > /dev/null 2>&1
-#    fi
-#
-#    # Back to root directory and get the next argument
-#    cd ../
-#    shift
-#done
+# Install modules on the server
+curl -u $AZURE_USER:$AZURE_PASS \
+    --header "Content-Type: application/json" \
+    --request POST \
+    --data '{ "command": "npm install", "dir": "site/wwwroot" }' \
+    https://smartcourse-test.scm.azurewebsites.net/api/command
+
