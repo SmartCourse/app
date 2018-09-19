@@ -1,11 +1,7 @@
 const data = require('../../../data/course_data_2019.json')
 const { toLowerCase, decodeUTF8Text } = require('../../utils/helpers')
 
-module.exports = (() => {
-    // unfortunately there are duplicate courses in the data set, so we must filter them
-
-    // list of courses to return
-    const courses = data.map(subj => {
+module.exports = data.map(subj => {
         const subjectCode = subj.code
         const subjectName = decodeUTF8Text(subj.name)
 
@@ -40,6 +36,3 @@ module.exports = (() => {
             })
         })
     }).reduce((curr, acc) => [...curr, ...acc], [])
-
-    return courses
-})()
