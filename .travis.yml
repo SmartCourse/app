@@ -19,9 +19,14 @@ after_script:
 cache:
   directories:
     - node_modules
-deploy:
-  on: 
-    branch: s5-deployment
-  after_deploy:
-    - cd ../
-    - ./deploy.sh
+
+jobs:
+  include:
+    - stage: deploy
+      script:
+        - cd ../
+        - ./deploy.sh
+
+stages:
+  - name: deploy
+    if:branch = s5-deployment
