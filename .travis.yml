@@ -22,11 +22,17 @@ cache:
 
 jobs:
   include:
-    - stage: deploy
+    - stage: deploy-dev
       script:
         - cd ../
-        - ./deploy.sh
+        - ./deploy.sh staging
+    - stage: deploy-prod
+      script:
+        - cd ../
+        - ./deploy.sh prod
 
 stages:
-  - name: deploy
-    if: branch = s5-deployment
+  - name: deploy-dev
+    if: branch = dev
+  - name: deploy-prod
+    if: branch = master
