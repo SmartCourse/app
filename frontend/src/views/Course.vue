@@ -1,5 +1,6 @@
 <template>
   <div class="main-content course">
+    <AppBreadCrumb/>
     <div class="course-header">
         <div class="course-header-title">
             <h2>{{ courseInfo.code }} - {{ courseInfo.name }}</h2>
@@ -123,7 +124,6 @@ h4 > a {
 }
 
 .course-header {
-    margin-top:20px;
     background-color:white;
 }
 
@@ -145,6 +145,7 @@ h4 > a {
 
 .button-container {
     text-align:right;
+    padding-bottom:10px;
 }
 
 </style>
