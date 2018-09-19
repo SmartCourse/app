@@ -21,8 +21,8 @@ import {mapGetters} from 'vuex'
 export default {
   components: { Search },
   computed: {
-      ...mapGetters('auth', ['isLoggedIn'])
-  },
+    ...mapGetters('auth', ['isLoggedIn'])
+  }
 }
 </script>
 

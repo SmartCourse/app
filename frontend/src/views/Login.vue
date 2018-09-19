@@ -34,7 +34,6 @@ export default {
 }
 </script>
 
-
 <style scoped>
 .auth-input {
   font: inherit;

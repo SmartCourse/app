@@ -5,7 +5,7 @@ import config from './config'
 
 firebase.initializeApp(config)
 
-const auth = firebase.auth
+export const auth = firebase.auth()
 
 const state = {
   loading: false,
@@ -22,9 +22,8 @@ const getters = {
 }
 
 setInterval(() => {
-  console.log('Auth state: ')
-  console.log(!!auth().currentUser)
-}, 5000)
+  console.log('Background Auth state check: ', !!auth.currentUser)
+}, 10000)
 
 const mutations = {
   ERROR(state, message) {
@@ -60,13 +59,13 @@ const actions = {
       return commit('ERROR', 'Missing fields')
     }
 
-    return auth().signInWithEmailAndPassword(email, password)
+    return auth.signInWithEmailAndPassword(email, password)
       .then(user => commit('LOGIN', user))
       .catch(error => commit('ERROR', error.message))
   },
 
   logout({commit}) {
-    return auth().signOut()
+    return auth.signOut()
       .then(() => commit('LOGOUT'))
       .catch(error => commit('ERROR', error.message))
   },
@@ -76,14 +75,14 @@ const actions = {
       return commit('ERROR', 'Missing fields')
     }
 
-    return auth().createUserWithEmailAndPassword(email, password)
+    return auth.createUserWithEmailAndPassword(email, password)
       .then(user => commit('SIGN_UP', user))
       .catch(error => commit('ERROR', error.message))
   },
 
   checkAuth({commit}) {
     return new Promise((resolve, reject) => {
-      const unsubscribe = auth().onAuthStateChanged(user => {
+      const unsubscribe = auth.onAuthStateChanged(user => {
         unsubscribe()
         resolve(user)
       }, reject)

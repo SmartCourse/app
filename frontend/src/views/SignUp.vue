@@ -18,20 +18,20 @@ import { mapGetters } from 'vuex'
 import AppAuthForm from '@/components/AppAuthForm'
 
 export default {
-    name: 'signup',
-    data() {
-        return {
-            email: '',
-            password: ''
-        }
-    },
-    components: { AppAuthForm },
-    computed: {
-        ...mapGetters('auth', [ 'error' ])
-    },
-    created() {
-      this.$store.commit('auth/ERROR', '')
+  name: 'signup',
+  data() {
+    return {
+      email: '',
+      password: ''
     }
+  },
+  components: { AppAuthForm },
+  computed: {
+    ...mapGetters('auth', [ 'error' ])
+  },
+  created() {
+    this.$store.commit('auth/ERROR', '')
+  }
 }
 </script>
 
@@ -45,4 +45,3 @@ export default {
   border-bottom: var(--border);
 }
 </style>
-

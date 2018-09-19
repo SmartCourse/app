@@ -17,22 +17,21 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import AppButton from '@/components/AppButton'
 import Card from '@/components/Card'
 
 export default {
-    name: 'auth-form',
-    props: {
-        clickHandler: {
-            type: Function,
-            required: true
-        },
-        title: String,
-        error: String,
-        buttonText: String
+  name: 'auth-form',
+  props: {
+    clickHandler: {
+      type: Function,
+      required: true
     },
-    components: { AppButton, Card }
+    title: String,
+    error: String,
+    buttonText: String
+  },
+  components: { AppButton, Card }
 }
 </script>
 
