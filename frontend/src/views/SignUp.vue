@@ -1,20 +1,21 @@
 <template>
-  <div class="sign-up">
-    <p>Let's create a new account !</p>
-    <form>
-        <input type="text" v-model="email" placeholder="Email"><br>
-        <input type="password" v-model="password" placeholder="Password"><br>
-        <button type="button" @click="$store.dispatch('auth/signUp', {email, password})">
-            Sign Up
-        </button>
-        <p v-if="error">{{ error }}</p>
-    </form>
-    <span>Or go back to <router-link to="/login">login</router-link>.</span>
+  <div class="main-content">
+    <AppAuthForm
+      :title="'Sign Up'"
+      :buttonText="'Sign Up'"
+      :error="error"
+      :clickHandler="() => $store.dispatch('auth/signUp', {email, password})"
+    >
+      <input class="auth-input" type="text" placeholder="Display Name">
+      <input class="auth-input" type="text" v-model="email" placeholder="Email">
+      <input class="auth-input" type="password" v-model="password" placeholder="Password">
+    </AppAuthForm>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import AppAuthForm from '@/components/AppAuthForm'
 
 export default {
     name: 'signup',
@@ -24,6 +25,7 @@ export default {
             password: ''
         }
     },
+    components: { AppAuthForm },
     computed: {
         ...mapGetters('auth', [ 'error' ])
     },
@@ -31,21 +33,13 @@ export default {
 </script>
 
 <style scoped>
-  .sign-up {
-     width: 50%;
-    margin: 40px auto;
-  }
-  input {
-    margin: 10px auto;
-    padding: 15px;
-  }
-  button {
-    margin-top: 10px;
-    cursor: pointer;
-  }
-  span {
-    display: block;
-    margin-top: 20px;
-    font-size: 11px;
-  }
+.auth-input {
+  font: inherit;
+  display: block;
+  margin: 10px 0;
+  padding: 10px 0;
+  border-style: none;
+  border-bottom: var(--border);
+}
 </style>
+
