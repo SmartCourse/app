@@ -20,9 +20,8 @@ cache:
   directories:
     - node_modules
 deploy:
-  provider: azure_web_apps
-  site: smartcourse-test
-  on: s5-deployment
-  script:
+  on: 
+    branch: s5-deployment
+  after_deploy:
     - cd ../
     - ./deploy.sh
