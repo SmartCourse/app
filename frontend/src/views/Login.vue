@@ -4,7 +4,7 @@
       :title="'Login'"
       :buttonText="'Login'"
       :error="error"
-      :clickHandler="() => $store.dispatch('auth/login', {email, password})"
+      :clickHandler="() => $store.dispatch('auth/signIn', {email, password})"
     >
       <input class="auth-input" type="text" v-model="email" placeholder="Email">
       <input class="auth-input" type="password" v-model="password" placeholder="Password">
@@ -27,6 +27,9 @@ export default {
   components: { AppAuthForm },
   computed: {
     ...mapGetters('auth', ['error'])
+  },
+  created() {
+    this.$store.commit('auth/ERROR', '')
   }
 }
 </script>

@@ -5,7 +5,7 @@
         <h2>{{ title }}</h2>
         <form class="auth-form">
           <slot></slot>
-          <AppButton class="button-spacing" @click.native="handler">
+          <AppButton class="button-spacing" @click.native="clickHandler">
               {{ buttonText }}
           </AppButton>
         </form>
@@ -45,6 +45,8 @@ export default {
 }
 
 .button-spacing {
+    width: 80%;
+    margin: auto;
     margin-top: 30px;
 }
 
@@ -58,7 +60,6 @@ export default {
 }
 
 .card-content {
-  position: relative;
   width: 320px;
   min-height: 300px;
   padding: 0px 10px;
@@ -70,7 +71,13 @@ export default {
   display: block;
   margin-top: 20px;
   position: absolute;
-  bottom: 0;
-  right: 10px;
+  top: 10px;
+  right: 20px;
+}
+
+@media screen and (min-width: 768px) {
+    .card-content {
+        width: 450px;
+    }
 }
 </style>

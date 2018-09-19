@@ -29,6 +29,9 @@ export default {
     computed: {
         ...mapGetters('auth', [ 'error' ])
     },
+    created() {
+      this.$store.commit('auth/ERROR', '')
+    }
 }
 </script>
 

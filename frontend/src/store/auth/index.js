@@ -26,7 +26,9 @@ const mutations = {
     state.error = message
   },
   SIGN_UP(state, user) {
-    console.log('LOGIN', user)
+    // on successful signup communicate with backend to update database.
+    // else think of what state we need to keep on record
+    console.log('SIGN UP', user)
     state.success = 'Your account has been successfully created!'
   },
   LOGIN(state, user) {
@@ -54,6 +56,7 @@ const actions = {
     if (!(email && password)) {
       return commit('ERROR', 'Missing fields')
     }
+
     return auth().createUserWithEmailAndPassword(email, password)
       .then(user => commit('SIGN_UP', user))
       .catch(error => commit('ERROR', error.message))
