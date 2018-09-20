@@ -20,7 +20,6 @@ jobs:
 
     - stage: test
       script:
-        - cd backend
         - npm test
         - cd ../frontend
         - npm test
@@ -30,9 +29,11 @@ jobs:
 
     - stage: deploy-dev
       script:
+        - cd ../
         - ./deploy.sh staging
     - stage: deploy-prod
       script:
+        - cd ../
         - ./deploy.sh prod
 
 stages:
