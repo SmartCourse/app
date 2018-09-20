@@ -4,19 +4,18 @@ node_js:
   - 10
 notifications:
     slack: cs4920-2018:SDt3tqEvra7QvkVy5wnY9faR
+install:
+  - cd frontend
+  - npm install
+  - npm run build
+  - cd ../backend
+  - npm install
+cache:
+  directories:
+    - node_modules
+
 jobs:
   include:
-    - stage: install
-      script:
-        - cd frontend
-        - npm install
-        - npm run build
-        - cd ../backend
-        - npm install
-        cache:
-          directories:
-            - node_modules
-
     - stage: test
       script:
         - cd backend
@@ -40,7 +39,6 @@ jobs:
       if: branch = dev
 
 stages:
-  - install
   - test
   - deploy-prod
   - deploy-dev
