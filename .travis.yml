@@ -21,7 +21,7 @@ jobs:
     - stage: test
       script: 
         - npm test
-        - cd ../frontend
+        - cd frontend
         - npm test
       after_script:
         - cd ../backend
@@ -29,11 +29,9 @@ jobs:
 
     - stage: deploy-dev
       script:
-        - cd ../
         - ./deploy.sh staging
     - stage: deploy-prod
       script:
-        - cd ../
         - ./deploy.sh prod
 
 stages:
@@ -42,4 +40,3 @@ stages:
   - name: deploy-dev
     if: branch = dev
   - deploy-prod
-    if: branch = master
