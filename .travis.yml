@@ -19,9 +19,10 @@ jobs:
         - npm install
 
     - stage: test
-      script: 
+      script:
+        - cd backend
         - npm test
-        - cd frontend
+        - cd ../frontend
         - npm test
       after_script:
         - cd ../backend
