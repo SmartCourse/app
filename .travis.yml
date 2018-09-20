@@ -31,14 +31,15 @@ jobs:
       script:
         - cd ../
         - ./deploy.sh staging
+      if: branch = master
     - stage: deploy-prod
       script:
         - cd ../
         - ./deploy.sh prod
+      if: branch = dev
 
 stages:
   - install
   - test
-  - name: deploy-dev
-    if: branch = dev
   - deploy-prod
+  - deploy-dev
