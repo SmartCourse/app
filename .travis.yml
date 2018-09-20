@@ -34,5 +34,3 @@ jobs:
 stages:
   - name: deploy-dev
     if: branch = dev
-  - name: deploy-prod
-    if: branch = master
