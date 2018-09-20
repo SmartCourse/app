@@ -32,7 +32,7 @@ jobs:
     - stage: deploy-dev
       script:
         - ./deploy.sh staging
-      if: branch = s5-deployment
+      if: branch = dev
     - stage: deploy-prod
       script:
         - ./deploy.sh prod
