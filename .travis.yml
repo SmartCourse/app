@@ -1,27 +1,32 @@
+---
 language: node_js
 node_js:
   - 10
 notifications:
     slack: cs4920-2018:SDt3tqEvra7QvkVy5wnY9faR
-install:
-  - cd frontend
-  - npm install
-  - npm run build
-  - cd ../backend
-  - npm install
-script: 
-  - npm test
-  - cd ../frontend
-  - npm test
-after_script:
-  - cd ../backend
-  - npm run coverage
 cache:
   directories:
     - node_modules
 
 jobs:
   include:
+    - stage: install
+      script:
+        - cd frontend
+        - npm install
+        - npm run build
+        - cd ../backend
+        - npm install
+
+    - stage: test
+      script: 
+        - npm test
+        - cd ../frontend
+        - npm test
+      after_script:
+        - cd ../backend
+        - npm run coverage
+
     - stage: deploy-dev
       script:
         - cd ../
@@ -32,6 +37,8 @@ jobs:
         - ./deploy.sh prod
 
 stages:
+  - install
+  - test
   - name: deploy-dev
     if: branch = dev
-  - name: deploy-prod
+  - deploy-prod
