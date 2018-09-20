@@ -20,6 +20,7 @@ jobs:
 
     - stage: test
       script:
+        - ls
         - npm test
         - cd ../frontend
         - npm test
