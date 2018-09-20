@@ -10,6 +10,7 @@ install:
   - npm run build
   - cd ../backend
   - npm install
+  - cd ../
 cache:
   directories:
     - node_modules
@@ -19,24 +20,23 @@ jobs:
     - stage: test
       script:
         - cd backend
-        - ls
         - npm test
         - cd ../frontend
         - npm test
+        - cd ../
       after_script:
-        - cd ../backend
+        - cd backend
         - npm run coverage
+        - cd ../
 
     - stage: deploy-dev
       script:
-        - cd ../
         - ./deploy.sh staging
-      if: branch = master
+      if: branch = s5-deployment
     - stage: deploy-prod
       script:
-        - cd ../
         - ./deploy.sh prod
-      if: branch = dev
+      if: branch = master
 
 stages:
   - test
