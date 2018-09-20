@@ -4,10 +4,6 @@ node_js:
   - 10
 notifications:
     slack: cs4920-2018:SDt3tqEvra7QvkVy5wnY9faR
-cache:
-  directories:
-    - node_modules
-
 jobs:
   include:
     - stage: install
@@ -17,6 +13,9 @@ jobs:
         - npm run build
         - cd ../backend
         - npm install
+        cache:
+          directories:
+            - node_modules
 
     - stage: test
       script:
