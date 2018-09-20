@@ -42,3 +42,4 @@ stages:
   - name: deploy-dev
     if: branch = dev
   - deploy-prod
+    if: branch = master
