@@ -10,6 +10,10 @@ if [[ "$type" != "staging" && "$type" != "prod" ]]; then
     echo "Type must be either 'staging' or 'prod'"
 fi
 
+if [[ "$type" == "prod" ]]; then
+    exit 0
+fi
+
 # Compile the front end
 cd frontend
 npm install
