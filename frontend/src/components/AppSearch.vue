@@ -12,7 +12,7 @@
                 :key="item.code"
                 tag="li"
                 v-for="item in suggestions"
-                :to="{ path: `/course/${item.code}` }"
+                :to="{ path: `/course/${item.code}/info` }"
             >
                 {{ item.name }} ({{ item.code }})
             </router-link>

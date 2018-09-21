@@ -1,0 +1,51 @@
+<template>
+    <div class="course-content">
+      <div class="course-info">
+        <div>
+          <p>
+            <b>Description:</b>
+          </p>
+          <p v-html="courseInfo.description"></p> <!-- description may contain <p> tags -->
+        </div>
+        <div v-if="courseInfo.requirements">
+          <p>
+            <b>Requirements:</b>
+          </p>
+          <p v-html="courseInfo.requirements"></p> <!-- requirements may contain <p> tags -->
+        </div>
+      </div>
+</template>
+
+<script>
+import { mapGetters } from 'vuex'
+
+export default {
+  name: 'courseInfo',
+  computed: {
+    ...mapGetters('course', {
+      courseInfo: 'course'
+    })
+  },
+  created () {
+    this.$store.dispatch('course/getCourse', this.code)
+  },
+  beforeRouteUpdate ({ params: { code } }, from, next) {
+    this.$store.dispatch('course/getCourse', code)
+    next()
+  }
+}
+</script>
+
+<style scoped>
+.course-content {
+    background-color:white;
+    margin-top:2px;
+    padding:10px;
+    min-height:50vh;
+}
+
+.course-info {
+    padding-left:20px;
+    padding-right:20px;
+}
+</style>

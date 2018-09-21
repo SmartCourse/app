@@ -10,6 +10,10 @@ const reviewView = () => import('./views/Review')
 const newQuestionView = () => import('./views/NewQuestion')
 const newReviewView = () => import('./views/NewReview')
 
+const courseInfo = () => import('./views/CourseInfo')
+const courseQuestions = () => import('./views/CourseQuestions')
+const courseReviews = () => import('./views/CourseReviews')
+
 export default new Router({
   mode: 'history',
   routes: [
@@ -23,6 +27,29 @@ export default new Router({
       props: ({params: { code }}) => ({
         code
       }),
+      children: [
+        {
+          path: 'info',
+          component: courseInfo,
+          props: ({params: { code }}) => ({
+            code
+          })
+        },
+        {
+          path: 'questions',
+          component: courseQuestions,
+          props: ({params: { code }}) => ({
+            code
+          })
+        },
+        {
+          path: 'reviews',
+          component: courseReviews,
+          props: ({params: { code }}) => ({
+            code
+          })
+        }
+      ],
       // route level code-splitting
       // this generates a separate chunk (course.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
