@@ -7,10 +7,21 @@ firebase.initializeApp(config)
 
 export const auth = firebase.auth()
 
+function sendAuthToken(user) {
+  return user.getIdToken(/* forceRefresh */ true)
+    .then(idToken => {
+      console.log('token', idToken)
+      fetch('localhost:3000/api', {
+        headers: {
+          'Authorization': 'Bearer ' + idToken
+        }
+      })
+    })
+}
+
 const state = {
   loading: false,
   error: '',
-  success: '',
   user: null
 }
 
@@ -34,12 +45,13 @@ const mutations = {
     // on successful signup communicate with backend to update database.
     // If by email, new users are signed in by default
     console.log('SIGN UP', user)
-    state.success = 'Your account has been successfully created!'
+    sendAuthToken(user)
     state.user = user
   },
   LOGIN(state, user) {
     // login happens in indexedDB in chrome, localStorage in other browsers
     console.log('LOGIN', user)
+    sendAuthToken(user)
     state.user = user
   },
   LOGOUT(state) {

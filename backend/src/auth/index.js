@@ -1,13 +1,24 @@
-/**
- * firebase SDK details can be found here:
- * https://firebase.google.com/docs/admin/setup
- */
+const auth = require('./config')
 
-const admin = require('firebase-admin')
+module.exports = function (req, _, next) {
+    const token = req.header('authorization')
 
-const credentials = ('./config.json')
+    // no token no worries
+    if (!token) {
+        return next()
+    }
 
-admin.initializeApp({
-    credential: admin.credential.cert(credentials),
-    databaseURL: 'https://smartcourse-ec321.firebaseio.com'
-})
+    // client attempting auth
+    console.log('HEADER:', token)
+    return auth.verifyIdToken(token)
+        .then(decodedToken => {
+            console.log(decodedToken)
+            // attach user to request obj
+            req.user = decodedToken.uid
+        })
+        .catch(err => {
+            // invalid JWT
+            console.warn(err)
+        })
+        .finally(next)
+}
