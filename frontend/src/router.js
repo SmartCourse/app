@@ -29,6 +29,7 @@ export default new Router({
       }),
       children: [
         {
+          name: 'info',
           path: 'info',
           component: courseInfo,
           props: ({params: { code }}) => ({
@@ -36,6 +37,7 @@ export default new Router({
           })
         },
         {
+          name: 'questions',
           path: 'questions',
           component: courseQuestions,
           props: ({params: { code }}) => ({
@@ -43,6 +45,7 @@ export default new Router({
           })
         },
         {
+          name: 'reviews',
           path: 'reviews',
           component: courseReviews,
           props: ({params: { code }}) => ({

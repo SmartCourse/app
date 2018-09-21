@@ -10,17 +10,17 @@
                 <a target=_blank :href="courseInfo.outlineURL">Course Outline</a>
             </h4>
         </div>
-
+        
         <router-link to="info">
-            <TabButton @click.native="$store.dispatch('course/changeTab', 'info')" :active="courseTab=='info'">Info</TabButton>
+            <TabButton :active="this.$route.name == 'info'">Info</TabButton>
         </router-link> 
 
         <router-link to="questions">
-            <TabButton @click.native="$store.dispatch('course/changeTab', 'questions')" :active="courseTab=='questions'">Questions</TabButton>
+            <TabButton :active="this.$route.name == 'questions'">Questions</TabButton>
         </router-link> 
 
         <router-link to="reviews">
-            <TabButton @click.native="$store.dispatch('course/changeTab', 'reviews')" :active="courseTab=='reviews'">Reviews</TabButton> 
+            <TabButton :active="this.$route.name == 'reviews'">Reviews</TabButton> 
         </router-link>
 
         <router-view/>
@@ -33,7 +33,6 @@
 <script>
 // @ is an alias to /src
 import TabButton from '@/components/course/TabButton'
-import AppButton from '@/components/AppButton'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -43,11 +42,9 @@ export default {
   },
   components: {
     TabButton,
-    AppButton
   },
   computed: {
     ...mapGetters('course', {
-      courseTab: 'courseTab',
       courseInfo: 'course'
     })
   },

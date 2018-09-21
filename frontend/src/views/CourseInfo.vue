@@ -21,6 +21,9 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'courseInfo',
+  props: {
+    code: String
+  },
   computed: {
     ...mapGetters('course', {
       courseInfo: 'course'
