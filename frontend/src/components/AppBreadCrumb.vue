@@ -8,21 +8,32 @@
 
 <script>
 export default {
+
+  // TODO acquire list of subjects from api (see AppSearch), and store them in data
+
   computed: {
     routeList() {
-      // TODO this
-      // e.g. Subject > COMP > Management and Ethics > Ask Question
-      // i.e. need to use course store
-      //this.$route.path.split("/")
-      const list = []
+      // e.g. Subjects > Computer Science > COMP4920 > Ask Question
+
+      let id = 0
+      // TODO this won't be just Home in the final version prob
+      const list = [{id: id++, text: 'Home', route: '/'}]
+
       if (this.$route.params.code) {
-          list.push({id:2, text:this.$store.state.course.course.name, route:"/"})
+        const courseCode = this.$route.params.code
+        list.push({id: id++, text: courseCode, route: `/course/${courseCode}`})
       }
-      return [
-          {id:0, text:"Subjects", route:"/"},
-          {id:1, text:"COMP", route:"/"},
-          ...list,
-          {id:3, text:"Ask Question", route:"/"}]
+
+      const map = {
+        'newQuestion': 'Ask Question',
+        'newReview': 'Add Review',
+        'question': 'View Question',
+        'review': 'View Review'
+      }
+      if (this.$route.name in map) {
+        list.push({id: id++, text: map[this.$route.name], route: this.$route.path})
+      }
+      return list
     }
   }
 }
