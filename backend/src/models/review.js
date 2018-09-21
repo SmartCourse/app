@@ -6,17 +6,6 @@ class Review {
     }
 
     /**
-     * TODO - PAGING
-     * @param   {string}  code          The code the review corresponds to
-     * @param   {number}  pageNumber    The page of the reviews list
-     * @returns {Array}
-     */
-    getReviews(code, pageNumber = 1) {
-        return this.db
-            .queryAll('SELECT * FROM review WHERE code=?', [code])
-    }
-
-    /**
      * Gets specific review corresponding to an id.
      * @param   {number}  id   Required id param.
      * @returns {object}
@@ -27,8 +16,20 @@ class Review {
     }
 
     /**
-     * Post a review.
-     * @param {string} code  The id from the route param
+     * @param   {string}  code          The code of the course
+     * @param   {number}  pageNumber    The page number for which we want to get questions.
+     * @returns {Array}
+     */
+    getReviews(code, pageNumber) {
+        const pageSize = 10
+        const offset = (pageSize * pageNumber) - pageSize
+        return this.db
+            .queryAll('SELECT * FROM review WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
+                [code, offset, pageSize])
+    }
+
+    /**
+     * @param {string} code  The code of the course.
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
