@@ -1,6 +1,5 @@
 <template>
     <section class="main-content">
-      <AppBreadCrumb/>
       <QuestionCard v-bind="question"/>
 
       <AnswerForm @submitCommentForm="submitAnswer" :type="commentType" :callback="submitAnswer">

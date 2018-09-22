@@ -1,6 +1,5 @@
 <template>
     <section class="main-content">
-      <AppBreadCrumb/>
       <ReviewCard v-bind="review"/>
 
       <ReplyForm @submitCommentForm="submitReply" :type="commentType" :callback="submitReply">

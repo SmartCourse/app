@@ -7,7 +7,7 @@
 <style scoped>
 .card {
   position: relative;
-  margin-bottom: 10px;
+  margin: 10px 0px;
   border: var(--border);
   border-radius: 2px;
   padding: 10px;
