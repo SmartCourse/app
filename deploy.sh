@@ -23,7 +23,6 @@ zip -r smartcourse.zip package.json web.config data public src
 # Configure environment variables
 read -d '' TMP_ENVS << EOF || true
 {
-    "WEBSITE_NODE_DEFAULT_VERSION": "8.11.1",
     "FIREBASE_PRIVATE_KEY_ID": "$FIREBASE_PRIVATE_KEY_ID",
     "FIREBASE_PRIVATE_KEY": "$FIREBASE_PRIVATE_KEY"
 }
@@ -41,8 +40,15 @@ curl -u $AZURE_USER:$AZURE_PASS \
     --data-binary @smartcourse.zip https://smartcourse-$type.scm.azurewebsites.net/api/zipdeploy
 
 # Install modules on the server
+read -d '' TMP_CMDS << EOF || true
+{
+    "command": "npm install",
+    "dir": "site/wwwroot"
+}
+EOF
+
 curl -u $AZURE_USER:$AZURE_PASS \
     --header "Content-Type: application/json" \
     --request POST \
-    --data '{ "command": "npm install", "dir": "site/wwwroot" }' \
+    --data "$TMP_CMDS" \
     https://smartcourse-$type.scm.azurewebsites.net/api/command
