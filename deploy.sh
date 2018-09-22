@@ -21,18 +21,12 @@ rm -f smartcourse.zip
 zip -r smartcourse.zip package.json web.config data public src
 
 # Configure environment variables
-read -d '' TMP_ENVS << EOF || true
-{
-    "FIREBASE_PRIVATE_KEY_ID": "$FIREBASE_PRIVATE_KEY_ID",
-    "FIREBASE_PRIVATE_KEY": "$FIREBASE_PRIVATE_KEY"
-}
-EOF
-
-curl -u $AZURE_USER:$AZURE_PASS \
-    --header "Content-Type: application/json" \
-    --request POST \
-    --data "$TMP_ENVS" \
-    https://smartcourse-$type.scm.azurewebsites.net/api/settings
+az webapp config appsettings set \
+    -n smartcourse-$type \
+    -g smartcourse-resources \
+    --settings WEBSITE_NODE_DEFAULT_VERSION=8.11.1 \
+    FIREBASE_PRIVATE_KEY_ID="$FIREBASE_PRIVATE_KEY_ID" \
+    FIREBASE_PRIVATE_KEY="$FIREBASE_PRIVATE_KEY"
 
 # Deploy the site
 curl -u $AZURE_USER:$AZURE_PASS \
