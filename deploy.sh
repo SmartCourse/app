@@ -35,7 +35,6 @@ curl -u $AZURE_USER:$AZURE_PASS \
     --request POST \
     --data "$TMP_ENVS" \
     https://smartcourse-$type.scm.azurewebsites.net/api/settings
-rm tmp_env_vars
 
 # Deploy the site
 curl -u $AZURE_USER:$AZURE_PASS \
@@ -46,5 +45,5 @@ curl -u $AZURE_USER:$AZURE_PASS \
 curl -u $AZURE_USER:$AZURE_PASS \
     --header "Content-Type: application/json" \
     --request POST \
-    --data '{ "command": "rm -rf node_modules; npm install", "dir": "site/wwwroot" }' \
+    --data '{ "command": "npm install", "dir": "site/wwwroot" }' \
     https://smartcourse-$type.scm.azurewebsites.net/api/command
