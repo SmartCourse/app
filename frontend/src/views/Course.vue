@@ -10,16 +10,16 @@
                 <a target=_blank :href="courseInfo.outlineURL">Course Outline</a>
             </h4>
         </div>
-        
-        <router-link to="info">
+
+        <router-link :to="{name: 'info'}">
             <TabButton :active="this.$route.name == 'info'">Info</TabButton>
         </router-link> 
 
-        <router-link to="questions">
+        <router-link :to="{name: 'questions'}">
             <TabButton :active="this.$route.name == 'questions'">Questions</TabButton>
         </router-link> 
 
-        <router-link to="reviews">
+        <router-link :to="{name: 'reviews'}">
             <TabButton :active="this.$route.name == 'reviews'">Reviews</TabButton> 
         </router-link>
 

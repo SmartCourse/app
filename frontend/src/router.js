@@ -23,30 +23,30 @@ export default new Router({
       component: Home
     },
     {
-      path: '/course/:code',
+      path: '/course/:code/',
       props: ({params: { code }}) => ({
         code
       }),
       children: [
         {
+          path: '',
           name: 'info',
-          path: 'info',
           component: courseInfo,
           props: ({params: { code }}) => ({
             code
           })
         },
         {
-          name: 'questions',
           path: 'questions',
+          name: 'questions',
           component: courseQuestions,
           props: ({params: { code }}) => ({
             code
           })
         },
         {
-          name: 'reviews',
           path: 'reviews',
+          name: 'reviews',
           component: courseReviews,
           props: ({params: { code }}) => ({
             code
