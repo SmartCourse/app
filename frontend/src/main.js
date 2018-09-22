@@ -7,11 +7,13 @@ import store from './store'
 // GLOBALS
 import LoadingSpinner from '@/components/LoadingSpinner'
 import AppLogo from '@/components/AppLogo'
+import AppBreadCrumb from '@/components/AppBreadCrumb'
 
 Vue.config.productionTip = false
 Vue.config.devtools = true
 Vue.component('LoadingSpinner', LoadingSpinner)
 Vue.component('AppLogo', AppLogo)
+Vue.component('AppBreadCrumb', AppBreadCrumb)
 
 // read this on a blog == basically if the auth doesn't get ready in time
 // it can not realise the user is authenticated.
