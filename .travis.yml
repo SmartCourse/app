@@ -32,11 +32,11 @@ jobs:
     - stage: deploy-dev
       script:
         - ./deploy.sh staging
-      if: branch = dev
+      if: branch = s5-deployment
     - stage: deploy-prod
       script:
         - ./deploy.sh prod
-      if: branch = s5-deployment
+      if: branch = master
 
 stages:
   - test

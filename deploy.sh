@@ -24,7 +24,6 @@ zip -r smartcourse.zip package.json web.config data public src
 read -d '' TMP_ENVS << EOF || true
 {
     "WEBSITE_NODE_DEFAULT_VERSION": "8.11.1",
-    "DEPLOYMENT_TYPE": "$type",
     "FIREBASE_PRIVATE_KEY_ID": "$FIREBASE_PRIVATE_KEY_ID",
     "FIREBASE_PRIVATE_KEY": "$FIREBASE_PRIVATE_KEY"
 }
