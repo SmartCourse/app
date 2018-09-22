@@ -20,7 +20,7 @@ function request (path, { headers, method, data }) {
   const url = `${API_URL}${path}`
 
   if (method === 'GET') {
-    return fetch(url)
+    return fetch(url, { headers })
   }
 
   headers = {
