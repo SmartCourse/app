@@ -13,14 +13,14 @@
 
         <router-link :to="{name: 'info'}">
             <TabButton :active="this.$route.name == 'info'">Info</TabButton>
-        </router-link> 
+        </router-link>
 
         <router-link :to="{name: 'questions'}">
             <TabButton :active="this.$route.name == 'questions'">Questions</TabButton>
-        </router-link> 
+        </router-link>
 
         <router-link :to="{name: 'reviews'}">
-            <TabButton :active="this.$route.name == 'reviews'">Reviews</TabButton> 
+            <TabButton :active="this.$route.name == 'reviews'">Reviews</TabButton>
         </router-link>
 
         <router-view/>
@@ -41,7 +41,7 @@ export default {
     code: String
   },
   components: {
-    TabButton,
+    TabButton
   },
   computed: {
     ...mapGetters('course', {

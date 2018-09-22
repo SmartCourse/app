@@ -11,7 +11,7 @@
       <section class="questions">
         <ol>
           <li :key="item.id" v-for="item in reviews">
-            <ReviewCard v-bind="item"/> 
+            <ReviewCard v-bind="item"/>
           </li>
         </ol>
       </section>
@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     ...mapGetters('course', {
-      reviews: 'reviews',
+      reviews: 'reviews'
     })
   },
   created () {
