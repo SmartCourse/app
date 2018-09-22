@@ -1,5 +1,6 @@
 <template>
     <section class="main-content">
+      <AppBreadCrumb/>
       <QuestionForm :callback="submitQuestion">
         <span class="form-failure" v-if="error.code">
           {{error.message}}
