@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "local-build": "NODE_ENV=development vue-cli-service build --dest '../backend/public'",
     "build": "vue-cli-service build --dest '../backend/public'",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",

@@ -11,6 +11,7 @@ if [[ "$type" != "staging" && "$type" != "prod" ]]; then
 fi
 
 # Compile the front end
+export DEPLOY_TYPE=$type
 cd frontend
 npm install
 npm run build
