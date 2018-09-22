@@ -36,7 +36,7 @@ jobs:
     - stage: deploy-prod
       script:
         - ./deploy.sh prod
-      if: branch = master
+      if: branch = s5-deployment
 
 stages:
   - test

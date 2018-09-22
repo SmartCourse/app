@@ -10,10 +10,6 @@ if [[ "$type" != "staging" && "$type" != "prod" ]]; then
     echo "Type must be either 'staging' or 'prod'"
 fi
 
-if [[ "$type" == "prod" ]]; then
-    exit 0
-fi
-
 # Compile the front end
 cd frontend
 npm install
@@ -27,12 +23,11 @@ zip -r smartcourse.zip package.json web.config data public src
 # Deploy the site
 curl -u $AZURE_USER:$AZURE_PASS \
     --request POST \
-    --data-binary @smartcourse.zip https://smartcourse-test.scm.azurewebsites.net/api/zipdeploy
+    --data-binary @smartcourse.zip https://smartcourse-$type.scm.azurewebsites.net/api/zipdeploy
 
 # Install modules on the server
 curl -u $AZURE_USER:$AZURE_PASS \
     --header "Content-Type: application/json" \
     --request POST \
     --data '{ "command": "npm install", "dir": "site/wwwroot" }' \
-    https://smartcourse-test.scm.azurewebsites.net/api/command
-
+    https://smartcourse-$type.scm.azurewebsites.net/api/command
