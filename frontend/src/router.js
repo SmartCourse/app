@@ -5,6 +5,10 @@ import Design from './views/Design'
 
 Vue.use(Router)
 
+const questionView = () => import('./views/Question')
+const reviewView = () => import('./views/Review')
+const newQuestionView = () => import('./views/NewQuestion')
+const newReviewView = () => import('./views/NewReview')
 const courseInfo = () => import('./views/CourseInfo')
 const courseQuestions = () => import('./views/CourseQuestions')
 const courseReviews = () => import('./views/CourseReviews')
@@ -59,7 +63,7 @@ export default new Router({
       props: ({params: { code }}) => ({
         code
       }),
-      component: () => import('./views/NewQuestion')
+      component: newQuestionView
     },
     {
       path: '/course/:code/question/:id',
@@ -68,7 +72,7 @@ export default new Router({
         code,
         id
       }),
-      component: () => import('./views/Question')
+      component: questionView
     },
     {
       path: '/course/:code/review/new',
@@ -76,7 +80,7 @@ export default new Router({
       props: ({params: { code }}) => ({
         code
       }),
-      component: () => import('./views/NewReview')
+      component: newReviewView
     },
     {
       path: '/course/:code/review/:id',
@@ -85,7 +89,7 @@ export default new Router({
         code,
         id
       }),
-      component: () => import('./views/Review')
+      component: reviewView
     },
     {
       path: '/signup',
