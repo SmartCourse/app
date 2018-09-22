@@ -11,8 +11,6 @@ exports.responseHandler = function(fn, response) {
 
 exports.toLowerCase = str => str.toLowerCase()
 
-
-
 /**
  * Convert a string to utf8
  */
