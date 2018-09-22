@@ -2,8 +2,9 @@
   <div>
     <section class="main-content home">
       <AppLogo :first="'Smart'" :last="'Course'"/>
-      <p>Making the most of your degree.</p>
+      <p>Community-driven ratings, reviews and info about UNSW courses</p>
       <Search/>
+      <p>or <router-link :to="'/subjects'">browse by subject area</router-link></p>
     </section>
     <section class="homepage-section">
       <article class="content">
@@ -12,7 +13,7 @@
             <p class="why-icon"><i class="material-icons theme">person</i></p>
             <h3>Individual Value</h3>
             <p>SmartCourse is primarily driven by a desire to give you a richer university experience.
-               Figure out the courses that best suit you based on our rich archives of feedback and reviews.</p>
+               Choose the courses that best suit you based on student feedback and reviews.</p>
           </div>
           <div class="why-card">
             <p class="why-icon"><i class="material-icons pink">people</i></p>
@@ -30,7 +31,7 @@
         </div>
       </article>
     </section>
-    <section class="homepage-section who">
+    <!--section class="homepage-section who">
       <article class="content">
         <div>Our story.</div>
       </article>
@@ -39,7 +40,7 @@
       <article class="content">
         <div>Sign up today.</div>
       </article>
-    </section>
+    </section-->
   </div>
 </template>
 
@@ -64,6 +65,15 @@ export default {
   /* override main-content width */
   max-width: none;
   width:100%;
+}
+
+
+.home > h1 {
+    margin:3vh;
+}
+
+.home > p {
+  font-size: var(--font-medium);
 }
 
 .homepage-section {
@@ -127,6 +137,10 @@ export default {
 
 p {
   margin: 10px auto;
+}
+
+a {
+    color:var(--theme)
 }
 
 @media screen and (max-width: 768px) {

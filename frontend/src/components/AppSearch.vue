@@ -4,7 +4,7 @@
             type='text'
             v-model='search'
             name='search'
-            placeholder='Search...'
+            placeholder='Search all courses...'
         />
         <ul v-if="search && suggestions.length">
             <router-link
