@@ -43,15 +43,15 @@ const mutations = {
   SIGN_UP(state, user) {
     // on successful signup communicate with backend to update database.
     // If by email, new users are signed in by default
-    console.log('SIGN UP', user)
-    sendAuthToken(user)
-    state.user = user
+    console.log('SIGN UP', user.user)
+    sendAuthToken(user.user)
+    state.user = user.user
   },
   LOGIN(state, user) {
     // login happens in indexedDB in chrome, localStorage in other browsers
-    console.log('LOGIN', user)
-    sendAuthToken(user)
-    state.user = user
+    console.log('LOGIN', user.user)
+    sendAuthToken(user.user)
+    state.user = user.user
   },
   LOGOUT(state) {
     state.user = null
