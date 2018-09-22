@@ -11,64 +11,30 @@
                 <a target=_blank :href="courseInfo.outlineURL">Course Outline</a>
             </h4>
         </div>
-        <TabButton @click.native="$store.dispatch('course/changeTab', 'info')" :active="courseTab=='info'">
-            info
-        </TabButton>
-        <TabButton @click.native="$store.dispatch('course/changeTab', 'questions')" :active="courseTab=='questions'">
-            questions
-        </TabButton>
-        <TabButton @click.native="$store.dispatch('course/changeTab', 'reviews')" :active="courseTab=='reviews'">
-            reviews
-        </TabButton>
+
+        <router-link :to="{name: 'info'}">
+            <TabButton :active="this.$route.name == 'info'">Info</TabButton>
+        </router-link>
+
+        <router-link :to="{name: 'questions'}">
+            <TabButton :active="this.$route.name == 'questions'">Questions</TabButton>
+        </router-link>
+
+        <router-link :to="{name: 'reviews'}">
+            <TabButton :active="this.$route.name == 'reviews'">Reviews</TabButton>
+        </router-link>
     </div>
+
     <div class="course-content">
-      <div v-if="courseTab=='info'" class="course-info">
-        <div>
-          <p>
-            <b>Description:</b>
-          </p>
-          <p v-html="courseInfo.description"></p> <!-- description may contain <p> tags -->
-        </div>
-        <div v-if="courseInfo.requirements">
-          <p>
-            <b>Requirements:</b>
-          </p>
-          <p v-html="courseInfo.requirements"></p> <!-- requirements may contain <p> tags -->
-        </div>
-      </div>
-
-      <div v-if="courseTab=='questions'">
-        <div class='button-container'>
-            <router-link :to="{ name: 'newQuestion', params: {code} }">
-                <AppButton>Ask Question</AppButton>
-            </router-link>
-        </div>
-        <Feed
-          feedType="QuestionCard"
-          :items="questions"
-        />
-      </div>
-
-      <div v-if="courseTab=='reviews'">
-        <div class='button-container'>
-            <router-link :to="{ name: 'newReview', params: {code} }">
-                <AppButton>Add Review</AppButton>
-            </router-link>
-        </div>
-        <Feed
-            feedType="ReviewCard"
-            :items="reviews"
-          />
-      </div>
+        <router-view/>
     </div>
+
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Feed from '@/components/course/Feed'
 import TabButton from '@/components/course/TabButton'
-import AppButton from '@/components/AppButton'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -77,22 +43,15 @@ export default {
     code: String
   },
   components: {
-    Feed,
-    TabButton,
-    AppButton
+    TabButton
   },
   computed: {
     ...mapGetters('course', {
-      questions: 'questions',
-      reviews: 'reviews',
-      courseTab: 'courseTab',
       courseInfo: 'course'
     })
   },
   created () {
     this.$store.dispatch('course/getCourse', this.code)
-    this.$store.dispatch('course/getQuestions', this.code)
-    this.$store.dispatch('course/getReviews', this.code)
   },
   beforeRouteUpdate ({ params: { code } }, from, next) {
     // called when the route that renders this component has changed,
@@ -102,8 +61,6 @@ export default {
     // will be reused, and this hook will be called when that happens.
     // has access to `this` component instance.
     this.$store.dispatch('course/getCourse', code)
-    this.$store.dispatch('course/getQuestions', code)
-    this.$store.dispatch('course/getReviews', code)
     next()
   }
 }
@@ -137,15 +94,4 @@ h4 > a {
     padding:10px;
     min-height:50vh;
 }
-
-.course-info {
-    padding-left:20px;
-    padding-right:20px;
-}
-
-.button-container {
-    text-align:right;
-    padding-bottom:10px;
-}
-
 </style>
