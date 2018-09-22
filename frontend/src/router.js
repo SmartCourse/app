@@ -5,13 +5,6 @@ import Design from './views/Design'
 
 Vue.use(Router)
 
-const questionView = () => import('./views/Question')
-const reviewView = () => import('./views/Review')
-const newQuestionView = () => import('./views/NewQuestion')
-const newReviewView = () => import('./views/NewReview')
-const SignUp = () => import('./views/SignUp')
-const Login = () => import('./views/Login')
-
 export default new Router({
   mode: 'history',
   routes: [
@@ -36,7 +29,7 @@ export default new Router({
       props: ({params: { code }}) => ({
         code
       }),
-      component: newQuestionView
+      component: () => import('./views/NewQuestion')
     },
     {
       path: '/course/:code/question/:id',
@@ -45,7 +38,7 @@ export default new Router({
         code,
         id
       }),
-      component: questionView
+      component: () => import('./views/Question')
     },
     {
       path: '/course/:code/review/new',
@@ -53,7 +46,7 @@ export default new Router({
       props: ({params: { code }}) => ({
         code
       }),
-      component: newReviewView
+      component: () => import('./views/NewReview')
     },
     {
       path: '/course/:code/review/:id',
@@ -62,15 +55,15 @@ export default new Router({
         code,
         id
       }),
-      component: reviewView
+      component: () => import('./views/Review')
     },
     {
       path: '/signup',
-      component: SignUp
+      component: () => import('./views/SignUp')
     },
     {
       path: '/login',
-      component: Login
+      component: () => import('./views/Login')
     },
     {
       path: '/fonts',

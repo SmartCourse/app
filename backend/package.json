@@ -10,6 +10,7 @@
     "coverage": "npx nyc report --reporter=html --reporter=text-lcov | coveralls"
   },
   "dependencies": {
+    "compression": "^1.7.3",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
