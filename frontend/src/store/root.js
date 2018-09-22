@@ -1,12 +1,19 @@
 
+import { get } from '../utils/api'
+
 const state = {
   loading: false,
-  search: []
+  courses: [],
+  user: {}
 }
 
 const actions = {
   populateSearch({commit}) {
-    commit()
+    return get('/course')
+      .then(data => {
+        commit('POPULATE_SEARCH', data)
+      })
+      .catch(err => console.warn(err))
   },
   togglePageLoad() {}
 }
@@ -16,7 +23,15 @@ const mutations = {
     state.loading = bool
   },
   POPULATE_SEARCH(state, data) {
-    state.search = data
+    state.courses = data
+  },
+  /**
+   * Eventually should expose user in the root state
+   * @param {*} state The root state
+   * @param {*} user  The logged in user object or null
+   */
+  SET_USER(state, user) {
+    state.user = user
   }
 }
 

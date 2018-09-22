@@ -1,15 +1,20 @@
 const auth = require('./config')
 
 module.exports = function (req, _, next) {
-    const token = req.header('authorization')
-
+    const authHeader = req.header('authorization')
     // no token no worries
-    if (!token) {
+    if (!authHeader) {
+        return next()
+    }
+    const tokenised = authHeader.split(' ')
+    const [bearer, token] = tokenised
+
+    if (!(bearer === 'Bearer' && token)) {
         return next()
     }
 
     // client attempting auth
-    console.log('HEADER:', token)
+    console.log('jwt:', token)
     return auth.verifyIdToken(token)
         .then(decodedToken => {
             console.log(decodedToken)

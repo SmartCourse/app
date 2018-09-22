@@ -6,7 +6,7 @@
 const admin = require('firebase-admin')
 
 // todo fix the || case
-const credentials = require('./config.json')
+const credentials = require('./config.json') || {}
 
 const firebase = admin.initializeApp({
     credential: admin.credential.cert(credentials),

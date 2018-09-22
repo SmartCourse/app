@@ -2,20 +2,24 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 
 import config from './config'
+import {get} from '../../utils/api'
 
 firebase.initializeApp(config)
 
 export const auth = firebase.auth()
 
 function sendAuthToken(user) {
-  return user.getIdToken(/* forceRefresh */ true)
+  return user.getIdToken(/* forceRefresh true */)
     .then(idToken => {
       console.log('token', idToken)
-      fetch('localhost:3000/api', {
+      return get('/user', {
         headers: {
           'Authorization': 'Bearer ' + idToken
-        }
+        },
+        mode: 'cors'
       })
+    }).catch(err => {
+      console.warn(err)
     })
 }
 
@@ -61,6 +65,7 @@ const mutations = {
   UPDATE(state, user) {
     // useful for intial boot
     console.log(user)
+    if (user) sendAuthToken(user)
     state.user = user
   }
 }
@@ -102,7 +107,9 @@ const actions = {
       .then(user => {
         commit('UPDATE', user)
       })
-      .catch(error => commit('ERROR', error.message))
+      .catch(error => {
+        commit('ERROR', error)
+      })
   }
 }
 
