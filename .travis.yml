@@ -7,7 +7,7 @@ notifications:
 install:
   - cd frontend
   - npm install
-  - npm run build
+  - npm run build-local
   - cd ../backend
   - npm install
   - cd ../
