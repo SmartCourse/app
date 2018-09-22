@@ -1,7 +1,7 @@
 import APIError from './errors'
-// TODO eventually second URL should be set to deploy url
-const API_URL = process && process.env
-  ? 'http://localhost:3000/api' : 'http://127.0.0.1:3000/api'
+
+const API_URL = process && process.env && process.env.NODE_ENV === 'development'
+  ? 'http://localhost:3000/api' : `https://smartcourse-${process.env.NODE_ENV}.azurewebsites.net/api`
 
 async function responseCheck(res) {
   if (res.ok) {
