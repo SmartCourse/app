@@ -88,15 +88,17 @@ input, li {
 }
 
 ul {
-    width: 540px;
     position: absolute;
-    max-height: 200px;
+    background: white;
+    width: 540px;
+    z-index: 10;
+    max-height: 220px;
     overflow-y: scroll;
 }
 
 li {
-    font-size: 0.8em;
     background: white;
+    font-size: 0.8em;
 }
 
 li:hover {
