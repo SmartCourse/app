@@ -1,5 +1,5 @@
-const courseModel = require('../models/subject')()
-const subjectModel = require('../models/course')()
+const subjectModel = require('../models/subject')()
+const courseModel = require('../models/course')()
 const errorHandler = require('./error')
 const { responseHandler } = require('../utils/helpers')
 
