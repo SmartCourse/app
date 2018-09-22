@@ -21,7 +21,7 @@ rm -f smartcourse.zip
 zip -r smartcourse.zip package.json web.config data public src
 
 # Configure environment variables
-cat > tmp_env_vars <<- EOM
+read -r -d '' TMP_ENVS << EOM
 {
     "WEBSITE_NODE_DEFAULT_VERSION": "8.11.1",
     "DEPLOYMENT_TYPE": "$type",
@@ -33,7 +33,7 @@ EOM
 curl -u $AZURE_USER:$AZURE_PASS \
     --header "Content-Type: application/json" \
     --request POST \
-    --data `cat tmp_env_vars` \
+    --data "$TMP_ENVS" \
     https://smartcourse-$type.scm.azurewebsites.net/api/settings
 rm tmp_env_vars
 
