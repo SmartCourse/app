@@ -4,8 +4,8 @@
  */
 
 const admin = require('firebase-admin')
-const private_key_id = process.env['FIREBASE_PRIVATE_KEY_ID'] // eslint-disable-line
-const private_key    = process.env['FIREBASE_PRIVATE_KEY']    // eslint-disable-line
+const private_key_id = process.env.FIREBASE_PRIVATE_KEY_ID // eslint-disable-line
+const private_key    = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'); // eslint-disable-line
 
 const credentials = {
     type: 'service_account',
