@@ -11,7 +11,6 @@ export const auth = firebase.auth()
 function sendAuthToken(user) {
   return user.getIdToken(/* forceRefresh true */)
     .then(idToken => {
-      console.log('token', idToken)
       return get('/user', {
         headers: {
           'Authorization': 'Bearer ' + idToken
@@ -35,10 +34,6 @@ const getters = {
   error: ({ error }) => error,
   user: ({ user }) => user
 }
-
-setInterval(() => {
-  console.log('Background Auth state check: ', !!auth.currentUser)
-}, 10000)
 
 const mutations = {
   ERROR(state, message) {

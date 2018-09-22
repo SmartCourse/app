@@ -17,7 +17,6 @@ module.exports = function (req, _, next) {
     console.log('jwt:', token)
     return auth.verifyIdToken(token)
         .then(decodedToken => {
-            console.log(decodedToken)
             // attach user to request obj
             req.user = decodedToken.uid
         })
