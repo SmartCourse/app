@@ -59,7 +59,7 @@ export default {
         // this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
         return
       }
-      this.$store.dispatch('questions/postAnswer', {form: answerForm, id: this.question.id})
+      this.$store.dispatch('questions/postAnswer', {form: answerForm, code: this.code, id: this.question.id})
     }
   },
   created () {

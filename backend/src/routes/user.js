@@ -11,4 +11,14 @@ router.get('/:id', function (_, res) {
     })
 })
 
+/**
+ * TODO
+ * provide frontend with any user specific data deemed necessary for intialisation
+ */
+router.get('/', function (req, res) {
+    res.json({
+        auth: !!req.user // for the time being shorthand for saying is user auth'd
+    })
+})
+
 module.exports = router

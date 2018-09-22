@@ -9,7 +9,6 @@ const questionView = () => import('./views/Question')
 const reviewView = () => import('./views/Review')
 const newQuestionView = () => import('./views/NewQuestion')
 const newReviewView = () => import('./views/NewReview')
-
 const courseInfo = () => import('./views/CourseInfo')
 const courseQuestions = () => import('./views/CourseQuestions')
 const courseReviews = () => import('./views/CourseReviews')
@@ -91,6 +90,14 @@ export default new Router({
         id
       }),
       component: reviewView
+    },
+    {
+      path: '/signup',
+      component: () => import('./views/SignUp')
+    },
+    {
+      path: '/login',
+      component: () => import('./views/Login')
     },
     {
       path: '/fonts',
