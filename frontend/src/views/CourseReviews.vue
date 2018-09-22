@@ -1,6 +1,5 @@
 <template>
-  <div class="main-content course">
-    <div class="course-header">
+    <div class="course-reviews">
 
         <div class='button-container'>
             <router-link :to="{ name: 'newReview', params: {code} }">
@@ -51,6 +50,7 @@ export default {
 
 <style scoped>
 .button-container {
+    margin-bottom:10px;
     text-align:right;
 }
 </style>

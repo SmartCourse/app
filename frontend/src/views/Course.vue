@@ -23,9 +23,10 @@
         <router-link :to="{name: 'reviews'}">
             <TabButton :active="this.$route.name == 'reviews'">Reviews</TabButton>
         </router-link>
+    </div>
 
+    <div class="course-content">
         <router-view/>
-
     </div>
 
   </div>
@@ -85,5 +86,12 @@ h4 > a {
 
 .course-header-title {
     padding:20px;
+}
+
+.course-content {
+    background-color:white;
+    margin-top:2px;
+    padding:10px;
+    min-height:50vh;
 }
 </style>
