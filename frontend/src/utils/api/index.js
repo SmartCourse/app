@@ -1,7 +1,7 @@
 import APIError from './errors'
 // TODO - THIS DOESN'T SEEM TO BE WORKING...
 export const API_URL = process && process.env && process.env.NODE_ENV === "development"
-  ? 'http://localhost:3000/api' : `https://smartcourse-${process.env.DEPLOY_TYPE}.azurewebsites.net/api`
+  ? 'http://localhost:3000/api' : `https://smartcourse-${process.env.NODE_ENV}.azurewebsites.net/api`
 
 async function responseCheck(res) {
   if (res.ok) {
