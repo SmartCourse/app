@@ -2,8 +2,10 @@
 [![Build Status](https://travis-ci.com/SmartCourse/app.svg?branch=dev)](https://travis-ci.com/SmartCourse/app)
 [![Coverage Status](https://coveralls.io/repos/github/SmartCourse/app/badge.svg?branch=dev&service=github)](https://coveralls.io/github/SmartCourse/app?branch=dev)
 
-## TODO Deploy/Build Guide
-Stuff will happen here soon.
+## Builds and Deployment
+Our production build is automatically deployed when code is merged with master. The current production build can be found at: http://smartcourse-prod.azurewebsites.net/
+
+Our staging build is automatically deployed when code is merged with dev. The current staging build can be found at: https://smartcourse-staging.azurewebsites.net/
 
 ## Draft Feature Plan
 * Question answering ala stack overflow
