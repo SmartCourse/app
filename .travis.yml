@@ -30,7 +30,7 @@ jobs:
         - cd ../
 
     - stage: deploy-dev
-      before-script:
+      before_script:
         - AZ_REPO=$(lsb_release -cs)
         - echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
           sudo tee /etc/apt/sources.list.d/azure-cli.list
@@ -41,7 +41,7 @@ jobs:
         - ./deploy.sh staging
       if: branch = dev
     - stage: deploy-prod
-      before-script:
+      before_script:
         - AZ_REPO=$(lsb_release -cs)
         - echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
           sudo tee /etc/apt/sources.list.d/azure-cli.list
