@@ -21,7 +21,9 @@ import {mapGetters} from 'vuex'
 export default {
   components: { Search },
   computed: {
-    ...mapGetters('auth', ['isLoggedIn'])
+    isLoggedIn() {
+        return this.$store.getters.isLoggedIn
+    }
   }
 }
 </script>

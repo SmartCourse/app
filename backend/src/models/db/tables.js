@@ -8,8 +8,7 @@ function createUserTable (db) {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         firstName TEXT NOT NULL,
         lastName TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
+        email TEXT UNIQUE NOT NULL
         )`
     )
 }
@@ -105,8 +104,7 @@ function devInitDB(db) {
     const user = {
         firstName: 'Walker',
         lastName: 'Francis',
-        email: 'alnuno-das-hinds@gmail.com',
-        password: 'ilovetravxoxo'
+        email: 'alnuno-das-hinds@gmail.com'
     }
 
     const unsw = {
