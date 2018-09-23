@@ -20,14 +20,6 @@ cd ../backend
 rm -f smartcourse.zip
 zip -r smartcourse.zip package.json web.config data public src
 
-# Configure environment variables
-az webapp config appsettings set \
-    -n smartcourse-$type \
-    -g smartcourse-resources \
-    --settings WEBSITE_NODE_DEFAULT_VERSION=8.11.1 \
-    FIREBASE_PRIVATE_KEY_ID="$FIREBASE_PRIVATE_KEY_ID" \
-    FIREBASE_PRIVATE_KEY="$FIREBASE_PRIVATE_KEY"
-
 # Deploy the site
 curl -u $AZURE_USER:$AZURE_PASS \
     --request POST \
