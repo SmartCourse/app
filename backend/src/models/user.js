@@ -30,7 +30,7 @@ class User {
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
-    createUser(code, { firstName = 'Alex', lastName = 'Papandneves', email }) {
+    createUser({ displayName: firstName, displayName: lastName, email }) {
         return this.db
             .insert('user', { firstName, lastName, email })
             .then(id => this.getProfile(id))
