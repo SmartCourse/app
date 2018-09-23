@@ -37,7 +37,6 @@ exports.decodeUTF8Text = function(s) {
         return decodeURIComponent(escape(s))
     } catch (e) {
         console.warn(e.message)
-        console.warn(s)
         // replacing non ascii characters with spaces seems to work. We could just return s too
         return s.replace(/[^\x00-\x7F]/g, ' ') // eslint-disable-line
     }

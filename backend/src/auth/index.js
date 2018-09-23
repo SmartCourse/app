@@ -21,7 +21,7 @@ module.exports = function (req, _, next) {
         })
         .catch(err => {
             // invalid JWT
-            console.warn(err)
+            console.warn(err.message)
         })
         .finally(next)
 }
