@@ -16,7 +16,6 @@
 
 <script>
 import Search from '@/components/AppSearch'
-import {mapGetters} from 'vuex'
 
 export default {
   components: { Search },

@@ -6,9 +6,11 @@ const subjectData = require('./subjects')
 function createUserTable (db) {
     db.run(`CREATE TABLE user (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        firstName TEXT NOT NULL,
-        lastName TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL
+        uid TEXT NOT NULL,
+        displayName TEXT DEFAULT 'ANON',
+        email TEXT UNIQUE NOT NULL,
+        joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        reputation INTEGER DEFAULT '0.00'
         )`
     )
 }
@@ -102,9 +104,9 @@ function createReviewTable (db) {
 function devInitDB(db) {
     /* Fake data objects */
     const user = {
-        firstName: 'Walker',
-        lastName: 'Francis',
-        email: 'alnuno-das-hinds@gmail.com'
+        displayName: 'Francis Walker',
+        email: 'alnuno-das-hinds@gmail.com',
+        uid: '1234hheaj1'
     }
 
     const unsw = {

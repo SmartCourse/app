@@ -11,15 +11,22 @@ exports.responseHandler = function(fn, response) {
 
 exports.toLowerCase = str => str.toLowerCase()
 
+exports.isAuthorized = function(req, res, next) {
+    if (!req.user) {
+        return res.status(401).json({ code: 401, message: 'Unauthorized' })
+    }
+    next()
+}
+
 /**
  * Convert a string to utf8
  */
-exports.encodeutf8 = (s) => unescape(encodeURIComponent(s));
+exports.encodeutf8 = (s) => unescape(encodeURIComponent(s))
 
 /**
  * Convert a utf-8 string to a regular javascript string (utf-16 I think)
  */
-exports.decodeutf8 = (s) => decodeURIComponent(escape(s));
+exports.decodeutf8 = (s) => decodeURIComponent(escape(s))
 
 /**
  * Converts a utf-8 string to regular string, doesn't throw errors

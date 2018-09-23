@@ -25,8 +25,7 @@ exports.getSelf = function(req, res) {
     return res.json(req.user)
 }
 
-exports.createUser = function({ body }, res) {
-    console.log(body)
-    return responseHandler(userModel.createUser(body), res)
+exports.createUser = function({ user }, res) {
+    return responseHandler(userModel.createUser(user), res)
         .catch(errorHandler(res))
 }

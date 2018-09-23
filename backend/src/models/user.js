@@ -26,13 +26,12 @@ class User {
     }
 
     /**
-     * @param {string} code  The code of the course.
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
-    createUser({ displayName: firstName, displayName: lastName, email }) {
+    createUser({ displayName, email, uid }) {
         return this.db
-            .insert('user', { firstName, lastName, email })
+            .insert('user', { displayName, email, uid })
             .then(id => this.getProfile(id))
     }
 }

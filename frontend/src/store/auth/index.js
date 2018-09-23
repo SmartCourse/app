@@ -26,9 +26,11 @@ const mutations = {
 /* successful signIn returns an UserAuth object which has field user */
 const actions = {
   signIn({commit}, { email, password }) {
+    commit('SET_LOADING', true)
     return auth.signInWithEmailAndPassword(email, password)
       .then(({ user }) => commit('SET_USER', user, {root: true}))
       .catch(error => commit('ERROR', error.message))
+      .finally(() => commit('SET_LOADING', false))
   },
 
   /**
@@ -47,6 +49,7 @@ const actions = {
    * Currently, successful signUp will automatically sign in user.
    **/
   signUp({commit}, { email, password }) {
+    commit('SET_LOADING', true)
     return auth.createUserWithEmailAndPassword(email, password)
       .then(({ user }) => {
         /* TODO implement retry if failure occurs on server
@@ -59,6 +62,7 @@ const actions = {
           commit('SET_USER', user, {root: true})])
       })
       .catch(error => commit('ERROR', error.message))
+      .finally(() => commit('SET_LOADING', false))
   },
 
   /**
