@@ -31,11 +31,11 @@ const getters = {
 }
 
 const mutations = {
-  REFRESH_QUESTION_FEED (state, questions) {
-    state.questions = questions.map(questionMapper)
+  REFRESH_QUESTION_FEED (state, {meta, data}) {
+    state.questions = data.map(questionMapper)
   },
-  REFRESH_REVIEW_FEED (state, reviews) {
-    state.reviews = reviews.map(reviewMapper)
+  REFRESH_REVIEW_FEED (state, {meta, data}) {
+    state.reviews = data.map(reviewMapper)
   },
   FOCUS_COURSE (state, course) {
     state.course = courseMapper(course)

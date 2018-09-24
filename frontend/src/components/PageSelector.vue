@@ -1,9 +1,11 @@
 <template>
+  <div class="PageSelector">
     <div class='button-container'>
       <AppButton @click.native="prevPage()">Prev</AppButton>
       <span>{{pageNumber}}</span>
       <AppButton @click.native="nextPage()">Next</AppButton>
     </div>
+  </div>
 </template>
 
 <script>

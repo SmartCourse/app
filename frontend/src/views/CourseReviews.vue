@@ -15,6 +15,8 @@
         </ol>
       </section>
 
+    <PageSelector :update="refreshReviews"></PageSelector>
+
   </div>
 </template>
 
@@ -22,6 +24,7 @@
 // @ is an alias to /src
 import ReviewCard from '@/components/reviews-replies/ReviewCard'
 import AppButton from '@/components/AppButton'
+import PageSelector from '@/components/PageSelector'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -31,18 +34,28 @@ export default {
   },
   components: {
     AppButton,
-    ReviewCard
+    ReviewCard,
+    PageSelector
   },
   computed: {
     ...mapGetters('course', {
       reviews: 'reviews'
     })
   },
+  methods: {
+    refreshReviews(pageNumber) {
+      this.$store.dispatch('course/getReviews',
+      {
+        id: this.code,
+        pageNumber: pageNumber
+      })    
+    }
+  },
   created () {
-    this.$store.dispatch('course/getReviews', this.code)
+    this.refreshReviews(1)
   },
   beforeRouteUpdate ({ params: { code } }, from, next) {
-    this.$store.dispatch('course/getReviews', code)
+    this.refreshReviews(1)
     next()
   }
 }

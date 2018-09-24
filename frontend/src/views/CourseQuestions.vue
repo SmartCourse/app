@@ -15,6 +15,7 @@
         </ol>
       </section>
 
+      <PageSelector :update="refreshQuestions"></PageSelector>
   </div>
 </template>
 
@@ -22,13 +23,15 @@
 // @ is an alias to /src
 import QuestionCard from '@/components/questions-answers/QuestionCard'
 import AppButton from '@/components/AppButton'
+import PageSelector from '@/components/PageSelector'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'courseQuestions',
   components: {
     AppButton,
-    QuestionCard
+    QuestionCard,
+    PageSelector
   },
   props: {
     code: String
@@ -38,11 +41,20 @@ export default {
       questions: 'questions'
     })
   },
+  methods: {
+    refreshQuestions(pageNumber) {
+      this.$store.dispatch('course/getQuestions',
+      {
+        id: this.code,
+        pageNumber: pageNumber
+      })    
+    }
+  },
   created () {
-    this.$store.dispatch('course/getQuestions', this.code)
+    this.refreshQuestions(1)
   },
   beforeRouteUpdate ({ params: { code } }, from, next) {
-    this.$store.dispatch('course/getQuestions', code)
+    this.refreshQuestions(1)
     next()
   }
 }
