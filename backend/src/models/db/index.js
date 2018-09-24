@@ -1,6 +1,6 @@
-const { createDB, devInitDB, insertDB } = require('./tables')
+const { createDB, insertDB } = require('./tables')
 
-const DB_NAME = process.env === 'test' ? ':memory:' : ':memory:'
+const DB_NAME = process.env.NODE_ENV === 'test' ? ':memory:' : 'db/smartcourse.db'
 
 /**
  * Very slight abstraction over the direct sql queries.
@@ -11,10 +11,6 @@ const DB_NAME = process.env === 'test' ? ':memory:' : ':memory:'
 class DB {
     constructor(databaseName) {
         this._db = createDB(databaseName)
-        // If in memory databse, intialise it
-        if (DB_NAME === ':memory:') {
-            devInitDB(this._db)
-        }
     }
 
     insert(table, data) {
