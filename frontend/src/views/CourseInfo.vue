@@ -29,10 +29,12 @@ export default {
     })
   },
   created () {
-    this.$store.dispatch('course/getCourse', this.code)
+    if (!this.courseInfo)
+      this.$store.dispatch('course/getCourse', this.code)
   },
   beforeRouteUpdate ({ params: { code } }, from, next) {
-    this.$store.dispatch('course/getCourse', code)
+    if (this.code && this.code !== code)
+        this.$store.dispatch('course/getCourse', code)
     next()
   }
 }

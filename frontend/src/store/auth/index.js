@@ -25,11 +25,14 @@ const mutations = {
 
 /* successful signIn returns an UserAuth object which has field user */
 const actions = {
-  signIn({commit}, { email, password }) {
+  signIn({ commit }, { email, password }) {
     commit('SET_LOADING', true)
     return auth.signInWithEmailAndPassword(email, password)
       .then(({ user }) => commit('SET_USER', user, {root: true}))
-      .catch(error => commit('ERROR', error.message))
+      .catch(error => {
+        commit('ERROR', error.message)
+        throw error
+      })
       .finally(() => commit('SET_LOADING', false))
   },
 
@@ -37,7 +40,7 @@ const actions = {
    * logout client side. Everything will be handled by
    * firebase for this.
    */
-  logout({commit}) {
+  logout({ commit }) {
     return auth.signOut()
       .then(() => commit('SET_USER', null, {root: true}))
       .catch(error => commit('ERROR', error.message))
@@ -48,7 +51,7 @@ const actions = {
    * UserAuth obj has field user which is what we're interested in
    * Currently, successful signUp will automatically sign in user.
    **/
-  signUp({commit}, { email, password }) {
+  signUp({ commit }, { email, password }) {
     commit('SET_LOADING', true)
     return auth.createUserWithEmailAndPassword(email, password)
       .then(({ user }) => {
@@ -59,23 +62,26 @@ const actions = {
          */
         return Promise.all([
           createUser(user),
-          commit('SET_USER', user, {root: true})])
+          commit('SET_USER', user, { root: true })])
       })
-      .catch(error => commit('ERROR', error.message))
+      .catch(error => {
+        commit('ERROR', error.message)
+        throw error
+      })
       .finally(() => commit('SET_LOADING', false))
   },
 
   /**
    * Called on application boot once firebase has been initialised
    */
-  checkAuth({commit}) {
+  checkAuth({ commit }) {
     return new Promise((resolve, reject) => {
       const unsubscribe = auth.onAuthStateChanged(user => {
         unsubscribe()
         resolve(user)
       }, reject)
     })
-      .then(user => commit('SET_USER', user, {root: true}))
+      .then(user => commit('SET_USER', user, { root: true }))
       .catch(error => {
         commit('ERROR', error)
       })

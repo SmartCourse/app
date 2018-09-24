@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content">
+  <div class="auth-page">
     <AppAuthForm v-if="!loading"
       :title="'Sign Up'"
       :buttonText="'Sign Up'"
@@ -35,6 +35,7 @@ export default {
       const { email, password } = this
       this.$store.dispatch('auth/signUp', { email, password })
         .then(() => this.$router.push('/'))
+        .catch(e => e)
     }
   },
   created() {
