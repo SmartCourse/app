@@ -17,7 +17,11 @@ const getters = {
 }
 
 const actions = {
-  populateSearch({commit}) {
+  populateSearch({commit, state}) {
+    // avoid repeats of this
+    if (state.courses.length) {
+      return
+    }
     return get('/course')
       .then(data => commit('POPULATE_SEARCH', data))
       .catch(err => console.warn(err))
