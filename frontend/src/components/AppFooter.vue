@@ -55,7 +55,7 @@ footer {
 
 .links-header {
     color: var(--white);
-    font-weight: bold;
+    font: var(--header-4);
 }
 
 .links > * {

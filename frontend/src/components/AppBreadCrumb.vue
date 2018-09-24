@@ -42,8 +42,7 @@ export default {
 <style scoped lang='less'>
 
 .breadcrumb {
-    padding: 10px;
-    padding-left:20px;
+    padding: 10px 20px;
     color: var(--theme);
 }
 
@@ -52,7 +51,7 @@ export default {
 }
 
 .breadcrumb > li+li:before {
-    padding: 8px;
+    padding: 10px;
     color: var(--soft-black);
     content: ">";
 }
