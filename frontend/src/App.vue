@@ -99,15 +99,19 @@ p {
   margin: auto;
 }
 
-a {
-  color:inherit;
-  text-decoration:inherit;
+.auth-page {
+  height: 90vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-a:hover {
-  color:inherit;
-  text-decoration:inherit;
-  cursor:pointer;
+a, a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: inherit;
 }
 
 ol, ul {

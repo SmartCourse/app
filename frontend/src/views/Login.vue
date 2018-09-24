@@ -1,6 +1,6 @@
 <template>
-<div class="main-content">
-    <AppAuthForm
+<div class="auth-page">
+    <AppAuthForm v-if="!loading"
       :title="'Login'"
       :buttonText="'Login'"
       :error="error"
@@ -9,6 +9,7 @@
       <input class="auth-input" type="text" v-model="email" placeholder="Email">
       <input class="auth-input" type="password" v-model="password" placeholder="Password">
     </AppAuthForm>
+    <LoadingSpinner v-else/>
 </div>
 </template>
 
@@ -26,13 +27,14 @@ export default {
   },
   components: { AppAuthForm },
   computed: {
-    ...mapGetters('auth', ['error'])
+    ...mapGetters('auth', [ 'error', 'loading' ])
   },
   methods: {
     clickHandler() {
       const { email, password } = this
       this.$store.dispatch('auth/signIn', {email, password})
         .then(() => this.$router.push('/'))
+        .catch(e => e)
     }
   },
   created() {
