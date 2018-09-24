@@ -28,7 +28,7 @@
 </template>
 
 <style scoped lang='less'>
-footer {
+#footer {
   color: var(--soft-white);
   width: 100%;
   background-color: var(--black);
@@ -55,7 +55,7 @@ footer {
 
 .links-header {
     color: var(--white);
-    font-weight: bold;
+    font-weight: bolder;
 }
 
 .links > * {

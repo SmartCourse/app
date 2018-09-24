@@ -40,7 +40,6 @@ export default {
 
 <style scoped>
 .course-info {
-    padding-left:20px;
-    padding-right:20px;
+    padding: 0 20px;
 }
 </style>

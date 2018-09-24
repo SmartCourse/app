@@ -89,7 +89,7 @@ input, li {
 
 ul {
     position: absolute;
-    background: white;
+    background: var(--white);
     width: 540px;
     z-index: 10;
     max-height: 220px;
@@ -97,7 +97,7 @@ ul {
 }
 
 li {
-    background: white;
+    background: var(--white);
     font-size: 0.8em;
 }
 

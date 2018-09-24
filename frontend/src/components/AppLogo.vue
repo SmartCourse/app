@@ -24,7 +24,7 @@ h1 span {
 }
 
 .course {
-  color: white;
+  color: var(--white);
   background-color: var(--theme);
 }
 

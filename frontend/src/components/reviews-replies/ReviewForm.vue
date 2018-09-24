@@ -47,7 +47,7 @@ input[type=text] {
   border-radius: 2px;
   font: inherit;
   resize: none;
-  padding: 5px;
+  padding: 10px;
   outline: none;
   margin: 10px 0px;
   width: 100%;
@@ -60,7 +60,7 @@ textarea {
   border-radius: 2px;
   font: inherit;
   resize: none;
-  padding: 5px;
+  padding: 10px;
   outline: none;
   margin: 10px 0px;
   width: 100%;
