@@ -8,7 +8,6 @@ import { REQUEST, COMMITS, ACTIONS } from './constants'
 
 const state = {
   loading: false,
-  courseTab: 'info',
   questions: [],
   reviews: [],
   course: {
@@ -25,7 +24,6 @@ const state = {
 
 const getters = {
   course: ({course}) => course,
-  courseTab: ({courseTab}) => courseTab,
   questions: ({questions}) => questions,
   reviews: ({reviews}) => reviews,
   loading: ({loading}) => loading,
@@ -38,9 +36,6 @@ const mutations = {
   },
   REFRESH_REVIEW_FEED (state, reviews) {
     state.reviews = reviews.map(reviewMapper)
-  },
-  FOCUS_TAB (state, tab) {
-    state.courseTab = tab
   },
   FOCUS_COURSE (state, course) {
     state.course = courseMapper(course)
@@ -64,9 +59,6 @@ const actions = {
   },
   async getCourse ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_COURSE, args: [id] })
-  },
-  changeTab ({commit}, tab) {
-    commit('FOCUS_TAB', tab)
   }
 }
 

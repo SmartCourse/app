@@ -1,3 +1,4 @@
+---
 language: node_js
 node_js:
   - 10
@@ -6,16 +7,38 @@ notifications:
 install:
   - cd frontend
   - npm install
-  - npm run build
+  - npm run build-local
   - cd ../backend
   - npm install
-script: 
-  - npm test
-  - cd ../frontend
-  - npm test
-after_script:
-  - cd ../backend
-  - npm run coverage
+  - cd ../
 cache:
   directories:
     - node_modules
+
+jobs:
+  include:
+    - stage: test
+      script:
+        - cd backend
+        - npm test
+        - cd ../frontend
+        - npm test
+        - cd ../
+      after_script:
+        - cd backend
+        - npm run coverage
+        - cd ../
+
+    - stage: deploy-dev
+      script:
+        - ./deploy.sh staging
+      if: branch = dev
+    - stage: deploy-prod
+      script:
+        - ./deploy.sh prod
+      if: branch = master
+
+stages:
+  - test
+  - deploy-dev
+  - deploy-prod

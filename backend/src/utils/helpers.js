@@ -11,8 +11,6 @@ exports.responseHandler = function(fn, response) {
 
 exports.toLowerCase = str => str.toLowerCase()
 
-
-
 /**
  * Convert a string to utf8
  */
@@ -34,6 +32,6 @@ exports.decodeUTF8Text = function(s) {
         console.warn(e.message)
         console.warn(s)
         // replacing non ascii characters with spaces seems to work. We could just return s too
-        return s.replace(/[^\x00-\x7F]/g, " ");
+        return s.replace(/[^\x00-\x7F]/g, ' ') // eslint-disable-line
     }
 }

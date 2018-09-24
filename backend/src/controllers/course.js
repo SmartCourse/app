@@ -20,7 +20,25 @@ exports.getCourse = function ({ params }, res) {
 exports.getCourseQuestions = function ({ params, query }, res) {
     let p = parseInt(query.p)
     const pageNumber = p || 1
-    responseHandler(questionModel.getQuestions(params.code, pageNumber), res)
+
+    let getCourseQuestions = new Promise(function(resolve, reject) {
+        Promise.all([
+            questionModel.getQuestions(params.code, pageNumber),
+            questionModel.getQuestionCount(params.code)
+        ]).then(function(values) {
+            const lastPage = Math.trunc((values[1][0]['COUNT()'] + 10) / 10)
+            resolve({
+                'meta': {
+                    'curr': pageNumber,
+                    'last': lastPage,
+                    'pageSize': 10
+                },
+                'data': values[0]
+            })
+        })
+    })
+
+    responseHandler(getCourseQuestions, res)
         .catch(errorHandler(res))
 }
 
@@ -28,7 +46,25 @@ exports.getCourseQuestions = function ({ params, query }, res) {
 exports.getCourseReviews = function ({ params, query }, res) {
     let p = parseInt(query.p)
     const pageNumber = p || 1
-    responseHandler(reviewModel.getReviews(params.code, pageNumber), res)
+
+    let getCourseReviews = new Promise(function(resolve, reject) {
+        Promise.all([
+            reviewModel.getReviews(params.code, pageNumber),
+            reviewModel.getReviewCount(params.code)
+        ]).then(function(values) {
+            const lastPage = Math.trunc((values[1][0]['COUNT()'] + 10) / 10)
+            resolve({
+                'meta': {
+                    'curr': pageNumber,
+                    'last': lastPage,
+                    'pageSize': 10
+                },
+                'data': values[0]
+            })
+        })
+    })
+
+    responseHandler(getCourseReviews, res)
         .catch(errorHandler(res))
 }
 

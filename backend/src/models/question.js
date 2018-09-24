@@ -16,6 +16,7 @@ class Question {
     }
 
     /**
+     * Get a specific page of questions for a course
      * @param   {string} code        The code of the course
      * @param   {number} pageNumber  The page number for which we want to get questions.
      * @returns {object}
@@ -26,6 +27,17 @@ class Question {
         return this.db
             .queryAll('SELECT * FROM question WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
                 [code, offset, pageSize])
+    }
+
+    /**
+     * Gets the total number of questions for a course
+     * @param   {string} code        The code of the course
+     * @returns {object}
+     */
+    getQuestionCount(code) {
+        return this.db
+            .queryAll('SELECT COUNT() FROM question WHERE code=?',
+                [code])
     }
 
     /**
