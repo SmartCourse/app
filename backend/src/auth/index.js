@@ -17,11 +17,11 @@ module.exports = function (req, _, next) {
     return auth.verifyIdToken(token)
         .then(decodedToken => {
             // attach user to request obj
-            req.user = decodedToken.uid
+            req.user = decodedToken
         })
         .catch(err => {
             // invalid JWT
-            console.warn(err)
+            console.warn(err.message)
         })
         .finally(next)
 }

@@ -1,7 +1,7 @@
 /* All inputs should be validated in this class that are course related */
 class Course {
     constructor(db) {
-        console.log('initialising ORM course object')
+        console.log('initialising ORM Course object')
         this.db = db
     }
 
