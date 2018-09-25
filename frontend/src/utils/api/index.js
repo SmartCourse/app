@@ -1,4 +1,5 @@
 import APIError from './errors'
+import store from '../../store'
 
 const API_URL = process && process.env && process.env.NODE_ENV === 'development'
   ? 'http://localhost:3000/api' : (process.env.NODE_ENV === 'staging'
@@ -25,6 +26,10 @@ function request (path, { headers, method, data }) {
     return fetch(url, { headers })
   }
 
+  // creds always required for POST, PUT
+
+  console.log('store', store)
+
   headers = {
     'Content-Type': 'application/json',
     ...headers
@@ -50,7 +55,7 @@ export const get = (path, options) =>
     .then(responseCheck)
 
 /**
- * A POST request
+ * A POST request, used to create an entry in the db
  * @param   {string} path     The relative path for the api call.
  * @param   {object} options  Any options being passed to the req, eg. auth
  * @returns {Promise}         The relevant request
@@ -60,7 +65,7 @@ export const post = (path, options) =>
     .then(responseCheck)
 
 /**
- * A PUT request
+ * A PUT request, used to update the db
  * @param   {string} path     The relative path for the api call.
  * @param   {object} options  Any options being passed to the req, eg. auth
  * @returns {Promise}         The relevant request

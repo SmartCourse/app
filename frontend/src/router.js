@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home'
-import Design from './views/Design'
 
 Vue.use(Router)
 
@@ -9,9 +8,9 @@ const questionView = () => import('./views/Question')
 const reviewView = () => import('./views/Review')
 const newQuestionView = () => import('./views/NewQuestion')
 const newReviewView = () => import('./views/NewReview')
-const courseInfo = () => import('./views/CourseInfo')
-const courseQuestions = () => import('./views/CourseQuestions')
-const courseReviews = () => import('./views/CourseReviews')
+const courseInfo = () => import('./views/course/CourseInfo')
+const courseQuestions = () => import('./views/course/CourseQuestions')
+const courseReviews = () => import('./views/course/CourseReviews')
 
 export default new Router({
   mode: 'history',
@@ -55,7 +54,7 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (course.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('./views/Course')
+      component: () => import('./views/course')
     },
     {
       path: '/course/:code/question/new',
@@ -101,7 +100,7 @@ export default new Router({
     },
     {
       path: '/fonts',
-      component: Design
+      component: () => import('./views/Design')
     }
   ]
 })
