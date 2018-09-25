@@ -63,7 +63,12 @@ function createSubjectTable(db) {
             const prep = db.prepare(query)
 
             subjectData.map(subj => insertDB(db, 'subject', subj, prep)
-                .then((id) => console.log(`Inserted subject ${id}/${total}`)))
+                .then((id) => {
+                    if (id % 100 === 0 || id === total) {
+                        console.log(`Inserted subject ${id}/${total}`)
+                    }
+                })
+            )
             prep.finalize()
         }
     })
@@ -103,7 +108,12 @@ function createCourseTable (db) {
             const prep = db.prepare(query)
 
             courseData.map(subj => insertDB(db, 'course', subj, prep)
-                .then((id) => console.log(`Inserted course ${id}/${total}`)))
+                .then((id) => {
+                    if (id % 100 === 0 || id === total) {
+                        console.log(`Inserted course ${id}/${total}`)
+                    }
+                })
+            )
             prep.finalize()
         }
     })
