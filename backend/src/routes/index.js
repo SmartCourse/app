@@ -10,7 +10,6 @@ const subjectRouter = require('./subject')
 api.use('/user', userRouter)
 api.use('/uni', uniRouter)
 api.use('/course', courseRouter)
-api.use('/subject', subjectRouter)
 
 /* Root API for debugging */
 api.get('/', function (req, res) {

@@ -1,8 +1,8 @@
 <template>
   <div>
     <section class="main-content home">
-      <AppLogo :first="'Smart'" :last="'Course'"/>
-      <p>Community-driven ratings, reviews and info about UNSW courses</p>
+      <AppLogo class="splash" :first="'Smart'" :last="'Course'"/>
+        <p>Community-driven ratings, reviews and info about UNSW courses</p>
       <Search/>
       <p>or <router-link :to="'/subjects'">browse by subject area</router-link></p>
     </section>
@@ -64,16 +64,19 @@ export default {
   background-color: var(--white);
   /* override main-content width */
   max-width: none;
-  width:100%;
+  width: 100%;
 }
 
-
 .home > h1 {
-    margin:3vh;
+  margin-bottom:2vh;
 }
 
 .home > p {
   font-size: var(--font-medium);
+}
+
+.splash {
+  font-size: 5rem;
 }
 
 .homepage-section {
@@ -91,7 +94,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: minmax(300px, 1fr);
-  grid-gap: 10px;
+  grid-gap: 20px;
   max-height: none;
 }
 
@@ -100,7 +103,7 @@ export default {
   text-align: center;
   padding: 10px 20px;
   background-color: var(--white);
-  width: 250px;
+  width: 275px;
   min-height: 300px;
 }
 
@@ -143,10 +146,44 @@ a {
     color:var(--theme)
 }
 
+/* tablet and below */
 @media screen and (max-width: 768px) {
   .home {
    font-size: var(--font-large-mobile);
   }
+  .splash {
+   font-size: 3rem;
+  }
+
+  .why {
+    grid-template-columns: none;
+    grid-auto-flow: row;
+  }
+
+  .why-card {
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .why-card {
+    width: 300px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+   .why-card {
+     width: 350px;
+     min-height: 350px;
+   }
+
+   .why {
+     grid-gap: 40px;
+   }
+
+   .content {
+     padding: 40px 0;
+   }
 }
 
 </style>

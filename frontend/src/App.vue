@@ -13,7 +13,10 @@ import AppNavBar from '@/components/AppNavBar'
 import AppFooter from '@/components/AppFooter'
 
 export default {
-  components: { AppNavBar, AppFooter }
+  components: { AppNavBar, AppFooter },
+  created() {
+    this.$store.dispatch('auth/checkAuth')
+  }
 }
 
 </script>
@@ -32,7 +35,7 @@ html, body {
   color: rgba(0,0,0,.84);
   font-size: 16px;
   line-height: 1.4;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 :root {
@@ -53,15 +56,15 @@ html, body {
   /*--theme-light: rgba(#00a99d, 0.6);*/
   --theme-light: rgba(102, 203, 196);
   // font format
-  --header-1: 600 3rem /1.2 sans-serif;
-  --header-1-mobile: 600 2rem /1.1 sans-serif;
-  --header-2: 600 2.25rem /1.2 sans-serif;
-  --header-2-mobile: 600 1.625rem /1.2 sans-serif;
-  --header-3: 400 1.75rem /1.3 sans-serif;
-  --header-3-mobile: 400 1.4rem /1.2 sans-serif;
-  --header-4: 400 1.15rem /1.4 sans-serif;
-  --body-copy-1: 400 1rem /1.6 sans-serif;
-  --body-copy-2: 400 0.85rem /1.6 sans-serif;
+  --header-1: 600 3rem /1.2 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --header-1-mobile: 600 2rem /1.1 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --header-2: 600 2.25rem /1.2 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --header-2-mobile: 600 1.625rem /1.2 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --header-3: 400 1.75rem /1.3 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --header-3-mobile: 400 1.4rem /1.2 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --header-4: 400 1.15rem /1.4 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --body-copy-1: 400 1rem /1.6 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --body-copy-2: 400 0.85rem /1.6 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
   --font-large: 40px;
   --font-large-mobile: 24px;
   --font-medium: 20px;
@@ -72,6 +75,10 @@ html, body {
 
 h1, h2, h3, h4, h5, h6 {
   letter-spacing: normal;
+}
+
+p {
+  color: rgba(0,0,0,.72);
 }
 
 .form-success {
@@ -87,20 +94,24 @@ h1, h2, h3, h4, h5, h6 {
 
 .main-content {
   /* arbitrary */
-  min-height: calc(100vh - 148px);
+  min-height: 90vh;
   max-width: 768px;
   margin: auto;
 }
 
-a {
-  color:inherit;
-  text-decoration:inherit;
+.auth-page {
+  height: 90vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-a:hover {
-  color:inherit;
-  text-decoration:inherit;
-  cursor:pointer;
+a, a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: inherit;
 }
 
 ol, ul {
@@ -111,4 +122,5 @@ ol, ul {
 li {
   list-style-type: none;
 }
+
 </style>

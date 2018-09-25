@@ -7,12 +7,13 @@
         <ul class="navigation">
             <li class="links-header">Navigation</li>
             <li>Home</li>
-            <li>Courses</li>
+            <li>Subjects</li>
             <li>About</li>
         </ul>
         <ul class="information">
             <li class="links-header">Information</li>
-            <li>Legal</li>
+            <li>Privacy Policy</li>
+            <li>Terms of Use</li>
             <li>Help</li>
             <li>UNSW Handbook</li>
         </ul>
@@ -27,7 +28,7 @@
 </template>
 
 <style scoped lang='less'>
-footer {
+#footer {
   color: var(--soft-white);
   width: 100%;
   background-color: var(--black);
@@ -54,7 +55,7 @@ footer {
 
 .links-header {
     color: var(--white);
-    font-weight: bold;
+    font-weight: bolder;
 }
 
 .links > * {
