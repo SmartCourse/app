@@ -1,5 +1,6 @@
 import APIError from './errors'
 import store from '../../store'
+import { getAuthHeaders } from './auth'
 
 const API_URL = process && process.env && process.env.NODE_ENV === 'development'
   ? 'http://localhost:3000/api' : (process.env.NODE_ENV === 'staging'
@@ -19,23 +20,35 @@ async function responseCheck(res) {
 
 function request (path, { headers, method, data }) {
   // eventually add cors and auth headers
-
   const url = `${API_URL}${path}`
 
   if (method === 'GET') {
     return fetch(url, { headers })
   }
 
-  // creds always required for POST, PUT
-
-  console.log('store', store)
+  const auth = store.getters.authObject
+  const body = data ? JSON.stringify(data) : null
 
   headers = {
     'Content-Type': 'application/json',
     ...headers
   }
 
-  const body = data ? JSON.stringify(data) : null
+  // creds always required for POST, PUT, DELETE
+  // NB. for mvp allow people to slip through here
+  // even if not logged on
+  if (!headers.Authorization && auth) {
+    return getAuthHeaders(auth)
+      .then(options => fetch(url, {
+        headers: {
+          ...options.headers,
+          ...headers
+        },
+        mode: options.mode,
+        body,
+        method
+      }))
+  }
 
   return fetch(url, {
     headers,

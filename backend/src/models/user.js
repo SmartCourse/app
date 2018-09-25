@@ -26,6 +26,16 @@ class User {
     }
 
     /**
+     * Alternative getter to get the relevant user's details
+     * @param {uid} uid uid string
+     * @returns {object} user object
+     */
+    getUserByUID(uid) {
+        return this.db
+            .query('SELECT * FROM user WHERE uid=?', [uid])
+    }
+
+    /**
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
