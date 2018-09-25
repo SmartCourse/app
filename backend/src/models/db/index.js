@@ -1,6 +1,7 @@
 const { createDB, insertDB } = require('./tables')
 
-const DB_NAME = process.env.NODE_ENV === 'test' ? ':memory:' : 'db/smartcourse.db'
+// Note the backwards directory traversal is due to azure server current directory stuff
+const DB_NAME = process.env.NODE_ENV === 'test' ? ':memory:' : '../../db/smartcourse.db'
 
 /**
  * Very slight abstraction over the direct sql queries.
