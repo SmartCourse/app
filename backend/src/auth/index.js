@@ -23,5 +23,5 @@ module.exports = function (req, _, next) {
             // invalid JWT
             console.warn(err.message)
         })
-        .finally(next)
+        .then(next)
 }

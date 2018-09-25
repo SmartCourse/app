@@ -23,6 +23,7 @@ const mutations = {
   }
 }
 
+/* TODO CHANGE THESE TO ASYNC */
 /* successful signIn returns an UserAuth object which has field user */
 const actions = {
   signIn({ commit }, { email, password }) {
