@@ -4,7 +4,7 @@
       <AppLogo class="splash" :first="'Smart'" :last="'Course'"/>
         <p>Community-driven ratings, reviews and info about UNSW courses</p>
       <Search/>
-      <p>or <router-link :to="'/subjects'">browse by subject area</router-link></p>
+      <p>or <router-link :to="'/subject'">browse by subject area</router-link></p>
     </section>
     <section class="homepage-section">
       <article class="content">

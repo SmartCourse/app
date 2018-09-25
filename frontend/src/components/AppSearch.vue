@@ -31,7 +31,7 @@ export default {
 
   computed: {
     courses() {
-        return this.$store.state.courses.map(item => item)
+      return this.$store.state.courses.map(item => item)
     },
     suggestions() {
       const lower = this.search.toLowerCase()

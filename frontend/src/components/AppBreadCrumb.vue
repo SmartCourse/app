@@ -19,19 +19,29 @@ export default {
       // TODO this won't be just Home in the final version prob
       const list = [{id: id++, text: 'Home', route: '/'}]
 
-      if (this.$route.params.code) {
-        const courseCode = this.$route.params.code
-        list.push({id: id++, text: courseCode, route: `/course/${courseCode}`})
-      }
-
-      const map = {
-        'newQuestion': 'Ask Question',
-        'newReview': 'Add Review',
-        'question': 'View Question',
-        'review': 'View Review'
-      }
-      if (this.$route.name in map) {
-        list.push({id: id++, text: map[this.$route.name], route: this.$route.path})
+      const path = this.$route.path.split('/')
+      if (path.length) {
+        if (path[1] === 'subject') {
+          if (this.$route.params.code) {
+            const subjCode = this.$route.params.code
+            list.push({id: id++, text: 'Subjects', route: '/subject'})
+            list.push({id: id++, text: subjCode, route: this.$route.path})
+          } else {
+            list.push({id: id++, text: 'Subjects', route: this.$route.path})
+          }
+        } else if (path[1] === 'course') {
+          const courseCode = this.$route.params.code
+          list.push({id: id++, text: courseCode, route: `/course/${courseCode}`})
+          const map = {
+            'newQuestion': 'Ask Question',
+            'newReview': 'Add Review',
+            'question': 'View Question',
+            'review': 'View Review'
+          }
+          if (this.$route.name in map) {
+            list.push({id: id++, text: map[this.$route.name], route: this.$route.path})
+          }
+        }
       }
       return list
     }
