@@ -1,4 +1,3 @@
-const sqlite3 = require('sqlite3')
 const courseData = require('./courses')
 const subjectData = require('./subjects')
 
@@ -30,8 +29,6 @@ function createUniversityTable (db) {
         if (err) {
             console.error(err)
         } else {
-            const unsw = { name: 'Univerity of New South Wales' }
-            insertDB(db, 'university', unsw)
             console.log('Created Uni Table')
         }
     })
@@ -50,26 +47,6 @@ function createSubjectTable(db) {
             console.error(err)
         } else {
             console.log('Created Subject Table')
-
-            // Kind of hacky, but we only serving one university at this time
-            const universityID = 1
-            const total = Object.keys(subjectData).length
-            subjectData.forEach((subj) => { subj['universityID'] = universityID })
-
-            // Prepare query
-            const columns = Object.keys(subjectData[0])
-            const placeholders = columns.map(_ => '?').join()
-            const query = `INSERT INTO subject (${columns}) VALUES (${placeholders})`
-            const prep = db.prepare(query)
-
-            subjectData.map(subj => insertDB(db, 'subject', subj, prep)
-                .then((id) => {
-                    if (id % 100 === 0 || id === total) {
-                        console.log(`Inserted subject ${id}/${total}`)
-                    }
-                })
-            )
-            prep.finalize()
         }
     })
 }
@@ -95,26 +72,6 @@ function createCourseTable (db) {
             console.error(err)
         } else {
             console.log('Created Course Table')
-
-            // Kind of hacky, but we only serving one university at this time
-            const universityID = 1
-            const total = Object.keys(courseData).length
-            courseData.forEach((subj) => { subj['universityID'] = universityID })
-
-            // Prepare query
-            const columns = Object.keys(courseData[0])
-            const placeholders = columns.map(_ => '?').join()
-            const query = `INSERT INTO course (${columns}) VALUES (${placeholders})`
-            const prep = db.prepare(query)
-
-            courseData.map(subj => insertDB(db, 'course', subj, prep)
-                .then((id) => {
-                    if (id % 100 === 0 || id === total) {
-                        console.log(`Inserted course ${id}/${total}`)
-                    }
-                })
-            )
-            prep.finalize()
         }
     })
 }
@@ -184,23 +141,51 @@ function createReviewTable (db) {
     })
 }
 
+function initUniTable(db) {
+    const unsw = { name: 'Univerity of New South Wales' }
+    insertDB(db, 'university', unsw)
+}
+
+function initSubjectTable(db) {
+    // Kind of hacky, but we only serving one university at this time
+    const universityID = 1
+    subjectData.forEach((subj) => { subj['universityID'] = universityID })
+
+    // Prepare query
+    const columns = Object.keys(subjectData[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO subject (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    // Do insertions and return promise for all of them to be completed
+    const promises = subjectData.map(subj => insertDB(db, 'subject', subj, prep))
+    return Promise.all(promises)
+        .then(() => prep.finalize())
+}
+
+function initCourseTable(db) {
+    // Kind of hacky, but we only serving one university at this time
+    const universityID = 1
+    courseData.forEach((subj) => { subj['universityID'] = universityID })
+
+    // Prepare query
+    const columns = Object.keys(courseData[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO course (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    // Do insertions and return promise for all of them to be completed
+    const promises = courseData.map(subj => insertDB(db, 'course', subj, prep))
+    return Promise.all(promises)
+        .then(() => prep.finalize())
+}
+
 /**
- * Initiates a new SQL database from the given param
- * @param   {string} databaseName A db name, if not :memory: initiates a .db file
+ * Initiates a new SQL database by creating the tables with some UNSW data
+ * @param   {object} SQLObject
  * @returns {object} SQLObject
  */
-function createDB(databaseName) {
-    // Create the database object
-    let db = new sqlite3.Database(databaseName,
-        sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
-        (err) => {
-            if (err) {
-                console.error(err.message)
-            }
-        }
-    )
-
-    // Create the database tables
+function createDB(db) {
     db.serialize(() => {
         db = createUserTable(db)
         db = createUniversityTable(db)
@@ -211,7 +196,7 @@ function createDB(databaseName) {
         db = createCommentTable(db)
     })
 
-    return db
+    return Promise.all([initUniTable(db), initSubjectTable(db), initCourseTable(db)])
 }
 
 // Insert given JSON object into database table.

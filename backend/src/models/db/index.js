@@ -1,3 +1,4 @@
+const sqlite3 = require('sqlite3')
 const { createDB, insertDB } = require('./tables')
 
 // Note the backwards directory traversal is due to azure server current directory stuff
@@ -11,7 +12,17 @@ const DB_NAME = process.env.NODE_ENV === 'test' ? ':memory:' : '../../db/smartco
  */
 class DB {
     constructor(databaseName) {
-        this._db = createDB(databaseName)
+        this._db = new sqlite3.Database(databaseName, sqlite3.OPEN_READWRITE,
+            (err) => {
+                err ? console.error(err) : console.log(`Opened database: ${databaseName}`)
+            }
+        )
+
+        // Initialise the test db
+        if (process.env.NODE_ENV === 'test') {
+            createDB(this._db)
+                .then('Initialised Database!')
+        }
     }
 
     insert(table, data) {

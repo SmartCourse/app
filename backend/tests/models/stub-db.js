@@ -1,4 +1,8 @@
 class DB {
+    initDB() {
+        return Promise.resolve(true)
+    }
+
     insert(table, data) {
         return Promise.resolve(true)
     }
