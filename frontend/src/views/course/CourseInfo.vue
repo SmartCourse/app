@@ -27,13 +27,6 @@ export default {
     ...mapGetters('course', {
       courseInfo: 'course'
     })
-  },
-  created () {
-    if (!this.courseInfo) { this.$store.dispatch('course/getCourse', this.code) }
-  },
-  beforeRouteUpdate ({ params: { code } }, from, next) {
-    if (this.code && this.code !== code) { this.$store.dispatch('course/getCourse', code) }
-    next()
   }
 }
 </script>

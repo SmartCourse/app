@@ -13,7 +13,7 @@ const state = {
 
 const getters = {
   isLoggedIn: ({ userAuthObject }) => !!userAuthObject,
-  user: ({ userAuthObject }) => userAuthObject
+  authObject: ({ userAuthObject }) => userAuthObject
 }
 
 const actions = {

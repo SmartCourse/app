@@ -74,7 +74,7 @@ export default {
 
 .splash {
   font-size: 5rem;
-  margin:25px auto;
+  margin:0.5em auto;
 }
 
 .homepage-section {

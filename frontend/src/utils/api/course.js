@@ -22,9 +22,16 @@ export function getCourse(course) {
 }
 
 export function courseMapper({
-  code, name, studyLevel,
-  subjectCode, handbookURL, outlineURL,
-  rating, description, requirements, tags
+  code,
+  name,
+  studyLevel,
+  subjectCode,
+  handbookURL,
+  outlineURL,
+  rating,
+  description,
+  requirements,
+  tags
 }) {
   return {
     code,

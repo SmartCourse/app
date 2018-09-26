@@ -1,4 +1,5 @@
 const auth = require('./config')
+const userModel = require('../models/user')()
 
 module.exports = function (req, _, next) {
     const authHeader = req.header('authorization')
@@ -17,7 +18,11 @@ module.exports = function (req, _, next) {
     return auth.verifyIdToken(token)
         .then(decodedToken => {
             // attach user to request obj
-            req.user = decodedToken
+            req.authorized = decodedToken
+            return userModel.getUserByUID(decodedToken.uid)
+        })
+        .then(user => {
+            req.user = user
         })
         .catch(err => {
             // invalid JWT

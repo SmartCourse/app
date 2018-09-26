@@ -10,7 +10,10 @@ function createUserTable (db) {
         displayName TEXT DEFAULT 'ANON',
         email TEXT UNIQUE NOT NULL,
         joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        reputation INTEGER DEFAULT '0.00'
+        reputation INTEGER DEFAULT '0.00',
+        degree TEXT,
+        gradYear TIMESTAMP DEFAULT '2018',
+        description TEXT
         )`
     )
 }
@@ -147,7 +150,7 @@ function devInitDB(db) {
                 ...subjectData.map(subj => insertDB(db, 'subject', { universityID, ...subj }))
             ])
         })
-        .then((courseID) => {
+        .then(() => {
             // course dependencies
             [question, review]
                 .forEach(item => { item.code = 'COMP4920' }, question)
