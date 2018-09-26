@@ -1,7 +1,7 @@
 // firebase authentication class
 import auth from './config'
 
-import {createUser} from '@/utils/api/auth'
+import { createUser } from '@/utils/api/auth'
 
 const state = {
   loading: false,
@@ -23,12 +23,13 @@ const mutations = {
   }
 }
 
+/* TODO CHANGE THESE TO ASYNC */
 /* successful signIn returns an UserAuth object which has field user */
 const actions = {
   signIn({ commit }, { email, password }) {
     commit('SET_LOADING', true)
     return auth.signInWithEmailAndPassword(email, password)
-      .then(({ user }) => commit('SET_USER', user, {root: true}))
+      .then(({ user }) => commit('SET_USER', user, { root: true }))
       .catch(error => {
         commit('ERROR', error.message)
         throw error
@@ -42,7 +43,7 @@ const actions = {
    */
   logout({ commit }) {
     return auth.signOut()
-      .then(() => commit('SET_USER', null, {root: true}))
+      .then(() => commit('SET_USER', null, { root: true }))
       .catch(error => commit('ERROR', error.message))
   },
 

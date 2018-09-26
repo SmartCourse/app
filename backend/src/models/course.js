@@ -14,6 +14,11 @@ class Course {
             .queryAll('SELECT * FROM course')
     }
 
+    getCoursesBySubject(subjCode) {
+        return this.db
+            .queryAll('SELECT * FROM course WHERE subjectCode = ?', [subjCode])
+    }
+
     /**
      * Gets a course instance from the DB.
      * @returns {object}    Info specific to single course.

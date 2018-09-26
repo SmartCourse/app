@@ -1,3 +1,4 @@
+const sqlite3 = require('sqlite3')
 const courseData = require('./courses')
 const subjectData = require('./subjects')
 
@@ -9,7 +10,10 @@ function createUserTable (db) {
         displayName TEXT DEFAULT 'ANON',
         email TEXT UNIQUE NOT NULL,
         joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        reputation INTEGER DEFAUL T '0.00'
+        reputation INTEGER DEFAULT '0.00',
+        degree TEXT,
+        gradYear TIMESTAMP DEFAULT '2018',
+        description TEXT
         )`,
     (err) => {
         if (err) {

@@ -35,7 +35,7 @@ export default {
       const { email, password } = this
       this.$store.dispatch('auth/signUp', { email, password })
         .then(() => this.$router.push('/'))
-        .catch(e => e)
+        .catch(e => {})
     }
   },
   created() {
@@ -51,6 +51,7 @@ export default {
   margin: 10px 0;
   padding: 10px 0;
   border-style: none;
+  outline: none;
   border-bottom: 1px solid var(--color-light-gray);
 }
 </style>

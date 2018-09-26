@@ -60,7 +60,9 @@ export default {
     // navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
     // will be reused, and this hook will be called when that happens.
     // has access to `this` component instance.
-    if (this.code && this.code !== code) { this.$store.dispatch('course/getCourse', code) }
+    if (this.code && this.code !== code) {
+        this.$store.dispatch('course/getCourse', code)  
+    }
     next()
   }
 }
@@ -77,21 +79,21 @@ h4 {
     margin-bottom:5px;
 }
 h4 > a {
-    color:var(--theme);
+    color: var(--theme);
 }
 
 .course-header {
-    background-color:white;
+    background-color: var(--white);
 }
 
 .course-header-title {
-    padding:20px;
+    padding: 20px;
 }
 
 .course-content {
-    background-color:white;
-    margin-top:2px;
-    padding:10px;
-    min-height:50vh;
+    background-color: var(--white);
+    margin-top: 2px;
+    padding: 10px;
+    min-height: 50vh;
 }
 </style>
