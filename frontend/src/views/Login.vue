@@ -19,7 +19,7 @@ import AppAuthForm from '@/components/AppAuthForm'
 
 export default {
   name: 'login',
-  data: function() {
+  data() {
     return {
       email: '',
       password: ''
@@ -34,7 +34,7 @@ export default {
       const { email, password } = this
       this.$store.dispatch('auth/signIn', {email, password})
         .then(() => this.$router.push('/'))
-        .catch(e => e)
+        .catch(e => {})
     }
   },
   created() {

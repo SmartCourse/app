@@ -16,3 +16,15 @@ exports.cors = function(req, res, next) {
         next()
     }
 }
+
+exports.corsProd = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'https://smartcourse-prod.azurewebsites.net')
+    res.header('Access-Control-Allow-Headers', 'Origin, Authorization, X-Requested-With, Content-Type, Accept')
+    res.header('Access-Control-Allow-Methods', 'GET, HEAD, PUT, DELETE, POST, OPTIONS')
+    // intercepts OPTIONS method
+    if (req.method === 'OPTIONS') {
+        res.sendStatus(200)
+    } else {
+        next()
+    }
+}

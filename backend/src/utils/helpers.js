@@ -12,7 +12,7 @@ exports.responseHandler = function(fn, response) {
 exports.toLowerCase = str => str.toLowerCase()
 
 exports.isAuthorized = function(req, res, next) {
-    if (!req.user) {
+    if (!req.authorized) {
         return res.status(401).json({ code: 401, message: 'Unauthorized' })
     }
     next()

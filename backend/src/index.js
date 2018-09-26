@@ -13,9 +13,13 @@ app.use(compression())
 app.use(express.static(path.join(__dirname, '../public')))
 app.use(firebase)
 
+const { cors, corsProd } = require('./utils/cors')
+
 if (app.get('env') === 'development') {
     app.use(logger('dev'))
-    app.use(require('./utils/cors').cors)
+    app.use(cors)
+} else {
+    app.use(corsProd)
 }
 
 const apiRouter = require('./routes')

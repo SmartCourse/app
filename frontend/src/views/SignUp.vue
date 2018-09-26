@@ -35,7 +35,7 @@ export default {
       const { email, password } = this
       this.$store.dispatch('auth/signUp', { email, password })
         .then(() => this.$router.push('/'))
-        .catch(e => e)
+        .catch(e => {})
     }
   },
   created() {
