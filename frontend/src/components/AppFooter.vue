@@ -33,7 +33,7 @@ export default {
         return {
                 nav: [
                     { content: 'Home', href: '/'},
-                    { content: 'Subjects', href: '/subjects'},
+                    { content: 'Subjects', href: '/subject'},
                     { content: 'Profile', href: '/profile'},
                 ],
                 info: [
