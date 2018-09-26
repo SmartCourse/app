@@ -10,21 +10,13 @@ if [[ "$type" != "staging" && "$type" != "prod" ]]; then
     echo "Type must be either 'staging' or 'prod'"
 fi
 
-# Compile the front end
-cd frontend
-npm install
-npm run build-$type
-
-# Zip the web app files
-cd ../backend
-rm -f smartcourse.zip
-zip -r smartcourse.zip package.json web.config data public src
-
-# Backup the database
-authorization_header="Authorization: SharedKey smartcoursebackups$STORAGE_KEY"
+echo "Backing up database on server..."
 read -d '' TMP_CMDS << EOF || true
 {
-    "command": "cp -f db/smartcourse.db ../db/",
+    "command": "If Not Exist db (mkdir db) & \
+                If Not Exist db/smartcourse.db (node src/models/db/new.js) \
+                Else (echo 'Need this for some reason...') & \
+                cp -f db/smartcourse.db ../db/",
     "dir": "site/wwwroot"
 }
 EOF
@@ -33,22 +25,49 @@ curl -u $AZURE_USER:$AZURE_PASS \
     --request POST \
     --data "$TMP_CMDS" \
     https://smartcourse-$type.scm.azurewebsites.net/api/command
+echo ""
 
-# Deploy the site
+echo "Compiling..."
+cd frontend
+npm install
+npm run build-$type
+cd ../backend
+rm -f smartcourse.zip
+cp ../scripts/backup.sh .
+zip -r smartcourse.zip package.json web.config backup.sh data public src
+rm backup.sh
+echo ""
+
+echo "Deploying..."
 curl -u $AZURE_USER:$AZURE_PASS \
     --request POST \
     --data-binary @smartcourse.zip https://smartcourse-$type.scm.azurewebsites.net/api/zipdeploy
+echo ""
 
-# Install modules on the server and restore the database
+echo "Restoring database, backing up to blob storage and installing modules..."
 read -d '' TMP_CMDS << EOF || true
 {
     "command": "mkdir db || cp ../db/smartcourse.db db/ && npm install",
     "dir": "site/wwwroot"
 }
 EOF
-
 curl -u $AZURE_USER:$AZURE_PASS \
     --header "Content-Type: application/json" \
     --request POST \
     --data "$TMP_CMDS" \
     https://smartcourse-$type.scm.azurewebsites.net/api/command
+echo ""
+read -d '' TMP_CMDS << EOF || true
+{
+    "command": "bash backup.sh $type",
+    "dir": "site/wwwroot"
+}
+EOF
+curl -u $AZURE_USER:$AZURE_PASS \
+    --header "Content-Type: application/json" \
+    --request POST \
+    --data "$TMP_CMDS" \
+    https://smartcourse-$type.scm.azurewebsites.net/api/command
+echo ""
+
+echo "DONE!"
