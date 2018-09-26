@@ -12,7 +12,6 @@ module.exports = data.map(subj => {
         const description = decodeUTF8Text(course.description)
         const requirements = decodeUTF8Text(course.requirements)
         const name = decodeUTF8Text(course.name)
-       // console.log(course.code)
         const tags = [
             course.code,
             name,
