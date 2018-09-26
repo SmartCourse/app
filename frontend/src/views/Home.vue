@@ -2,7 +2,7 @@
   <div>
     <section class="main-content home">
       <AppLogo class="splash" :first="'Smart'" :last="'Course'"/>
-        <p>Community-driven ratings, reviews and info about UNSW courses</p>
+      <p>Community-driven ratings, reviews and info about UNSW courses.</p>
       <Search/>
       <p>or <router-link :to="'/subject'">browse by subject area</router-link></p>
     </section>
@@ -67,16 +67,14 @@ export default {
   width: 100%;
 }
 
-.home > h1 {
-  margin-bottom:2vh;
-}
-
 .home > p {
   font-size: var(--font-medium);
+  text-align: center;
 }
 
 .splash {
   font-size: 5rem;
+  margin:25px auto;
 }
 
 .homepage-section {
