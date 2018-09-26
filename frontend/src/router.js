@@ -11,14 +11,37 @@ const newReviewView = () => import('./views/NewReview')
 const courseInfo = () => import('./views/course/CourseInfo')
 const courseQuestions = () => import('./views/course/CourseQuestions')
 const courseReviews = () => import('./views/course/CourseReviews')
+const subjectList = () => import('./views/SubjectList')
+const subjectCourses = () => import('./views/SubjectCourses')
 
 export default new Router({
   mode: 'history',
+  scrollBehavior (to, from, savedPosition) {
+    // scroll to top of page on following a route, unless history state used
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  },
   routes: [
     {
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/subject',
+      name: 'subjectList',
+      component: subjectList
+    },
+    {
+      path: '/subject/:code',
+      name: 'subjectCourses',
+      props: ({params: { code }}) => ({
+        code
+      }),
+      component: subjectCourses
     },
     {
       path: '/course/:code/',

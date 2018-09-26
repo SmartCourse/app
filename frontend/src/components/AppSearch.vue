@@ -4,7 +4,7 @@
             type='text'
             v-model='search'
             name='search'
-            placeholder='Search...'
+            placeholder='Search all courses...'
         />
         <ul v-if="search && suggestions.length">
             <router-link
@@ -31,7 +31,7 @@ export default {
 
   computed: {
     courses() {
-        return this.$store.state.courses.map(item => item)
+      return this.$store.state.courses.map(item => item)
     },
     suggestions() {
       const lower = this.search.toLowerCase()

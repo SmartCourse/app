@@ -21,7 +21,7 @@ export default {
   components: { Search },
   computed: {
     isLoggedIn() {
-        return this.$store.getters.isLoggedIn
+      return this.$store.getters.isLoggedIn
     }
   }
 }
