@@ -23,11 +23,8 @@ export default {
   name: 'subjectList',
   computed: {
     ...mapGetters('subject', {
-      subjects: 'subjects'
+      subjects: 'subjectList'
     })
-  },
-  created () {
-    this.$store.dispatch('subject/getSubjects')
   }
 }
 </script>

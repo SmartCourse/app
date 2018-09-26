@@ -7,7 +7,7 @@ import { REQUEST, COMMITS, ACTIONS } from './constants'
 
 const state = {
   loading: false,
-  subjects: [],
+  subjects: {},
   courses: [],
   error: {
     code: 0,
@@ -17,14 +17,24 @@ const state = {
 
 const getters = {
   courses: ({courses}) => courses,
-  subjects: ({subjects}) => subjects,
+  // convert subjects object to array [{code, name, handbookURL}, ...]
+  subjectList: ({subjects}) => Object.entries(subjects)
+                            .map(([code, {name, handbookURL}]) => ({code, name, handbookURL}))
+                            .sort((a, b) => a.code.localeCompare(b.code)),
+  subjectMap: ({subjects}) => subjects,
   loading: ({loading}) => loading,
   error: ({error}) => error
 }
 
 const mutations = {
   REFRESH_SUBJECTS (state, subjects) {
-    state.subjects = subjects.map(subjectMapper)
+    state.subjects = subjects
+        .map(subjectMapper)
+        // convert array to object {code: {name, handbookURL}, code: { ... }, ...}
+        .reduce((acc, {code, name, handbookURL}) => {
+            acc[code] = {name, handbookURL}
+            return acc
+        }, {})
   },
   REFRESH_COURSES (state, courses) {
     state.courses = courses.map(courseMapper)

@@ -17,8 +17,8 @@ const subjectCourses = () => import('./views/SubjectCourses')
 
 export default new Router({
   mode: 'history',
-
   scrollBehavior (to, from, savedPosition) {
+    // scroll to top of page on following a route, unless history state used
     if (savedPosition) {
       return savedPosition
     } else {

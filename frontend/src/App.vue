@@ -16,6 +16,7 @@ export default {
   components: { AppNavBar, AppFooter },
   created() {
     this.$store.dispatch('auth/checkAuth')
+    this.$store.dispatch('subject/getSubjects')
   }
 }
 

@@ -4,13 +4,13 @@
       <p>
         <b>Description:</b>
       </p>
-      <p v-html="courseInfo.description"></p> <!-- description may contain <p> tags -->
+      <p class="text-body" v-html="courseInfo.description"></p> <!-- description may contain <p> tags -->
     </div>
     <div v-if="courseInfo.requirements">
       <p>
         <b>Requirements:</b>
       </p>
-      <p v-html="courseInfo.requirements"></p> <!-- requirements may contain <p> tags -->
+      <p class="text-body" v-html="courseInfo.requirements"></p> <!-- requirements may contain <p> tags -->
     </div>
   </div>
 </template>
@@ -40,6 +40,10 @@ export default {
 
 <style scoped>
 .course-info {
-    padding: 0 20px;
+    padding: 0 10px;
+    text-align:justify;
+}
+.text-body {
+    padding: 0px 10px;
 }
 </style>
