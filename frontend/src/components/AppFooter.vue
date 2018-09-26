@@ -29,28 +29,27 @@
 
 <script>
 export default {
-    data() {
-        return {
-                nav: [
-                    { content: 'Home', href: '/'},
-                    { content: 'Subjects', href: '/subject'},
-                    { content: 'Profile', href: '/profile'},
-                ],
-                info: [
-                    { content: 'Privacy Policy', href: '/'},
-                    { content: 'Terms of Use', href: '/'},
-                    { content: 'Help', href: '/'},
-                    { content: 'UNSW Handbook', href: '/'}
-                ],
-                social: [
-                    { content: 'facebook', href: '/'},
-                    { content: 'twitter', href: '/'}
-                ]
-        }
+  data() {
+    return {
+      nav: [
+        { content: 'Home', href: '/'},
+        { content: 'Subjects', href: '/subject'},
+        { content: 'Profile', href: '/profile'}
+      ],
+      info: [
+        { content: 'Privacy Policy', href: '/'},
+        { content: 'Terms of Use', href: '/'},
+        { content: 'Help', href: '/'},
+        { content: 'UNSW Handbook', href: '/'}
+      ],
+      social: [
+        { content: 'facebook', href: '/'},
+        { content: 'twitter', href: '/'}
+      ]
     }
+  }
 }
 </script>
-
 
 <style scoped lang='less'>
 #footer {
@@ -95,7 +94,6 @@ export default {
 .link:hover {
     color: var(--theme-light);
 }
-
 
 .links ul:nth-of-type(-n + 2) {
     border-right: var(--border);

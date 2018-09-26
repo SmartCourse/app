@@ -1,4 +1,3 @@
-const sqlite3 = require('sqlite3')
 const courseData = require('./courses')
 const subjectData = require('./subjects')
 
@@ -147,7 +146,7 @@ function createReviewTable (db) {
 
 function initUniTable(db) {
     const unsw = { name: 'Univerity of New South Wales' }
-    insertDB(db, 'university', unsw)
+    return insertDB(db, 'university', unsw)
 }
 
 function initSubjectTable(db) {
@@ -164,7 +163,6 @@ function initSubjectTable(db) {
     // Do insertions and return promise for all of them to be completed
     const promises = subjectData.map(subj => insertDB(db, 'subject', subj, prep))
     return Promise.all(promises)
-        .then(() => prep.finalize())
 }
 
 function initCourseTable(db) {
@@ -181,7 +179,6 @@ function initCourseTable(db) {
     // Do insertions and return promise for all of them to be completed
     const promises = courseData.map(subj => insertDB(db, 'course', subj, prep))
     return Promise.all(promises)
-        .then(() => prep.finalize())
 }
 
 /**
@@ -199,7 +196,6 @@ function createDB(db) {
         db = createReviewTable(db)
         db = createCommentTable(db)
     })
-
     return Promise.all([initUniTable(db), initSubjectTable(db), initCourseTable(db)])
 }
 

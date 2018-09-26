@@ -61,7 +61,7 @@ export default {
     // will be reused, and this hook will be called when that happens.
     // has access to `this` component instance.
     if (this.code && this.code !== code) {
-        this.$store.dispatch('course/getCourse', code)  
+      this.$store.dispatch('course/getCourse', code)
     }
     next()
   }

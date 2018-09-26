@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3')
 const { createDB, insertDB } = require('./tables')
 
-const DB_NAME = process.env.NODE_ENV === 'test' ? ':memory:' : './db/smartcourse.db'
+const DB_NAME = process.env.NODE_ENV === 'production' ? 'D:\\home\\site\\wwwroot\\db\\smartcourse.db' : ':memory:'
 
 /**
  * Very slight abstraction over the direct sql queries.
@@ -18,9 +18,10 @@ class DB {
         )
 
         // Initialise the test db
-        if (process.env.NODE_ENV === 'test') {
+        if (process.env.NODE_ENV !== 'production') {
             createDB(this._db)
-                .then('Initialised Database!')
+                .then(console.log('Initialised Database!'))
+                .catch(console.warn)
         }
     }
 

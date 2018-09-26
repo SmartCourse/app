@@ -6,7 +6,8 @@
 # TODO - Don't use $RANDOM and only keep 'n' backups at a time.
 # 
 # Expected to be run in root directory of server (i.e. backend/), such
-# that the database can be found at ./db/smartcourse.db.
+# that the backup database can be found at ../db/smartcourse.db on the
+# azure server.
 # 
 # Arguments:
 #   1: Type of deployment (staging or prod)
@@ -17,7 +18,7 @@ storage_account=smartcoursebackups
 container_name=db-backups
 blob_name=smartcourse-$1-$RANDOM
 access_key="$STORAGE_KEY"
-file=db/smartcourse.db
+file=../db/smartcourse.db
 file_len=`cat $file | wc -c`
 
 # Standard API variables
