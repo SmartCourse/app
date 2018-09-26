@@ -9,14 +9,14 @@ class Course {
      * TODO add 'uni' param, add paging
      * @returns a list of courses
      */
-    getCourses(subjCode) {
-        if (subjCode) {
-            return this.db
-                .queryAll("SELECT * FROM course WHERE subjectCode = ?", [subjCode])
-        } else {
-            return this.db
-                .queryAll('SELECT * FROM course')
-        }
+    getCourses() {
+        return this.db
+            .queryAll('SELECT * FROM course')
+    }
+
+    getCoursesBySubject(subjCode) {
+        return this.db
+            .queryAll('SELECT * FROM course WHERE subjectCode = ?', [subjCode])
     }
 
     /**

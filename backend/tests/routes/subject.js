@@ -54,6 +54,5 @@ describe('Subject route testing', () => {
             request.then(({ body }) =>
                 expect(body.filter(c => c.name === 'Accounting and Financial Management 1A').length).to.equal(1))
         )
-
     })
 })

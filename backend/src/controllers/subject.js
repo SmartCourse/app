@@ -11,7 +11,6 @@ exports.getSubjects = function (_, res) {
 
 /* Get all courses of a given subject */
 exports.getCourses = function ({ params }, res) {
-    responseHandler(courseModel.getCourses(params.code), res)
+    responseHandler(courseModel.getCoursesBySubject(params.code), res)
         .catch(errorHandler(res))
 }
-

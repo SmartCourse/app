@@ -13,7 +13,6 @@ class Subject {
         return this.db
             .queryAll('SELECT * FROM subject')
     }
-
 }
 
 let Singleton = null

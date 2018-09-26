@@ -19,8 +19,8 @@ const getters = {
   courses: ({courses}) => courses,
   // convert subjects object to array [{code, name, handbookURL}, ...]
   subjectList: ({subjects}) => Object.entries(subjects)
-                            .map(([code, {name, handbookURL}]) => ({code, name, handbookURL}))
-                            .sort((a, b) => a.code.localeCompare(b.code)),
+    .map(([code, {name, handbookURL}]) => ({code, name, handbookURL}))
+    .sort((a, b) => a.code.localeCompare(b.code)),
   subjectMap: ({subjects}) => subjects,
   loading: ({loading}) => loading,
   error: ({error}) => error
@@ -29,12 +29,12 @@ const getters = {
 const mutations = {
   REFRESH_SUBJECTS (state, subjects) {
     state.subjects = subjects
-        .map(subjectMapper)
-        // convert array to object {code: {name, handbookURL}, code: { ... }, ...}
-        .reduce((acc, {code, name, handbookURL}) => {
-            acc[code] = {name, handbookURL}
-            return acc
-        }, {})
+      .map(subjectMapper)
+    // convert array to object {code: {name, handbookURL}, code: { ... }, ...}
+      .reduce((acc, {code, name, handbookURL}) => {
+        acc[code] = {name, handbookURL}
+        return acc
+      }, {})
   },
   REFRESH_COURSES (state, courses) {
     state.courses = courses.map(courseMapper)
