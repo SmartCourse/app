@@ -46,10 +46,10 @@ export default {
   methods: {
     refreshReviews(pageNumber) {
       this.$store.dispatch('course/getReviews',
-      {
-        id: this.code,
-        pageNumber: pageNumber
-      })    
+        {
+          id: this.code,
+          pageNumber: pageNumber
+        })
     }
   },
   created () {

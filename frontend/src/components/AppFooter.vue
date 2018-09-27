@@ -29,28 +29,27 @@
 
 <script>
 export default {
-    data() {
-        return {
-                nav: [
-                    { content: 'Home', href: '/'},
-                    { content: 'Subjects', href: '/subject'},
-                    { content: 'Profile', href: '/profile'},
-                ],
-                info: [
-                    { content: 'Privacy Policy', href: '/'},
-                    { content: 'Terms of Use', href: '/'},
-                    { content: 'Help', href: '/'},
-                    { content: 'UNSW Handbook', href: '/'}
-                ],
-                social: [
-                    { content: 'facebook', href: '/'},
-                    { content: 'twitter', href: '/'}
-                ]
-        }
+  data() {
+    return {
+      nav: [
+        { content: 'Home', href: '/' },
+        { content: 'Subjects', href: '/subject' },
+        { content: 'Profile', href: '/profile' }
+      ],
+      info: [
+        { content: 'Privacy Policy', href: '/' },
+        { content: 'Terms of Use', href: '/' },
+        { content: 'Help', href: '/' },
+        { content: 'UNSW Handbook', href: '/' }
+      ],
+      social: [
+        { content: 'facebook', href: '/' },
+        { content: 'twitter', href: '/' }
+      ]
     }
+  }
 }
 </script>
-
 
 <style scoped lang='less'>
 #footer {
@@ -65,40 +64,39 @@ export default {
 }
 
 .logo-container > h1 {
-    margin: 40px auto;
+  margin: 40px auto;
 }
 
 .links {
-    padding: 40px 0;
-    margin: 0 auto;
-    max-width: 800px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-auto-rows: auto;
-    grid-gap: 40px;
+  padding: 40px 0;
+  margin: 0 auto;
+  max-width: 800px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-auto-rows: auto;
+  grid-gap: 40px;
 }
 
 .links-header {
-    color: var(--white);
-    font-weight: bolder;
+  color: var(--white);
+  font-weight: bolder;
 }
 
 .links > * {
-    line-height: 2;
-    padding-bottom: 20px;
+  line-height: 2;
+  padding-bottom: 20px;
 }
 
 .link {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .link:hover {
-    color: var(--theme-light);
+  color: var(--theme-light);
 }
 
-
 .links ul:nth-of-type(-n + 2) {
-    border-right: var(--border);
+  border-right: var(--border);
 }
 
 p {
@@ -109,18 +107,18 @@ p {
 }
 
 @media screen and (max-width: 600px){
-    .links {
-        width: 300px;
-        grid-template-columns: 1fr;
-    }
+  .links {
+    width: 300px;
+    grid-template-columns: 1fr;
+  }
 
-    .links ul:nth-of-type(-n + 2) {
-        border: none;
-        border-bottom: var(--border);
-    }
+  .links ul:nth-of-type(-n + 2) {
+    border: none;
+    border-bottom: var(--border);
+  }
 
-    .logo-container > h1 {
-        margin: auto;
-    }
+  logo-container > h1 {
+    margin: auto;
+  }
 }
 </style>

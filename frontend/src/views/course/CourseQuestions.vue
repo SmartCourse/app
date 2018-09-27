@@ -45,10 +45,10 @@ export default {
   methods: {
     refreshQuestions(pageNumber) {
       this.$store.dispatch('course/getQuestions',
-      {
-        id: this.code,
-        pageNumber: pageNumber
-      })
+        {
+          id: this.code,
+          pageNumber: pageNumber
+        })
     }
   },
   created () {
