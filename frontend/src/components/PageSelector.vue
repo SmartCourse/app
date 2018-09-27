@@ -1,9 +1,9 @@
 <template>
   <div class="PageSelector">
     <div class='button-container'>
-      <AppButton @click.native="goPrevPage()">Prev</AppButton>
-      <span>{{currPage}}</span>
-      <AppButton @click.native="goNextPage()">Next</AppButton>
+      <AppButton @click.native="goPrevPage()" :alt="false">&laquo;</AppButton>
+      <AppButton :disabled="true">{{currPage}}</AppButton>
+      <AppButton @click.native="goNextPage()" :alt="false">&raquo;</AppButton>
     </div>
   </div>
 </template>
