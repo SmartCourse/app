@@ -20,8 +20,7 @@ class Review {
      * @param   {number}  pageNumber    The page number for which we want to get questions.
      * @returns {Array}
      */
-    getReviews(code, pageNumber) {
-        const pageSize = 10
+    getReviews(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
             .queryAll('SELECT * FROM review WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',

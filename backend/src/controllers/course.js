@@ -20,18 +20,19 @@ exports.getCourse = function ({ params }, res) {
 exports.getCourseQuestions = function ({ params, query }, res) {
     let p = parseInt(query.p)
     const pageNumber = p || 1
+    const pageSize = 10
 
     let getCourseQuestions = new Promise(function(resolve, reject) {
         Promise.all([
-            questionModel.getQuestions(params.code, pageNumber),
+            questionModel.getQuestions(params.code, pageNumber, pageSize),
             questionModel.getQuestionCount(params.code)
         ]).then(function(values) {
-            const lastPage = Math.trunc((values[1][0]['COUNT()'] + 10) / 10)
+            const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize) / pageSize)
             resolve({
                 'meta': {
                     'curr': pageNumber,
                     'last': lastPage,
-                    'pageSize': 10
+                    'pageSize': pageSize
                 },
                 'data': values[0]
             })
@@ -46,18 +47,19 @@ exports.getCourseQuestions = function ({ params, query }, res) {
 exports.getCourseReviews = function ({ params, query }, res) {
     let p = parseInt(query.p)
     const pageNumber = p || 1
+    const pageSize = 10
 
     let getCourseReviews = new Promise(function(resolve, reject) {
         Promise.all([
-            reviewModel.getReviews(params.code, pageNumber),
+            reviewModel.getReviews(params.code, pageNumber, pageSize),
             reviewModel.getReviewCount(params.code)
         ]).then(function(values) {
-            const lastPage = Math.trunc((values[1][0]['COUNT()'] + 10) / 10)
+            const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize) / pageSize)
             resolve({
                 'meta': {
                     'curr': pageNumber,
                     'last': lastPage,
-                    'pageSize': 10
+                    'pageSize': pageSize
                 },
                 'data': values[0]
             })

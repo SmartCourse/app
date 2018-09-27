@@ -21,8 +21,7 @@ class Question {
      * @param   {number} pageNumber  The page number for which we want to get questions.
      * @returns {object}
      */
-    getQuestions(code, pageNumber) {
-        const pageSize = 10
+    getQuestions(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
             .queryAll('SELECT * FROM question WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
