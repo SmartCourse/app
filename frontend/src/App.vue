@@ -2,7 +2,8 @@
   <div id="app">
     <AppNavBar/>
     <main>
-      <router-view :key="$route.path"/>
+      <!--<router-view :key="$route.path"/> -->
+      <router-view/>
     </main>
     <AppFooter/>
   </div>
@@ -16,6 +17,7 @@ export default {
   components: { AppNavBar, AppFooter },
   created() {
     this.$store.dispatch('auth/checkAuth')
+    this.$store.dispatch('subject/getSubjects')
   }
 }
 
@@ -53,14 +55,13 @@ html, body {
   --border-thick: 2px solid rgba(160, 178, 178, 0.5);
   --box-shadow-active: 0px 0px 0px 1px #ddd;
   --theme: #00a99d;
-  /*--theme-light: rgba(#00a99d, 0.6);*/
   --theme-light: rgba(102, 203, 196);
   // font format
   --header-1: 600 3rem /1.2 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
   --header-1-mobile: 600 2rem /1.1 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
   --header-2: 600 2.25rem /1.2 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
   --header-2-mobile: 600 1.625rem /1.2 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
-  --header-3: 400 1.75rem /1.3 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --header-3: 400 1.6rem /1.3 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
   --header-3-mobile: 400 1.4rem /1.2 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
   --header-4: 400 1.15rem /1.4 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
   --body-copy-1: 400 1rem /1.6 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -75,6 +76,10 @@ html, body {
 
 h1, h2, h3, h4, h5, h6 {
   letter-spacing: normal;
+}
+
+p {
+  color: rgba(0,0,0,.72);
 }
 
 .form-success {
@@ -95,15 +100,19 @@ h1, h2, h3, h4, h5, h6 {
   margin: auto;
 }
 
-a {
-  color:inherit;
-  text-decoration:inherit;
+.auth-page {
+  height: 90vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-a:hover {
-  color:inherit;
-  text-decoration:inherit;
-  cursor:pointer;
+a, a:hover {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: inherit;
 }
 
 ol, ul {

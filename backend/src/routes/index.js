@@ -5,10 +5,12 @@ const api = express.Router()
 const userRouter = require('./user')
 const uniRouter = require('./uni')
 const courseRouter = require('./course')
+const subjectRouter = require('./subject')
 
 api.use('/user', userRouter)
 api.use('/uni', uniRouter)
 api.use('/course', courseRouter)
+api.use('/subject', subjectRouter)
 
 /* Root API for debugging */
 api.get('/', function (req, res) {

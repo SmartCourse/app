@@ -1,107 +1,88 @@
-import firebase from 'firebase/app'
-import 'firebase/auth'
+// firebase authentication class
+import auth from './config'
 
-import config from './config'
-import {get} from '../../utils/api'
-
-firebase.initializeApp(config)
-
-export const auth = firebase.auth()
-
-function sendAuthToken(user) {
-  return user.getIdToken(/* forceRefresh true */)
-    .then(idToken => {
-      return get('/user', {
-        headers: {
-          'Authorization': 'Bearer ' + idToken
-        },
-        mode: 'cors'
-      })
-    }).catch(err => {
-      console.warn(err)
-    })
-}
+import { createUser } from '@/utils/api/auth'
 
 const state = {
   loading: false,
-  error: '',
-  user: null
+  error: ''
 }
 
 const getters = {
   loading: ({ loading }) => loading,
-  isLoggedIn: ({ user }) => !!user,
-  error: ({ error }) => error,
-  user: ({ user }) => user
+  error: ({ error }) => error
 }
 
 const mutations = {
   ERROR(state, message) {
-    console.log('ERROR', message)
+    if (message) console.log('AUTH ERROR', message)
     state.error = message
   },
-  SIGN_UP(state, user) {
-    // on successful signup communicate with backend to update database.
-    // If by email, new users are signed in by default
-    console.log('SIGN UP', user.user)
-    sendAuthToken(user.user)
-    state.user = user.user
-  },
-  LOGIN(state, user) {
-    // login happens in indexedDB in chrome, localStorage in other browsers
-    console.log('LOGIN', user.user)
-    sendAuthToken(user.user)
-    state.user = user.user
-  },
-  LOGOUT(state) {
-    state.user = null
-    console.log('LOGOUT EVENT')
-  },
-  UPDATE(state, user) {
-    // useful for intial boot
-    console.log(user)
-    if (user) sendAuthToken(user)
-    state.user = user
+  SET_LOADING(state, isLoading) {
+    state.loading = isLoading
   }
 }
 
+/* TODO CHANGE THESE TO ASYNC */
+/* successful signIn returns an UserAuth object which has field user */
 const actions = {
-  signIn({commit}, { email, password }) {
-    if (!(email && password)) {
-      return commit('ERROR', 'Missing fields')
-    }
-
+  signIn({ commit }, { email, password }) {
+    commit('SET_LOADING', true)
     return auth.signInWithEmailAndPassword(email, password)
-      .then(user => commit('LOGIN', user))
-      .catch(error => commit('ERROR', error.message))
+      .then(({ user }) => commit('SET_USER', user, { root: true }))
+      .catch(error => {
+        commit('ERROR', error.message)
+        throw error
+      })
+      .finally(() => commit('SET_LOADING', false))
   },
 
-  logout({commit}) {
+  /**
+   * logout client side. Everything will be handled by
+   * firebase for this.
+   */
+  logout({ commit }) {
     return auth.signOut()
-      .then(() => commit('LOGOUT'))
+      .then(() => commit('SET_USER', null, { root: true }))
       .catch(error => commit('ERROR', error.message))
   },
 
-  signUp({commit}, { email, password }) {
-    if (!(email && password)) {
-      return commit('ERROR', 'Missing fields')
-    }
-
+  /**
+   * successful signup returns an UserAuth object.
+   * UserAuth obj has field user which is what we're interested in
+   * Currently, successful signUp will automatically sign in user.
+   **/
+  signUp({ commit }, { email, password }) {
+    commit('SET_LOADING', true)
     return auth.createUserWithEmailAndPassword(email, password)
-      .then(user => commit('SIGN_UP', user))
-      .catch(error => commit('ERROR', error.message))
+      .then(({ user }) => {
+        /* TODO implement retry if failure occurs on server
+          Simultaneously:
+          1. Send off new user creds for backend creation,
+          2. Set user state in store.
+         */
+        return Promise.all([
+          createUser(user),
+          commit('SET_USER', user, { root: true })])
+      })
+      .catch(error => {
+        commit('ERROR', error.message)
+        throw error
+      })
+      .finally(() => commit('SET_LOADING', false))
   },
 
-  checkAuth({commit}) {
+  /**
+   * Called on application boot once firebase has been initialised
+   */
+  checkAuth({ commit }) {
     return new Promise((resolve, reject) => {
       const unsubscribe = auth.onAuthStateChanged(user => {
         unsubscribe()
         resolve(user)
       }, reject)
     })
-      .then(user => {
-        commit('UPDATE', user)
-      })
+      .then(user => commit('SET_USER', user, { root: true }))
       .catch(error => {
         commit('ERROR', error)
       })

@@ -16,12 +16,13 @@
 
 <script>
 import Search from '@/components/AppSearch'
-import {mapGetters} from 'vuex'
 
 export default {
   components: { Search },
   computed: {
-    ...mapGetters('auth', ['isLoggedIn'])
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn
+    }
   }
 }
 </script>
@@ -46,6 +47,7 @@ export default {
     justify-content: space-between;
 
     h3 {
+        cursor: pointer;
         margin: auto 10px;
         text-align: center;
         display: inline-block;

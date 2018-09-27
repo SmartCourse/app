@@ -1,7 +1,7 @@
 /* All inputs should be validated in this class that are review related */
 class Review {
     constructor(db) {
-        console.log('initialising ORM review object')
+        console.log('initialising ORM Review object')
         this.db = db
     }
 

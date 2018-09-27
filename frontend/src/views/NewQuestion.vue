@@ -29,7 +29,10 @@ export default {
       answers: 'answers',
       loading: 'loading',
       error: 'error'
-    })
+    }),
+    user() {
+      return this.$store.getters.user
+    }
   },
   methods: {
     submitQuestion (questionForm) {

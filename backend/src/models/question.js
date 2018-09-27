@@ -1,7 +1,7 @@
 /* All inputs should be validated in this class that are question related */
 class Question {
     constructor(db) {
-        console.log('initialising ORM question object')
+        console.log('initialising ORM Question object')
         this.db = db
     }
 

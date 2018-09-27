@@ -6,29 +6,54 @@
         </div>
         <ul class="navigation">
             <li class="links-header">Navigation</li>
-            <li>Home</li>
-            <li>Subjects</li>
-            <li>About</li>
+            <router-link class="link" tag='li' :to="link.href" v-for="link in nav" :key="link.content">
+                {{ link.content }}
+            </router-link>
         </ul>
         <ul class="information">
             <li class="links-header">Information</li>
-            <li>Privacy Policy</li>
-            <li>Terms of Use</li>
-            <li>Help</li>
-            <li>UNSW Handbook</li>
+            <router-link class="link" tag='li' :to="link.href" v-for="link in info" :key="link.content">
+                {{ link.content }}
+            </router-link>
         </ul>
         <ul class="socials">
             <li class="links-header">Social</li>
-            <li>twitter</li>
-            <li>facebook</li>
+            <router-link class="link" tag='li' :to="link.href" v-for="link in social" :key="link.content">
+                {{ link.content }}
+            </router-link>
         </ul>
        </section>
       <p>Copyright &copy; SmartCourse 2018</p>
     </footer>
 </template>
 
+<script>
+export default {
+    data() {
+        return {
+                nav: [
+                    { content: 'Home', href: '/'},
+                    { content: 'Subjects', href: '/subject'},
+                    { content: 'Profile', href: '/profile'},
+                ],
+                info: [
+                    { content: 'Privacy Policy', href: '/'},
+                    { content: 'Terms of Use', href: '/'},
+                    { content: 'Help', href: '/'},
+                    { content: 'UNSW Handbook', href: '/'}
+                ],
+                social: [
+                    { content: 'facebook', href: '/'},
+                    { content: 'twitter', href: '/'}
+                ]
+        }
+    }
+}
+</script>
+
+
 <style scoped lang='less'>
-footer {
+#footer {
   color: var(--soft-white);
   width: 100%;
   background-color: var(--black);
@@ -55,13 +80,22 @@ footer {
 
 .links-header {
     color: var(--white);
-    font-weight: bold;
+    font-weight: bolder;
 }
 
 .links > * {
     line-height: 2;
     padding-bottom: 20px;
 }
+
+.link {
+    cursor: pointer;
+}
+
+.link:hover {
+    color: var(--theme-light);
+}
+
 
 .links ul:nth-of-type(-n + 2) {
     border-right: var(--border);

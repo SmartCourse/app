@@ -7,32 +7,53 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-
-  // TODO acquire list of subjects from api (see AppSearch), and store them in data
-
   computed: {
+    ...mapGetters('subject', {
+      subjects: 'subjectMap'
+    }),
     routeList() {
       // e.g. Subjects > Computer Science > COMP4920 > Ask Question
 
       let id = 0
-      // TODO this won't be just Home in the final version prob
-      const list = [{id: id++, text: 'Home', route: '/'}]
+      const list = [
+        {id: id++, text: 'Home', route: '/'},
+        {id: id++, text: 'Subjects', route: '/subject'}
+      ]
 
-      if (this.$route.params.code) {
-        const courseCode = this.$route.params.code
-        list.push({id: id++, text: courseCode, route: `/course/${courseCode}`})
+      const path = this.$route.path.split('/')
+      if (path.length) {
+        if (this.$route.params.code) {
+          // if there's a course or subject code, add the subject name
+          const subjCode = this.$route.params.code.slice(0, 4)
+          // deal with async population of subjects
+          if (!this.subjects[subjCode]) {
+            // use the code if name not available yet
+            list.push({id: id++, text: subjCode, route: `/subject/${subjCode}`})
+          } else {
+            // otherwise use the full subject name from the store
+            const subjName = this.subjects[subjCode].name
+            list.push({id: id++, text: subjName, route: `/subject/${subjCode}`})
+          }
+
+          if (path[1] === 'course') {
+            const courseCode = this.$route.params.code
+            list.push({id: id++, text: courseCode, route: `/course/${courseCode}`})
+            const map = {
+              'newQuestion': 'Ask Question',
+              'newReview': 'Add Review',
+              'question': 'View Question',
+              'review': 'View Review'
+            }
+            if (this.$route.name in map) {
+              list.push({id: id++, text: map[this.$route.name], route: this.$route.path})
+            }
+          }
+        }
       }
 
-      const map = {
-        'newQuestion': 'Ask Question',
-        'newReview': 'Add Review',
-        'question': 'View Question',
-        'review': 'View Review'
-      }
-      if (this.$route.name in map) {
-        list.push({id: id++, text: map[this.$route.name], route: this.$route.path})
-      }
       return list
     }
   }
@@ -42,8 +63,7 @@ export default {
 <style scoped lang='less'>
 
 .breadcrumb {
-    padding: 10px;
-    padding-left:20px;
+    padding: 10px 20px;
     color: var(--theme);
 }
 
@@ -52,7 +72,7 @@ export default {
 }
 
 .breadcrumb > li+li:before {
-    padding: 8px;
+    padding: 10px;
     color: var(--soft-black);
     content: ">";
 }

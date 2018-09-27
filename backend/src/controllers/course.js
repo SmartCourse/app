@@ -70,9 +70,10 @@ exports.getCourseReviews = function ({ params, query }, res) {
         .catch(errorHandler(res))
 }
 
-exports.postQuestion = function ({ params, body }, res) {
+exports.postQuestion = function ({ user, params, body }, res) {
     // TODO fix userID
     body.userID = 1
+    if (user) body.userID = user.id
     responseHandler(questionModel.postQuestion(params.code, body), res)
         .catch(errorHandler(res))
 }

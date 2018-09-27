@@ -6,10 +6,14 @@ const subjectData = require('./subjects')
 function createUserTable (db) {
     db.run(`CREATE TABLE user (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        firstName TEXT NOT NULL,
-        lastName TEXT NOT NULL,
+        uid TEXT NOT NULL,
+        displayName TEXT DEFAULT 'ANON',
         email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
+        joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        reputation INTEGER DEFAULT '0.00',
+        degree TEXT,
+        gradYear TIMESTAMP DEFAULT '2018',
+        description TEXT
         )`
     )
 }
@@ -103,10 +107,9 @@ function createReviewTable (db) {
 function devInitDB(db) {
     /* Fake data objects */
     const user = {
-        firstName: 'Walker',
-        lastName: 'Francis',
+        displayName: 'Francis Walker',
         email: 'alnuno-das-hinds@gmail.com',
-        password: 'ilovetravxoxo'
+        uid: '1234hheaj1'
     }
 
     const unsw = {
@@ -147,7 +150,7 @@ function devInitDB(db) {
                 ...subjectData.map(subj => insertDB(db, 'subject', { universityID, ...subj }))
             ])
         })
-        .then((courseID) => {
+        .then(() => {
             // course dependencies
             [question, review]
                 .forEach(item => { item.code = 'COMP4920' }, question)

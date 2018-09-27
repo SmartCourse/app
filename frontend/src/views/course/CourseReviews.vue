@@ -64,7 +64,7 @@ export default {
 
 <style scoped>
 .button-container {
-    margin-bottom:10px;
-    text-align:right;
+    margin-bottom: 10px;
+    text-align: right;
 }
 </style>

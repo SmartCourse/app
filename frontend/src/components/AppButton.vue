@@ -28,7 +28,7 @@ button {
 
 .standard-button {
     background-color: var(--theme);
-    color: white;
+    color: var(--white);
     border: none;
 }
 
