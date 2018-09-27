@@ -70,22 +70,22 @@ describe('Course route testing', () => {
 
         it('correct number of questions', () =>
             request.then(({ body }) =>
-                expect(body.length).is.a('number'))
+                expect(body.data.length).is.a('number'))
         )
 
         it('question has a title', () =>
             request.then(({ body }) =>
-                expect(body[0].title).is.a('string'))
+                expect(body.data[0].title).is.a('string'))
         )
 
         it('question has a body', () =>
             request.then(({ body }) =>
-                expect(body[0].body).is.a('string'))
+                expect(body.data[0].body).is.a('string'))
         )
 
         it('question has a course id', () =>
             request.then(({ body }) =>
-                expect(body[0].code).is.a('string'))
+                expect(body.data[0].code).is.a('string'))
         )
     })
 
@@ -124,17 +124,17 @@ describe('Course route testing', () => {
 
         it('Returns a list of reviews', () =>
             request.then(({ body }) =>
-                expect(body).is.a('array'))
+                expect(body.data).is.a('array'))
         )
 
         it('review[0] has a body', () =>
             request.then(({ body }) =>
-                expect(body[0].body).is.a('string'))
+                expect(body.data[0].body).is.a('string'))
         )
 
         it('review[0] has a course id', () =>
             request.then(({ body }) =>
-                expect(body[0].code).is.a('string'))
+                expect(body.data[0].code).is.a('string'))
         )
     })
 
