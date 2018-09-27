@@ -12,7 +12,7 @@
 import AppButton from '@/components/AppButton'
 
 export default {
-  name: 'PageSelector',
+  name: 'AppPageSelector',
   components: {
     AppButton
   },

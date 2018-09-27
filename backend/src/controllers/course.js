@@ -22,7 +22,7 @@ exports.getCourseQuestions = function ({ params, query }, res) {
     const pageNumber = p || 1
     const pageSize = 10
 
-    let getCourseQuestions = new Promise(function(resolve, reject) {
+    const getCourseQuestions = new Promise((resolve, reject) => {
         Promise.all([
             questionModel.getQuestions(params.code, pageNumber, pageSize),
             questionModel.getQuestionCount(params.code)
@@ -49,7 +49,7 @@ exports.getCourseReviews = function ({ params, query }, res) {
     const pageNumber = p || 1
     const pageSize = 10
 
-    let getCourseReviews = new Promise(function(resolve, reject) {
+    const getCourseReviews = new Promise((resolve, reject) => {
         Promise.all([
             reviewModel.getReviews(params.code, pageNumber, pageSize),
             reviewModel.getReviewCount(params.code)

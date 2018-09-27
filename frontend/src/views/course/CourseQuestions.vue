@@ -7,31 +7,28 @@
             </router-link>
         </div>
 
-      <section class="questions">
-        <ol>
-          <li :key="item.id" v-for="item in questions">
-            <QuestionCard v-bind="item"/>
-          </li>
-        </ol>
-      </section>
+      <Feed
+        feedType="QuestionCard"
+        :items="questions"
+      />
 
-      <PageSelector :currPage="this.meta.curr" :lastPage="this.meta.last" :update="refreshQuestions"></PageSelector>
+      <AppPageSelector :currPage="meta.curr" :lastPage="meta.last" :update="refreshQuestions"></AppPageSelector>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import QuestionCard from '@/components/questions-answers/QuestionCard'
+import Feed from '@/components/course/Feed'
 import AppButton from '@/components/AppButton'
-import PageSelector from '@/components/PageSelector'
+import AppPageSelector from '@/components/AppPageSelector'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'courseQuestions',
   components: {
+    Feed,
     AppButton,
-    QuestionCard,
-    PageSelector
+    AppPageSelector
   },
   props: {
     code: String
