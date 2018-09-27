@@ -2,22 +2,23 @@
     <Card>
       <div class="content">
           <h3>Submit a Review</h3>
-          <p>
             <input type="text" placeholder="Review title..." v-model="title"><br>
             <textarea placeholder="Your review here.." v-model="body"></textarea><br>
-            Course Difficulty
-            <span>
-              <p style="text-align:left">Easy</p>
-              <p style="text-align:center">Med</p>
-              <p style="text-align:right">Hard</p>
-            </span>
-            <input type="range" min="1" max="3" class="slider" v-bind:value="num" v-on:input="doSomething($event.target.value)">
-            {{this.num}}
+
+            <h4>Would you recommend this course?</h4>
+            <input type="radio" value="true" v-model="recommend"> Yes
+            <input type="radio" value="false" v-model="recommend"> No
+
+            <h4>How would you rate the difficulty of this course?</h4>
+            <label style="float:left;">Easy</label>
+            <label style="float:right;">Hard</label>
+            <input type="range" min="1" max="3" class="slider" v-model="difficulty">
+            <br>
+
             <!-- should probs be a separate component -->
-            <AppButton @click.native="callback({title, body})">Submit</AppButton>
+            <AppButton @click.native="callback({title, body, recommend, difficulty})">Submit</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
-          </p>
       </div>
   </Card>
 </template>
@@ -39,12 +40,8 @@ export default {
     return {
       title: '',
       body: '',
-      num: 2
-    }
-  },
-  methods: {
-    doSomething(val) {
-      this.num = val
+      recommend: '',
+      difficulty: 2
     }
   }
 }
@@ -86,39 +83,39 @@ textarea:focus, textarea:active {
   border: 1px solid #acc;
 }
 
-/* The slider itself */
 .slider {
     -webkit-appearance: none;  /* Override default CSS styles */
     appearance: none;
-    width: 100%; /* Full-width */
-    height: 25px; /* Specified height */
-    background: #d3d3d3; /* Grey background */
-    outline: none; /* Remove outline */
-    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    width: 100%;
+    height: 25px;
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
     transition: opacity .2s;
 }
 
-/* Mouse-over effects */
 .slider:hover {
-    opacity: 1; /* Fully shown on mouse-over */
+    opacity: 1;
 }
 
 /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none; /* Override default look */
     appearance: none;
-    width: 25px; /* Set a specific slider handle width */
-    height: 25px; /* Slider handle height */
-    background: #4CAF50; /* Green background */
-    cursor: pointer; /* Cursor on hover */
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--theme);
+    cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
-    width: 25px; /* Set a specific slider handle width */
-    height: 25px; /* Slider handle height */
-    background: #4CAF50; /* Green background */
-    cursor: pointer; /* Cursor on hover */
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--theme);
+    cursor: pointer;
 }
 
 </style>
