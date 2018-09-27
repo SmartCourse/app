@@ -1,9 +1,9 @@
 <template>
   <div class="PageSelector">
     <div class='button-container'>
-      <AppButton @click.native="prevPage()">Prev</AppButton>
-      <span>{{pageNumber}}</span>
-      <AppButton @click.native="nextPage()">Next</AppButton>
+      <AppButton @click.native="goPrevPage()">Prev</AppButton>
+      <span>{{currPage}}</span>
+      <AppButton @click.native="goNextPage()">Next</AppButton>
     </div>
   </div>
 </template>
@@ -16,32 +16,27 @@ export default {
   components: {
     AppButton
   },
-  data () {
-    return {
-      pageNumber: 1
-    }
-  },
   props: {
+    currPage: Number,
+    lastPage: Number,
     update: Function
   },
   methods: {
-    firstPage() {
-      this.pageNumber = 1
-      this.update(this.pageNumber)
+    goFirstPage() {
+      this.update(1)
     },
-    prevPage() {
-      if (this.pageNumber > 1) {
-        this.pageNumber--
-        this.update(this.pageNumber)
+    goPrevPage() {
+      if (this.currPage > 1) {
+        this.update(this.currPage - 1)
       }
     },
-    nextPage() {
-      this.pageNumber++
-      this.update(this.pageNumber)
+    goNextPage() {
+      if (this.currPage < this.lastPage) {
+        this.update(this.currPage + 1)
+      }
     },
-    lastPage() {
-      this.pageNumber = 2 // TODO: Last page stuff?
-      this.update(this.pageNumber)
+    goLastPage() {
+      this.update(this.lastPage)
     }
   }
 }

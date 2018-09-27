@@ -15,7 +15,7 @@
         </ol>
       </section>
 
-      <PageSelector :update="refreshQuestions"></PageSelector>
+      <PageSelector :currPage="this.meta.curr" :lastPage="this.meta.last" :update="refreshQuestions"></PageSelector>
   </div>
 </template>
 
@@ -38,7 +38,8 @@ export default {
   },
   computed: {
     ...mapGetters('course', {
-      questions: 'questions'
+      questions: 'questions',
+      meta: 'questionsMeta'
     })
   },
   methods: {
@@ -47,7 +48,7 @@ export default {
       {
         id: this.code,
         pageNumber: pageNumber
-      })    
+      })
     }
   },
   created () {

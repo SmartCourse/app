@@ -15,7 +15,7 @@
         </ol>
       </section>
 
-    <PageSelector :update="refreshReviews"></PageSelector>
+    <PageSelector :currPage="this.meta.curr" :lastPage="this.meta.last" :update="refreshReviews"></PageSelector>
 
   </div>
 </template>
@@ -39,7 +39,8 @@ export default {
   },
   computed: {
     ...mapGetters('course', {
-      reviews: 'reviews'
+      reviews: 'reviews',
+      meta: 'reviewsMeta'
     })
   },
   methods: {
