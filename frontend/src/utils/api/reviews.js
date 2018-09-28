@@ -2,13 +2,13 @@ import { get, post, put } from './index'
 import format from 'date-fns/format'
 
 /* get review */
-export function getReview(id) {
-  return get(`/review/${id}`)
+export function getReview(course, id) {
+  return get(`/course/${course}/review/${id}`)
 }
 
-export function replyMapper({ replyID, likes, userID, body, timestamp }) {
+export function replyMapper({ id, likes, userID, body, timestamp }) {
   return {
-    id: replyID,
+    id: String(id),
     body,
     likes,
     author: userID,
@@ -16,9 +16,10 @@ export function replyMapper({ replyID, likes, userID, body, timestamp }) {
   }
 }
 
-export function reviewMapper({ reviewID, likes, userID, title, body, timestamp }) {
+export function reviewMapper({ id, code, likes, userID, title, body, timestamp }) {
   return {
-    id: reviewID,
+    id: String(id),
+    code,
     title,
     body,
     likes,
@@ -30,26 +31,28 @@ export function reviewMapper({ reviewID, likes, userID, title, body, timestamp }
 /**
  * @param {object} data the data associated with the new review
  */
-export function postReview(id, data) {
-  return post(`/course/${id}/review`, { data })
+export function postReview(course, data) {
+  return post(`/course/${course}/review`, { data })
 }
 
-export function getReplies(id) {
-  return get(`/review/${id}/comments`)
+export function getReplies(course, id) {
+  return get(`/course/${course}/review/${id}/comments`)
 }
 
 /**
+ * @param {string} course  the course code of the course
  * @param {string} id the id of the review being replied
  * @param {object} body the data associated with the new reply
  */
-export function postReply(id, data) {
-  return post(`/review/${id}/comments`, { data })
+export function postReply(course, id, data) {
+  return post(`/course/${course}/review/${id}/comments`, { data })
 }
 
 /**
+ * @param {string} course  the course code of the course
  * @param {string} id the id of the review being edited
  * @param {object} body the data associated with the new review
  */
-export function editReview(id, data) {
-  return put(`/review/${id}`, { data })
+export function editReview(course, id, data) {
+  return put(`/course/${course}/review/${id}`, { data })
 }

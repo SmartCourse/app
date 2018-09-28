@@ -10,3 +10,34 @@ exports.responseHandler = function(fn, response) {
 }
 
 exports.toLowerCase = str => str.toLowerCase()
+
+exports.isAuthorized = function(req, res, next) {
+    if (!req.authorized) {
+        return res.status(401).json({ code: 401, message: 'Unauthorized' })
+    }
+    next()
+}
+
+/**
+ * Convert a string to utf8
+ */
+exports.encodeutf8 = (s) => unescape(encodeURIComponent(s))
+
+/**
+ * Convert a utf-8 string to a regular javascript string (utf-16 I think)
+ */
+exports.decodeutf8 = (s) => decodeURIComponent(escape(s))
+
+/**
+ * Converts a utf-8 string to regular string, doesn't throw errors
+ * This is used for description, name and requirements text fields
+ */
+exports.decodeUTF8Text = function(s) {
+    try {
+        return decodeURIComponent(escape(s))
+    } catch (e) {
+        console.warn(e.message)
+        // replacing non ascii characters with spaces seems to work. We could just return s too
+        return s.replace(/[^\x00-\x7F]/g, ' ') // eslint-disable-line
+    }
+}

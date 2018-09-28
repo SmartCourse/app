@@ -1,7 +1,11 @@
 import APIError from './errors'
-// TODO eventually second URL should be set to deploy url
-const API_URL = process && process.env
-  ? 'http://localhost:3000/api' : 'http://127.0.0.1:3000/api'
+import store from '../../store'
+import { getAuthHeaders } from './auth'
+
+const API_URL = process && process.env && process.env.NODE_ENV === 'development'
+  ? 'http://localhost:3000/api' : (process.env.NODE_ENV === 'staging'
+    ? 'https://smartcourse-staging.azurewebsites.net/api'
+    : 'https://smartcourse-prod.azurewebsites.net/api')
 
 async function responseCheck(res) {
   if (res.ok) {
@@ -16,19 +20,35 @@ async function responseCheck(res) {
 
 function request (path, { headers, method, data }) {
   // eventually add cors and auth headers
-
   const url = `${API_URL}${path}`
 
   if (method === 'GET') {
-    return fetch(url)
+    return fetch(url, { headers })
   }
+
+  const auth = store.getters.authObject
+  const body = data ? JSON.stringify(data) : null
 
   headers = {
     'Content-Type': 'application/json',
     ...headers
   }
 
-  const body = data ? JSON.stringify(data) : null
+  // creds always required for POST, PUT, DELETE
+  // NB. for mvp allow people to slip through here
+  // even if not logged on
+  if (!headers.Authorization && auth) {
+    return getAuthHeaders(auth)
+      .then(options => fetch(url, {
+        headers: {
+          ...options.headers,
+          ...headers
+        },
+        mode: options.mode,
+        body,
+        method
+      }))
+  }
 
   return fetch(url, {
     headers,
@@ -48,7 +68,7 @@ export const get = (path, options) =>
     .then(responseCheck)
 
 /**
- * A POST request
+ * A POST request, used to create an entry in the db
  * @param   {string} path     The relative path for the api call.
  * @param   {object} options  Any options being passed to the req, eg. auth
  * @returns {Promise}         The relevant request
@@ -58,7 +78,7 @@ export const post = (path, options) =>
     .then(responseCheck)
 
 /**
- * A PUT request
+ * A PUT request, used to update the db
  * @param   {string} path     The relative path for the api call.
  * @param   {object} options  Any options being passed to the req, eg. auth
  * @returns {Promise}         The relevant request

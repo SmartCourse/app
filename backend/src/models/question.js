@@ -1,19 +1,8 @@
 /* All inputs should be validated in this class that are question related */
 class Question {
     constructor(db) {
-        console.log('initialising ORM question object')
+        console.log('initialising ORM Question object')
         this.db = db
-    }
-
-    /**
-     * TODO - PAGING
-     * @param   {id}     courseID    The id of the couse we're getting questions for.
-     * @param   {number} pageNumber  The pageNumber, defaults to 1?, if higher than max should just give max.
-     * @returns {object}
-     */
-    getQuestions(courseID, pageNumber = 1) {
-        return this.db
-            .queryAll('SELECT * FROM question WHERE courseID=?', [courseID])
     }
 
     /**
@@ -23,18 +12,31 @@ class Question {
      */
     getQuestion(questionID) {
         return this.db
-            .query('SELECT * FROM question WHERE questionID=?', [questionID])
+            .query('SELECT * FROM question WHERE id=?', [questionID])
+    }
+
+    /**
+     * @param   {string} code        The code of the course
+     * @param   {number} pageNumber  The page number for which we want to get questions.
+     * @returns {object}
+     */
+    getQuestions(code, pageNumber) {
+        const pageSize = 10
+        const offset = (pageSize * pageNumber) - pageSize
+        return this.db
+            .queryAll('SELECT * FROM question WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
+                [code, offset, pageSize])
     }
 
     /**
      * Post a question.
-     * @param {id} courseID  The id from the route param
-     * @param {*}  data      controller passed in object which should
+     * @param {string} code  The code of the course
+     * @param {object}  data      controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
-    postQuestion(courseID, { userID, title, body }) {
+    postQuestion(code, { userID, title, body }) {
         return this.db
-            .insert('question', { courseID, userID, title, body })
+            .insert('question', { code, userID, title, body })
             .then((questionID) => this.getQuestion(questionID))
     }
 }

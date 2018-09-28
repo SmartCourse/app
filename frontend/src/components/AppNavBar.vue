@@ -4,8 +4,12 @@
           <AppLogo :first="'S'" :last="'C'"/>
       </router-link>
       <div class="links">
-          <Search class="mini"/>
-        <!--router-link class="link-item" to="/">Login</router-link-->
+        <Search class="mini" v-if="$route.name !== 'home'"/>
+        <!-- hacky padding div -->
+        <div v-else/>
+        <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/login">Login</router-link></h3>
+        <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/signup">Sign Up</router-link></h3>
+        <h3 v-else @click="$store.dispatch('auth/logout')" class="link-item">Logout</h3>
       </div>
     </div>
 </template>
@@ -14,7 +18,12 @@
 import Search from '@/components/AppSearch'
 
 export default {
-  components: { Search }
+  components: { Search },
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn
+    }
+  }
 }
 </script>
 
@@ -27,13 +36,24 @@ export default {
     align-items: center;
     justify-content: space-between;
     border-bottom: var(--border);
-    background-color: white;
+    background-color: var(--white);
     font-size: var(--font-small);
 }
 
 .links {
-    h2 {
+    /* should be flex will require less hacks */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    h3 {
+        cursor: pointer;
+        margin: auto 10px;
+        text-align: center;
         display: inline-block;
+    }
+    h3:first-of-type {
+        color: var(--theme);
     }
 }
 

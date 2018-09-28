@@ -6,7 +6,7 @@
             <input type="text" placeholder="Review title..." v-model="title"><br>
             <textarea placeholder="Your review here.." v-model="body"></textarea><br>
             <!-- should probs be a separate component -->
-            <AppButton @click.native="$emit('submitReviewForm', {title, body})">Submit</AppButton>
+            <AppButton @click.native="callback({title, body})">Submit</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </p>
@@ -23,6 +23,9 @@ export default {
   components: {
     Card,
     AppButton
+  },
+  props: {
+    callback: Function
   },
   data () {
     return {
@@ -44,7 +47,7 @@ input[type=text] {
   border-radius: 2px;
   font: inherit;
   resize: none;
-  padding: 5px;
+  padding: 10px;
   outline: none;
   margin: 10px 0px;
   width: 100%;
@@ -57,7 +60,7 @@ textarea {
   border-radius: 2px;
   font: inherit;
   resize: none;
-  padding: 5px;
+  padding: 10px;
   outline: none;
   margin: 10px 0px;
   width: 100%;

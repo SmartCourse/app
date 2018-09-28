@@ -1,5 +1,5 @@
 <template>
-    <button :class="alt ? 'standard-button' : 'alt-button'">
+    <button type='button' :class="alt ? 'standard-button' : 'alt-button'">
         <slot></slot>
     </button>
 </template>
@@ -20,6 +20,7 @@ button {
     cursor: pointer;
     padding: 10px 20px;
     font: inherit;
+    font-weight: bold;
     outline: none;
     border-radius: 4px;
     transition: 0.2s ease-in-out box-shadow;
@@ -27,7 +28,7 @@ button {
 
 .standard-button {
     background-color: var(--theme);
-    color: white;
+    color: var(--white);
     border: none;
 }
 

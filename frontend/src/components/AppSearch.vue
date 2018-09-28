@@ -4,15 +4,15 @@
             type='text'
             v-model='search'
             name='search'
-            placeholder='Search...'
+            placeholder='Search all courses...'
         />
         <ul v-if="search && suggestions.length">
             <router-link
                 @click.native="resetSearch()"
-                :key="item.courseID"
+                :key="item.code"
                 tag="li"
                 v-for="item in suggestions"
-                :to="{ path: `/course/${item.courseID}` }"
+                :to="{ path: `/course/${item.code}` }"
             >
                 {{ item.name }} ({{ item.code }})
             </router-link>
@@ -21,19 +21,25 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
-      search: '',
-      courses: []
+      search: ''
     }
   },
 
   computed: {
+    courses() {
+      return this.$store.state.courses.map(item => item)
+    },
     suggestions() {
+      // Give higher preference to course code before course name
       const lower = this.search.toLowerCase()
       return this.courses
-        .filter(item => item.tags.match(lower))
+        .filter(item => item.code.toLowerCase().match(lower))
+        .concat(this.courses
+          .filter(item => item.name.toLowerCase().match(lower)))
         .slice(0, 5)
     }
   },
@@ -43,12 +49,7 @@ export default {
   },
 
   created() {
-    fetch('http://localhost:3000/api/course')
-      .then(response => response.json())
-      .then(data => {
-        this.courses = data
-      })
-      .catch(err => console.warn(err))
+    this.$store.dispatch('populateSearch')
   }
 }
 </script>
@@ -72,11 +73,11 @@ input {
     font-size: 1em;
 
     & input {
-        width: 240px;
+        width: 300px;
     }
 
     & ul {
-        width: 280px;
+        width: 340px;
     }
 }
 
@@ -90,28 +91,41 @@ input, li {
 }
 
 ul {
-    width: 540px;
     position: absolute;
-    max-height: 200px;
+    background: var(--white);
+    width: 540px;
+    z-index: 10;
+    max-height: 220px;
     overflow-y: scroll;
 }
 
 li {
+    background: var(--white);
     font-size: 0.8em;
-    background: white;
 }
 
 li:hover {
     background: var(--theme-light);
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 740px) {
     ul {
         width: 350px;
     }
 
     input {
         width: 310px;
+    }
+
+    .mini {
+
+        & input {
+            width: 100px;
+        }
+
+        & ul {
+            width: 140px;
+        }
     }
 
 }

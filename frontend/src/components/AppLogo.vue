@@ -5,8 +5,14 @@
 <script>
 export default {
   props: {
-    first: String,
-    last: String
+    first: {
+      type: String,
+      default: 'Smart'
+    },
+    last: {
+      type: String,
+      default: 'Course'
+    }
   }
 }
 </script>
@@ -18,7 +24,7 @@ h1 span {
 }
 
 .course {
-  color: white;
+  color: var(--white);
   background-color: var(--theme);
 }
 

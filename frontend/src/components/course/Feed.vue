@@ -23,9 +23,6 @@ export default {
   props: {
     feedType: String,
     items: Array
-  },
-  mounted() {
-    console.log('mounting feed')
   }
 }
 </script>
