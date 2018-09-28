@@ -112,13 +112,7 @@ function createReviewTable (db) {
             FOREIGN KEY (code) REFERENCES course(code),
             FOREIGN KEY (userID) REFERENCES user(id)
             )`,
-        (err) => { if (err) { 
-            reject(err)
-        } else {
-            console.log('REVIEW TABLE')
-            resolve('Created Review Table')
-        }
-    })
+        (err) => err ? reject(err) : resolve('Created Review Table'))
     })
 }
 
