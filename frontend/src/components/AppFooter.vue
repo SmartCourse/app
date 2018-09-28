@@ -32,19 +32,19 @@ export default {
   data() {
     return {
       nav: [
-        { content: 'Home', href: '/'},
-        { content: 'Subjects', href: '/subject'},
-        { content: 'Profile', href: '/profile'}
+        { content: 'Home', href: '/' },
+        { content: 'Subjects', href: '/subject' },
+        { content: 'Profile', href: '/profile' }
       ],
       info: [
-        { content: 'Privacy Policy', href: '/'},
-        { content: 'Terms of Use', href: '/'},
-        { content: 'Help', href: '/'},
-        { content: 'UNSW Handbook', href: '/'}
+        { content: 'Privacy Policy', href: '/' },
+        { content: 'Terms of Use', href: '/' },
+        { content: 'Help', href: '/' },
+        { content: 'UNSW Handbook', href: '/' }
       ],
       social: [
-        { content: 'facebook', href: '/'},
-        { content: 'twitter', href: '/'}
+        { content: 'facebook', href: '/' },
+        { content: 'twitter', href: '/' }
       ]
     }
   }

@@ -3,144 +3,122 @@ const subjectData = require('./subjects')
 
 // TODO - STUB USER TABLE (REFACTOR FOR AUTH)
 function createUserTable (db) {
-    return db.run(`CREATE TABLE user (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        uid TEXT NOT NULL,
-        displayName TEXT DEFAULT 'ANON',
-        email TEXT UNIQUE NOT NULL,
-        joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        reputation INTEGER DEFAULT '0.00',
-        degree TEXT,
-        gradYear TIMESTAMP DEFAULT '2018',
-        description TEXT
-        )`,
-    (err) => {
-        if (err) {
-            console.error(err)
-        } else {
-            console.log('Created User Table')
-        }
+    return new Promise((resolve, reject) => {
+        db.run(`CREATE TABLE user (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uid TEXT NOT NULL,
+            displayName TEXT DEFAULT 'ANON',
+            email TEXT UNIQUE NOT NULL,
+            joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            reputation INTEGER DEFAULT '0.00',
+            degree TEXT,
+            gradYear TIMESTAMP DEFAULT '2018',
+            description TEXT
+            )`,
+        (err) => err ? reject(err) : resolve('Created User Table'))
     })
 }
 
 function createUniversityTable (db) {
-    return db.run(`CREATE TABLE university (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL
-        )`,
-    (err) => {
-        if (err) {
-            console.error(err)
-        } else {
-            console.log('Created Uni Table')
-        }
+    return new Promise((resolve, reject) => {
+        db.run(`CREATE TABLE university (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL
+            )`,
+        (err) => err ? reject(err) : resolve('Created Uni Table'))
     })
 }
 
 function createSubjectTable(db) {
-    return db.run(`CREATE TABLE subject (
-        code TEXT PRIMARY KEY NOT NULL,
-        universityID INTEGER NOT NULL,
-        name TEXT NOT NULL,
-        handbookURL TEXT NOT NULL,
-        FOREIGN KEY (universityID) REFERENCES university(id)
-        )`,
-    (err) => {
-        if (err) {
-            console.error(err)
-        } else {
-            console.log('Created Subject Table')
-        }
+    return new Promise((resolve, reject) => {
+        db.run(`CREATE TABLE subject (
+            code TEXT PRIMARY KEY NOT NULL,
+            universityID INTEGER NOT NULL,
+            name TEXT NOT NULL,
+            handbookURL TEXT NOT NULL,
+            FOREIGN KEY (universityID) REFERENCES university(id)
+            )`,
+        (err) => err ? reject(err) : resolve('Created Subject Table'))
     })
 }
 
 function createCourseTable (db) {
-    return db.run(`CREATE TABLE course (
-        code TEXT PRIMARY KEY NOT NULL,
-        universityID INTEGER NOT NULL,
-        name TEXT NOT NULL,
-        studyLevel TEXT NOT NULL,
-        subjectCode TEXT NOT NULL,
-        handbookURL TEXT NOT NULL,
-        outlineURL TEXT,
-        description TEXT NOT NULL,
-        requirements TEXT,
-        rating INTEGER DEFAULT '0.00',
-        tags TEXT,
-        FOREIGN KEY (universityID) REFERENCES university(id),
-        FOREIGN KEY (subjectCode) REFERENCES subject(code)
-        )`,
-    (err) => {
-        if (err) {
-            console.error(err)
-        } else {
-            console.log('Created Course Table')
-        }
+    return new Promise((resolve, reject) => {
+        db.run(`CREATE TABLE course (
+            code TEXT PRIMARY KEY NOT NULL,
+            universityID INTEGER NOT NULL,
+            name TEXT NOT NULL,
+            studyLevel TEXT NOT NULL,
+            subjectCode TEXT NOT NULL,
+            handbookURL TEXT NOT NULL,
+            outlineURL TEXT,
+            description TEXT NOT NULL,
+            requirements TEXT,
+            rating INTEGER DEFAULT '0.00',
+            tags TEXT,
+            FOREIGN KEY (universityID) REFERENCES university(id),
+            FOREIGN KEY (subjectCode) REFERENCES subject(code)
+            )`,
+        (err) => err ? reject(err) : resolve('Created Course Table'))
     })
 }
 
 function createQuestionTable (db) {
-    return db.run(`CREATE TABLE question (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        code TEXT NOT NULL,
-        userID INTEGER NOT NULL,
-        title TEXT NOT NULL,
-        body TEXT NOT NULL,
-        timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (code) REFERENCES course(code),
-        FOREIGN KEY (userID) REFERENCES user(id)
-        )`,
-    (err) => {
-        if (err) {
-            console.error(err)
-        } else {
-            console.log('Created Question Table')
-        }
+    return new Promise((resolve, reject) => {
+        db.run(`CREATE TABLE question (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code TEXT NOT NULL,
+            userID INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            body TEXT NOT NULL,
+            timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            likes INTEGER DEFAULT '0.00',
+            FOREIGN KEY (code) REFERENCES course(code),
+            FOREIGN KEY (userID) REFERENCES user(id)
+            )`,
+        (err) => err ? reject(err) : resolve('Created Question Table'))
     })
 }
 
 function createCommentTable (db) {
-    return db.run(`CREATE TABLE comment (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        questionID INTEGER,
-        reviewID INTEGER,
-        commentParent INTEGER,
-        userID INTEGER NOT NULL,
-        body TEXT NOT NULL,
-        timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (questionID) REFERENCES question(id),
-        FOREIGN KEY (reviewID) REFERENCES review(id),
-        FOREIGN KEY (userID) REFERENCES user(id)
-        )`,
-    (err) => {
-        if (err) {
-            console.error(err)
-        } else {
-            console.log('Created Comment Table')
-        }
+    return new Promise((resolve, reject) => {
+        db.run(`CREATE TABLE comment (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            questionID INTEGER,
+            reviewID INTEGER,
+            commentParent INTEGER,
+            userID INTEGER NOT NULL,
+            body TEXT NOT NULL,
+            timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            likes INTEGER DEFAULT '0.00',
+            FOREIGN KEY (questionID) REFERENCES question(id),
+            FOREIGN KEY (reviewID) REFERENCES review(id),
+            FOREIGN KEY (userID) REFERENCES user(id)
+            )`,
+        (err) => err ? reject(err) : resolve('Created Comment Table'))
     })
 }
 
 function createReviewTable (db) {
-    return db.run(`CREATE TABLE review (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        code TEXT NOT NULL,
-        userID INTEGER NOT NULL,
-        title TEXT NOT NULL,
-        body TEXT NOT NULL,
-        timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        likes INTEGER DEFAULT '0.00',
-        FOREIGN KEY (code) REFERENCES course(code),
-        FOREIGN KEY (userID) REFERENCES user(id)
-        )`,
-    (err) => {
-        if (err) {
-            console.error(err)
+    return new Promise((resolve, reject) => {
+        db.run(`CREATE TABLE review (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            code TEXT NOT NULL,
+            userID INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            body TEXT NOT NULL,
+            timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            likes INTEGER DEFAULT '0.00',
+            FOREIGN KEY (code) REFERENCES course(code),
+            FOREIGN KEY (userID) REFERENCES user(id)
+            )`,
+        (err) => { if (err) { 
+            reject(err)
         } else {
-            console.log('Created Review Table')
+            console.log('REVIEW TABLE')
+            resolve('Created Review Table')
         }
+    })
     })
 }
 
@@ -152,32 +130,32 @@ function initUniTable(db) {
 function initSubjectTable(db) {
     // Kind of hacky, but we only serving one university at this time
     const universityID = 1
-    subjectData.forEach((subj) => { subj['universityID'] = universityID })
+    const subjects = subjectData.map(subject => ({ ...subject, universityID }))
 
     // Prepare query
-    const columns = Object.keys(subjectData[0])
+    const columns = Object.keys(subjects[0])
     const placeholders = columns.map(_ => '?').join()
     const query = `INSERT INTO subject (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
 
     // Do insertions and return promise for all of them to be completed
-    const promises = subjectData.map(subj => insertDB(db, 'subject', subj, prep))
+    const promises = subjects.map(subj => insertDB(db, 'subject', subj, prep))
     return Promise.all(promises)
 }
 
 function initCourseTable(db) {
     // Kind of hacky, but we only serving one university at this time
     const universityID = 1
-    courseData.forEach((subj) => { subj['universityID'] = universityID })
+    const courses = courseData.map(course => ({ ...course, universityID }))
 
     // Prepare query
-    const columns = Object.keys(courseData[0])
+    const columns = Object.keys(courses[0])
     const placeholders = columns.map(_ => '?').join()
     const query = `INSERT INTO course (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
 
     // Do insertions and return promise for all of them to be completed
-    const promises = courseData.map(subj => insertDB(db, 'course', subj, prep))
+    const promises = courses.map(subj => insertDB(db, 'course', subj, prep))
     return Promise.all(promises)
 }
 
@@ -187,16 +165,23 @@ function initCourseTable(db) {
  * @returns {object} SQLObject
  */
 function createDB(db) {
-    db.serialize(() => {
-        db = createUserTable(db)
-        db = createUniversityTable(db)
-        db = createSubjectTable(db)
-        db = createCourseTable(db)
-        db = createQuestionTable(db)
-        db = createReviewTable(db)
-        db = createCommentTable(db)
-    })
-    return Promise.all([initUniTable(db), initSubjectTable(db), initCourseTable(db)])
+    Promise.all([
+        createUserTable(db),
+        createUniversityTable(db),
+        createSubjectTable(db),
+        createCourseTable(db),
+        createQuestionTable(db),
+        createReviewTable(db),
+        createCommentTable(db)
+    ])
+        .then(() => {
+            console.log('Created tables')
+            return Promise.all([initUniTable(db), initSubjectTable(db), initCourseTable(db)])
+        })
+        .then(() => {
+            console.log('Initialised tables')
+        })
+        .catch(() => console.warn())
 }
 
 // Insert given JSON object into database table.

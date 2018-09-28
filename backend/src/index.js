@@ -6,11 +6,6 @@ const firebase = require('./auth')
 const compression = require('compression')
 const app = express()
 
-// Hacky change of directory due to azure running root of project at src/bin
-if (process.cwd().endsWith('bin')) {
-    process.chdir('..\\..\\')
-}
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())

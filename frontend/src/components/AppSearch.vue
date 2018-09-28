@@ -39,7 +39,7 @@ export default {
       return this.courses
         .filter(item => item.code.toLowerCase().match(lower))
         .concat(this.courses
-            .filter(item => item.name.toLowerCase().match(lower)))
+          .filter(item => item.name.toLowerCase().match(lower)))
         .slice(0, 5)
     }
   },
