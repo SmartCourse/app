@@ -16,7 +16,7 @@ describe('Course route testing', () => {
 
         it('returns a list', () =>
             request.then(({ body }) =>
-                expect(body.length).to.be.equal(3006))
+                expect(body.length).to.be.greaterThan(0))
         )
 
         it('has the correct code', () =>
@@ -56,12 +56,33 @@ describe('Course route testing', () => {
         )
     })
 
-    describe('GET /api/course/COMP4920/questions', () => {
+    describe('POST /api/course/ACCT1501/question', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/course/COMP4920/questions')
+                .post('/api/course/ACCT1501/question')
+                .set('Accept', 'application/json')
+                .send({ body: 'testu', title: 'jeff' })
+                .expect('Content-Type', /json/)
+                .expect(200)
+            return request
+        })
+
+        it('returns the question we POSTed', () =>
+            request.then(({ body }) => {
+                expect(body.title).to.equal('jeff')
+                expect(body.body).to.equal('testu')
+            })
+        )
+    })
+
+    describe('GET /api/course/ACCT1501/questions', () => {
+        let request
+
+        before(() => {
+            request = supertest
+                .get('/api/course/ACCT1501/questions')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -89,23 +110,23 @@ describe('Course route testing', () => {
         )
     })
 
-    describe('POST /api/course/ACCT1501/question', () => {
+    describe('POST /api/course/COMP4920/review', () => {
         let request
 
         before(() => {
             request = supertest
-                .post('/api/course/ACCT1501/question')
+                .post('/api/course/COMP4920/review')
                 .set('Accept', 'application/json')
-                .send({ body: 'testu', title: 'jeff' })
+                .send({ title: 'I\'m a real boy', body: 'barry is good' })
                 .expect('Content-Type', /json/)
                 .expect(200)
             return request
         })
 
-        it('returns the question we POSTed', () =>
+        it('review has a body', () =>
             request.then(({ body }) => {
-                expect(body.title).to.equal('jeff')
-                expect(body.body).to.equal('testu')
+                expect(body.title).to.equal('I\'m a real boy')
+                expect(body.body).to.equal('barry is good')
             })
         )
     })
@@ -135,27 +156,6 @@ describe('Course route testing', () => {
         it('review[0] has a course id', () =>
             request.then(({ body }) =>
                 expect(body[0].code).is.a('string'))
-        )
-    })
-
-    describe('POST /api/course/COMP4920/review', () => {
-        let request
-
-        before(() => {
-            request = supertest
-                .post('/api/course/COMP4920/review')
-                .set('Accept', 'application/json')
-                .send({ title: 'I\'m a real boy', body: 'barry is good' })
-                .expect('Content-Type', /json/)
-                .expect(200)
-            return request
-        })
-
-        it('review has a body', () =>
-            request.then(({ body }) => {
-                expect(body.title).to.equal('I\'m a real boy')
-                expect(body.body).to.equal('barry is good')
-            })
         )
     })
 })

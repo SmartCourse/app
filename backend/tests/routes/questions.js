@@ -34,6 +34,26 @@ describe('Test question routes', () => {
 })
 
 describe('Test answer routes', () => {
+
+    describe('POST /api/course/COMP4920/question/1/answers', () => {
+        let request
+
+        before(() => {
+            request = supertest
+                .post('/api/course/COMP4920/question/1/answers')
+                .send({ body: 'superruuu____testu' })
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(200)
+            return request
+        })
+
+        it('returns the answer we POSTed', () =>
+            request.then(({ body }) =>
+                expect(body.body).to.equal('superruuu____testu'))
+        )
+    })
+
     describe('GET /api/course/COMP4920/question/1/answers', () => {
         let request
 
@@ -54,25 +74,6 @@ describe('Test answer routes', () => {
         it('has a valid answer', () =>
             request.then(({ body }) =>
                 expect(body[0].body).to.be.a('string'))
-        )
-    })
-
-    describe('POST /api/course/COMP4920/question/1/answers', () => {
-        let request
-
-        before(() => {
-            request = supertest
-                .post('/api/course/COMP4920/question/1/answers')
-                .send({ body: 'superruuu____testu' })
-                .set('Accept', 'application/json')
-                .expect('Content-Type', /json/)
-                .expect(200)
-            return request
-        })
-
-        it('returns the answer we POSTed', () =>
-            request.then(({ body }) =>
-                expect(body.body).to.equal('superruuu____testu'))
         )
     })
 
