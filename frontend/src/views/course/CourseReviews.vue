@@ -9,12 +9,12 @@
 
       <Feed
         feedType="ReviewCard"
-        :items="questions"
+        :items="reviews"
       />
 
-      <AppPageSelector v-if="meta.last != 1" 
-        :currPage="meta.curr" 
-        :lastPage="meta.last" 
+      <AppPageSelector v-if="meta.last != 1"
+        :currPage="meta.curr"
+        :lastPage="meta.last"
         :update="refreshReviews"
       />
 

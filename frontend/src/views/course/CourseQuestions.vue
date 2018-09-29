@@ -12,9 +12,9 @@
         :items="questions"
       />
 
-      <AppPageSelector v-if="meta.last != 1" 
-        :currPage="meta.curr" 
-        :lastPage="meta.last" 
+      <AppPageSelector v-if="meta.last != 1"
+        :currPage="meta.curr"
+        :lastPage="meta.last"
         :update="refreshQuestions"
       />
 

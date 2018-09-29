@@ -18,11 +18,11 @@ export default {
   name: 'Feed',
   components: {
     QuestionCard,
-    ReviewCard,
+    ReviewCard
   },
   props: {
     feedType: String,
-    items: Array,
+    items: Array
   }
 }
 </script>
