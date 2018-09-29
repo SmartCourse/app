@@ -38,6 +38,8 @@ echo "Compiling..."
 cd frontend
 npm install
 npm run build-$type
+
+# Zip the web app files
 cd ../backend
 rm -f smartcourse.zip
 cp ../scripts/backup.sh .
@@ -58,6 +60,7 @@ read -d '' TMP_CMDS << EOF || true
     "dir": "site/wwwroot"
 }
 EOF
+
 curl -u $AZURE_USER:$AZURE_PASS \
     --header "Content-Type: application/json" \
     --request POST \
