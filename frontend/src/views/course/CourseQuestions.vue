@@ -1,18 +1,23 @@
 <template>
     <div class="course-questions">
 
-        <div class='button-container'>
-            <router-link :to="{ name: 'newQuestion', params: {code} }">
-                <AppButton>Ask Question</AppButton>
-            </router-link>
-        </div>
+      <div class='button-container'>
+          <router-link :to="{ name: 'newQuestion', params: {code} }">
+              <AppButton>Ask Question</AppButton>
+          </router-link>
+      </div>
 
       <Feed
         feedType="QuestionCard"
         :items="questions"
       />
 
-      <AppPageSelector :currPage="meta.curr" :lastPage="meta.last" :update="refreshQuestions"></AppPageSelector>
+      <AppPageSelector v-if="meta.last != 1" 
+        :currPage="meta.curr" 
+        :lastPage="meta.last" 
+        :update="refreshQuestions"
+      />
+
   </div>
 </template>
 

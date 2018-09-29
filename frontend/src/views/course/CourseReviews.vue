@@ -1,18 +1,22 @@
 <template>
     <div class="course-reviews">
 
-        <div class='button-container'>
-            <router-link :to="{ name: 'newReview', params: {code} }">
-                <AppButton>Add Review</AppButton>
-            </router-link>
-        </div>
+      <div class='button-container'>
+          <router-link :to="{ name: 'newReview', params: {code} }">
+              <AppButton>Add Review</AppButton>
+          </router-link>
+      </div>
 
       <Feed
-        feedType="QuestionCard"
+        feedType="ReviewCard"
         :items="questions"
       />
 
-    <AppPageSelector :currPage="meta.curr" :lastPage="meta.last" :update="refreshReviews"></AppPageSelector>
+      <AppPageSelector v-if="meta.last != 1" 
+        :currPage="meta.curr" 
+        :lastPage="meta.last" 
+        :update="refreshReviews"
+      />
 
   </div>
 </template>
