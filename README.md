@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/SmartCourse/app/badge.svg?branch=dev&service=github)](https://coveralls.io/github/SmartCourse/app?branch=dev)
 
 ## Builds and Deployment
-Our production build is automatically deployed when code is merged with master. The current production build can be found at: http://smartcourse-prod.azurewebsites.net/
+Our production build is automatically deployed when code is merged with master. The current production build can be found at: http://smartcourse.azurewebsites.net/
 
 Our staging build is automatically deployed when code is merged with dev. The current staging build can be found at: https://smartcourse-staging.azurewebsites.net/
 
