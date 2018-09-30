@@ -110,11 +110,11 @@ li:hover {
 
 @media screen and (max-width: 740px) {
     ul {
-        width: 350px;
+        width: 330px;
     }
 
     input {
-        width: 310px;
+        width: 290px;
     }
 
     .mini {
