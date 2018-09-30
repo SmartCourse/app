@@ -1,27 +1,31 @@
 <template>
     <div class="course-reviews">
 
-        <div class='button-container'>
-            <router-link :to="{ name: 'newReview', params: {code} }">
-                <AppButton>Add Review</AppButton>
-            </router-link>
-        </div>
+      <div class='button-container'>
+          <router-link :to="{ name: 'newReview', params: {code} }">
+              <AppButton>Add Review</AppButton>
+          </router-link>
+      </div>
 
-      <section class="questions">
-        <ol>
-          <li :key="item.id" v-for="item in reviews">
-            <ReviewCard v-bind="item"/>
-          </li>
-        </ol>
-      </section>
+      <Feed
+        feedType="ReviewCard"
+        :items="reviews"
+      />
+
+      <AppPageSelector v-if="meta.last != 1"
+        :currPage="meta.curr"
+        :lastPage="meta.last"
+        :update="refreshReviews"
+      />
 
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import ReviewCard from '@/components/reviews-replies/ReviewCard'
+import Feed from '@/components/course/Feed'
 import AppButton from '@/components/AppButton'
+import AppPageSelector from '@/components/AppPageSelector'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -30,19 +34,30 @@ export default {
     code: String
   },
   components: {
+    Feed,
     AppButton,
-    ReviewCard
+    AppPageSelector
   },
   computed: {
     ...mapGetters('course', {
-      reviews: 'reviews'
+      reviews: 'reviews',
+      meta: 'reviewsMeta'
     })
   },
+  methods: {
+    refreshReviews(pageNumber) {
+      this.$store.dispatch('course/getReviews',
+        {
+          id: this.code,
+          pageNumber: pageNumber
+        })
+    }
+  },
   created () {
-    this.$store.dispatch('course/getReviews', this.code)
+    this.refreshReviews(1)
   },
   beforeRouteUpdate ({ params: { code } }, from, next) {
-    this.$store.dispatch('course/getReviews', code)
+    this.refreshReviews(1)
     next()
   }
 }
