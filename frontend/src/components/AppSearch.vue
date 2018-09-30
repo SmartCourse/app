@@ -58,7 +58,7 @@ export default {
 
 .search {
     position: relative;
-    font-size: 0.7em;
+    font-size: var(--font-medium);
     margin: 20px auto;
 }
 
