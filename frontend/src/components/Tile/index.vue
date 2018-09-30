@@ -15,7 +15,7 @@
   background-color: var(--white);
 
   flex: 0 49%;
-  
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -25,4 +25,3 @@
   min-height: -moz-min-content;
 }
 </style>
-

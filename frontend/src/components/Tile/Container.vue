@@ -6,8 +6,6 @@
 </div>
 </template>
 
-
-
 <style lang="less" scoped>
 .tile-page {
     display: flex;
@@ -26,5 +24,3 @@
     justify-content: space-between;
 }
 </style>
-
-

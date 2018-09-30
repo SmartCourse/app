@@ -19,8 +19,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Tile from '@/components/Tile';
-import TilesContainer from '@/components/Tile/Container';
+import Tile from '@/components/Tile'
+import TilesContainer from '@/components/Tile/Container'
 
 export default {
   name: 'subjectList',

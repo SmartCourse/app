@@ -8,7 +8,6 @@ export default {
 }
 </script>
 
-
 <style scoped>
 input[type=text] {
   border: var(--border);
@@ -26,4 +25,3 @@ input:active, input:focus {
   border: 1px solid #acc;
 }
 </style>
-

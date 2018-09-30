@@ -27,7 +27,7 @@ export default {
       password: ''
     }
   },
-  components: { AppAuthForm },
+  components: { AppAuthForm, AuthInput },
   computed: {
     ...mapGetters('auth', [ 'error', 'loading' ])
   },
@@ -44,4 +44,3 @@ export default {
   }
 }
 </script>
-

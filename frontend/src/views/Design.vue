@@ -45,7 +45,7 @@
             <div>
                 <AppButton>Submit</AppButton>
                 <AppButton :alt="false">Cancel</AppButton>
-                <QuestionCard 
+                <QuestionCard
                     :title="'This is a standard length title'"
                     :body="'This is a longer body, that includes a lot more words than the title, but isn\'t too long!'"
                 />

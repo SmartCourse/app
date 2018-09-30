@@ -1,6 +1,6 @@
 <template>
-  <input 
-    :value="value" class="auth-input" 
+  <input
+    :value="value" class="auth-input"
     @input="$emit('input', $event.target.value)"/>
 </template>
 
@@ -9,7 +9,6 @@ export default {
   props: ['value']
 }
 </script>
-
 
 <style scoped>
 .auth-input {
@@ -22,5 +21,3 @@ export default {
   border-bottom: 1px solid var(--color-light-gray);
 }
 </style>
-
-

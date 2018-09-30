@@ -26,7 +26,7 @@ export default {
     Card,
     CardHeader,
     AppButton,
-    AppInput,
+    AppInput
   },
   props: {
     callback: Function
