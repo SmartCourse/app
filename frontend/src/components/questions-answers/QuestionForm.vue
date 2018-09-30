@@ -1,7 +1,7 @@
 <template>
     <Card>
       <div class="content">
-          <CardHeader>Submit a Question</CardHeader>
+          <CardHeader>Submit Your Question</CardHeader>
           <form>
             <AppInput v-model="title" placeholder="Question title" />
             <textarea placeholder="Your question here.." v-model="body"></textarea><br>
