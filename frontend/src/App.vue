@@ -98,6 +98,7 @@ p {
   min-height: 90vh;
   max-width: 768px;
   margin: auto;
+  margin-bottom: 20px;
 }
 
 .auth-page {

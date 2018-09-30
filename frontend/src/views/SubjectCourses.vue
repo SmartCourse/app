@@ -3,7 +3,7 @@
     <AppBreadCrumb/>
     <TilesContainer v-if="courses.length">
       <Tile :key="item.code" v-for="item in courses">
-        <router-link v-if="item.code" class="card-header" tag="div" :to="{ name: 'info', params: { code:item.code }}">
+        <router-link v-if="item.code" class="tile-header" tag="div" :to="{ name: 'info', params: { code:item.code }}">
           <h4>
             {{ item.code }}
           </h4>
@@ -22,8 +22,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Tile from '@/components/AppTile'
-import TilesContainer from '@/components/AppTileContainer'
+import Tile from '@/components/Tile'
+import TilesContainer from '@/components/Tile/Container'
 
 export default {
   name: 'subjectCourses',

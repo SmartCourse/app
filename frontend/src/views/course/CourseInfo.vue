@@ -2,13 +2,13 @@
   <div class="course-info">
     <div>
       <p>
-        <b>Description:</b>
+        <b>Description</b>
       </p>
       <p class="text-body" v-html="courseInfo.description"></p> <!-- description may contain <p> tags -->
     </div>
     <div v-if="courseInfo.requirements">
       <p>
-        <b>Requirements:</b>
+        <b>Requirements</b>
       </p>
       <p class="text-body" v-html="courseInfo.requirements"></p> <!-- requirements may contain <p> tags -->
     </div>
@@ -36,7 +36,8 @@ export default {
     padding: 0 10px;
     text-align:justify;
 }
-.text-body {
-    padding: 0px 10px;
+
+p {
+  font: var(--body-copy-1);
 }
 </style>

@@ -6,9 +6,9 @@
       :error="error"
       :clickHandler="clickHandler"
     >
-      <input class="auth-input" type="text" placeholder="Display Name">
-      <input class="auth-input" type="text" v-model="email" placeholder="Email">
-      <input class="auth-input" type="password" v-model="password" placeholder="Password">
+      <AuthInput type="text" placeholder="Display Name"/>
+      <AuthInput type="text" v-model="email" placeholder="Email"/>
+      <AuthInput type="password" v-model="password" placeholder="Password"/>
     </AppAuthForm>
     <LoadingSpinner v-else/>
   </div>
@@ -16,7 +16,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import AppAuthForm from '@/components/AppAuthForm'
+import AppAuthForm from '@/components/Authentication/Form'
+import AuthInput from '@/components/Authentication/Input'
 
 export default {
   name: 'signup',
@@ -44,14 +45,3 @@ export default {
 }
 </script>
 
-<style scoped>
-.auth-input {
-  font: inherit;
-  display: block;
-  margin: 10px 0;
-  padding: 10px 0;
-  border-style: none;
-  outline: none;
-  border-bottom: 1px solid var(--color-light-gray);
-}
-</style>

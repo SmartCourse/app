@@ -2,8 +2,8 @@
   <div class="main-content subject-list">
     <AppBreadCrumb/>
     <TilesContainer>
-        <Tile class="subject-card" :key="item.code" v-for="item in subjects">
-          <router-link v-if="item.code" class="card-header" tag="div" :to="{ name: 'subjectCourses', params: { code:item.code }}">
+        <Tile :key="item.code" v-for="item in subjects">
+          <router-link v-if="item.code" class="tile-header" tag="div" :to="{ name: 'subjectCourses', params: { code:item.code }}">
             <h4>
               {{ item.code }}
             </h4>
@@ -19,8 +19,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Tile from '@/components/AppTile';
-import TilesContainer from '@/components/AppTileContainer';
+import Tile from '@/components/Tile';
+import TilesContainer from '@/components/Tile/Container';
 
 export default {
   name: 'subjectList',
