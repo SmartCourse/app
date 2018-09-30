@@ -34,7 +34,6 @@ export default {
 <style scoped>
 .course-info {
     padding: 0 10px;
-    text-align:justify;
 }
 
 p {

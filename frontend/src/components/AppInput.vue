@@ -1,6 +1,13 @@
 <template>
-  <input type="text"/>
+  <input :value="value" type="text" @input="$emit('input', $event.target.value)"/>
 </template>
+
+<script>
+export default {
+  props: ['value']
+}
+</script>
+
 
 <style scoped>
 input[type=text] {

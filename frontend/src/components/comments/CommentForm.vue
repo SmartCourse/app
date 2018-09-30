@@ -22,7 +22,8 @@ export default {
   name: 'CommentForm',
   components: {
     Card,
-    AppButton
+    AppButton,
+    CardHeader
   },
   props: {
     type: String,
@@ -39,7 +40,7 @@ export default {
 <style scoped lang='less'>
 
 .content {
-  padding: 0px 60px;
+  padding: 20px;
 }
 
 textarea {

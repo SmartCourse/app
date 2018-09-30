@@ -1,6 +1,15 @@
 <template>
-  <input class="auth-input"/>
+  <input 
+    :value="value" class="auth-input" 
+    @input="$emit('input', $event.target.value)"/>
 </template>
+
+<script>
+export default {
+  props: ['value']
+}
+</script>
+
 
 <style scoped>
 .auth-input {
