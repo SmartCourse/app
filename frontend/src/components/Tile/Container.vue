@@ -10,8 +10,7 @@
 .tile-page {
     display: flex;
     justify-content: center;
-    align-items: center;
-
+    align-items: flex-start;
     background-color: var(--white);
     margin-top: 2px;
     padding: 10px;
@@ -19,6 +18,7 @@
 }
 
 .tiles-container {
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;

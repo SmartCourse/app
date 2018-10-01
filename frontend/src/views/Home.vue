@@ -177,7 +177,7 @@ a {
 
 @media screen and (min-width: 1200px) {
    .why-card {
-     width: 400px;
+     width: 350px;
      min-height: 350px;
    }
 

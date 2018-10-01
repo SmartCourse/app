@@ -11,7 +11,6 @@
   margin-bottom: 0.5em;
   border: var(--border);
   border-radius: 2px;
-  /*padding: 20px 20px 10px;*/
   background-color: var(--white);
 
   flex: 0 49%;
