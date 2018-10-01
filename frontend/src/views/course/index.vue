@@ -3,13 +3,14 @@
     <AppBreadCrumb/>
     <div class="course-header">
         <div class="course-header-title">
-            <h2>{{ courseInfo.code }} - {{ courseInfo.name }}</h2>
-            <h4>
+            <h2>{{ courseInfo.code }}</h2>
+            <h3>{{ courseInfo.name }}</h3>
+            <p>
                 <a target=_blank :href="courseInfo.handbookURL">Handbook</a>
-            </h4>
-            <h4 v-if="courseInfo.outlineURL">
+            </p>
+            <p v-if="courseInfo.outlineURL">
                 <a target=_blank :href="courseInfo.outlineURL">Course Outline</a>
-            </h4>
+            </p>
         </div>
 
         <router-link :to="{name: 'info'}">
@@ -70,15 +71,24 @@ export default {
 
 <style scoped>
 h2 {
-    margin: 0;
-    margin-bottom:10px;
+    font: var(--header-2); 
 }
 
-h4 {
-    margin:0;
-    margin-bottom:5px;
+h3 {
+    font: var(--header-3);
 }
-h4 > a {
+
+h2, h3 {
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+p {
+    font: var(--body-copy-1);
+    margin: 0;
+    margin-bottom: 5px;
+}
+p > a {
     color: var(--theme);
 }
 

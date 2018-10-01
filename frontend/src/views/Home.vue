@@ -64,7 +64,7 @@ export default {
   background-color: var(--white);
   /* override main-content width */
   max-width: none;
-  width: 100%;
+  padding: 0 20px;
 }
 
 .home > p {
@@ -145,7 +145,7 @@ a {
 }
 
 /* tablet and below */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 800px) {
   .home {
    font-size: var(--font-large-mobile);
   }
@@ -165,7 +165,13 @@ a {
 
 @media screen and (max-width: 500px) {
   .why-card {
-    width: 300px;
+    width: 280px;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .why-card {
+    width: 240px;
   }
 }
 

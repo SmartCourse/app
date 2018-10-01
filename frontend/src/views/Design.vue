@@ -45,6 +45,10 @@
             <div>
                 <AppButton>Submit</AppButton>
                 <AppButton :alt="false">Cancel</AppButton>
+                <QuestionCard
+                    :title="'This is a standard length title'"
+                    :body="'This is a longer body, that includes a lot more words than the title, but isn\'t too long!'"
+                />
             </div>
         </section>
     </div>
@@ -52,9 +56,10 @@
 
 <script>
 import AppButton from '@/components/AppButton'
+import QuestionCard from '@/components/questions-answers/QuestionCard'
 
 export default {
-  components: { AppButton }
+  components: { AppButton, QuestionCard }
 }
 </script>
 

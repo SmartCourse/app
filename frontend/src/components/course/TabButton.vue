@@ -21,7 +21,8 @@ button {
     border:none;
     cursor: pointer;
     padding: 10px 20px;
-    font: inherit;
+    font: var(--header-4);
+    font-weight: bolder;
     outline: none;
 }
 
@@ -30,7 +31,6 @@ button {
 }
 
 .tab-button {
-    font-size:larger;
     background-color: var(--white);
     color: var(--black);
 }

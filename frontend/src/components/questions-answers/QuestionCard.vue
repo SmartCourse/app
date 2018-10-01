@@ -14,7 +14,7 @@
                 <p>{{ body }}</p>
             </div>
             <aside class="user">
-                <User :image="'https://travis-ci.com/images/logos/TravisCI-Mascot-1.png'"/>
+                <User :author="author" :image="'https://travis-ci.com/images/logos/TravisCI-Mascot-1.png'"/>
                 <p class="date">Asked: <time>{{ published }}</time></p>
             </aside>
         </div>

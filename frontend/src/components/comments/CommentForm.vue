@@ -1,27 +1,29 @@
 <template>
     <Card>
       <div class="content">
-          <h3>Submit {{ type }}</h3>
-          <p>
+          <CardHeader>Submit {{ type }}</CardHeader>
+          <form>
             <textarea placeholder="Your input here.." v-model="body"></textarea><br>
             <!-- should probs be a separate component -->
             <AppButton @click.native="callback({body})">{{ type }}</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
-          </p>
+          </form>
       </div>
   </Card>
 </template>
 
 <script>
 import Card from '@/components/Card'
+import CardHeader from '@/components/Card/Header'
 import AppButton from '@/components/AppButton'
 
 export default {
   name: 'CommentForm',
   components: {
     Card,
-    AppButton
+    AppButton,
+    CardHeader
   },
   props: {
     type: String,
@@ -38,7 +40,7 @@ export default {
 <style scoped lang='less'>
 
 .content {
-  padding: 0px 60px;
+  padding: 20px;
 }
 
 textarea {
