@@ -33,10 +33,6 @@ export default {
   },
   methods: {
     submitReview (reviewForm) {
-      // check that they actually typed something
-      if (reviewForm.title === '' || reviewForm.body === '' || reviewForm.recommend === '') {
-        return
-      }
       this.$store.dispatch('reviews/postReview',
         {
           form: reviewForm,

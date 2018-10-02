@@ -1,7 +1,7 @@
 <template>
     <Card>
       <div class="content">
-        <CardHeader>Submit a Review</CardHeader>
+        <CardHeader>Submit Your Review</CardHeader>
           <form>
             <p>
               Reviews are the lifeblood of SmartCourse. Your feedback helps
@@ -23,7 +23,7 @@
               How would you rate the difficulty of this course?
             </InputOptions>
 
-            <AppButton :disabled="!(recommend && enjoy && difficulty)" class='submit' @click.native="callback({title, body, recommend, difficulty, enjoy})">Submit</AppButton>
+            <AppButton :disabled="!(recommend && enjoy && difficulty && body && title)" class='submit' @click.native="callback({title, body, recommend, difficulty, enjoy})">Submit</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </form>
