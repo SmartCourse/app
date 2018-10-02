@@ -13,7 +13,8 @@
 export default {
   name: 'user',
   props: {
-    image: String
+    image: String,
+    author: Number
   },
   data() {
     return {

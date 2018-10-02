@@ -23,7 +23,10 @@ yarn-error.log*
 *.sw*
 
 backend/public
+backend/db
 package-lock.json
+*.zip
 
 __pycache__
 *.pyc
+keys.sh

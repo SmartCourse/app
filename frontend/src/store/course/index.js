@@ -8,8 +8,9 @@ import { REQUEST, COMMITS, ACTIONS } from './constants'
 
 const state = {
   loading: false,
-  courseTab: 'info',
+  questionsMeta: {},
   questions: [],
+  reviewsMeta: {},
   reviews: [],
   course: {
     id: 0,
@@ -25,22 +26,22 @@ const state = {
 
 const getters = {
   course: ({course}) => course,
-  courseTab: ({courseTab}) => courseTab,
   questions: ({questions}) => questions,
+  questionsMeta: ({questionsMeta}) => questionsMeta,
   reviews: ({reviews}) => reviews,
+  reviewsMeta: ({reviewsMeta}) => reviewsMeta,
   loading: ({loading}) => loading,
   error: ({error}) => error
 }
 
 const mutations = {
-  REFRESH_QUESTION_FEED (state, questions) {
-    state.questions = questions.map(questionMapper)
+  REFRESH_QUESTION_FEED (state, {meta, data}) {
+    state.questions = data.map(questionMapper)
+    state.questionsMeta = meta
   },
-  REFRESH_REVIEW_FEED (state, reviews) {
-    state.reviews = reviews.map(reviewMapper)
-  },
-  FOCUS_TAB (state, tab) {
-    state.courseTab = tab
+  REFRESH_REVIEW_FEED (state, {meta, data}) {
+    state.reviews = data.map(reviewMapper)
+    state.reviewsMeta = meta
   },
   FOCUS_COURSE (state, course) {
     state.course = courseMapper(course)
@@ -56,17 +57,14 @@ const mutations = {
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
-  async getQuestions ({dispatch}, id) {
-    return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, args: [id] })
+  async getQuestions ({dispatch}, {id, pageNumber}) {
+    return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, args: [id, pageNumber] })
   },
-  async getReviews ({dispatch}, id) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REVIEWS, args: [id] })
+  async getReviews ({dispatch}, {id, pageNumber}) {
+    return dispatch('doRequest', { action: ACTIONS.GET_REVIEWS, args: [id, pageNumber] })
   },
   async getCourse ({dispatch}, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_COURSE, args: [id] })
-  },
-  changeTab ({commit}, tab) {
-    commit('FOCUS_TAB', tab)
   }
 }
 

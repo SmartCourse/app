@@ -3,15 +3,15 @@ import { get } from './index'
 /**
  * Get all questions relevant to a course
  */
-export function getQuestions(course) {
-  return get(`/course/${course}/questions`)
+export function getQuestions(course, pageNumber) {
+  return get(`/course/${course}/questions?p=${pageNumber}`)
 }
 
 /**
  * Get all reviews relevant to a course
  */
-export function getReviews(course) {
-  return get(`/course/${course}/reviews`)
+export function getReviews(course, pageNumber) {
+  return get(`/course/${course}/reviews?p=${pageNumber}`)
 }
 
 /**
@@ -21,7 +21,18 @@ export function getCourse(course) {
   return get(`/course/${course}`)
 }
 
-export function courseMapper({code, name, studyLevel, subjectCode, handbookURL, outlineURL, rating, description, requirements, tags}) {
+export function courseMapper({
+  code,
+  name,
+  studyLevel,
+  subjectCode,
+  handbookURL,
+  outlineURL,
+  rating,
+  description,
+  requirements,
+  tags
+}) {
   return {
     code,
     name,

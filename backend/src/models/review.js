@@ -1,7 +1,7 @@
 /* All inputs should be validated in this class that are review related */
 class Review {
     constructor(db) {
-        console.log('initialising ORM review object')
+        console.log('initialising ORM Review object')
         this.db = db
     }
 
@@ -20,12 +20,22 @@ class Review {
      * @param   {number}  pageNumber    The page number for which we want to get questions.
      * @returns {Array}
      */
-    getReviews(code, pageNumber) {
-        const pageSize = 10
+    getReviews(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
             .queryAll('SELECT * FROM review WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
                 [code, offset, pageSize])
+    }
+
+    /**
+     * Gets the total number of reviews for a course
+     * @param   {string} code        The code of the course
+     * @returns {object}
+     */
+    getReviewCount(code) {
+        return this.db
+            .queryAll('SELECT COUNT() FROM review WHERE code=?',
+                [code])
     }
 
     /**

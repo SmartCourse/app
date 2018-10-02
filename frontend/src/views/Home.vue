@@ -1,9 +1,10 @@
 <template>
   <div>
     <section class="main-content home">
-      <AppLogo :first="'Smart'" :last="'Course'"/>
-      <p>Making the most of your degree.</p>
+      <AppLogo class="splash" :first="'Smart'" :last="'Course'"/>
+      <p>Community-driven ratings, reviews and info about UNSW courses.</p>
       <Search/>
+      <p>or <router-link :to="'/subject'">browse by subject area</router-link></p>
     </section>
     <section class="homepage-section">
       <article class="content">
@@ -12,7 +13,7 @@
             <p class="why-icon"><i class="material-icons theme">person</i></p>
             <h3>Individual Value</h3>
             <p>SmartCourse is primarily driven by a desire to give you a richer university experience.
-               Figure out the courses that best suit you based on our rich archives of feedback and reviews.</p>
+               Choose the courses that best suit you based on student feedback and reviews.</p>
           </div>
           <div class="why-card">
             <p class="why-icon"><i class="material-icons pink">people</i></p>
@@ -30,7 +31,7 @@
         </div>
       </article>
     </section>
-    <section class="homepage-section who">
+    <!--section class="homepage-section who">
       <article class="content">
         <div>Our story.</div>
       </article>
@@ -39,7 +40,7 @@
       <article class="content">
         <div>Sign up today.</div>
       </article>
-    </section>
+    </section-->
   </div>
 </template>
 
@@ -63,7 +64,17 @@ export default {
   background-color: var(--white);
   /* override main-content width */
   max-width: none;
-  width:100%;
+  padding: 0 20px;
+}
+
+.home > p {
+  font-size: var(--font-medium);
+  text-align: center;
+}
+
+.splash {
+  font-size: 5rem;
+  margin:0.5em auto;
 }
 
 .homepage-section {
@@ -81,7 +92,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: minmax(300px, 1fr);
-  grid-gap: 10px;
+  grid-gap: 20px;
   max-height: none;
 }
 
@@ -90,7 +101,7 @@ export default {
   text-align: center;
   padding: 10px 20px;
   background-color: var(--white);
-  width: 250px;
+  width: 275px;
   min-height: 300px;
 }
 
@@ -129,10 +140,54 @@ p {
   margin: 10px auto;
 }
 
-@media screen and (max-width: 768px) {
+a {
+    color:var(--theme)
+}
+
+/* tablet and below */
+@media screen and (max-width: 800px) {
   .home {
    font-size: var(--font-large-mobile);
   }
+  .splash {
+   font-size: 3rem;
+  }
+
+  .why {
+    grid-template-columns: none;
+    grid-auto-flow: row;
+  }
+
+  .why-card {
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .why-card {
+    width: 280px;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .why-card {
+    width: 240px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+   .why-card {
+     width: 350px;
+     min-height: 350px;
+   }
+
+   .why {
+     grid-gap: 40px;
+   }
+
+   .content {
+     padding: 40px 0;
+   }
 }
 
 </style>

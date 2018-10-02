@@ -1,7 +1,7 @@
 /* All inputs should be validated in this class that are course related */
 class Course {
     constructor(db) {
-        console.log('initialising ORM course object')
+        console.log('initialising ORM Course object')
         this.db = db
     }
 
@@ -12,6 +12,11 @@ class Course {
     getCourses() {
         return this.db
             .queryAll('SELECT * FROM course')
+    }
+
+    getCoursesBySubject(subjCode) {
+        return this.db
+            .queryAll('SELECT * FROM course WHERE subjectCode = ?', [subjCode])
     }
 
     /**

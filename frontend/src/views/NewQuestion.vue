@@ -1,5 +1,6 @@
 <template>
     <section class="main-content">
+      <AppBreadCrumb/>
       <QuestionForm :callback="submitQuestion">
         <span class="form-failure" v-if="error.code">
           {{error.message}}
@@ -28,7 +29,10 @@ export default {
       answers: 'answers',
       loading: 'loading',
       error: 'error'
-    })
+    }),
+    user() {
+      return this.$store.getters.user
+    }
   },
   methods: {
     submitQuestion (questionForm) {

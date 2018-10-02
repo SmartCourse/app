@@ -4,7 +4,7 @@
             type='text'
             v-model='search'
             name='search'
-            placeholder='Search...'
+            placeholder='Search all courses...'
         />
         <ul v-if="search && suggestions.length">
             <router-link
@@ -21,19 +21,25 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
-      search: '',
-      courses: []
+      search: ''
     }
   },
 
   computed: {
+    courses() {
+      return this.$store.state.courses.map(item => item)
+    },
     suggestions() {
+      // Give higher preference to course code before course name
       const lower = this.search.toLowerCase()
       return this.courses
-        .filter(item => item.tags.match(lower))
+        .filter(item => item.code.toLowerCase().match(lower))
+        .concat(this.courses
+          .filter(item => item.name.toLowerCase().match(lower)))
         .slice(0, 5)
     }
   },
@@ -43,12 +49,7 @@ export default {
   },
 
   created() {
-    fetch('http://localhost:3000/api/course')
-      .then(response => response.json())
-      .then(data => {
-        this.courses = data
-      })
-      .catch(err => console.warn(err))
+    this.$store.dispatch('populateSearch')
   }
 }
 </script>
@@ -57,7 +58,7 @@ export default {
 
 .search {
     position: relative;
-    font-size: 0.7em;
+    font-size: var(--font-medium);
     margin: 20px auto;
 }
 
@@ -90,15 +91,17 @@ input, li {
 }
 
 ul {
-    width: 540px;
     position: absolute;
-    max-height: 200px;
+    background: var(--white);
+    width: 540px;
+    z-index: 10;
+    max-height: 220px;
     overflow-y: scroll;
 }
 
 li {
+    background: var(--white);
     font-size: 0.8em;
-    background: white;
 }
 
 li:hover {
@@ -107,11 +110,11 @@ li:hover {
 
 @media screen and (max-width: 740px) {
     ul {
-        width: 350px;
+        width: 330px;
     }
 
     input {
-        width: 310px;
+        width: 290px;
     }
 
     .mini {

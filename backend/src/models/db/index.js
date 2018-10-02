@@ -1,7 +1,10 @@
-const { createDB, devInitDB, insertDB } = require('./tables')
+const path = require('path')
+const sqlite3 = require('sqlite3')
+const { createDB, insertDB } = require('./tables')
 
-const DB_NAME = process.env === 'test' ? ':memory:' : ':memory:'
-
+const DB_NAME = process.env.NODE_ENV === 'production'
+    ? path.join(__dirname, '../../../db/smartcourse.db') : ':memory:'
+console.log(path.join(__dirname, '../../../db/smartcourse.db'))
 /**
  * Very slight abstraction over the direct sql queries.
  * This object can be instantiated once and then all queries are assumed to be
@@ -10,11 +13,19 @@ const DB_NAME = process.env === 'test' ? ':memory:' : ':memory:'
  */
 class DB {
     constructor(databaseName) {
-        this._db = createDB(databaseName)
-        // If in memory databse, intialise it
-        if (DB_NAME === ':memory:') {
-            devInitDB(this._db)
-        }
+        this._db = new sqlite3.Database(databaseName, sqlite3.OPEN_READWRITE,
+            (err) => {
+                if (err) { 
+                    console.error(err)
+                } else {
+                    console.log(`Opened database: ${databaseName}`)
+                    // Initialise the test db
+                    if (process.env.NODE_ENV !== 'production') {
+                        createDB(this._db)
+                    }
+                }
+            }
+        )
     }
 
     insert(table, data) {

@@ -21,9 +21,9 @@ button {
     border:none;
     cursor: pointer;
     padding: 10px 20px;
-    font: inherit;
+    font: var(--header-4);
+    font-weight: bolder;
     outline: none;
-    transition: 0.2s ease-in-out box-shadow;
 }
 
 .tab-button-active {
@@ -31,9 +31,8 @@ button {
 }
 
 .tab-button {
-    font-size:larger;
-    background-color: white;
-    color: black;
+    background-color: var(--white);
+    color: var(--black);
 }
 
 .tab-button:hover {
