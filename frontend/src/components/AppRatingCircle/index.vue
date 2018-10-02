@@ -56,7 +56,7 @@ svg {
 circle {
     fill: none;
     stroke-width: 5px;
-    transition: all 3s ease-in-out;
+    transition: stroke-dashoffset 3s ease-in-out;
 }
 
 text {

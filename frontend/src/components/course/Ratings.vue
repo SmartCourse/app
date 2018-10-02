@@ -21,7 +21,7 @@ export default {
     align-items: flex-start;
     justify-content: flex-start;
     height: 100px;
-    transform: translateX(-15px);
+    transform: translateX(-10px);
 }
 
 .rating {
