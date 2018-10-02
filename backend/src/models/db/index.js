@@ -15,7 +15,7 @@ class DB {
     constructor(databaseName) {
         this._db = new sqlite3.Database(databaseName, sqlite3.OPEN_READWRITE,
             (err) => {
-                if (err) { 
+                if (err) {
                     console.error(err)
                 } else {
                     console.log(`Opened database: ${databaseName}`)
@@ -34,6 +34,16 @@ class DB {
 
     deleteDB () {
         return Promise.resolve(false)
+    }
+
+    run (query, params = []) {
+        return new Promise((resolve, reject) => {
+            this._db.run(
+                query,
+                params,
+                (err) => { err ? reject(err) : resolve(true) }
+            )
+        })
     }
 
     query(query, params = []) {
