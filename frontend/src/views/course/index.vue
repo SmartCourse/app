@@ -11,6 +11,7 @@
             <p v-if="courseInfo.outlineURL">
                 <a target=_blank :href="courseInfo.outlineURL">Course Outline</a>
             </p>
+            <CourseRatings :ratings="courseInfo.ratings || ratings"/>
         </div>
 
         <router-link :to="{name: 'info'}">
@@ -36,6 +37,8 @@
 <script>
 // @ is an alias to /src
 import TabButton from '@/components/course/TabButton'
+import CourseRatings from '@/components/course/Ratings'
+
 import { mapGetters } from 'vuex'
 
 export default {
@@ -43,8 +46,28 @@ export default {
   props: {
     code: String
   },
+  data() {
+      // temp data
+      return {
+          ratings: [
+              {
+                  text: "Difficulty",
+                  value: 10,
+              },
+              {
+                  text: "Workload",
+                  value: 40,
+              },
+              {
+                  text: "Enjoyed",
+                  value: 98,
+              }
+          ]
+      }
+  },
   components: {
-    TabButton
+    TabButton,
+    CourseRatings
   },
   computed: {
     ...mapGetters('course', {
