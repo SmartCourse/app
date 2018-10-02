@@ -2,7 +2,7 @@
     <svg version="1.1" class="svg-loader" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
      y="0px" viewBox="0 0 80 90" xml:space="preserve">
      <g>
-        <circle stroke="grey" fill="none" v-bind:r="r" :cx="cx" :cy="cy"/>
+        <circle stroke="var(--color-light-gray)" fill="none" v-bind:r="r" :cx="cx" :cy="cy"/>
         <text text-anchor="middle" alignment-baseline="central" x="40" y="40">{{ value }}</text>
         <circle stroke="var(--theme)" v-bind:r="r" :cx="cx" :cy="cy"
             :transform="`rotate(-90 ${cx} ${cy})`"
@@ -24,15 +24,24 @@ export default {
       cx: 40,
       cy: 40,
       r: 25,
+      rating: 0
     }
   },
   computed: {
     circumfrence() {
       return 2 * Math.PI * this.r
     },
-    rating() {
+  },
+  methods: {
+    calcRating() {
       return ((100 - this.value) / 100) * this.circumfrence
     }
+  },
+  mounted() {
+    this.rating = this.circumfrence
+    setTimeout(() => {
+      this.rating = this.calcRating()
+    })
   }
 }
 </script>
@@ -47,6 +56,7 @@ svg {
 circle {
     fill: none;
     stroke-width: 5px;
+    transition: all 3s ease-in-out;
 }
 
 text {
