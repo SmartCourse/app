@@ -21,7 +21,7 @@ button {
     border:none;
     cursor: pointer;
     padding: 10px 20px;
-    font: var(--header-4);
+    font: var(--header-3);
     font-weight: bolder;
     outline: none;
 }

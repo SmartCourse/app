@@ -27,6 +27,12 @@ button {
     transition: box-shadow 0.2s ease-in-out;
 }
 
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    box-shadow: none;
+}
+
 .standard-button {
     background-color: var(--theme);
     color: var(--white);

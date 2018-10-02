@@ -23,7 +23,7 @@
               How would you rate the difficulty of this course?
             </InputOptions>
 
-            <AppButton type='submit' @click.native="callback({title, body, recommend, difficulty, enjoy})">Submit</AppButton>
+            <AppButton :disabled="!(recommend && enjoy && difficulty)" class='submit' @click.native="callback({title, body, recommend, difficulty, enjoy})">Submit</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </form>
@@ -54,9 +54,9 @@ export default {
     return {
       title: '',
       body: '',
-      recommend: 'Yes',
-      enjoy: 'Yes',
-      difficulty: 'Easy'
+      recommend: '',
+      enjoy: '',
+      difficulty: ''
     }
   }
 }
@@ -85,7 +85,8 @@ textarea:focus, textarea:active {
   border: 1px solid #acc;
 }
 
-button[type='submit'] {
+.submit {
+  background-color: #e91e63;
   width: 50%;
   margin: 40px 25%;
 }
