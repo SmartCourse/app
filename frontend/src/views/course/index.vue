@@ -71,7 +71,7 @@ export default {
 
 <style scoped>
 h2 {
-    font: var(--header-2); 
+    font: var(--header-2);
 }
 
 h3 {

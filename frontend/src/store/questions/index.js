@@ -54,6 +54,9 @@ const actions = {
   async postQuestion ({dispatch}, { code, form }) {
     return dispatch('doRequest', { action: ACTIONS.POST_QUESTION, args: [code, form] })
   },
+  async putQuestion ({dispatch}, {code, id, data}) {
+    return dispatch('doRequest', { action: ACTIONS.PUT_QUESTION, args: [code, id, data] })
+  },
   async getAnswers ({dispatch}, { code, id }) {
     return dispatch('doRequest', { action: ACTIONS.GET_ANSWERS, args: [code, id] })
   },

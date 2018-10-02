@@ -1,11 +1,7 @@
 <template>
     <Card>
         <div class="card-content">
-            <div class="meta-fields">
-                <p class="vote">&plus;</p>
-                <p class="likes">{{ likes }}</p>
-                <p class="vote">&minus;</p>
-            </div>
+            <Vote v-bind:likes="likes" :upvote="upvote" :downvote="downvote" />
             <div class="content">
                 <!-- v-if here just stops router error due to async data -->
                 <router-link v-if="code" tag="h2" :to="{ name: 'question', params: { code, id }}">
@@ -24,9 +20,10 @@
 <script>
 import Card from '@/components/Card'
 import User from '@/components/UserSummary'
+import Vote from '@/components/Vote'
 
 export default {
-  components: { Card, User },
+  components: { Card, User, Vote },
   props: {
     code: String,
     id: String,
@@ -35,6 +32,16 @@ export default {
     title: String,
     body: String,
     published: String
+  },
+  methods: {
+    upvote() {
+      //this.likes +=1
+      this.$store.dispatch('questions/putQuestion', 
+        { code: this.code, id: this.id, data: { likes: this.likes } })
+    },
+    downvote() {
+      console.log('decrement')
+    }
   }
 }
 </script>
