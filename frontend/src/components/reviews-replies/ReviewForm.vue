@@ -86,7 +86,7 @@ textarea:focus, textarea:active {
 }
 
 .submit {
-  background-color: #e91e63;
+  background-color: var(--black);
   width: 50%;
   margin: 40px 25%;
 }
