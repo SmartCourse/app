@@ -43,23 +43,23 @@ export default {
     code: String
   },
   data() {
-      // temp data
-      return {
-          ratings: [
-              {
-                  text: "Difficulty",
-                  value: 10,
-              },
-              {
-                  text: "Workload",
-                  value: 40,
-              },
-              {
-                  text: "Enjoyed",
-                  value: 98,
-              }
-          ]
-      }
+    // temp data
+    return {
+      ratings: [
+        {
+          text: 'Difficulty',
+          value: 10
+        },
+        {
+          text: 'Workload',
+          value: 40
+        },
+        {
+          text: 'Enjoyed',
+          value: 98
+        }
+      ]
+    }
   },
   components: {
     TabButton,
@@ -91,7 +91,7 @@ export default {
 
 <style scoped>
 h2 {
-    font: var(--header-2); 
+    font: var(--header-2);
 }
 
 h3 {

@@ -8,10 +8,10 @@
 import Rating from '@/components/AppRatingCircle'
 
 export default {
-    components: { Rating },
-    props: {
-        ratings: Array
-    }
+  components: { Rating },
+  props: {
+    ratings: Array
+  }
 }
 </script>
 

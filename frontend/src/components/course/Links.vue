@@ -11,10 +11,10 @@
 
 <script>
 export default {
-    props: {
-        handbookURL: String,
-        outlineURL: String
-    }
+  props: {
+    handbookURL: String,
+    outlineURL: String
+  }
 }
 </script>
 

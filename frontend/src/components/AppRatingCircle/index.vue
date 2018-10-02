@@ -30,7 +30,7 @@ export default {
   computed: {
     circumfrence() {
       return 2 * Math.PI * this.r
-    },
+    }
   },
   methods: {
     calcRating() {
@@ -47,9 +47,7 @@ export default {
 </script>
 
 <style scoped>
-
 svg {
-  font: var(--body-copy-1);
   height: inherit;
 }
 
@@ -60,7 +58,10 @@ circle {
 }
 
 text {
-    stroke: var(--black);
+    font-family: inherit;
+    font-size: inherit;
+    stroke: var(--black-p);
+    fill: var(--black-p);
     stroke-width: 0px;
 }
 </style>
