@@ -47,7 +47,9 @@ export default {
     justify-content: space-between;
 
     h3 {
+        font: var(--header-4);
         cursor: pointer;
+        font-weight: bold;
         margin: auto 10px;
         text-align: center;
         display: inline-block;

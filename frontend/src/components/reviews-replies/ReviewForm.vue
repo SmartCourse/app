@@ -3,21 +3,27 @@
       <div class="content">
         <CardHeader>Submit a Review</CardHeader>
           <form>
+            <p>
+              Reviews are the lifeblood of SmartCourse. Your feedback helps
+              to inform others -- other students, teachers and the university.
+              Please think carefully about your feedback before you submit it.
+            </p>
             <AppInput placeholder="Review title..." v-model="title"/><br>
             <textarea placeholder="Your review here.." v-model="body"></textarea><br>
 
-            <h4>Would you recommend this course?</h4>
-            <input type="radio" value="true" v-model="recommend"> Yes
-            <input type="radio" value="false" v-model="recommend"> No
+            <InputOptions v-model="recommend" :options="['Yes', 'No', 'Unsure']">
+              Would you recommend this course?
+            </InputOptions>
 
-            <h4>How would you rate the difficulty of this course?</h4>
-            <label style="float:left;">Easy</label>
-            <label style="float:right;">Hard</label>
-            <input type="range" min="1" max="3" class="slider" v-model="difficulty">
-            <br>
+            <InputOptions v-model="enjoy" :options="['Yes', 'No', 'Unsure']">
+              Did you enjoy this course?
+            </InputOptions>
 
-            <!-- should probs be a separate component -->
-            <AppButton @click.native="callback({title, body, recommend, difficulty})">Submit</AppButton>
+            <InputOptions v-model="difficulty" :options="['Easy', 'Hard', 'Average']">
+              How would you rate the difficulty of this course?
+            </InputOptions>
+
+            <AppButton type='submit' @click.native="callback({title, body, recommend, difficulty, enjoy})">Submit</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </form>
@@ -30,6 +36,7 @@ import Card from '@/components/Card'
 import CardHeader from '@/components/Card/Header'
 import AppButton from '@/components/AppButton'
 import AppInput from '@/components/AppInput'
+import InputOptions from '@/components/reviews-replies/ReviewOptions'
 
 export default {
   name: 'ReviewForm',
@@ -37,7 +44,8 @@ export default {
     Card,
     CardHeader,
     AppButton,
-    AppInput
+    AppInput,
+    InputOptions
   },
   props: {
     callback: Function
@@ -46,8 +54,9 @@ export default {
     return {
       title: '',
       body: '',
-      recommend: '',
-      difficulty: 2
+      recommend: 'Yes',
+      enjoy: 'Yes',
+      difficulty: 'Easy'
     }
   }
 }
@@ -76,39 +85,9 @@ textarea:focus, textarea:active {
   border: 1px solid #acc;
 }
 
-.slider {
-    -webkit-appearance: none;  /* Override default CSS styles */
-    appearance: none;
-    width: 100%;
-    height: 25px;
-    border-radius: 5px;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-}
-
-.slider:hover {
-    opacity: 1;
-}
-
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Override default look */
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: var(--theme);
-    cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: var(--theme);
-    cursor: pointer;
+button[type='submit'] {
+  width: 50%;
+  margin: 40px 25%;
 }
 
 </style>
