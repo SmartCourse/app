@@ -202,7 +202,35 @@ function insertDB (db, table, data, prep) {
     })
 }
 
+// Updates given JSON object into database table.
+// data = { column : value }
+// For security reasons, column inputs can NEVER be user defined.
+// TODO - Maybe need a better way todo more complex conditions
+function updateDB (db, table, data, conditions) {
+    return new Promise((resolve, reject) => {
+        const updateValues = Object.values(data)
+        const updateColumns = Object.keys(data)
+        const updatePlaceholders = updateColumns.map(col => `${col}=?`).join(',')
+
+        let query = `UPDATE ${table} SET ${updatePlaceholders}`
+
+        const condValues = Object.values(conditions)
+        if (conditions) {
+            const condColumns = Object.keys(conditions)
+            const condPlaceholders = condColumns.map(col => `${col}=?`).join(' AND ')
+            query += ` WHERE ${condPlaceholders}`
+        }
+
+        db = db.run(
+            query,
+            [...updateValues, ...condValues],
+            function (err) { err ? reject(err) : resolve(this.changes) }
+        )
+    })
+}
+
 module.exports = {
     createDB,
-    insertDB
+    insertDB,
+    updateDB
 }

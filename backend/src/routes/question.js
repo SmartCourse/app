@@ -11,4 +11,7 @@ question.get('/:id/answers', questionController.getQuestionAnswers)
 /* Post an answer for a given question */
 question.post('/:id/answers', questionController.postAnswer)
 
+/* Put an updated like value */
+question.put('/:id', questionController.putLikes)
+
 module.exports = question

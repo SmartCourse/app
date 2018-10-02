@@ -50,6 +50,14 @@ class Question {
             .insert('question', { code, userID, title, body })
             .then((questionID) => this.getQuestion(questionID))
     }
+
+    /*
+     * Put question likes
+     */
+    putQuestionLikes(id, likes) {
+        return this.db
+            .update('question', { likes }, { id })
+    }
 }
 
 let Singleton = null

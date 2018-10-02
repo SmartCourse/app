@@ -17,6 +17,14 @@ exports.getQuestionAnswers = function ({ params, query }, res) {
 
 /* POST new answer. */
 exports.postAnswer = function ({ params, body }, res) {
+    console.log(body)
     responseHandler(commentModel.postComment({ questionID: params.id }, body), res)
+        .catch(errorHandler(res))
+}
+
+/* PUT updated likes value */
+exports.putLikes = function ({ params, body }, res) {
+    console.log(body.likes)
+    responseHandler(questionModel.putQuestionLikes(params.id, body.likes), res)
         .catch(errorHandler(res))
 }
