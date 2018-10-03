@@ -6,7 +6,7 @@
         <text text-anchor="middle" alignment-baseline="central" x="40" y="40">{{ value }}</text>
         <circle stroke="var(--theme)" v-bind:r="r" :cx="cx" :cy="cy"
             :transform="`rotate(-90 ${cx} ${cy})`"
-            :stroke-dasharray="circumfrence"
+            :stroke-dasharray="circumference"
             :stroke-dashoffset="rating"/>
      </g>
      <text v-if="text" class="description" alignment-baseline="central" x="40" y="80" text-anchor="middle">{{ text }}</text>
@@ -28,17 +28,17 @@ export default {
     }
   },
   computed: {
-    circumfrence() {
+    circumference() {
       return 2 * Math.PI * this.r
     }
   },
   methods: {
     calcRating() {
-      return ((100 - this.value) / 100) * this.circumfrence
+      return ((100 - this.value) / 100) * this.circumference
     }
   },
   mounted() {
-    this.rating = this.circumfrence
+    this.rating = this.circumference
     setTimeout(() => {
       this.rating = this.calcRating()
     })
