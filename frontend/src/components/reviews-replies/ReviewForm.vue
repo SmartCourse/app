@@ -1,12 +1,29 @@
 <template>
     <Card>
       <div class="content">
-        <CardHeader>Submit a Review</CardHeader>
+        <CardHeader>Submit Your Review</CardHeader>
           <form>
+            <p>
+              Reviews are the lifeblood of SmartCourse. Your feedback helps
+              to inform others -- other students, teachers and the university.
+              Please think carefully about your feedback before you submit it.
+            </p>
             <AppInput placeholder="Review title..." v-model="title"/><br>
             <textarea placeholder="Your review here.." v-model="body"></textarea><br>
-            <!-- should probs be a separate component -->
-            <AppButton @click.native="callback({title, body})">Submit</AppButton>
+
+            <InputOptions v-model="recommend" :options="['Yes', 'No', 'Unsure']">
+              Would you recommend this course?
+            </InputOptions>
+
+            <InputOptions v-model="enjoy" :options="['Yes', 'No', 'Unsure']">
+              Did you enjoy this course?
+            </InputOptions>
+
+            <InputOptions v-model="difficulty" :options="['Easy', 'Hard', 'Average']">
+              How would you rate the difficulty of this course?
+            </InputOptions>
+
+            <AppButton :disabled="!(recommend && enjoy && difficulty && body && title)" class='submit' @click.native="callback({title, body, recommend, difficulty, enjoy})">Submit</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </form>
@@ -19,6 +36,7 @@ import Card from '@/components/Card'
 import CardHeader from '@/components/Card/Header'
 import AppButton from '@/components/AppButton'
 import AppInput from '@/components/AppInput'
+import InputOptions from '@/components/reviews-replies/ReviewOptions'
 
 export default {
   name: 'ReviewForm',
@@ -26,7 +44,8 @@ export default {
     Card,
     CardHeader,
     AppButton,
-    AppInput
+    AppInput,
+    InputOptions
   },
   props: {
     callback: Function
@@ -34,7 +53,10 @@ export default {
   data () {
     return {
       title: '',
-      body: ''
+      body: '',
+      recommend: '',
+      enjoy: '',
+      difficulty: ''
     }
   }
 }
@@ -62,4 +84,11 @@ textarea {
 textarea:focus, textarea:active {
   border: 1px solid #acc;
 }
+
+.submit {
+  background-color: var(--black);
+  width: 50%;
+  margin: 40px 25%;
+}
+
 </style>
