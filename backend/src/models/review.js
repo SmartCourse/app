@@ -46,6 +46,18 @@ class Review {
      *                       contain the user data (probs eventually from an auth token)
      */
     postReview(code, { title, body, recommend, difficulty, teaching, workload, userID = 1 }) {
+
+        // basic sanitization
+        if (!(recommend === 'true' || recommend === 'false')) {
+            throw Error("Invalid recommend value")
+        }
+        recommend = Number(recommend==='true')
+
+        ;[difficulty, teaching, workload].forEach(item => {
+            if (item < 0 || item > 3) throw Error("Invalid difficulty, teaching or workload value")
+        })
+
+        // insert review, get review, update course ratings
         return this.db
             .insert('review', { code, userID, title, body, recommend, difficulty, teaching, workload })
             .then((reviewID) => this.getReview(reviewID))

@@ -6,18 +6,30 @@
             <AppInput placeholder="Review title..." v-model="title"/><br>
             <textarea placeholder="Your review here.." v-model="body"></textarea><br>
 
-            <h4>Would you recommend this course?</h4>
+            <h4>Would you recommend this course to a friend?</h4>
             <input type="radio" value="true" v-model="recommend"> Yes
             <input type="radio" value="false" v-model="recommend"> No
 
-            <h4>How would you rate the difficulty of this course?</h4>
+            <h4>How difficult was the course?</h4>
             <label style="float:left;">Easy</label>
             <label style="float:right;">Hard</label>
             <input type="range" min="1" max="3" class="slider" v-model="difficulty">
             <br>
 
+            <h4>What was the workload like?</h4>
+            <label style="float:left;">Low</label>
+            <label style="float:right;">High</label>
+            <input type="range" min="1" max="3" class="slider" v-model="workload">
+            <br>
+
+            <h4>How well was the course taught?</h4>
+            <label style="float:left;">Poorly</label>
+            <label style="float:right;">Excellently</label>
+            <input type="range" min="1" max="3" class="slider" v-model="teaching">
+            <br>
+
             <!-- should probs be a separate component -->
-            <AppButton @click.native="callback({title, body, recommend, difficulty})">Submit</AppButton>
+            <AppButton @click.native="callback({title, body, recommend, difficulty, teaching, workload})">Submit</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </form>
@@ -47,7 +59,9 @@ export default {
       title: '',
       body: '',
       recommend: '',
-      difficulty: 2
+      difficulty: 2,
+      teaching: 2,
+      workload: 2
     }
   }
 }
