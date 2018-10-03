@@ -21,10 +21,16 @@ button {
     padding: 10px 20px;
     margin: 0px 4px;
     font: inherit;
-    font-weight: bold;
+    font-weight: bolder;
     outline: none;
     border-radius: 4px;
-    transition: 0.2s ease-in-out box-shadow;
+    transition: box-shadow 0.1s ease-in-out;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+    box-shadow: none;
 }
 
 .standard-button {
@@ -40,6 +46,7 @@ button {
 .alt-button {
     color: var(--theme);
     border: var(--border-dark);
+    background: var(--white);
 }
 
 .alt-button:hover {

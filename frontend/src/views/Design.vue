@@ -49,6 +49,7 @@
                     :title="'This is a standard length title'"
                     :body="'This is a longer body, that includes a lot more words than the title, but isn\'t too long!'"
                 />
+                <AppRatingCircle/>
             </div>
         </section>
     </div>
@@ -57,9 +58,10 @@
 <script>
 import AppButton from '@/components/AppButton'
 import QuestionCard from '@/components/questions-answers/QuestionCard'
+import AppRatingCircle from '@/components/AppRatingCircle'
 
 export default {
-  components: { AppButton, QuestionCard }
+  components: { AppButton, QuestionCard, AppRatingCircle }
 }
 </script>
 

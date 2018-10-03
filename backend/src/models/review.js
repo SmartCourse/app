@@ -47,11 +47,7 @@ class Review {
      */
     postReview(code, { title, body, recommend, difficulty, teaching, workload, userID = 1 }) {
 
-        // basic sanitization
-        if (!(recommend === 'true' || recommend === 'false')) {
-            throw Error("Invalid recommend value")
-        }
-        recommend = Number(recommend==='true')
+        if (recommend != 0 && recommend != 1) throw Error("Invalid recommend value")
 
         ;[difficulty, teaching, workload].forEach(item => {
             if (item < 0 || item > 3) throw Error("Invalid difficulty, teaching or workload value")

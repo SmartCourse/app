@@ -1,35 +1,39 @@
 <template>
     <Card>
       <div class="content">
-        <CardHeader>Submit a Review</CardHeader>
+        <CardHeader>Submit Your Review</CardHeader>
           <form>
-            <AppInput placeholder="Review title..." v-model="title"/><br>
-            <textarea placeholder="Your review here.." v-model="body"></textarea><br>
+            <p>
+              Reviews are the lifeblood of SmartCourse. Your feedback helps
+              to inform others -- other students, teachers and the university.
+              Please think carefully about your feedback before you submit it.
+            </p>
+            <span class="required">*</span>
+            <AppInput placeholder="Review title..." v-model="title" style="margin:8px auto;"/><br>
+            <span class="required">*</span>
+            <textarea placeholder="Your review here..." v-model="body"></textarea><br>
 
-            <h4>Would you recommend this course to a friend?</h4>
-            <input type="radio" value="true" v-model="recommend"> Yes
-            <input type="radio" value="false" v-model="recommend"> No
+            <InputOptions v-model="recommend" :options="['Yes', 'No']">
+              Would you recommend this course to a friend? <span class="required">*</span>
+            </InputOptions>
 
-            <h4>How difficult was the course?</h4>
-            <label style="float:left;">Easy</label>
-            <label style="float:right;">Hard</label>
-            <input type="range" min="1" max="3" class="slider" v-model="difficulty">
-            <br>
+            <InputOptions v-model="enjoy" :options="['1', '2', '3', '4', '5']">
+              How much did you enjoy this course? <span class="required">*</span>
+            </InputOptions>
 
-            <h4>What was the workload like?</h4>
-            <label style="float:left;">Low</label>
-            <label style="float:right;">High</label>
-            <input type="range" min="1" max="3" class="slider" v-model="workload">
-            <br>
+            <InputOptions v-model="difficulty" :options="['Easy', 'Average', 'Hard']">
+              How would you rate the difficulty of this course?
+            </InputOptions>
 
-            <h4>How well was the course taught?</h4>
-            <label style="float:left;">Poorly</label>
-            <label style="float:right;">Excellently</label>
-            <input type="range" min="1" max="3" class="slider" v-model="teaching">
-            <br>
+            <InputOptions v-model="teaching" :options="['Poor', 'Average', 'Excellent']">
+              How would you rate the teaching quality of this course?
+            </InputOptions>
 
-            <!-- should probs be a separate component -->
-            <AppButton @click.native="callback({title, body, recommend, difficulty, teaching, workload})">Submit</AppButton>
+            <InputOptions v-model="workload" :options="['Light', 'Average', 'Heavy']">
+              How would you rate the workload of this course?
+            </InputOptions>
+
+            <AppButton :disabled="!(recommend && enjoy && body && title)" class='submit' @click.native="callback({title, body, recommend, enjoy, difficulty, teaching, workload})">Submit</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </form>
@@ -42,6 +46,7 @@ import Card from '@/components/Card'
 import CardHeader from '@/components/Card/Header'
 import AppButton from '@/components/AppButton'
 import AppInput from '@/components/AppInput'
+import InputOptions from '@/components/reviews-replies/ReviewOptions'
 
 export default {
   name: 'ReviewForm',
@@ -49,7 +54,8 @@ export default {
     Card,
     CardHeader,
     AppButton,
-    AppInput
+    AppInput,
+    InputOptions
   },
   props: {
     callback: Function
@@ -59,9 +65,10 @@ export default {
       title: '',
       body: '',
       recommend: '',
-      difficulty: 2,
-      teaching: 2,
-      workload: 2
+      enjoy: '',
+      difficulty: '',
+      teaching: '',
+      workload: ''
     }
   }
 }
@@ -69,11 +76,16 @@ export default {
 
 <style scoped lang='less'>
 
+.required {
+    color:red;
+}
+
 .content {
   padding: 20px;
 }
 
 textarea {
+  display:inline;
   border: var(--border);
   border-radius: 2px;
   font: inherit;
@@ -90,39 +102,10 @@ textarea:focus, textarea:active {
   border: 1px solid #acc;
 }
 
-.slider {
-    -webkit-appearance: none;  /* Override default CSS styles */
-    appearance: none;
-    width: 100%;
-    height: 25px;
-    border-radius: 5px;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-}
-
-.slider:hover {
-    opacity: 1;
-}
-
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Override default look */
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: var(--theme);
-    cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: var(--theme);
-    cursor: pointer;
+.submit {
+  background-color: var(--black);
+  width: 50%;
+  margin: 40px 25%;
 }
 
 </style>

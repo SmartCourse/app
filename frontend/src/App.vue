@@ -46,6 +46,7 @@ html, body {
   --soft-white: #aaa;
   --black: #111;
   --soft-black: rgba(#111, 0.65);
+  --black-p: rgba(0,0,0,.72);
   // borders
   --color-gray: #d5d5d5;
   --color-light-gray: #eaeaea;
@@ -79,7 +80,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 p {
-  color: rgba(0,0,0,.72);
+  color: var(--black-p);
 }
 
 .form-success {
