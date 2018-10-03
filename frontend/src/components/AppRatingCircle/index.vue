@@ -23,25 +23,16 @@ export default {
     return {
       cx: 40,
       cy: 40,
-      r: 25,
-      rating: 0
+      r: 25
     }
   },
   computed: {
     circumference() {
       return 2 * Math.PI * this.r
-    }
-  },
-  methods: {
-    calcRating() {
+    },
+    rating() {
       return ((100 - this.value) / 100) * this.circumference
     }
-  },
-  mounted() {
-    this.rating = this.circumference
-    setTimeout(() => {
-      this.rating = this.calcRating()
-    })
   }
 }
 </script>
