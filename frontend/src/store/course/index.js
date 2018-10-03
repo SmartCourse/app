@@ -16,7 +16,6 @@ const state = {
     id: 0,
     code: '',
     name: '',
-    rating: 0
   },
   error: {
     code: 0,
@@ -26,6 +25,13 @@ const state = {
 
 const getters = {
   course: ({course}) => course,
+  ratings: ({course}) => [
+      {text: "Recommended", value: course.recommend},
+      {text: "Enjoyment", value: course.enjoy},
+      {text: "Difficulty", value: course.difficulty},
+      {text: "Teaching", value: course.teaching},
+      {text: "Workload", value: course.workload}
+  ],
   questions: ({questions}) => questions,
   questionsMeta: ({questionsMeta}) => questionsMeta,
   reviews: ({reviews}) => reviews,

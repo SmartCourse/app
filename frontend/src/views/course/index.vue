@@ -6,7 +6,7 @@
             <h2>{{ courseInfo.code }}</h2>
             <h3>{{ courseInfo.name }}</h3>
             <CourseLinks   :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
-            <CourseRatings :ratings="courseInfo.ratings || ratings"/>
+            <CourseRatings :ratings="courseRatings || ratings"/>
         </div>
 
         <router-link :to="{name: 'info'}">
@@ -68,7 +68,8 @@ export default {
   },
   computed: {
     ...mapGetters('course', {
-      courseInfo: 'course'
+      courseInfo: 'course',
+      courseRatings: 'ratings'
     })
   },
   created () {
