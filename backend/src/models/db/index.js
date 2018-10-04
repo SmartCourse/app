@@ -44,6 +44,16 @@ class DB {
         return Promise.resolve(false)
     }
 
+    run (query, params = []) {
+        return new Promise((resolve, reject) => {
+            this._db.run(
+                query,
+                params,
+                (err) => { err ? reject(err) : resolve(true) }
+            )
+        })
+    }
+
     query(query, params = []) {
         return new Promise((resolve, reject) => {
             this._db.get(

@@ -1,6 +1,7 @@
 import {
   reviewMapper,
-  replyMapper
+  replyMapper,
+  newReviewMapper
 } from '@/utils/api/reviews'
 
 import { doRequestFactory } from '@/store/utils'

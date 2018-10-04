@@ -5,12 +5,8 @@
         <div class="course-header-title">
             <h2>{{ courseInfo.code }}</h2>
             <h3>{{ courseInfo.name }}</h3>
-            <p>
-                <a target=_blank :href="courseInfo.handbookURL">Handbook</a>
-            </p>
-            <p v-if="courseInfo.outlineURL">
-                <a target=_blank :href="courseInfo.outlineURL">Course Outline</a>
-            </p>
+            <CourseLinks   :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
+            <CourseRatings :ratings="courseRatings"/>
         </div>
 
         <router-link :to="{name: 'info'}">
@@ -36,6 +32,9 @@
 <script>
 // @ is an alias to /src
 import TabButton from '@/components/course/TabButton'
+import CourseRatings from '@/components/course/Ratings'
+import CourseLinks from '@/components/course/Links'
+
 import { mapGetters } from 'vuex'
 
 export default {
@@ -44,11 +43,14 @@ export default {
     code: String
   },
   components: {
-    TabButton
+    TabButton,
+    CourseRatings,
+    CourseLinks
   },
   computed: {
     ...mapGetters('course', {
-      courseInfo: 'course'
+      courseInfo: 'course',
+      courseRatings: 'ratings'
     })
   },
   created () {
@@ -81,15 +83,6 @@ h3 {
 h2, h3 {
     margin: 0;
     margin-bottom: 10px;
-}
-
-p {
-    font: var(--body-copy-1);
-    margin: 0;
-    margin-bottom: 5px;
-}
-p > a {
-    color: var(--theme);
 }
 
 .course-header {

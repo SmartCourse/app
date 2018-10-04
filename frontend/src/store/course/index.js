@@ -15,8 +15,7 @@ const state = {
   course: {
     id: 0,
     code: '',
-    name: '',
-    rating: 0
+    name: ''
   },
   error: {
     code: 0,
@@ -25,13 +24,20 @@ const state = {
 }
 
 const getters = {
-  course: ({ course }) => course,
-  questions: ({ questions }) => questions,
-  questionsMeta: ({ questionsMeta }) => questionsMeta,
-  reviews: ({ reviews }) => reviews,
-  reviewsMeta: ({ reviewsMeta }) => reviewsMeta,
-  loading: ({ loading }) => loading,
-  error: ({ error }) => error
+  course: ({course}) => course,
+  ratings: ({course}) => [
+    {text: 'Recommended', value: course.recommend || 0},
+    {text: 'Enjoyment', value: course.enjoy || 0},
+    {text: 'Difficulty', value: course.difficulty || 0},
+    {text: 'Teaching', value: course.teaching || 0},
+    {text: 'Workload', value: course.workload || 0}
+  ],
+  questions: ({questions}) => questions,
+  questionsMeta: ({questionsMeta}) => questionsMeta,
+  reviews: ({reviews}) => reviews,
+  reviewsMeta: ({reviewsMeta}) => reviewsMeta,
+  loading: ({loading}) => loading,
+  error: ({error}) => error
 }
 
 const mutations = {

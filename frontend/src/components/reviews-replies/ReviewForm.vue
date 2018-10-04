@@ -1,12 +1,39 @@
 <template>
     <Card>
       <div class="content">
-        <CardHeader>Submit a Review</CardHeader>
+        <CardHeader>Submit Your Review</CardHeader>
           <form>
-            <AppInput placeholder="Review title..." v-model="title"/><br>
-            <textarea placeholder="Your review here.." v-model="body"></textarea><br>
-            <!-- should probs be a separate component -->
-            <AppButton @click.native="callback({title, body})">Submit</AppButton>
+            <p>
+              Reviews are the lifeblood of SmartCourse. Your feedback helps
+              to inform others -- other students, teachers and the university.
+              Please think carefully about your feedback before you submit it.
+            </p>
+            <span class="required">*</span>
+            <AppInput placeholder="Review title..." v-model="title" style="margin:8px auto;"/><br>
+            <span class="required">*</span>
+            <textarea placeholder="Your review here..." v-model="body"></textarea><br>
+
+            <InputOptions v-model="recommend" :options="['Yes', 'No']">
+              Would you recommend this course to a friend? <span class="required">*</span>
+            </InputOptions>
+
+            <InputOptions v-model="enjoy" :options="['1', '2', '3', '4', '5']">
+              How much did you enjoy this course? <span class="required">*</span>
+            </InputOptions>
+
+            <InputOptions v-model="difficulty" :options="['Easy', 'Average', 'Hard']">
+              How would you rate the difficulty of this course?
+            </InputOptions>
+
+            <InputOptions v-model="teaching" :options="['Poor', 'Average', 'Excellent']">
+              How would you rate the teaching quality of this course?
+            </InputOptions>
+
+            <InputOptions v-model="workload" :options="['Light', 'Average', 'Heavy']">
+              How would you rate the workload of this course?
+            </InputOptions>
+
+            <AppButton :disabled="!(recommend && enjoy && body && title)" class='submit' @click.native="callback({title, body, recommend, enjoy, difficulty, teaching, workload})">Submit</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </form>
@@ -19,6 +46,7 @@ import Card from '@/components/Card'
 import CardHeader from '@/components/Card/Header'
 import AppButton from '@/components/AppButton'
 import AppInput from '@/components/AppInput'
+import InputOptions from '@/components/reviews-replies/ReviewOptions'
 
 export default {
   name: 'ReviewForm',
@@ -26,7 +54,8 @@ export default {
     Card,
     CardHeader,
     AppButton,
-    AppInput
+    AppInput,
+    InputOptions
   },
   props: {
     callback: Function
@@ -34,7 +63,12 @@ export default {
   data () {
     return {
       title: '',
-      body: ''
+      body: '',
+      recommend: '',
+      enjoy: '',
+      difficulty: '',
+      teaching: '',
+      workload: ''
     }
   }
 }
@@ -42,11 +76,16 @@ export default {
 
 <style scoped lang='less'>
 
+.required {
+    color:red;
+}
+
 .content {
   padding: 20px;
 }
 
 textarea {
+  display:inline;
   border: var(--border);
   border-radius: 2px;
   font: inherit;
@@ -62,4 +101,11 @@ textarea {
 textarea:focus, textarea:active {
   border: 1px solid #acc;
 }
+
+.submit {
+  background-color: var(--black);
+  width: 50%;
+  margin: 40px 25%;
+}
+
 </style>

@@ -1,3 +1,5 @@
+const courseModel = require('../models/course')()
+
 /* All inputs should be validated in this class that are review related */
 class Review {
     constructor(db) {
@@ -43,10 +45,21 @@ class Review {
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
-    postReview(code, { title, body, userID = 1 }) {
+    postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID = 1 }) {
+
+        if (recommend != 0 && recommend != 1) throw Error("Invalid recommend value")
+        if (enjoy < 1 || enjoy > 5) throw Error("Invalid enjoy value")
+
+        ;[difficulty, teaching, workload].forEach(item => {
+            if (item < 0 || item > 3) throw Error("Invalid difficulty, teaching or workload value")
+        })
+
+        // insert review, get review, update course ratings
         return this.db
-            .insert('review', { code, body, title, userID })
+            .insert('review', { code, userID, title, body, recommend, enjoy, difficulty, teaching, workload })
             .then((reviewID) => this.getReview(reviewID))
+            // TODO de-expensivify this
+            .then((review) => courseModel.updateCourseRatings(code).then(() => review))
     }
 }
 
