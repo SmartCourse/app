@@ -16,18 +16,20 @@ export function replyMapper({ id, likes, userID, body, timestamp }) {
   }
 }
 
-export function reviewMapper({ id, code, likes, userID, title, body, timestamp }) {
+export function reviewMapper({ id, code, title, body, likes, recommend, userID, timestamp }) {
   return {
     id: String(id),
     code,
     title,
     body,
     likes,
+    recommend,
     author: userID,
     published: format(timestamp, 'DD/MM/YY')
   }
 }
 
+/* Maps a new review from a ReviewForm to something the backend understands */
 export function newReviewMapper({ title, body, recommend, enjoy, difficulty, teaching, workload }) {
   return {
     title,
