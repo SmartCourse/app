@@ -5,7 +5,7 @@
       <!--<router-view :key="$route.path"/> -->
       <router-view/>
     </main>
-    <AppFooter/>
+    <AppFooter v-if="!authpage"/>
   </div>
 </template>
 
@@ -15,6 +15,12 @@ import AppFooter from '@/components/AppFooter'
 
 export default {
   components: { AppNavBar, AppFooter },
+  computed: {
+    authpage() {
+      const { name } = this.$route
+      return name === 'Login' || name === 'Sign Up'
+    }
+  },
   created() {
     this.$store.dispatch('auth/checkAuth')
     this.$store.dispatch('subject/getSubjects')
@@ -50,7 +56,7 @@ html, body {
   // borders
   --color-gray: #d5d5d5;
   --color-light-gray: #eaeaea;
-  --color-very-light-gray: #f5f5f5;
+  --color-very-light-gray: #f9f9f9;
   --border-dark: 1px solid var(--color-gray);
   --border: 1px solid var(--color-light-gray);
   --border-thick: 2px solid rgba(160, 178, 178, 0.5);
@@ -96,14 +102,14 @@ p {
 
 .main-content {
   /* arbitrary */
-  min-height: 90vh;
-  max-width: 768px;
+  min-height: calc(100vh - 85px);;
+  max-width: 800px;
   margin: auto;
   margin-bottom: 20px;
 }
 
 .auth-page {
-  height: 90vh;
+  height: calc(100vh - 85px);
   width: 100%;
   display: flex;
   flex-direction: column;

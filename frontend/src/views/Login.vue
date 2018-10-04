@@ -2,12 +2,13 @@
 <div class="auth-page">
     <AppAuthForm v-if="!loading"
       :title="'Login'"
-      :buttonText="'Login'"
+      :buttonText="'Log In'"
       :error="error"
       :clickHandler="clickHandler"
     >
-      <AuthInput type="text" v-model="email" placeholder="Email"/>
+      <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>
       <AuthInput type="password" v-model="password" placeholder="Password"/>
+      <a class="forgot-pass">Forgot your password?</a>
     </AppAuthForm>
     <LoadingSpinner v-else/>
 </div>
@@ -43,3 +44,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+.forgot-pass {
+  margin: 20px 0 0;
+  font: var(--body-copy-2);
+  text-align:right;
+}
+
+</style>

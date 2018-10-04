@@ -1,6 +1,6 @@
 <template>
     <svg version="1.1" class="svg-loader" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-     y="0px" viewBox="0 0 80 90" xml:space="preserve">
+     y="0px" viewBox="0 0 80 80" xml:space="preserve">
      <g>
         <circle stroke="var(--color-light-gray)" fill="none" v-bind:r="r" :cx="cx" :cy="cy"/>
         <text text-anchor="middle" alignment-baseline="central" x="40" y="40">{{ value }}</text>
@@ -9,7 +9,6 @@
             :stroke-dasharray="circumference"
             :stroke-dashoffset="rating"/>
      </g>
-     <text v-if="text" class="description" alignment-baseline="central" x="40" y="80" text-anchor="middle">{{ text }}</text>
     </svg>
 </template>
 

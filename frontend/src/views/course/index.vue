@@ -90,7 +90,7 @@ h2, h3 {
 }
 
 .course-header-title {
-    padding: 20px;
+    padding: 20px 20px 0px;
 }
 
 .course-content {

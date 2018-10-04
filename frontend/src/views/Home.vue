@@ -145,7 +145,7 @@ a {
 }
 
 /* tablet and below */
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 700px) {
   .home {
    font-size: var(--font-large-mobile);
   }
@@ -169,16 +169,16 @@ a {
   }
 }
 
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 700px) {
   .why-card {
-    width: 240px;
+    width: 200px;
   }
 }
 
 @media screen and (min-width: 1200px) {
    .why-card {
-     width: 350px;
-     min-height: 350px;
+     width: 340px;
+     min-height: 340px;
    }
 
    .why {

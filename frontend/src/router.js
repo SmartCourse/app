@@ -115,10 +115,12 @@ export default new Router({
     },
     {
       path: '/signup',
+      name: 'Sign Up',
       component: () => import('./views/SignUp')
     },
     {
       path: '/login',
+      name: 'Login',
       component: () => import('./views/Login')
     },
     {

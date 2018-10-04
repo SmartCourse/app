@@ -36,17 +36,21 @@ export default {
 </script>
 
 <style scoped>
+h2 {
+  font: var(--header-3);
+  margin: 5px 0 10px;
+}
+
 .auth-form {
   font: var(--body-copy-1);
   display: grid;
-  grid-row-gap: 20px;
   grid-auto-flow: row;
 }
 
 .button-spacing {
-    width: 80%;
-    margin: auto;
-    margin-top: 30px;
+  width: 80%;
+  margin: auto;
+  margin-top: 30px;
 }
 
 .app-auth-form {
@@ -59,6 +63,7 @@ export default {
 }
 
 .card-content {
+  max-width: 340px;
   width: 320px;
   min-height: 300px;
   padding: 0px 10px;
@@ -70,13 +75,14 @@ export default {
   display: block;
   margin-top: 20px;
   position: absolute;
-  top: 10px;
+  top: 0;
   right: 20px;
 }
 
-@media screen and (min-width: 768px) {
-    .card-content {
-        width: 450px;
+@media screen and (max-width: 450px) {
+    .app-auth-form {
+      flex-direction: row;
     }
 }
+
 </style>

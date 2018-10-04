@@ -1,11 +1,9 @@
 <template>
     <div class="ratings">
-        <Rating v-for="rating in ratings"
-            class="rating"
-            :text="rating.text"
-            :key="rating.text"
-            :value="rating.value"
-        />
+        <div v-for="rating in ratings" :key="rating.text" class="rating" >
+            <Rating  :value="rating.value"/>
+            <h2 class="rating-text">{{ rating && rating.text }} </h2>
+        </div>
     </div>
 </template>
 
@@ -24,13 +22,21 @@ export default {
 .ratings {
     display: flex;
     align-items: flex-start;
-    justify-content: flex-start;
-    height: 90px;
-    transform: translateX(-10px);
+    justify-content: space-between;
+    width: 100%;
+    overflow-x: scroll;
+    min-height: 120px;
+    border-bottom: var(--border);
+}
+
+.rating-text {
+    margin: 0;
+    font: var(--body-copy-1);
 }
 
 .rating {
-    margin: auto 20px;
-    height: inherit;
+    /* grid-row: 1; */
+    height: 80px;
+    text-align: center;
 }
 </style>

@@ -67,6 +67,11 @@ input {
     outline: none;
     font: inherit;
     width: 500px;
+    transition: border 0.3s ease-in;
+}
+
+input:active, input:focus {
+  border: 1px solid var(--theme-light);
 }
 
 .mini {

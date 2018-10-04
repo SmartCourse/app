@@ -9,7 +9,7 @@
             <div class="content">
                 <!-- v-if here just stops router error due to async data -->
                 <router-link v-if="code" tag="h2" :to="{ name: 'review', params: { code, id }}">
-                    {{ title }}
+                   {{ title }}
                 </router-link>
                 <p>{{ body }}</p>
             </div>
