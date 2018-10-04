@@ -43,13 +43,13 @@ export default {
     published: String
   },
   computed: {
-      recommendIcon () {
-          if (this.recommend == 1) {
-              return {class:"blue", icon:"thumb_up", text: "recommended"}
-          } else {
-              return {class:"red", icon:"thumb_down", text:"not recommended"}
-          }
+    recommendIcon () {
+      if (this.recommend === 1) {
+        return {class: 'blue', icon: 'thumb_up', text: 'recommended'}
+      } else {
+        return {class: 'red', icon: 'thumb_down', text: 'not recommended'}
       }
+    }
   }
 }
 </script>
