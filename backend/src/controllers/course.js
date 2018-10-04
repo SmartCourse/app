@@ -22,22 +22,21 @@ exports.getCourseQuestions = function ({ params, query }, res) {
     const pageNumber = p || 1
     const pageSize = 10
 
-    const getCourseQuestions = new Promise((resolve, reject) => {
-        Promise.all([
-            questionModel.getQuestions(params.code, pageNumber, pageSize),
-            questionModel.getQuestionCount(params.code)
-        ]).then(function(values) {
+    const getCourseQuestions = Promise.all([
+        questionModel.getQuestions(params.code, pageNumber, pageSize),
+        questionModel.getQuestionCount(params.code)
+    ])
+        .then(function(values) {
             const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize) / pageSize)
-            resolve({
+            return {
                 'meta': {
                     'curr': pageNumber,
                     'last': lastPage,
                     'pageSize': pageSize
                 },
                 'data': values[0]
-            })
+            }
         })
-    })
 
     responseHandler(getCourseQuestions, res)
         .catch(errorHandler(res))

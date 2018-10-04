@@ -1,11 +1,18 @@
 const questionModel = require('../models/question')()
 const commentModel = require('../models/comment')()
+const likesModel = require('../models/likes')()
 const errorHandler = require('./error')
 const { responseHandler } = require('../utils/helpers')
 
 /* GET question data. */
 exports.getQuestion = function ({ params }, res) {
-    responseHandler(questionModel.getQuestion(params.id), res)
+    const getQuestion = Promise.all([
+        questionModel.getQuestion(params.id),
+        likesModel.getLikes({ type: 'question', id: params.id })
+    ])
+        .then(([question, likes]) => { return { ...question, ...likes } })
+
+    responseHandler(getQuestion, res)
         .catch(errorHandler(res))
 }
 
@@ -24,17 +31,12 @@ exports.postAnswer = function ({ params, body }, res) {
 
 /* GET the likes value */
 exports.getLikes = function ({ params }, res) {
-    responseHandler(questionModel.getQuestionLikes(params.id), res)
+    responseHandler(likesModel.getLikes({ type: 'question', id: params.id }), res)
         .catch(errorHandler(res))
 }
 
 /* PUT updated likes value */
 exports.putLikes = function ({ params, body }, res) {
-    responseHandler(questionModel.putQuestionLikes(
-        {
-            questionID: params.id,
-            ...body
-        }
-    ), res)
+    responseHandler(likesModel.putLikes({ type: 'question', id: params.id, ...body }), res)
         .catch(errorHandler(res))
 }
