@@ -57,7 +57,8 @@ const actions = {
     return dispatch('doRequest', { action: ACTIONS.GET_REVIEW, args: [code, id] })
   },
   async postReview ({ dispatch }, { code, form }) {
-    return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, args: [code, form] })
+    const mappedForm = newReviewMapper(form)
+    return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, args: [code, mappedForm] })
   },
   async getReplies ({ dispatch }, { code, id }) {
     return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, args: [code, id] })
