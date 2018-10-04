@@ -54,7 +54,11 @@ function createCourseTable (db) {
             outlineURL TEXT,
             description TEXT NOT NULL,
             requirements TEXT,
-            rating INTEGER DEFAULT '0.00',
+            recommend INTEGER DEFAULT '50',
+            enjoy INTEGER DEFAULT '50',
+            difficulty INTEGER DEFAULT '50',
+            teaching INTEGER DEFAULT '50',
+            workload INTEGER DEFAULT '50',
             tags TEXT,
             FOREIGN KEY (universityID) REFERENCES university(id),
             FOREIGN KEY (subjectCode) REFERENCES subject(code)
@@ -107,8 +111,13 @@ function createReviewTable (db) {
             userID INTEGER NOT NULL,
             title TEXT NOT NULL,
             body TEXT NOT NULL,
+            recommend INTEGER NOT NULL,
+            enjoy INTEGER NOT NULL,
+            difficulty INTEGER DEFAULT '0',
+            teaching INTEGER DEFAULT '0',
+            workload INTEGER DEFAULT '0',
             timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            likes INTEGER DEFAULT '0.00',
+            likes INTEGER DEFAULT '0',
             FOREIGN KEY (code) REFERENCES course(code),
             FOREIGN KEY (userID) REFERENCES user(id)
             )`,
@@ -201,6 +210,7 @@ function insertDB (db, table, data, prep) {
         }
     })
 }
+
 
 module.exports = {
     createDB,

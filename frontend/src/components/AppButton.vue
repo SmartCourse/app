@@ -24,7 +24,7 @@ button {
     font-weight: bolder;
     outline: none;
     border-radius: 4px;
-    transition: box-shadow 0.2s ease-in-out;
+    transition: box-shadow 0.1s ease-in-out;
 }
 
 button:disabled {
@@ -46,6 +46,7 @@ button:disabled {
 .alt-button {
     color: var(--theme);
     border: var(--border-dark);
+    background: var(--white);
 }
 
 .alt-button:hover {

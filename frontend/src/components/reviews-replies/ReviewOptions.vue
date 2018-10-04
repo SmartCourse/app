@@ -8,6 +8,7 @@
             @click.native="clickEventHandler(option)"
             :alt="value === option"
             :key="option"
+            class="option"
             v-for="option in options"
             style="font-weight: normal"
         >
@@ -39,7 +40,11 @@ export default {
 
 .options {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-columns: 0.5fr;
     grid-gap: 10px;
+}
+
+.option {
+  grid-row: 1;
 }
 </style>

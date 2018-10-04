@@ -27,6 +27,24 @@ class Course {
         return this.db
             .query('SELECT * FROM course WHERE code=?', [code])
     }
+
+    updateCourseRatings(code) {
+        // recommend is just count(all recommended)/count(all reviews)
+        // others are mean(values - 1)*(100/2) for all values > 0
+        // ^ we need to subtract 1 from each value when taking the mean to get it in 0-2 (or 0-4) range
+        // ^ we take this mean and divide by 2 or 4 (range is 0-2 or 0-4) to get a normalised value
+        // ^ multiply by 100 so we have an integer percentage (we do this at an early step however, to avoid floating point biz)
+        return this.db
+            .run(`UPDATE course
+                    SET
+                      recommend = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE COUNT(DISTINCT recommend==1)*100/COUNT(*) END FROM review WHERE code==$code),
+                      enjoy = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(enjoy-1)*100/(4*COUNT(*)) END FROM review WHERE code==$code),
+                      difficulty = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(difficulty-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND difficulty > 0),
+                      teaching = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(teaching-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND teaching > 0),
+                      workload = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(workload-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND workload > 0)
+                    WHERE code=$code;`
+                  , {$code:code})
+    }
 }
 
 let Singleton = null

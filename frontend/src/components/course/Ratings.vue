@@ -30,6 +30,7 @@ export default {
 }
 
 .rating {
+    margin: auto 20px;
     height: inherit;
 }
 </style>

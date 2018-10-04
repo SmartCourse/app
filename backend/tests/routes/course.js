@@ -112,12 +112,21 @@ describe('Course route testing', () => {
 
     describe('POST /api/course/COMP4920/review', () => {
         let request
+        const form = {
+            title: 'I\'m a real boy',
+            body: 'barry is good',
+            enjoy: 3,
+            recommend: 0,
+            workload: 2,
+            teaching: 1,
+            difficulty: 1
+        }
 
         before(() => {
             request = supertest
                 .post('/api/course/COMP4920/review')
                 .set('Accept', 'application/json')
-                .send({ title: 'I\'m a real boy', body: 'barry is good' })
+                .send(form)
                 .expect('Content-Type', /json/)
                 .expect(200)
             return request
@@ -125,8 +134,8 @@ describe('Course route testing', () => {
 
         it('review has a body', () =>
             request.then(({ body }) => {
-                expect(body.title).to.equal('I\'m a real boy')
-                expect(body.body).to.equal('barry is good')
+                expect(body.title).to.equal(form.title)
+                expect(body.body).to.equal(form.body)
             })
         )
     })

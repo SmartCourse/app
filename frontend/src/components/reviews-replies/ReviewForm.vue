@@ -8,22 +8,32 @@
               to inform others -- other students, teachers and the university.
               Please think carefully about your feedback before you submit it.
             </p>
-            <AppInput placeholder="Review title..." v-model="title"/><br>
-            <textarea placeholder="Your review here.." v-model="body"></textarea><br>
+            <span class="required">*</span>
+            <AppInput placeholder="Review title..." v-model="title" style="margin:8px auto;"/><br>
+            <span class="required">*</span>
+            <textarea placeholder="Your review here..." v-model="body"></textarea><br>
 
-            <InputOptions v-model="recommend" :options="['Yes', 'No', 'Unsure']">
-              Would you recommend this course?
+            <InputOptions v-model="recommend" :options="['Yes', 'No']">
+              Would you recommend this course to a friend? <span class="required">*</span>
             </InputOptions>
 
-            <InputOptions v-model="enjoy" :options="['Yes', 'No', 'Unsure']">
-              Did you enjoy this course?
+            <InputOptions v-model="enjoy" :options="['1', '2', '3', '4', '5']">
+              How much did you enjoy this course? <span class="required">*</span>
             </InputOptions>
 
-            <InputOptions v-model="difficulty" :options="['Easy', 'Hard', 'Average']">
+            <InputOptions v-model="difficulty" :options="['Easy', 'Average', 'Hard']">
               How would you rate the difficulty of this course?
             </InputOptions>
 
-            <AppButton :disabled="!(recommend && enjoy && difficulty && body && title)" class='submit' @click.native="callback({title, body, recommend, difficulty, enjoy})">Submit</AppButton>
+            <InputOptions v-model="teaching" :options="['Poor', 'Average', 'Excellent']">
+              How would you rate the teaching quality of this course?
+            </InputOptions>
+
+            <InputOptions v-model="workload" :options="['Light', 'Average', 'Heavy']">
+              How would you rate the workload of this course?
+            </InputOptions>
+
+            <AppButton :disabled="!(recommend && enjoy && body && title)" class='submit' @click.native="callback({title, body, recommend, enjoy, difficulty, teaching, workload})">Submit</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </form>
@@ -56,7 +66,9 @@ export default {
       body: '',
       recommend: '',
       enjoy: '',
-      difficulty: ''
+      difficulty: '',
+      teaching: '',
+      workload: ''
     }
   }
 }
@@ -64,11 +76,16 @@ export default {
 
 <style scoped lang='less'>
 
+.required {
+    color:red;
+}
+
 .content {
   padding: 20px;
 }
 
 textarea {
+  display:inline;
   border: var(--border);
   border-radius: 2px;
   font: inherit;

@@ -6,7 +6,7 @@
             <h2>{{ courseInfo.code }}</h2>
             <h3>{{ courseInfo.name }}</h3>
             <CourseLinks   :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
-            <CourseRatings :ratings="courseInfo.ratings || ratings"/>
+            <CourseRatings :ratings="courseRatings"/>
         </div>
 
         <router-link :to="{name: 'info'}">
@@ -42,25 +42,6 @@ export default {
   props: {
     code: String
   },
-  data() {
-    // temp data
-    return {
-      ratings: [
-        {
-          text: 'Difficulty',
-          value: 10
-        },
-        {
-          text: 'Workload',
-          value: 40
-        },
-        {
-          text: 'Enjoyed',
-          value: 98
-        }
-      ]
-    }
-  },
   components: {
     TabButton,
     CourseRatings,
@@ -68,7 +49,8 @@ export default {
   },
   computed: {
     ...mapGetters('course', {
-      courseInfo: 'course'
+      courseInfo: 'course',
+      courseRatings: 'ratings'
     })
   },
   created () {
