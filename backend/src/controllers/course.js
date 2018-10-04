@@ -27,7 +27,7 @@ exports.getCourseQuestions = function ({ params, query }, res) {
             questionModel.getQuestions(params.code, pageNumber, pageSize),
             questionModel.getQuestionCount(params.code)
         ]).then(function(values) {
-            const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize) / pageSize)
+            const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize - 1) / pageSize)
             resolve({
                 'meta': {
                     'curr': pageNumber,
@@ -54,7 +54,7 @@ exports.getCourseReviews = function ({ params, query }, res) {
             reviewModel.getReviews(params.code, pageNumber, pageSize),
             reviewModel.getReviewCount(params.code)
         ]).then(function(values) {
-            const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize) / pageSize)
+            const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize - 1) / pageSize)
             resolve({
                 'meta': {
                     'curr': pageNumber,

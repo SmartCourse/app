@@ -11,7 +11,29 @@ exports.getQuestion = function ({ params }, res) {
 
 /* GET question ansewrs. */
 exports.getQuestionAnswers = function ({ params, query }, res) {
-    responseHandler(commentModel.getComments({ questionID: params.id }, query.p), res)
+    let p = parseInt(query.p)
+    const pageNumber = p || 1
+    const pageSize = 2
+
+    const getQuestionAnswers = new Promise((resolve, reject) => {
+        Promise.all([
+            commentModel.getComments({ questionID: params.id }, pageNumber, pageSize),
+            commentModel.getCommentCount({ questionID: params.id })
+        ]).then(function(values) {
+            console.log(values)
+            const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize - 1) / pageSize)
+            resolve({
+                'meta': {
+                    'curr': pageNumber,
+                    'last': lastPage,
+                    'pageSize': pageSize
+                },
+                'data': values[0]
+            })
+        })
+    })
+
+    responseHandler(getQuestionAnswers, res)
         .catch(errorHandler(res))
 }
 
