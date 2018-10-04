@@ -6,9 +6,10 @@ export function getQuestion(course, id) {
   return get(`/course/${course}/question/${id}`)
 }
 
-export function answerMapper({ id, likes, userID, body, timestamp }) {
+export function answerMapper({ id, questionID, likes, userID, body, timestamp }) {
   return {
     id: String(id),
+    questionID: String(questionID),
     body,
     likes,
     author: userID,
@@ -54,6 +55,14 @@ export function getLikes(course, id) {
 
 export function putLikes(course, id, data) {
   return put(`/course/${course}/question/${id}/likes`, { data })
+}
+
+export function getAnswerLikes(course, id, commentID) {
+  return get(`/course/${course}/question/${id}/amswer/${commentID}/likes`)
+}
+
+export function putAnswerLikes(course, id, commentID, data) {
+  return put(`/course/${course}/question/${id}/answer/${commentID}/likes`, { data })
 }
 
 /**

@@ -17,24 +17,54 @@ exports.getReview = function ({ params }, res) {
 
 /* GET top level review replies . */
 exports.getReviewComments = function ({ params, query }, res) {
-    responseHandler(commentModel.getComments({ reviewID: params.id }, query.p), res)
+    const getReplies = new Promise((resolve, reject) => {
+        // Get the replies
+        commentModel.getComments({ reviewID: params.id }, query.p)
+            // Get the likes for each reply
+            .then((replies) => {
+                const promises = replies.map(reply => likesModel.getLikes({ type: 'reply', id: reply.id }))
+                return Promise.all(promises)
+                    .then((likes) => {
+                        for (var i = 0; i < replies.length; i++) {
+                            replies[i].likes = likes[i].likes
+                        }
+                        resolve(replies)
+                    })
+            })
+            .catch(err => reject(err))
+    })
+
+    responseHandler(getReplies, res)
         .catch(errorHandler(res))
 }
 
 /* POST new comment. */
-exports.postComment = function ({ params, body }, res) {
-    responseHandler(commentModel.postComment({ reviewID: params.id }, body), res)
+exports.postComment = function ({ params, query, body }, res) {
+    commentModel.postComment({ reviewID: params.id }, body)
+        .then(exports.getReviewComments({ params, query }, res))
         .catch(errorHandler(res))
 }
 
 /* GET the likes value */
-exports.getLikes = function ({ params }, res) {
+exports.getReviewLikes = function ({ params }, res) {
     responseHandler(likesModel.getLikes({ type: 'review', id: params.id }), res)
         .catch(errorHandler(res))
 }
 
 /* PUT updated likes value */
-exports.putLikes = function ({ params, body }, res) {
+exports.putReviewLikes = function ({ params, body }, res) {
     responseHandler(likesModel.putLikes({ type: 'review', id: params.id, ...body }), res)
         .catch(errorHandler(res))
+}
+
+/* GET the reply likes value */
+exports.getReplyLikes = function ({ params }, res) {
+    responseHandler(likesModel.getLikes({ type: 'reply', id: params.id }), res)
+        .catch(errorHandler(res))
+}
+
+/* PUT updated reply likes value */
+exports.putReplyLikes = function ({ params, body, query }, res) {
+    likesModel.putLikes({ type: 'reply', id: params.replyID, ...body })
+        .then(exports.getReviewComments({ params, query }, res))
 }

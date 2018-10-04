@@ -69,6 +69,12 @@ const actions = {
   },
   async putLikes ({ dispatch }, { id, code, data }) {
     return dispatch('doRequest', { action: ACTIONS.PUT_LIKES, args: [code, id, data] })
+  },
+  async getReplyLikes ({ dispatch }, { id, code, commentID }) {
+    return dispatch('doRequest', { action: ACTIONS.GET_REPLY_LIKES, args: [code, id, commentID] })
+  },
+  async putReplyLikes ({ dispatch }, { id, code, commentID, data }) {
+    return dispatch('doRequest', { action: ACTIONS.PUT_REPLY_LIKES, args: [code, id, commentID, data] })
   }
 }
 

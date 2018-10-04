@@ -64,3 +64,11 @@ export function getLikes(course, id) {
 export function putLikes(course, id, data) {
   return put(`/course/${course}/review/${id}/likes`, { data })
 }
+
+export function getReplyLikes(course, id, commentID) {
+  return get(`/course/${course}/review/${id}/reply/${commentID}/likes`)
+}
+
+export function putReplyLikes(course, id, commentID, data) {
+  return put(`/course/${course}/review/${id}/reply/${commentID}/likes`, { data })
+}

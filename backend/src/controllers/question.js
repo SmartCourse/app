@@ -18,25 +18,54 @@ exports.getQuestion = function ({ params }, res) {
 
 /* GET question ansewrs. */
 exports.getQuestionAnswers = function ({ params, query }, res) {
-    responseHandler(commentModel.getComments({ questionID: params.id }, query.p), res)
+    const getAnswers = new Promise((resolve, reject) => {
+        // Get the answers
+        commentModel.getComments({ questionID: params.id }, query.p)
+            // Get the likes for each answer
+            .then((answers) => {
+                const promises = answers.map(answer => likesModel.getLikes({ type: 'answer', id: answer.id }))
+                return Promise.all(promises)
+                    .then((likes) => {
+                        for (var i = 0; i < answers.length; i++) {
+                            answers[i].likes = likes[i].likes
+                        }
+                        resolve(answers)
+                    })
+            })
+            .catch(err => reject(err))
+    })
+
+    responseHandler(getAnswers, res)
         .catch(errorHandler(res))
 }
 
 /* POST new answer. */
-exports.postAnswer = function ({ params, body }, res) {
-    console.log(body)
-    responseHandler(commentModel.postComment({ questionID: params.id }, body), res)
+exports.postAnswer = function ({ params, query, body }, res) {
+    commentModel.postComment({ questionID: params.id }, body)
+        .then(exports.getQuestionAnswers({ params, query }, res))
         .catch(errorHandler(res))
 }
 
-/* GET the likes value */
-exports.getLikes = function ({ params }, res) {
+/* GET the question likes value */
+exports.getQuestionLikes = function ({ params }, res) {
     responseHandler(likesModel.getLikes({ type: 'question', id: params.id }), res)
         .catch(errorHandler(res))
 }
 
-/* PUT updated likes value */
-exports.putLikes = function ({ params, body }, res) {
+/* PUT updated question likes value */
+exports.putQuestionLikes = function ({ params, body }, res) {
     responseHandler(likesModel.putLikes({ type: 'question', id: params.id, ...body }), res)
         .catch(errorHandler(res))
+}
+
+/* GET the answer likes value */
+exports.getAnswerLikes = function ({ params }, res) {
+    responseHandler(likesModel.getLikes({ type: 'answer', id: params.id }), res)
+        .catch(errorHandler(res))
+}
+
+/* PUT updated answer likes value */
+exports.putAnswerLikes = function ({ params, body, query }, res) {
+    likesModel.putLikes({ type: 'answer', id: params.answerID, ...body })
+        .then(exports.getQuestionAnswers({ params, query }, res))
 }

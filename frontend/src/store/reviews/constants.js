@@ -4,7 +4,9 @@ import {
   postReview,
   postReply,
   getLikes,
-  putLikes
+  putLikes,
+  getReplyLikes,
+  putReplyLikes
 } from '@/utils/api/reviews'
 
 export const ACTIONS = {
@@ -13,7 +15,9 @@ export const ACTIONS = {
   POST_REVIEW: Symbol('postReview'),
   POST_REPLY: Symbol('postReply'),
   GET_LIKES: Symbol('getLikes'),
-  PUT_LIKES: Symbol('putLikes')
+  PUT_LIKES: Symbol('putLikes'),
+  GET_REPLY_LIKES: Symbol('getReplyLikes'),
+  PUT_REPLY_LIKES: Symbol('putReplyLikes')
 }
 
 export const REQUEST = {
@@ -22,14 +26,18 @@ export const REQUEST = {
   [ACTIONS.POST_REVIEW]: postReview,
   [ACTIONS.POST_REPLY]: postReply,
   [ACTIONS.GET_LIKES]: getLikes,
-  [ACTIONS.PUT_LIKES]: putLikes
+  [ACTIONS.PUT_LIKES]: putLikes,
+  [ACTIONS.GET_REPLY_LIKES]: getReplyLikes,
+  [ACTIONS.PUT_REPLY_LIKES]: putReplyLikes
 }
 
 export const COMMITS = {
   [ACTIONS.GET_REVIEW]: 'FOCUS_REVIEW',
   [ACTIONS.GET_REPLIES]: 'FOCUS_REPLIES',
   [ACTIONS.POST_REVIEW]: 'FOCUS_REVIEW',
-  [ACTIONS.POST_REPLY]: 'APPEND_REPLY',
+  [ACTIONS.POST_REPLY]: 'FOCUS_REPLIES',
   [ACTIONS.GET_LIKES]: 'FOCUS_LIKES',
-  [ACTIONS.PUT_LIKES]: 'FOCUS_LIKES'
+  [ACTIONS.PUT_LIKES]: 'FOCUS_LIKES',
+  [ACTIONS.GET_REPLY_LIKES]: 'FOCUS_REPLIES',
+  [ACTIONS.PUT_REPLY_LIKES]: 'FOCUS_REPLIES'
 }
