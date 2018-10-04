@@ -22,9 +22,19 @@ exports.postAnswer = function ({ params, body }, res) {
         .catch(errorHandler(res))
 }
 
+/* GET the likes value */
+exports.getLikes = function ({ params }, res) {
+    responseHandler(questionModel.getQuestionLikes(params.id), res)
+        .catch(errorHandler(res))
+}
+
 /* PUT updated likes value */
 exports.putLikes = function ({ params, body }, res) {
-    console.log(body.likes)
-    responseHandler(questionModel.putQuestionLikes(params.id, body.likes), res)
+    responseHandler(questionModel.putQuestionLikes(
+        {
+            questionID: params.id,
+            ...body
+        }
+    ), res)
         .catch(errorHandler(res))
 }

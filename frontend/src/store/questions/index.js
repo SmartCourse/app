@@ -37,6 +37,10 @@ const mutations = {
   FOCUS_ANSWERS (state, answers) {
     state.questionObj.answers = answers.map(answerMapper)
   },
+  FOCUS_LIKES (state, { likes }) {
+    state.questionObj.question.likes = likes
+    // TODO - ALREADY UPVOTED
+  },
   API_ERROR (state, {code, message}) {
     state.error.code = code
     state.error.message = message
@@ -54,14 +58,17 @@ const actions = {
   async postQuestion ({dispatch}, { code, form }) {
     return dispatch('doRequest', { action: ACTIONS.POST_QUESTION, args: [code, form] })
   },
-  async putQuestion ({dispatch}, {code, id, data}) {
-    return dispatch('doRequest', { action: ACTIONS.PUT_QUESTION, args: [code, id, data] })
-  },
   async getAnswers ({dispatch}, { code, id }) {
     return dispatch('doRequest', { action: ACTIONS.GET_ANSWERS, args: [code, id] })
   },
   async postAnswer ({dispatch}, { id, code, form }) {
     return dispatch('doRequest', { action: ACTIONS.POST_ANSWER, args: [code, id, form] })
+  },
+  async getLikes ({dispatch}, { id, code }) {
+    return dispatch('doRequest', { action: ACTIONS.GET_LIKES, args: [code, id] })
+  },
+  async putLikes ({dispatch}, { id, code, data }) {
+    return dispatch('doRequest', { action: ACTIONS.PUT_LIKES, args: [code, id, data] })
   }
 }
 

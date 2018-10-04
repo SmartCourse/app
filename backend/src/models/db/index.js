@@ -1,6 +1,6 @@
 const path = require('path')
 const sqlite3 = require('sqlite3')
-const { createDB, insertDB, updateDB } = require('./tables')
+const { createDB, insertDB, insertUniqueDB, updateDB } = require('./tables')
 
 const DB_NAME = process.env.NODE_ENV === 'production'
     ? path.join(__dirname, '../../../db/smartcourse.db') : ':memory:'
@@ -15,7 +15,7 @@ class DB {
     constructor(databaseName) {
         this._db = new sqlite3.Database(databaseName, sqlite3.OPEN_READWRITE,
             (err) => {
-                if (err) { 
+                if (err) {
                     console.error(err)
                 } else {
                     console.log(`Opened database: ${databaseName}`)
@@ -30,6 +30,10 @@ class DB {
 
     insert(table, data) {
         return insertDB(this._db, table, data)
+    }
+
+    insertUnique(table, data) {
+        return insertUniqueDB(this._db, table, data)
     }
 
     update(table, data, conditions) {

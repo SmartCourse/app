@@ -48,11 +48,19 @@ export function postAnswer(course, id, data) {
   return post(`/course/${course}/question/${id}/answers`, { data })
 }
 
+export function getLikes(course, id) {
+  return get(`/course/${course}/question/${id}/likes`)
+}
+
+export function putLikes(course, id, data) {
+  return put(`/course/${course}/question/${id}/likes`, { data })
+}
+
 /**
  * @param {string} course  the course code of the course
  * @param {string} id      the id of the question being edited
  * @param {object} data    the data associated with the new question
  */
 export function editQuestion(course, id, data) {
-  return put(`/course/${course}/question/${id}`, { data })
+  return put(`/course/${course}/question/${id}/`, { data })
 }

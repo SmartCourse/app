@@ -21,6 +21,7 @@
 import Card from '@/components/Card'
 import User from '@/components/UserSummary'
 import Vote from '@/components/Vote'
+import { mapGetters } from 'vuex'
 
 export default {
   components: { Card, User, Vote },
@@ -35,12 +36,15 @@ export default {
   },
   methods: {
     upvote() {
-      //this.likes +=1
-      this.$store.dispatch('questions/putQuestion', 
-        { code: this.code, id: this.id, data: { likes: this.likes } })
+      this.$store.dispatch('questions/putLikes',
+      // TODO - REMOVE USER ID FROM HERE
+        { code: this.code, id: this.id, data: { userID: 1, value: 1 } })
     },
     downvote() {
-      console.log('decrement')
+      const newLikes = this.likes - 1
+      // TODO - REMOVE USER ID FROM HERE
+      this.$store.dispatch('questions/putLikes', 
+        { code: this.code, id: this.id, data: { userID: 1, value: -1 } })
     }
   }
 }

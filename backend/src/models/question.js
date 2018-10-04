@@ -11,8 +11,14 @@ class Question {
      * @returns {object}             Single question
      */
     getQuestion(questionID) {
-        return this.db
-            .query('SELECT * FROM question WHERE id=?', [questionID])
+        return Promise.all([
+            this.db.query('SELECT * FROM question WHERE id=?',
+                [questionID]),
+            this.getQuestionLikes(questionID)])
+            .then(([question, sum]) => {
+                const likes = sum['SUM(value)'] ? sum['SUM(value)'] : 0
+                return { ...question, likes }
+            })
     }
 
     /**
@@ -52,11 +58,30 @@ class Question {
     }
 
     /*
+     * Get question likes
+     */
+    getQuestionLikes({ questionID }) {
+        return this.db
+            .query('SELECT SUM(value) FROM like WHERE objectType=\'question\' AND objectID=?',
+                [questionID])
+            .then((sum) => {
+                const likes = sum['SUM(value)'] ? sum['SUM(value)'] : 0
+                return { likes }
+            })
+    }
+
+    /*
      * Put question likes
      */
-    putQuestionLikes(id, likes) {
+    putQuestionLikes({ questionID, userID, value }) {
         return this.db
-            .update('question', { likes }, { id })
+            .insertUnique('like', {
+                objectType: 'question',
+                objectID: questionID,
+                userID,
+                value
+            })
+            .then(() => this.getQuestionLikes({ questionID }))
     }
 }
 

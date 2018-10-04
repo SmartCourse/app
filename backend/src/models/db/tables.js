@@ -10,7 +10,7 @@ function createUserTable (db) {
             displayName TEXT DEFAULT 'ANON',
             email TEXT UNIQUE NOT NULL,
             joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            reputation INTEGER DEFAULT '0.00',
+            reputation INTEGER DEFAULT '0',
             degree TEXT,
             gradYear TIMESTAMP DEFAULT '2018',
             description TEXT
@@ -54,7 +54,7 @@ function createCourseTable (db) {
             outlineURL TEXT,
             description TEXT NOT NULL,
             requirements TEXT,
-            rating INTEGER DEFAULT '0.00',
+            rating INTEGER DEFAULT '0',
             tags TEXT,
             FOREIGN KEY (universityID) REFERENCES university(id),
             FOREIGN KEY (subjectCode) REFERENCES subject(code)
@@ -72,7 +72,6 @@ function createQuestionTable (db) {
             title TEXT NOT NULL,
             body TEXT NOT NULL,
             timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            likes INTEGER DEFAULT '0.00',
             FOREIGN KEY (code) REFERENCES course(code),
             FOREIGN KEY (userID) REFERENCES user(id)
             )`,
@@ -90,7 +89,6 @@ function createCommentTable (db) {
             userID INTEGER NOT NULL,
             body TEXT NOT NULL,
             timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            likes INTEGER DEFAULT '0.00',
             FOREIGN KEY (questionID) REFERENCES question(id),
             FOREIGN KEY (reviewID) REFERENCES review(id),
             FOREIGN KEY (userID) REFERENCES user(id)
@@ -108,11 +106,30 @@ function createReviewTable (db) {
             title TEXT NOT NULL,
             body TEXT NOT NULL,
             timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            likes INTEGER DEFAULT '0.00',
             FOREIGN KEY (code) REFERENCES course(code),
             FOREIGN KEY (userID) REFERENCES user(id)
             )`,
         (err) => err ? reject(err) : resolve('Created Review Table'))
+    })
+}
+
+function createLikeTable (db) {
+    return new Promise((resolve, reject) => {
+        db.run(`CREATE TABLE like (
+            objectType TEXT NOT NULL,
+            objectID INTEGER NOT NULL,
+            userID INTEGER NOT NULL,
+            value INTEGER DEFAULT '0',
+            FOREIGN KEY (userID) REFERENCES user(id)
+            )`,
+        (err) => {
+            if (err) {
+                reject(err)
+            } else {
+                db.run('CREATE UNIQUE INDEX id ON like (objectType, objectID, userID)',
+                    (err) => err ? reject(err) : resolve('Created Like Table'))
+            }
+        })
     })
 }
 
@@ -166,7 +183,8 @@ function createDB(db) {
         createCourseTable(db),
         createQuestionTable(db),
         createReviewTable(db),
-        createCommentTable(db)
+        createCommentTable(db),
+        createLikeTable(db)
     ])
         .then(() => {
             console.log('Created tables')
@@ -202,6 +220,25 @@ function insertDB (db, table, data, prep) {
     })
 }
 
+// Inserts unique JSON object into database table.
+// data = { column : value }
+// For security reasons, column inputs can NEVER be user defined.
+function insertUniqueDB (db, table, data) {
+    return new Promise((resolve, reject) => {
+        const insertValues = Object.values(data)
+        const insertColumns = Object.keys(data)
+        const insertPlaceholders = insertColumns.map(_ => '?').join()
+        const query = `REPLACE INTO ${table} (${insertColumns})
+        VALUES (${insertPlaceholders})`
+
+        db = db.run(
+            query,
+            [...insertValues],
+            function (err) { err ? reject(err) : resolve(this.lastID) }
+        )
+    })
+}
+
 // Updates given JSON object into database table.
 // data = { column : value }
 // For security reasons, column inputs can NEVER be user defined.
@@ -232,5 +269,6 @@ function updateDB (db, table, data, conditions) {
 module.exports = {
     createDB,
     insertDB,
+    insertUniqueDB,
     updateDB
 }

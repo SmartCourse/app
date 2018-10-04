@@ -1,32 +1,35 @@
 import {
   getQuestion,
   postQuestion,
-  putQuestion,
   getAnswers,
-  postAnswer
+  postAnswer,
+  getLikes,
+  putLikes
 } from '@/utils/api/questions'
-import { editQuestion } from '../../utils/api/questions';
 
 export const ACTIONS = {
   GET_QUESTION: Symbol('getQuestion'),
   POST_QUESTION: Symbol('postQuestion'),
-  PUT_QUESTION: Symbol('putQuestion'),
   GET_ANSWERS: Symbol('getAnswers'),
-  POST_ANSWER: Symbol('postAnswer')
+  POST_ANSWER: Symbol('postAnswer'),
+  GET_LIKES: Symbol('getLikes'),
+  PUT_LIKES: Symbol('putLikes')
 }
 
 export const REQUEST = {
   [ACTIONS.GET_QUESTION]: getQuestion,
   [ACTIONS.POST_QUESTION]: postQuestion,
-  [ACTIONS.PUT_QUESTION]: editQuestion,
   [ACTIONS.GET_ANSWERS]: getAnswers,
-  [ACTIONS.POST_ANSWER]: postAnswer
+  [ACTIONS.POST_ANSWER]: postAnswer,
+  [ACTIONS.GET_LIKES]: getLikes,
+  [ACTIONS.PUT_LIKES]: putLikes
 }
 
 export const COMMITS = {
   [ACTIONS.GET_QUESTION]: 'FOCUS_QUESTION',
   [ACTIONS.POST_QUESTION]: 'FOCUS_QUESTION',
-  [ACTIONS.PUT_QUESTION]: 'FOCUS_QUESTION',
   [ACTIONS.GET_ANSWERS]: 'FOCUS_ANSWERS',
-  [ACTIONS.POST_ANSWER]: 'APPEND_ANSWER'
+  [ACTIONS.POST_ANSWER]: 'APPEND_ANSWER',
+  [ACTIONS.GET_LIKES]: 'FOCUS_LIKES',
+  [ACTIONS.PUT_LIKES]: 'FOCUS_LIKES'
 }
