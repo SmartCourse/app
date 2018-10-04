@@ -13,6 +13,7 @@ const state = {
   search: '',
   reviewObj: {
     review: {},
+    repliesMeta: {},
     replies: []
   },
   error: {
@@ -24,6 +25,7 @@ const state = {
 const getters = {
   review: ({reviewObj: {review}}) => review,
   replies: ({reviewObj: {replies}}) => replies,
+  repliesMeta: ({reviewObj: {repliesMeta}}) => repliesMeta,
   loading: ({loading}) => loading,
   error: ({error}) => error
 }
@@ -35,8 +37,9 @@ const mutations = {
   FOCUS_REVIEW (state, review) {
     state.reviewObj.review = reviewMapper(review)
   },
-  FOCUS_REPLIES (state, replies) {
-    state.reviewObj.replies = replies.map(replyMapper)
+  FOCUS_REPLIES (state, {meta, data}) {
+    state.reviewObj.replies = data.map(replyMapper)
+    state.reviewObj.repliesMeta = meta
   },
   API_ERROR (state, {code, message}) {
     state.error.code = code

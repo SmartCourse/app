@@ -13,24 +13,21 @@ exports.getQuestion = function ({ params }, res) {
 exports.getQuestionAnswers = function ({ params, query }, res) {
     let p = parseInt(query.p)
     const pageNumber = p || 1
-    const pageSize = 2
+    const pageSize = 10
 
-    const getQuestionAnswers = new Promise((resolve, reject) => {
-        Promise.all([
-            commentModel.getComments({ questionID: params.id }, pageNumber, pageSize),
-            commentModel.getCommentCount({ questionID: params.id })
-        ]).then(function(values) {
-            console.log(values)
-            const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize - 1) / pageSize)
-            resolve({
-                'meta': {
-                    'curr': pageNumber,
-                    'last': lastPage,
-                    'pageSize': pageSize
-                },
-                'data': values[0]
-            })
-        })
+    const getQuestionAnswers = Promise.all([
+        commentModel.getComments({ questionID: params.id }, pageNumber, pageSize),
+        commentModel.getCommentCount({ questionID: params.id })
+    ]).then((values) => {
+        const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize - 1) / pageSize)
+        return {
+            'meta': {
+                'curr': pageNumber,
+                'last': lastPage,
+                'pageSize': pageSize
+            },
+            'data': values[0]
+        }
     })
 
     responseHandler(getQuestionAnswers, res)

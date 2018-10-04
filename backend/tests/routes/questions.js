@@ -68,12 +68,12 @@ describe('Test answer routes', () => {
 
         it('has the right number of answers', () =>
             request.then(({ body }) =>
-                assert(body.length >= 1))
+                assert(body.data.length >= 1))
         )
 
         it('has a valid answer', () =>
             request.then(({ body }) =>
-                expect(body[0].body).to.be.a('string'))
+                expect(body.data[0].body).to.be.a('string'))
         )
     })
 

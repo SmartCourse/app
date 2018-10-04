@@ -35,8 +35,8 @@ export function postQuestion(course, data) {
   return post(`/course/${course}/question`, { data })
 }
 
-export function getAnswers(course, id) {
-  return get(`/course/${course}/question/${id}/answers`)
+export function getAnswers(course, id, pageNumber) {
+  return get(`/course/${course}/question/${id}/answers?p=${pageNumber}`)
 }
 
 /**
