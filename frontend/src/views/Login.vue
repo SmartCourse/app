@@ -3,6 +3,7 @@
     <AppAuthForm v-if="!loading"
       :title="'Login'"
       :buttonText="'Log In'"
+      :flavour="'Welcome back.'"
       :error="error"
       :clickHandler="clickHandler"
     >
@@ -49,8 +50,9 @@ export default {
 
 .forgot-pass {
   margin: 20px 0 0;
-  font: var(--body-copy-2);
+  font: var(--body-copy-1);
   text-align:right;
+  color: var(--theme);
 }
 
 </style>

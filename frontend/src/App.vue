@@ -89,13 +89,6 @@ p {
   color: var(--black-p);
 }
 
-.form-success {
-  color: green;
-}
-.form-failure {
-  color: red;
-}
-
 #app {
   background-color: var(--color-very-light-gray);
 }
@@ -130,6 +123,11 @@ ol, ul {
 
 li {
   list-style-type: none;
+}
+
+input, textarea {
+  outline: none;
+  border: none;
 }
 
 </style>

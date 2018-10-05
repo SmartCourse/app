@@ -211,7 +211,6 @@ function insertDB (db, table, data, prep) {
     })
 }
 
-
 module.exports = {
     createDB,
     insertDB

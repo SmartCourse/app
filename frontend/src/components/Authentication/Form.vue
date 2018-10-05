@@ -1,5 +1,6 @@
 <template>
   <div class="app-auth-form">
+    <h1 v-if="flavour">{{ flavour }}</h1>
     <Card>
       <div class="card-content">
         <h2>{{ title }}</h2>
@@ -10,7 +11,6 @@
           </AppButton>
         </form>
         <p v-if="error">{{ error }}</p>
-        <p class="back-link"><router-link to="/">Back to Home</router-link></p>
       </div>
     </Card>
   </div>
@@ -29,22 +29,33 @@ export default {
     },
     title: String,
     error: String,
-    buttonText: String
+    buttonText: String,
+    flavour: String
   },
   components: { AppButton, Card }
 }
 </script>
 
 <style scoped>
+h1 {
+  margin: 20px;
+  font: var(--header-1);
+}
+
 h2 {
-  font: var(--header-3);
-  margin: 5px 0 10px;
+  font: var(--header-2);
+  margin: 20px;
+}
+
+h1, h2 {
+  text-align: center;
 }
 
 .auth-form {
   font: var(--body-copy-1);
   display: grid;
   grid-auto-flow: row;
+  grid-gap: 20px;
 }
 
 .button-spacing {
@@ -70,19 +81,12 @@ h2 {
   margin-bottom: 20px;
 }
 
-.back-link {
-  color: var(--theme);
-  display: block;
-  margin-top: 20px;
-  position: absolute;
-  top: 0;
-  right: 20px;
-}
-
+/*
 @media screen and (max-width: 450px) {
     .app-auth-form {
       flex-direction: row;
     }
 }
+*/
 
 </style>
