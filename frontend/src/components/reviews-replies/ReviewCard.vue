@@ -66,7 +66,7 @@ h2 {
 }
 .recommend {
     float:left;
-    margin:10px;
+    margin-right:10px;
 }
 .blue {
     color:#0099ee;
