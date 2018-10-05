@@ -45,13 +45,13 @@ class Review {
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
-    postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID = 1 }) {
+    postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID }) {
 
-        if (recommend != 0 && recommend != 1) throw Error("Invalid recommend value")
-        if (enjoy < 1 || enjoy > 5) throw Error("Invalid enjoy value")
+        if (recommend != 0 && recommend != 1) throw Error('Invalid recommend value')
+        if (enjoy < 1 || enjoy > 5) throw Error('Invalid enjoy value')
 
         ;[difficulty, teaching, workload].forEach(item => {
-            if (item < 0 || item > 3) throw Error("Invalid difficulty, teaching or workload value")
+            if (item < 0 || item > 3) throw Error('Invalid difficulty, teaching or workload value')
         })
 
         // insert review, get review, update course ratings

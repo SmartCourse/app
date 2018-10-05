@@ -13,7 +13,6 @@ class Likes {
             .query('SELECT SUM(value) FROM like WHERE objectType=? AND objectID=?',
                 [type, id])
             .then((sum) => {
-                this.db.queryAll('SELECT * FROM like').then((rows) => console.log(rows))
                 const likes = sum['SUM(value)'] ? sum['SUM(value)'] : 0
                 return { likes }
             })

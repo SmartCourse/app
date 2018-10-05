@@ -28,23 +28,23 @@ export default {
   },
   methods: {
     upvote() {
-      // TODO - REMOVE USER ID FROM HERE
-      if (this.type === 'Answer') {
+      const { type, code, id, comment } = this
+      if (type === 'Answer') {
         this.$store.dispatch('questions/putAnswerLikes',
-          { code: this.code, id: this.id, commentID: this.comment.id, data: { userID: 1, value: 1 } })
-      } else if (this.type === 'Reply') {
+          { code, id, commentID: comment.id, data: { value: 1 } })
+      } else if (type === 'Reply') {
         this.$store.dispatch('reviews/putReplyLikes',
-          { code: this.code, id: this.id, commentID: this.comment.id, data: { userID: 1, value: 1 } })
+          { code, id, commentID: comment.id, data: { value: 1 } })
       }
     },
     downvote() {
-      // TODO - REMOVE USER ID FROM HERE
-      if (this.type === 'Answer') {
+      const { type, code, id, comment } = this
+      if (type === 'Answer') {
         this.$store.dispatch('questions/putAnswerLikes',
-          { code: this.code, id: this.id, commentID: this.comment.id, data: { userID: 1, value: -1 } })
-      } else if (this.type === 'Reply') {
+          { code, id, commentID: comment.id, data: { value: -1 } })
+      } else if (type === 'Reply') {
         this.$store.dispatch('reviews/putReplyLikes',
-          { code: this.code, id: this.id, commentID: this.comment.id, data: { userID: 1, value: -1 } })
+          { code, id, commentID: comment.id, data: { value: -1 } })
       }
     }
   }

@@ -70,15 +70,14 @@ exports.getCourseReviews = function ({ params, query }, res) {
 }
 
 exports.postQuestion = function ({ user, params, body }, res) {
-    // TODO fix userID
-    body.userID = 1
-    if (user) body.userID = user.id
+    body.userID = user || 1
     responseHandler(questionModel.postQuestion(params.code, body), res)
         .catch(errorHandler(res))
 }
 
 /* POST new review */
-exports.postReview = function ({ params, body }, res) {
+exports.postReview = function ({ user, params, body }, res) {
+    body.userID = user || 1
     responseHandler(reviewModel.postReview(params.code, body), res)
         .catch(errorHandler(res))
 }

@@ -39,7 +39,8 @@ exports.getReviewComments = function ({ params, query }, res) {
 }
 
 /* POST new comment. */
-exports.postComment = function ({ params, query, body }, res) {
+exports.postComment = function ({ user, params, query, body }, res) {
+    body.userID = user || 1
     commentModel.postComment({ reviewID: params.id }, body)
         .then(exports.getReviewComments({ params, query }, res))
         .catch(errorHandler(res))
@@ -52,8 +53,9 @@ exports.getReviewLikes = function ({ params }, res) {
 }
 
 /* PUT updated likes value */
-exports.putReviewLikes = function ({ params, body }, res) {
-    responseHandler(likesModel.putLikes({ type: 'review', id: params.id, ...body }), res)
+exports.putReviewLikes = function ({ user, params, body }, res) {
+    body.userID = user || 1
+    responseHandler(likesModel.putLikes({ type: 'review', ...params, ...body }), res)
         .catch(errorHandler(res))
 }
 
@@ -64,7 +66,8 @@ exports.getReplyLikes = function ({ params }, res) {
 }
 
 /* PUT updated reply likes value */
-exports.putReplyLikes = function ({ params, body, query }, res) {
+exports.putReplyLikes = function ({ user, params, body, query }, res) {
+    body.userID = user || 1
     likesModel.putLikes({ type: 'reply', id: params.replyID, ...body })
         .then(exports.getReviewComments({ params, query }, res))
 }

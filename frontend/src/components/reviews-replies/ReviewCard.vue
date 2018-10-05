@@ -35,14 +35,14 @@ export default {
   },
   methods: {
     upvote() {
-      // TODO - REMOVE USER ID FROM HERE
+      const { code, id } = this
       this.$store.dispatch('reviews/putLikes',
-        { code: this.code, id: this.id, data: { userID: 1, value: 1 } })
+        { code, id, data: { value: 1 } })
     },
     downvote() {
-      // TODO - REMOVE USER ID FROM HERE
+      const { code, id } = this
       this.$store.dispatch('reviews/putLikes',
-        { code: this.code, id: this.id, data: { userID: 1, value: -1 } })
+        { code, id, data: { value: -1 } })
     }
   }
 }
