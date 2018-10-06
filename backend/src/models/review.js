@@ -1,3 +1,4 @@
+const { DONT_RECOMMEND, RECOMMEND, MIN_ENJOY, MAX_ENJOY, MIN_OPTION, MAX_OPTION } = require('./constants')
 const courseModel = require('../models/course')()
 
 /* All inputs should be validated in this class that are review related */
@@ -47,11 +48,11 @@ class Review {
      */
     postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID }) {
 
-        if (recommend != 0 && recommend != 1) throw Error('Invalid recommend value')
-        if (enjoy < 1 || enjoy > 5) throw Error('Invalid enjoy value')
+        if (recommend != DONT_RECOMMEND && recommend != RECOMMEND) throw Error('Invalid recommend value')
+        if (enjoy < MIN_ENJOY || enjoy > MAX_ENJOY) throw Error('Invalid enjoy value')
 
         ;[difficulty, teaching, workload].forEach(item => {
-            if (item < 0 || item > 3) throw Error('Invalid difficulty, teaching or workload value')
+            if (item < MIN_OPTION || item > MAX_OPTION) throw Error('Invalid difficulty, teaching or workload value')
         })
 
         // insert review, get review, update course ratings

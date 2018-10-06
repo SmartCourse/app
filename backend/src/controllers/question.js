@@ -1,3 +1,4 @@
+const { ANONYMOUS } = require('../models/constants')
 const questionModel = require('../models/question')()
 const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
@@ -41,7 +42,7 @@ exports.getQuestionAnswers = function ({ params, query }, res) {
 
 /* POST new answer. */
 exports.postAnswer = function ({ user, params, query, body }, res) {
-    body.userID = user || 1
+    body.userID = user || ANONYMOUS
     commentModel.postComment({ questionID: params.id }, body)
         .then(exports.getQuestionAnswers({ params, query }, res))
         .catch(errorHandler(res))
@@ -55,7 +56,7 @@ exports.getQuestionLikes = function ({ params }, res) {
 
 /* PUT updated question likes value */
 exports.putQuestionLikes = function ({ user, params, body }, res) {
-    body.userID = user || 1
+    body.userID = user || ANONYMOUS
     responseHandler(likesModel.putLikes({ type: 'question', ...params, ...body }), res)
         .catch(errorHandler(res))
 }
@@ -68,7 +69,7 @@ exports.getAnswerLikes = function ({ params }, res) {
 
 /* PUT updated answer likes value */
 exports.putAnswerLikes = function ({ user, params, body, query }, res) {
-    body.userID = user || 1
+    body.userID = user || ANONYMOUS
     likesModel.putLikes({ type: 'answer', id: params.answerID, ...body })
         .then(exports.getQuestionAnswers({ params, query }, res))
 }
