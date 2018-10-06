@@ -17,7 +17,7 @@ const getters = {
 }
 
 const actions = {
-  populateSearch({commit, state}) {
+  populateSearch({ commit, state }) {
     // avoid repeats of this
     if (state.courses.length) {
       return

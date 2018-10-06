@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { shallowMount, RouterLinkStub } from '@vue/test-utils'
+import { mount, RouterLinkStub } from '@vue/test-utils'
 import ReviewCard from '@/components/reviews-replies/ReviewCard'
 
 describe('ReviewCard.vue', () => {
@@ -13,7 +13,7 @@ describe('ReviewCard.vue', () => {
       body:
         'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto'
     }
-    this.wrapper = shallowMount(ReviewCard, {
+    this.wrapper = mount(ReviewCard, {
       propsData: { ...this.card, code: 'COMP4920' },
       stubs: {
         'router-link': RouterLinkStub

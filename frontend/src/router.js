@@ -38,14 +38,14 @@ export default new Router({
     {
       path: '/subject/:code',
       name: 'subjectCourses',
-      props: ({params: { code }}) => ({
+      props: ({ params: { code } }) => ({
         code
       }),
       component: subjectCourses
     },
     {
       path: '/course/:code/',
-      props: ({params: { code }}) => ({
+      props: ({ params: { code } }) => ({
         code
       }),
       children: [
@@ -53,7 +53,7 @@ export default new Router({
           path: '',
           name: 'info',
           component: courseInfo,
-          props: ({params: { code }}) => ({
+          props: ({ params: { code } }) => ({
             code
           })
         },
@@ -61,7 +61,7 @@ export default new Router({
           path: 'questions',
           name: 'questions',
           component: courseQuestions,
-          props: ({params: { code }}) => ({
+          props: ({ params: { code } }) => ({
             code
           })
         },
@@ -69,7 +69,7 @@ export default new Router({
           path: 'reviews',
           name: 'reviews',
           component: courseReviews,
-          props: ({params: { code }}) => ({
+          props: ({ params: { code } }) => ({
             code
           })
         }
@@ -82,7 +82,7 @@ export default new Router({
     {
       path: '/course/:code/question/new',
       name: 'newQuestion',
-      props: ({params: { code }}) => ({
+      props: ({ params: { code } }) => ({
         code
       }),
       component: newQuestionView
@@ -90,7 +90,7 @@ export default new Router({
     {
       path: '/course/:code/question/:id',
       name: 'question',
-      props: ({params: { code, id }}) => ({
+      props: ({ params: { code, id } }) => ({
         code,
         id
       }),
@@ -99,7 +99,7 @@ export default new Router({
     {
       path: '/course/:code/review/new',
       name: 'newReview',
-      props: ({params: { code }}) => ({
+      props: ({ params: { code } }) => ({
         code
       }),
       component: newReviewView
@@ -107,7 +107,7 @@ export default new Router({
     {
       path: '/course/:code/review/:id',
       name: 'review',
-      props: ({params: { code, id }}) => ({
+      props: ({ params: { code, id } }) => ({
         code,
         id
       }),

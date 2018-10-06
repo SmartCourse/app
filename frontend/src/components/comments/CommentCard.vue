@@ -1,11 +1,7 @@
 <template>
     <Card>
         <div class="card-content">
-            <div class="meta-fields">
-                <p class="vote">&plus;</p>
-                <p class="likes">{{ comment.likes }}</p>
-                <p class="vote">&minus;</p>
-            </div>
+            <Vote v-bind:likes="comment.likes" :upvote="upvote" :downvote="downvote" />
             <div class="content">
                 <p>{{ comment.body }}</p>
             </div>
@@ -20,11 +16,37 @@
 <script>
 import Card from '@/components/Card'
 import User from '@/components/UserSummary'
+import Vote from '@/components/Vote'
 
 export default {
-  components: { Card, User },
+  components: { Card, User, Vote },
   props: {
+    type: String,
+    id: String,
+    code: String,
     comment: Object
+  },
+  methods: {
+    upvote() {
+      const { type, code, id, comment } = this
+      if (type === 'Answer') {
+        this.$store.dispatch('questions/putAnswerLikes',
+          { code, id, commentID: comment.id, data: { value: 1 } })
+      } else if (type === 'Reply') {
+        this.$store.dispatch('reviews/putReplyLikes',
+          { code, id, commentID: comment.id, data: { value: 1 } })
+      }
+    },
+    downvote() {
+      const { type, code, id, comment } = this
+      if (type === 'Answer') {
+        this.$store.dispatch('questions/putAnswerLikes',
+          { code, id, commentID: comment.id, data: { value: -1 } })
+      } else if (type === 'Reply') {
+        this.$store.dispatch('reviews/putReplyLikes',
+          { code, id, commentID: comment.id, data: { value: -1 } })
+      }
+    }
   }
 }
 </script>

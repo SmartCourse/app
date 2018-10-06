@@ -41,11 +41,11 @@ const getters = {
 }
 
 const mutations = {
-  REFRESH_QUESTION_FEED (state, {meta, data}) {
+  REFRESH_QUESTION_FEED (state, { meta, data }) {
     state.questions = data.map(questionMapper)
     state.questionsMeta = meta
   },
-  REFRESH_REVIEW_FEED (state, {meta, data}) {
+  REFRESH_REVIEW_FEED (state, { meta, data }) {
     state.reviews = data.map(reviewMapper)
     state.reviewsMeta = meta
   },
@@ -55,7 +55,7 @@ const mutations = {
   TOGGLE_LOADING (state, bool) {
     state.loading = bool
   },
-  API_ERROR (state, {code, message}) {
+  API_ERROR (state, { code, message }) {
     state.error.code = code
     state.error.message = message
   }
@@ -63,13 +63,13 @@ const mutations = {
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
-  async getQuestions ({dispatch}, {id, pageNumber}) {
+  async getQuestions ({ dispatch }, { id, pageNumber }) {
     return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, args: [id, pageNumber] })
   },
-  async getReviews ({dispatch}, {id, pageNumber}) {
+  async getReviews ({ dispatch }, { id, pageNumber }) {
     return dispatch('doRequest', { action: ACTIONS.GET_REVIEWS, args: [id, pageNumber] })
   },
-  async getCourse ({dispatch}, id) {
+  async getCourse ({ dispatch }, id) {
     return dispatch('doRequest', { action: ACTIONS.GET_COURSE, args: [id] })
   }
 }
