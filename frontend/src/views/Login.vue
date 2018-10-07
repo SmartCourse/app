@@ -6,10 +6,13 @@
       :flavour="'Welcome back.'"
       :error="error"
       :clickHandler="clickHandler"
+      :link="{
+        text: 'Forgot your password?',
+        name: 'Forgot Password'
+      }"
     >
       <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>
       <AuthInput type="password" v-model="password" placeholder="Password"/>
-      <a class="forgot-pass">Forgot your password?</a>
     </AppAuthForm>
     <LoadingSpinner v-else/>
 </div>
@@ -45,14 +48,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-.forgot-pass {
-  margin: 20px 0 0;
-  font: var(--body-copy-1);
-  text-align:right;
-  color: var(--theme);
-}
-
-</style>

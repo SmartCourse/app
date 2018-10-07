@@ -38,6 +38,7 @@ export default {
 
 <style scoped>
 svg {
+  max-width: 100%;
   height: inherit;
 }
 

@@ -5,6 +5,10 @@
       :buttonText="'Sign Up'"
       :error="error"
       :clickHandler="clickHandler"
+      :link="{
+        text: 'Already have an account?',
+        name: 'Login'
+      }"
     >
       <AuthInput type="text" placeholder="Display Name"/>
       <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>

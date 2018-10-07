@@ -124,6 +124,11 @@ export default new Router({
       component: () => import('./views/Login')
     },
     {
+      path: '/password-reset',
+      name: 'Forgot Password',
+      component: () => import('./views/ForgotPassword')
+    },
+    {
       path: '/fonts',
       component: () => import('./views/Design')
     }

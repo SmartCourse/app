@@ -18,7 +18,7 @@ export default {
   computed: {
     authpage() {
       const { name } = this.$route
-      return name === 'Login' || name === 'Sign Up'
+      return name === 'Login' || name === 'Sign Up' || name === 'Forgot Password'
     }
   },
   created() {

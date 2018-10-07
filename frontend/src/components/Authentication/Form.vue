@@ -1,11 +1,11 @@
 <template>
   <div class="app-auth-form">
-    <h1 v-if="flavour">{{ flavour }}</h1>
     <Card>
       <div class="card-content">
-        <h2>{{ title }}</h2>
+        <h2 v-if="title">{{ title }}</h2>
         <form class="auth-form">
           <slot></slot>
+          <router-link v-if="link" :to="{ name: link.name }" class="help-link">{{ link.text }}</router-link>
           <AppButton class="button-spacing" @click.native="clickHandler">
               {{ buttonText }}
           </AppButton>
@@ -26,6 +26,10 @@ export default {
     clickHandler: {
       type: Function,
       required: true
+    },
+    link: {
+      text: String,
+      name: String
     },
     title: String,
     error: String,
@@ -81,12 +85,11 @@ h1, h2 {
   margin-bottom: 20px;
 }
 
-/*
-@media screen and (max-width: 450px) {
-    .app-auth-form {
-      flex-direction: row;
-    }
+.help-link {
+  margin: 20px 0 0;
+  font: var(--body-copy-1);
+  text-align:right;
+  color: var(--theme);
 }
-*/
 
 </style>
