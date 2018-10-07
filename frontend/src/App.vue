@@ -86,6 +86,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 p {
+  // default unless specified
+  font: var(--body-copy-1);
   color: var(--black-p);
 }
 

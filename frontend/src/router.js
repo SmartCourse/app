@@ -13,6 +13,7 @@ const courseQuestions = () => import('./views/course/CourseQuestions')
 const courseReviews = () => import('./views/course/CourseReviews')
 const subjectList = () => import('./views/SubjectList')
 const subjectCourses = () => import('./views/SubjectCourses')
+const ErrorPage = () => import('./views/404')
 
 export default new Router({
   mode: 'history',
@@ -36,7 +37,7 @@ export default new Router({
       component: subjectList
     },
     {
-      path: '/subject/:code',
+      path: '/subject/:code([\\w]{4}',
       name: 'subjectCourses',
       props: ({params: { code }}) => ({
         code
@@ -44,7 +45,7 @@ export default new Router({
       component: subjectCourses
     },
     {
-      path: '/course/:code/',
+      path: '/course/:code([\\w]{8})/',
       props: ({params: { code }}) => ({
         code
       }),
@@ -80,7 +81,7 @@ export default new Router({
       component: () => import('./views/course')
     },
     {
-      path: '/course/:code/question/new',
+      path: '/course/:code([\\w]{8})/question/new',
       name: 'newQuestion',
       props: ({params: { code }}) => ({
         code
@@ -88,7 +89,7 @@ export default new Router({
       component: newQuestionView
     },
     {
-      path: '/course/:code/question/:id',
+      path: '/course/:code([\\w]{8})/question/:id',
       name: 'question',
       props: ({params: { code, id }}) => ({
         code,
@@ -97,7 +98,7 @@ export default new Router({
       component: questionView
     },
     {
-      path: '/course/:code/review/new',
+      path: '/course/:code([\\w]{8})/review/new',
       name: 'newReview',
       props: ({params: { code }}) => ({
         code
@@ -105,7 +106,7 @@ export default new Router({
       component: newReviewView
     },
     {
-      path: '/course/:code/review/:id',
+      path: '/course/:code([\\w]{8})/review/:id',
       name: 'review',
       props: ({params: { code, id }}) => ({
         code,
@@ -131,6 +132,11 @@ export default new Router({
     {
       path: '/fonts',
       component: () => import('./views/Design')
+    },
+    {
+      // match any other route
+      path: '*',
+      component: ErrorPage
     }
   ]
 })
