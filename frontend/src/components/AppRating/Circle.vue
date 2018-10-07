@@ -3,7 +3,7 @@
      y="0px" viewBox="0 0 80 80" xml:space="preserve">
      <g>
         <circle stroke="var(--color-light-gray)" fill="none" v-bind:r="r" :cx="cx" :cy="cy"/>
-        <text text-anchor="middle" alignment-baseline="central" x="40" y="40">{{ value }}</text>
+        <text text-anchor="middle" alignment-baseline="central" x="40" y="40">{{ value }}%</text>
         <circle stroke="var(--theme)" v-bind:r="r" :cx="cx" :cy="cy"
             :transform="`rotate(-90 ${cx} ${cy})`"
             :stroke-dasharray="circumference"
@@ -22,7 +22,7 @@ export default {
     return {
       cx: 40,
       cy: 40,
-      r: 25
+      r: 30
     }
   },
   computed: {

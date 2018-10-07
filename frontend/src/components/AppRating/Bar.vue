@@ -20,10 +20,9 @@ export default {
 </script>
 
 <style scoped>
-
 .container {
     margin: auto;
-    height: 10px;
+    height: 5px;
     background-color: var(--color-light-gray);
     width: 100%;
 }
@@ -33,5 +32,4 @@ export default {
     transition: width 1s ease-in-out;
     background-color: var(--theme);
 }
-
 </style>

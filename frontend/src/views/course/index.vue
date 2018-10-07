@@ -4,30 +4,35 @@
     <div class="course">
         <div class="course-header">
             <div class="course-header-title">
-                <h2>{{ courseInfo.code }}</h2>
-                <h3>{{ courseInfo.name }}</h3>
+                <div class="key-data">
+                    <div class="left">
+                        <h2>{{ courseInfo.code }}</h2>
+                        <h3>{{ courseInfo.name }}</h3>
+                    </div>
+                    <div class="right">
+                        <OverallRating :rating="courseRatings[0]"/>
+                    </div>
+                </div>
+
                 <CourseLinks   :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
                 <CourseRatings :ratings="courseRatings"/>
             </div>
-
-            <!--
             <router-link :to="{name: 'info'}">
-                <TabButton :active="this.$route.name == 'info'">Info</TabButton>
+                <TabButton :active="this.$route.name == 'info'">Reviews</TabButton>
             </router-link>
-            -->
 
             <router-link :to="{name: 'questions'}">
                 <TabButton :active="this.$route.name == 'questions'">Questions</TabButton>
             </router-link>
 
-            <router-link :to="{name: 'reviews'}">
-                <TabButton :active="this.$route.name == 'reviews'">Reviews</TabButton>
-            </router-link>
         </div>
 
-        <div class="course-content">
-            <router-view/>
+        <div class="course-info">
+            <CourseInfo :code="code"/>
         </div>
+    </div>
+    <div class="course-content">
+        <router-view/>
     </div>
 
   </div>
@@ -37,7 +42,9 @@
 // @ is an alias to /src
 import TabButton from '@/components/course/TabButton'
 import CourseRatings from '@/components/course/Ratings'
+import OverallRating from '@/components/AppRating/CircleWithText'
 import CourseLinks from '@/components/course/Links'
+import CourseInfo from './CourseInfo'
 
 import { mapGetters } from 'vuex'
 
@@ -49,7 +56,9 @@ export default {
   components: {
     TabButton,
     CourseRatings,
-    CourseLinks
+    CourseLinks,
+    CourseInfo,
+    OverallRating
   },
   computed: {
     ...mapGetters('course', {
@@ -79,7 +88,17 @@ export default {
 
 .course {
     display: grid;
-    grid-auto-columns: 1fr 2fr;
+    grid-auto-columns: 2fr 1fr;
+    grid-gap: 10px;
+}
+
+.key-data {
+    display: grid;
+    grid-auto-columns: 2fr 1fr;
+}
+
+.left, .right {
+    grid-row: 1;
 }
 
 h2 {
@@ -104,11 +123,25 @@ h2, h3 {
     padding: 20px 20px 0px;
 }
 
-.course-content {
+.course-info {
     grid-row: 1;
+}
+
+.course-content {
+    grid-row: 2;
     background-color: var(--white);
     margin-top: 2px;
     padding: 10px;
-    min-height: 50vh;
+    min-height: 150px;
+}
+
+@media screen and (max-width: 600px) {
+    .course-info {
+        display: none;
+    }
+
+    .right {
+        display: none;
+    }
 }
 </style>

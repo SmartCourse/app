@@ -8,7 +8,6 @@ const questionView = () => import('./views/Question')
 const reviewView = () => import('./views/Review')
 const newQuestionView = () => import('./views/NewQuestion')
 const newReviewView = () => import('./views/NewReview')
-const courseInfo = () => import('./views/course/CourseInfo')
 const courseQuestions = () => import('./views/course/CourseQuestions')
 const courseReviews = () => import('./views/course/CourseReviews')
 const subjectList = () => import('./views/SubjectList')
@@ -37,7 +36,7 @@ export default new Router({
       component: subjectList
     },
     {
-      path: '/subject/:code([\\w]{4}',
+      path: '/subject/:code([\\w]{4})',
       name: 'subjectCourses',
       props: ({params: { code }}) => ({
         code
@@ -51,14 +50,6 @@ export default new Router({
       }),
       children: [
         {
-          path: '',
-          name: 'info',
-          component: courseInfo,
-          props: ({params: { code }}) => ({
-            code
-          })
-        },
-        {
           path: 'questions',
           name: 'questions',
           component: courseQuestions,
@@ -67,8 +58,8 @@ export default new Router({
           })
         },
         {
-          path: 'reviews',
-          name: 'reviews',
+          path: '/',
+          name: 'info',
           component: courseReviews,
           props: ({params: { code }}) => ({
             code
