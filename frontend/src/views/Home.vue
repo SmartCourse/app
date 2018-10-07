@@ -149,6 +149,11 @@ a {
   .home {
    font-size: var(--font-large-mobile);
   }
+
+  .home > p {
+    max-width: 400px;
+  }
+
   .splash {
    font-size: 3rem;
   }
