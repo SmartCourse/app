@@ -1,29 +1,33 @@
 <template>
-  <div class="main-content course">
+  <div class="main-content">
     <AppBreadCrumb/>
-    <div class="course-header">
-        <div class="course-header-title">
-            <h2>{{ courseInfo.code }}</h2>
-            <h3>{{ courseInfo.name }}</h3>
-            <CourseLinks   :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
-            <CourseRatings :ratings="courseRatings"/>
+    <div class="course">
+        <div class="course-header">
+            <div class="course-header-title">
+                <h2>{{ courseInfo.code }}</h2>
+                <h3>{{ courseInfo.name }}</h3>
+                <CourseLinks   :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
+                <CourseRatings :ratings="courseRatings"/>
+            </div>
+
+            <!--
+            <router-link :to="{name: 'info'}">
+                <TabButton :active="this.$route.name == 'info'">Info</TabButton>
+            </router-link>
+            -->
+
+            <router-link :to="{name: 'questions'}">
+                <TabButton :active="this.$route.name == 'questions'">Questions</TabButton>
+            </router-link>
+
+            <router-link :to="{name: 'reviews'}">
+                <TabButton :active="this.$route.name == 'reviews'">Reviews</TabButton>
+            </router-link>
         </div>
 
-        <router-link :to="{name: 'info'}">
-            <TabButton :active="this.$route.name == 'info'">Info</TabButton>
-        </router-link>
-
-        <router-link :to="{name: 'questions'}">
-            <TabButton :active="this.$route.name == 'questions'">Questions</TabButton>
-        </router-link>
-
-        <router-link :to="{name: 'reviews'}">
-            <TabButton :active="this.$route.name == 'reviews'">Reviews</TabButton>
-        </router-link>
-    </div>
-
-    <div class="course-content">
-        <router-view/>
+        <div class="course-content">
+            <router-view/>
+        </div>
     </div>
 
   </div>
@@ -72,6 +76,12 @@ export default {
 </script>
 
 <style scoped>
+
+.course {
+    display: grid;
+    grid-auto-columns: 1fr 2fr;
+}
+
 h2 {
     font: var(--header-2);
 }
@@ -86,6 +96,7 @@ h2, h3 {
 }
 
 .course-header {
+    grid-row: 1;
     background-color: var(--white);
 }
 
@@ -94,6 +105,7 @@ h2, h3 {
 }
 
 .course-content {
+    grid-row: 1;
     background-color: var(--white);
     margin-top: 2px;
     padding: 10px;
