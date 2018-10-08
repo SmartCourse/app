@@ -38,7 +38,7 @@ export default {
   methods: {
     clickHandler() {
       const { email, password } = this
-      this.$store.dispatch('auth/signIn', {email, password})
+      this.$store.dispatch('auth/signIn', { email, password })
         .then(() => this.$router.push('/'))
         .catch(e => {})
     }

@@ -38,7 +38,7 @@ export default new Router({
     {
       path: '/subject/:code([\\w]{4})',
       name: 'subjectCourses',
-      props: ({params: { code }}) => ({
+      props: ({ params: { code } }) => ({
         code
       }),
       component: subjectCourses
@@ -53,7 +53,7 @@ export default new Router({
           path: 'questions',
           name: 'questions',
           component: courseQuestions,
-          props: ({params: { code }}) => ({
+          props: ({ params: { code } }) => ({
             code
           })
         },
@@ -61,7 +61,7 @@ export default new Router({
           path: '/',
           name: 'info',
           component: courseReviews,
-          props: ({params: { code }}) => ({
+          props: ({ params: { code } }) => ({
             code
           })
         }
@@ -74,7 +74,7 @@ export default new Router({
     {
       path: '/course/:code([\\w]{8})/question/new',
       name: 'newQuestion',
-      props: ({params: { code }}) => ({
+      props: ({ params: { code } }) => ({
         code
       }),
       component: newQuestionView
@@ -82,7 +82,7 @@ export default new Router({
     {
       path: '/course/:code([\\w]{8})/question/:id',
       name: 'question',
-      props: ({params: { code, id }}) => ({
+      props: ({ params: { code, id } }) => ({
         code,
         id
       }),
@@ -91,7 +91,7 @@ export default new Router({
     {
       path: '/course/:code([\\w]{8})/review/new',
       name: 'newReview',
-      props: ({params: { code }}) => ({
+      props: ({ params: { code } }) => ({
         code
       }),
       component: newReviewView
@@ -99,7 +99,7 @@ export default new Router({
     {
       path: '/course/:code([\\w]{8})/review/:id',
       name: 'review',
-      props: ({params: { code, id }}) => ({
+      props: ({ params: { code, id } }) => ({
         code,
         id
       }),

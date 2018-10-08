@@ -1,7 +1,7 @@
 
 // factories
 export function doRequestFactory(REQUEST, COMMITS) {
-  return async function ({commit}, {action, args}) {
+  return async function ({ commit }, { action, args }) {
     commit('TOGGLE_LOADING', true)
     try {
       const data = await REQUEST[action](...args)

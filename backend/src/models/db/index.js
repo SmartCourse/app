@@ -1,6 +1,6 @@
 const path = require('path')
 const sqlite3 = require('sqlite3')
-const { createDB, insertDB } = require('./tables')
+const { createDB, insertDB, insertUniqueDB, updateDB } = require('./tables')
 
 const DB_NAME = process.env.NODE_ENV === 'production'
     ? path.join(__dirname, '../../../db/smartcourse.db') : ':memory:'
@@ -30,6 +30,14 @@ class DB {
 
     insert(table, data) {
         return insertDB(this._db, table, data)
+    }
+
+    insertUnique(table, data) {
+        return insertUniqueDB(this._db, table, data)
+    }
+
+    update(table, data, conditions) {
+        return updateDB(this._db, table, data, conditions)
     }
 
     deleteDB () {

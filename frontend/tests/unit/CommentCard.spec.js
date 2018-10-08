@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import CommentCard from '@/components/comments/CommentCard'
 
 describe('CommentCard.vue', () => {
@@ -11,7 +11,7 @@ describe('CommentCard.vue', () => {
       body:
         'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto'
     }
-    this.wrapper = shallowMount(CommentCard, {
+    this.wrapper = mount(CommentCard, {
       propsData: { comment: this.card },
       stubs: {}
     })

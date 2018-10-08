@@ -28,7 +28,6 @@ function request (path, { headers, method, data }) {
 
   const auth = store.getters.authObject
   const body = data ? JSON.stringify(data) : null
-
   headers = {
     'Content-Type': 'application/json',
     ...headers
