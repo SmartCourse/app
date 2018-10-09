@@ -20,9 +20,9 @@ class User {
      * @param   {number}  id   Required id param.
      * @returns {object}
      */
-    getUser(id) {
+    getPublicProfile(id) {
         return this.db
-            .query('SELECT * FROM user WHERE id=?', [id])
+            .query('SELECT id, displayName, joined, degree, gradYear, description, picture FROM user WHERE id=?', [id])
     }
 
     /**

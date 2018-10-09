@@ -1,19 +1,33 @@
 <template>
   <div class="auth-page">
-    <AppAuthForm v-if="!loading"
+    <AppAuthForm v-if="!loading && !isLoggedIn"
       :title="'Sign Up'"
       :buttonText="'Sign Up'"
       :error="error"
-      :clickHandler="clickHandler"
+      :clickHandler="createAccount"
       :link="{
         text: 'Already have an account?',
         name: 'Login'
       }"
     >
-      <AuthInput type="text" placeholder="Display Name"/>
       <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>
       <AuthInput type="password" v-model="password" placeholder="Password"/>
     </AppAuthForm>
+    <AppAuthForm v-else-if="!loading && isLoggedIn && !hasProfile"
+      :title="'Complete Sign up'"
+      :buttonText="'Create Profile'"
+      :error="error"
+      :clickHandler="createProfile"
+      :link="{
+        text: '',
+        name: ''
+      }"
+    >
+      <AuthInput spellcheck="false" type="text" v-model="displayName" placeholder="Choose a display name"/>
+    </AppAuthForm>
+    <div v-else-if="!loading">
+        You are already signed in.
+    </div>
     <LoadingSpinner v-else/>
   </div>
 </template>
@@ -28,18 +42,25 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      displayName: ''
     }
   },
   components: { AppAuthForm, AuthInput },
   computed: {
-    ...mapGetters('auth', [ 'error', 'loading' ])
+    ...mapGetters('auth', [ 'error', 'loading' ]),
+    ...mapGetters([ 'isLoggedIn', 'hasProfile', 'authObject' ])
   },
   methods: {
-    clickHandler() {
+    createAccount() {
       const { email, password } = this
-      this.$store.dispatch('auth/signUp', { email, password })
-        .then(() => this.$router.push('/'))
+      this.$store.dispatch('auth/createAccount', { email, password })
+        .catch(e => {})
+    },
+    createProfile() {
+      const { displayName } = this
+      this.$store.dispatch('auth/createProfile', { user: this.authObject, displayName })
+        .then(this.$router.push('/'))
         .catch(e => {})
     }
   },

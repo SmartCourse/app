@@ -5,15 +5,18 @@ const state = {
   loading: false,
   // cached courses
   courses: [],
-  // fire authObject
+  // firebase authObject
   userAuthObject: {},
   // our own user data
   profile: {}
 }
 
 const getters = {
-  isLoggedIn: ({ userAuthObject }) => !!userAuthObject,
-  authObject: ({ userAuthObject }) => userAuthObject
+  authObject: ({ userAuthObject }) => userAuthObject,
+  // logged into firebase (authenticated account)
+  isLoggedIn: ({ userAuthObject }) => !!Object.keys(userAuthObject).length,
+  // logged into backend (existing profile)
+  hasProfile: ({ profile }) => !!Object.keys(profile).length
 }
 
 const actions = {
@@ -42,6 +45,9 @@ const mutations = {
    */
   SET_USER(state, user) {
     state.userAuthObject = user
+  },
+  SET_PROFILE(state, profile) {
+    state.profile = profile
   }
 }
 

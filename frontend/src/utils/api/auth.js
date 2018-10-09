@@ -33,9 +33,9 @@ export function getSelf(user) {
  * entry for the user
  * @param {*} user The user object provided by firebase
  */
-export function createUser(user) {
+export function createProfile(user, data) {
   return getAuthHeaders(user)
-    .then(options => post('/user', options))
+    .then(options => post('/user', { ...options, data }))
 }
 
 /**

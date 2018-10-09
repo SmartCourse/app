@@ -6,14 +6,15 @@ function createUserTable (db) {
     return new Promise((resolve, reject) => {
         db.run(`CREATE TABLE user (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            uid TEXT NOT NULL,
-            displayName TEXT DEFAULT 'ANON',
+            uid TEXT UNIQUE NOT NULL,
+            displayName TEXT UNIQUE NOT NULL,
             email TEXT UNIQUE NOT NULL,
             joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             reputation INTEGER DEFAULT '0',
             degree TEXT,
             gradYear TIMESTAMP DEFAULT '2018',
-            description TEXT
+            description TEXT,
+            picture TEXT
             )`,
         (err) => err ? reject(err) : resolve('Created User Table'))
     })

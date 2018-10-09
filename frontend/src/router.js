@@ -116,6 +116,11 @@ export default new Router({
       component: () => import('./views/Login')
     },
     {
+      path: '/profile',
+      name: 'Profile',
+      component: () => import('./views/Profile')
+    },
+    {
       path: '/password-reset',
       name: 'Forgot Password',
       component: () => import('./views/ForgotPassword')

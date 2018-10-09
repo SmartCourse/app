@@ -1,7 +1,7 @@
 // firebase authentication class
 import auth from './config'
 
-import { createUser } from '@/utils/api/auth'
+import { createProfile } from '@/utils/api/auth'
 
 const state = {
   loading: false,
@@ -43,7 +43,7 @@ const actions = {
    */
   logout({ commit }) {
     return auth.signOut()
-      .then(() => commit('SET_USER', null, { root: true }))
+      .then(() => commit('SET_USER', {}, { root: true }))
       .catch(error => commit('ERROR', error.message))
   },
 
@@ -52,19 +52,23 @@ const actions = {
    * UserAuth obj has field user which is what we're interested in
    * Currently, successful signUp will automatically sign in user.
    **/
-  signUp({ commit }, { email, password }) {
+  createAccount({ commit }, { email, password }) {
     commit('SET_LOADING', true)
     return auth.createUserWithEmailAndPassword(email, password)
-      .then(({ user }) => {
-        /* TODO implement retry if failure occurs on server
-          Simultaneously:
-          1. Send off new user creds for backend creation,
-          2. Set user state in store.
-         */
-        return Promise.all([
-          createUser(user),
-          commit('SET_USER', user, { root: true })])
+      .then(({ user }) => commit('SET_USER', user, { root: true }))
+      .catch(error => {
+        commit('ERROR', error.message)
+        throw error
       })
+      .finally(() => commit('SET_LOADING', false))
+  },
+  /**
+  * Create user profile in the backend
+  **/
+  createProfile({ commit }, { user, displayName }) {
+    commit('SET_LOADING', true)
+    return createProfile(user, { displayName })
+      .then((profile) => commit('SET_PROFILE', profile, { root: true }))
       .catch(error => {
         commit('ERROR', error.message)
         throw error
@@ -82,7 +86,7 @@ const actions = {
         resolve(user)
       }, reject)
     })
-      .then(user => commit('SET_USER', user, { root: true }))
+      .then(user => commit('SET_USER', user || {}, { root: true }))
       .catch(error => {
         commit('ERROR', error)
       })

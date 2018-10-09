@@ -3,13 +3,9 @@ const userModel = require('../models/user')()
 const { responseHandler } = require('../utils/helpers')
 
 /* Get data for a specific user */
-exports.getUser = function(_, res) {
-    return res.json({
-        userID: 1,
-        firstName: 'Walker',
-        lastName: 'Francis',
-        email: 'alnuno-das-hinds@gmail.com'
-    })
+exports.getUser = function({id}, res) {
+    return responseHandler(userModel.getPublicProfile(id), res)
+        .catch(errorHandler(res))
 }
 
 /**
@@ -25,7 +21,7 @@ exports.getSelf = function(req, res) {
     return res.json(req.user)
 }
 
-exports.createUser = function({ authorized }, res) {
-    return responseHandler(userModel.createUser(authorized), res)
+exports.createUser = function({ authorized: { email, uid }, body: { displayName } }, res) {
+    return responseHandler(userModel.createUser({ email, uid, displayName }), res)
         .catch(errorHandler(res))
 }
