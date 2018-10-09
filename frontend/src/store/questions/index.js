@@ -21,10 +21,10 @@ const state = {
 }
 
 const getters = {
-  question: ({questionObj: {question}}) => question,
-  answers: ({questionObj: {answers}}) => answers,
-  loading: ({loading}) => loading,
-  error: ({error}) => error
+  question: ({ questionObj: { question } }) => question,
+  answers: ({ questionObj: { answers } }) => answers,
+  loading: ({ loading }) => loading,
+  error: ({ error }) => error
 }
 
 const mutations = {
@@ -37,7 +37,11 @@ const mutations = {
   FOCUS_ANSWERS (state, answers) {
     state.questionObj.answers = answers.map(answerMapper)
   },
-  API_ERROR (state, {code, message}) {
+  FOCUS_LIKES (state, { likes }) {
+    state.questionObj.question.likes = likes
+    // TODO - ALREADY UPVOTED
+  },
+  API_ERROR (state, { code, message }) {
     state.error.code = code
     state.error.message = message
   },
@@ -48,17 +52,29 @@ const mutations = {
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
-  async getQuestion ({dispatch}, { code, id }) {
+  async getQuestion ({ dispatch }, { code, id }) {
     return dispatch('doRequest', { action: ACTIONS.GET_QUESTION, args: [code, id] })
   },
-  async postQuestion ({dispatch}, { code, form }) {
+  async postQuestion ({ dispatch }, { code, form }) {
     return dispatch('doRequest', { action: ACTIONS.POST_QUESTION, args: [code, form] })
   },
-  async getAnswers ({dispatch}, { code, id }) {
+  async getAnswers ({ dispatch }, { code, id }) {
     return dispatch('doRequest', { action: ACTIONS.GET_ANSWERS, args: [code, id] })
   },
-  async postAnswer ({dispatch}, { id, code, form }) {
+  async postAnswer ({ dispatch }, { id, code, form }) {
     return dispatch('doRequest', { action: ACTIONS.POST_ANSWER, args: [code, id, form] })
+  },
+  async getLikes ({ dispatch }, { id, code }) {
+    return dispatch('doRequest', { action: ACTIONS.GET_LIKES, args: [code, id] })
+  },
+  async putLikes ({ dispatch }, { id, code, data }) {
+    return dispatch('doRequest', { action: ACTIONS.PUT_LIKES, args: [code, id, data] })
+  },
+  async getAnswerLikes ({ dispatch }, { id, code, commentID }) {
+    return dispatch('doRequest', { action: ACTIONS.GET_ANSWER_LIKES, args: [code, id, commentID] })
+  },
+  async putAnswerLikes ({ dispatch }, { id, code, commentID, data }) {
+    return dispatch('doRequest', { action: ACTIONS.PUT_ANSWER_LIKES, args: [code, id, commentID, data] })
   }
 }
 
