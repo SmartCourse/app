@@ -18,7 +18,7 @@ describe('CommentForm.vue', () => {
   })
 
   it('comment body is correcto', function () {
-    expect(this.wrapper.vm.$data.body).to.include(this.comment.body)
+    expect(this.wrapper.vm.$data.body).to.equal('')
   })
   it('comment form type is rendered in title and button', function () {
     expect(this.wrapper.find('h3').text()).to.include('Answer')
