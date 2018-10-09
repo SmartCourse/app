@@ -15,7 +15,7 @@
                 </div>
 
                 <CourseLinks   :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
-                <CourseRatings :ratings="courseRatings"/>
+                <CourseRatings v-if="courseRatings" :ratings="courseRatings.slice(1)"/>
             </div>
         </div>
 
@@ -89,6 +89,7 @@ export default {
     display: grid;
     grid-auto-columns: 2fr 1fr;
     grid-gap: 10px;
+    max-height: 300px;
 }
 
 .key-data {
@@ -123,13 +124,15 @@ h2, h3 {
 }
 
 .course-info {
+    max-height: inherit;
+    overflow: hidden;
     grid-row: 1;
 }
 
 .course-content {
     grid-row: 2;
     background-color: var(--white);
-    margin-top: 2px;
+    margin-top: 10px;
     padding: 10px;
     min-height: 150px;
 }

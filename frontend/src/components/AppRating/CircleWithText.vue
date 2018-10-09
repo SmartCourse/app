@@ -1,8 +1,14 @@
 <template>
-    <div class="rating" >
-        <CircleRating  :value="rating.value"/>
-        <h2 class="rating-text">{{ rating && rating.text }}</h2>
-    </div>
+<div>
+  <div v-if="rating && rating.value >= 0" class="rating" >
+      <CircleRating  :value="rating.value"/>
+      <h2 class="rating-text">{{ rating && rating.text }}</h2>
+  </div>
+  <div v-else class="rating no-review">
+    <p class="material-icons">error</p>
+    <p>This course has not been reviewed yet.</p>
+  </div>
+</div>
 </template>
 
 <script>
@@ -25,6 +31,17 @@ export default {
 .rating-text {
   margin: 0;
   font: var(--body-copy-1);
+}
+
+.no-review {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-review > p {
+  margin: 0;
 }
 
 .rating {

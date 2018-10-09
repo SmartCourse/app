@@ -2,7 +2,6 @@
   <div id="app">
     <AppNavBar/>
     <main>
-      <!--<router-view :key="$route.path"/> -->
       <router-view/>
     </main>
     <AppFooter v-if="!authpage"/>
