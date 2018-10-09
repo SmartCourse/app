@@ -65,7 +65,8 @@ export default {
 
 <style scoped>
 .button-container {
-    margin-bottom: 10px;
-    text-align: right;
+  transform: translateY(-50px);
+  margin-bottom: 10px;
+  text-align: right;
 }
 </style>

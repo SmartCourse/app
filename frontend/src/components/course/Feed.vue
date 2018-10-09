@@ -30,6 +30,5 @@ export default {
 <style scoped>
 .feed {
   min-height: 150px;
-  background-color: red;
 }
 </style>

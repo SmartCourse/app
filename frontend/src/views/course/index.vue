@@ -10,7 +10,7 @@
                         <h3>{{ courseInfo.name }}</h3>
                     </div>
                     <div class="right">
-                        <OverallRating :rating="courseRatings[0]"/>
+                        <OverallRating :rating="courseRatings && courseRatings[0]"/>
                     </div>
                 </div>
 
