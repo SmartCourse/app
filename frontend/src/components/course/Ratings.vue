@@ -1,19 +1,15 @@
 <template>
-    <div class="ratings">
-        <Rating v-for="rating in ratings"
-            class="rating"
-            :text="rating.text"
-            :key="rating.text"
-            :value="rating.value"
-        />
-    </div>
+  <div class="ratings">
+    <Bar v-for="rating in ratings" :rating="rating" :key="rating.text" class="bar" />
+  </div>
 </template>
 
 <script>
-import Rating from '@/components/AppRatingCircle'
+import Rating from '@/components/AppRating/CircleWithText'
+import Bar from '@/components/AppRating/BarWithText'
 
 export default {
-  components: { Rating },
+  components: { Rating, Bar },
   props: {
     ratings: Array
   }
@@ -22,15 +18,7 @@ export default {
 
 <style scoped>
 .ratings {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    height: 90px;
-    transform: translateX(-10px);
-}
-
-.rating {
-    margin: auto 20px;
-    height: inherit;
+  padding: 10px 0;
+  border-bottom: var(--border);
 }
 </style>

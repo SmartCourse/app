@@ -8,11 +8,11 @@ const questionView = () => import('./views/Question')
 const reviewView = () => import('./views/Review')
 const newQuestionView = () => import('./views/NewQuestion')
 const newReviewView = () => import('./views/NewReview')
-const courseInfo = () => import('./views/course/CourseInfo')
 const courseQuestions = () => import('./views/course/CourseQuestions')
 const courseReviews = () => import('./views/course/CourseReviews')
 const subjectList = () => import('./views/SubjectList')
 const subjectCourses = () => import('./views/SubjectCourses')
+const ErrorPage = () => import('./views/404')
 
 export default new Router({
   mode: 'history',
@@ -36,7 +36,7 @@ export default new Router({
       component: subjectList
     },
     {
-      path: '/subject/:code',
+      path: '/subject/:code([\\w]{4})',
       name: 'subjectCourses',
       props: ({ params: { code } }) => ({
         code
@@ -44,19 +44,11 @@ export default new Router({
       component: subjectCourses
     },
     {
-      path: '/course/:code/',
-      props: ({ params: { code } }) => ({
+      path: '/course/:code([\\w]{8})/',
+      props: ({params: { code }}) => ({
         code
       }),
       children: [
-        {
-          path: '',
-          name: 'info',
-          component: courseInfo,
-          props: ({ params: { code } }) => ({
-            code
-          })
-        },
         {
           path: 'questions',
           name: 'questions',
@@ -66,8 +58,8 @@ export default new Router({
           })
         },
         {
-          path: 'reviews',
-          name: 'reviews',
+          path: '/',
+          name: 'info',
           component: courseReviews,
           props: ({ params: { code } }) => ({
             code
@@ -80,7 +72,7 @@ export default new Router({
       component: () => import('./views/course')
     },
     {
-      path: '/course/:code/question/new',
+      path: '/course/:code([\\w]{8})/question/new',
       name: 'newQuestion',
       props: ({ params: { code } }) => ({
         code
@@ -88,7 +80,7 @@ export default new Router({
       component: newQuestionView
     },
     {
-      path: '/course/:code/question/:id',
+      path: '/course/:code([\\w]{8})/question/:id',
       name: 'question',
       props: ({ params: { code, id } }) => ({
         code,
@@ -97,7 +89,7 @@ export default new Router({
       component: questionView
     },
     {
-      path: '/course/:code/review/new',
+      path: '/course/:code([\\w]{8})/review/new',
       name: 'newReview',
       props: ({ params: { code } }) => ({
         code
@@ -105,7 +97,7 @@ export default new Router({
       component: newReviewView
     },
     {
-      path: '/course/:code/review/:id',
+      path: '/course/:code([\\w]{8})/review/:id',
       name: 'review',
       props: ({ params: { code, id } }) => ({
         code,
@@ -115,15 +107,27 @@ export default new Router({
     },
     {
       path: '/signup',
+      name: 'Sign Up',
       component: () => import('./views/SignUp')
     },
     {
       path: '/login',
+      name: 'Login',
       component: () => import('./views/Login')
+    },
+    {
+      path: '/password-reset',
+      name: 'Forgot Password',
+      component: () => import('./views/ForgotPassword')
     },
     {
       path: '/fonts',
       component: () => import('./views/Design')
+    },
+    {
+      // match any other route
+      path: '*',
+      component: ErrorPage
     }
   ]
 })

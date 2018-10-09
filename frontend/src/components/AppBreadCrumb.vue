@@ -1,6 +1,6 @@
 <template>
-    <ul v-if="routeList" class="breadcrumb">
-        <li :key="item.id" v-for="item in routeList">
+    <ul v-if="routeList" class="breadcrumbs">
+        <li class="crumb" :key="item.id" v-for="item in routeList">
             <router-link tag="a" :to="item.route">{{ item.text }}</router-link>
         </li>
     </ul>
@@ -62,16 +62,18 @@ export default {
 
 <style scoped lang='less'>
 
-.breadcrumb {
+.breadcrumbs {
+    max-width: 100%;
+    overflow: hidden;
     padding: 10px 20px;
     color: var(--theme);
 }
 
-.breadcrumb > li {
+.crumb {
     display:inline;
 }
 
-.breadcrumb > li+li:before {
+.crumb+.crumb:before {
     padding: 10px;
     color: var(--soft-black);
     content: ">";
