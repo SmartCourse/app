@@ -44,10 +44,10 @@ const mutations = {
    * @param {*} user  The logged in user object or null
    */
   SET_USER(state, user) {
-    state.userAuthObject = user
+    state.userAuthObject = user || {}
   },
   SET_PROFILE(state, profile) {
-    state.profile = profile
+    state.profile = profile || {}
   }
 }
 

@@ -1,6 +1,6 @@
 <template>
 <div class="auth-page">
-    <AppAuthForm v-if="!loading"
+    <AppAuthForm v-if="!loading && !isLoggedIn"
       :title="'Login'"
       :buttonText="'Log In'"
       :flavour="'Welcome back.'"
@@ -14,6 +14,9 @@
       <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>
       <AuthInput type="password" v-model="password" placeholder="Password"/>
     </AppAuthForm>
+    <div v-else-if="!loading">
+        You are already signed in.
+    </div>
     <LoadingSpinner v-else/>
 </div>
 </template>
@@ -33,14 +36,22 @@ export default {
   },
   components: { AppAuthForm, AuthInput },
   computed: {
-    ...mapGetters('auth', [ 'error', 'loading' ])
+    ...mapGetters('auth', [ 'error', 'loading' ]),
+    ...mapGetters([ 'isLoggedIn', 'hasProfile', 'authObject' ])
   },
   methods: {
     clickHandler() {
       const { email, password } = this
       this.$store.dispatch('auth/signIn', { email, password })
-        .then(() => this.$router.push('/'))
-        .catch(e => {})
+        .then(() => {
+          if (this.isLoggedIn) {
+            if (this.hasProfile) {
+              this.$router.push('/')
+            } else {
+              this.$router.push('/signup')
+            }
+          }
+        })
     }
   },
   created() {

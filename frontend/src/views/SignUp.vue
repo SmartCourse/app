@@ -14,7 +14,7 @@
       <AuthInput type="password" v-model="password" placeholder="Password"/>
     </AppAuthForm>
     <AppAuthForm v-else-if="!loading && isLoggedIn && !hasProfile"
-      :title="'Complete Sign up'"
+      :title="'Create Profile'"
       :buttonText="'Create Profile'"
       :error="error"
       :clickHandler="createProfile"

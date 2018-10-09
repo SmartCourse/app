@@ -1,7 +1,7 @@
 // firebase authentication class
 import auth from './config'
 
-import { createProfile } from '@/utils/api/auth'
+import { createProfile, getSelf } from '@/utils/api/auth'
 
 const state = {
   loading: false,
@@ -15,7 +15,7 @@ const getters = {
 
 const mutations = {
   ERROR(state, message) {
-    if (message) console.log('AUTH ERROR', message)
+    if (message) console.warn('AUTH ERROR', message)
     state.error = message
   },
   SET_LOADING(state, isLoading) {
@@ -29,10 +29,20 @@ const actions = {
   signIn({ commit }, { email, password }) {
     commit('SET_LOADING', true)
     return auth.signInWithEmailAndPassword(email, password)
-      .then(({ user }) => commit('SET_USER', user, { root: true }))
+      .then(({ user }) => {
+        commit('SET_USER', user, { root: true })
+        return getSelf(user)
+      })
+      .then(profile => {
+        commit('SET_PROFILE', profile, { root: true })
+      })
       .catch(error => {
         commit('ERROR', error.message)
-        throw error
+        commit('SET_PROFILE', {}, { root: true })
+        if (!error.code || error.code != 403) {
+          auth.signOut()
+          commit('SET_USER', {}, { root: true })
+        }
       })
       .finally(() => commit('SET_LOADING', false))
   },
@@ -43,7 +53,10 @@ const actions = {
    */
   logout({ commit }) {
     return auth.signOut()
-      .then(() => commit('SET_USER', {}, { root: true }))
+      .then(() => {
+        commit('SET_USER', {}, { root: true })
+        commit('SET_PROFILE', {}, { root: true })
+      })
       .catch(error => commit('ERROR', error.message))
   },
 
@@ -62,6 +75,7 @@ const actions = {
       })
       .finally(() => commit('SET_LOADING', false))
   },
+
   /**
   * Create user profile in the backend
   **/
@@ -86,10 +100,23 @@ const actions = {
         resolve(user)
       }, reject)
     })
-      .then(user => commit('SET_USER', user || {}, { root: true }))
-      .catch(error => {
-        commit('ERROR', error)
+      .then((user) => {
+        if (user === null) throw Error('Not logged in')
+        commit('SET_USER', user, { root: true })
+        return getSelf(user)
       })
+      .then(profile => {
+        commit('SET_PROFILE', profile, { root: true })
+      })
+      .catch(error => {
+        commit('ERROR', error.message)
+        commit('SET_PROFILE', {}, { root: true })
+        if (!error.code || error.code != 403) {
+          auth.signOut()
+          commit('SET_USER', {}, { root: true })
+        }
+      })
+      .finally(() => commit('SET_LOADING', false))
   }
 }
 

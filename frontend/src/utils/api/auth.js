@@ -23,9 +23,7 @@ export function getAuthHeaders(user) {
  */
 export function getSelf(user) {
   return getAuthHeaders(user)
-    .then(options =>
-      get('/user', options))
-    .catch(err => console.warn(err))
+    .then(options => get('/user', options))
 }
 
 /**
