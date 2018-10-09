@@ -6,7 +6,13 @@
             <h2>{{ courseInfo.code }}</h2>
             <h3>{{ courseInfo.name }}</h3>
             <CourseLinks   :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
-            <CourseRatings :ratings="courseRatings"/>
+            <div v-if="courseRatings[0] && courseRatings[0].value > -1">
+                <p class="recommend-text"><b>{{ courseRatings[0] && courseRatings[0].value }}%</b> of reviewers recommend this course</p>
+                <CourseRatings :ratings="courseRatings.slice(1)"/>
+            </div>
+            <div v-else style='margin:10px auto;'>
+                This course has not been reviewed yet.
+            </div>
         </div>
 
         <router-link :to="{name: 'info'}">

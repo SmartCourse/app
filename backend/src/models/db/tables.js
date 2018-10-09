@@ -54,7 +54,7 @@ function createCourseTable (db) {
             outlineURL TEXT,
             description TEXT NOT NULL,
             requirements TEXT,
-            recommend INTEGER DEFAULT '50',
+            recommend INTEGER DEFAULT '-1',
             enjoy INTEGER DEFAULT '50',
             difficulty INTEGER DEFAULT '50',
             teaching INTEGER DEFAULT '50',
