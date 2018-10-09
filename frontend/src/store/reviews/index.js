@@ -59,8 +59,8 @@ const actions = {
     const mappedForm = newReviewMapper(form)
     return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, args: [code, mappedForm] })
   },
-  async getReplies ({dispatch}, { code, id }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, args: [code, id] })
+  async getReplies ({dispatch}, { code, id, pageNumber }) {
+    return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, args: [code, id, pageNumber] })
   },
   async postReply ({dispatch}, { code, id, form }) {
     return dispatch('doRequest', { action: ACTIONS.POST_REPLY, args: [code, id, form] })

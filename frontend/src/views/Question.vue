@@ -72,12 +72,11 @@ export default {
       this.$store.dispatch('questions/postAnswer', {form: answerForm, code: this.code, id: this.question.id})
     },
     refreshAnswers (pageNumber) {
-      console.log(pageNumber)
       this.$store.dispatch('questions/getAnswers',
         {
           id: this.id,
           code: this.code,
-          pageNumber: pageNumber
+          pageNumber
         })
     }
   },

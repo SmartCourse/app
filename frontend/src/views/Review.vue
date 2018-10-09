@@ -72,12 +72,11 @@ export default {
       this.$store.dispatch('reviews/postReply', {form: replyForm, code: this.code, id: this.review.id})
     },
     refreshReplies (pageNumber) {
-      console.log(pageNumber)
       this.$store.dispatch('reviews/getReplies',
         {
           id: this.id,
           code: this.code,
-          pageNumber: pageNumber
+          pageNumber
         })
     }
   },
