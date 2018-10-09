@@ -315,16 +315,36 @@ function initReviewTable(db) {
 }
 
 function initComments(db, parent) {
+    const commentTypes = [
+        {
+            body: 'Wow Comments!'
+        },
+        {
+            body: 'Generic Comment'
+        },
+        {
+            body: 'This is a comment!'
+        }
+    ]
+
+    const maxCommentsPerParent = 5
+    const numCommentTypes = commentTypes.length
+
     let comments = []
-    for (let i = 0; i < 1; i++) {
+
+    const numComments = Math.floor(Math.random() * maxCommentsPerParent + 1)
+
+    for (let i = 0; i < numComments; i++) {
+        const index = Math.floor(Math.random() * numCommentTypes)
         const comment = {
             ...parent,
             commentParent: 1,
             userID: 1,
-            body: 'This is a comment'
+            ...commentTypes[index]
         }
         comments.push(comment)
     }
+
     const columns = Object.keys(comments[0])
     const placeholders = columns.map(_ => '?').join()
     const query = `INSERT INTO comment (${columns}) VALUES (${placeholders})`
