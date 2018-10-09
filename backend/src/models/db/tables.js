@@ -239,6 +239,7 @@ function initQuestionsTable(db) {
     // Do insertions and return promise for all of them to be completed
     const promises = questions.map(q => {
         insertDB(db, 'question', q, prep)
+            .then(id => initComments(db, { questionID: id }))
     })
     return Promise.all(promises)
 }
@@ -308,6 +309,29 @@ function initReviewTable(db) {
     // Do insertions and return promise for all of them to be completed
     const promises = reviews.map(r => {
         insertDB(db, 'review', r, prep)
+            .then(id => initComments(db, { ReviewID: id }))
+    })
+    return Promise.all(promises)
+}
+
+function initComments(db, parent) {
+    let comments = []
+    for (let i = 0; i < 1; i++) {
+        const comment = {
+            ...parent,
+            commentParent: 1,
+            userID: 1,
+            body: 'This is a comment'
+        }
+        comments.push(comment)
+    }
+    const columns = Object.keys(comments[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO comment (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    const promises = comments.map(c => {
+        insertDB(db, 'comment', c, prep)
     })
     return Promise.all(promises)
 }
