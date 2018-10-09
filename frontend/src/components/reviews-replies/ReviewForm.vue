@@ -85,7 +85,6 @@ export default {
 }
 
 textarea {
-  display:inline;
   border: var(--border);
   border-radius: 2px;
   font: inherit;

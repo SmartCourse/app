@@ -2,15 +2,15 @@
   <div class="app-auth-form">
     <Card>
       <div class="card-content">
-        <h2>{{ title }}</h2>
+        <h2 v-if="title">{{ title }}</h2>
         <form class="auth-form">
           <slot></slot>
+          <router-link v-if="link" :to="{ name: link.name }" class="help-link">{{ link.text }}</router-link>
           <AppButton class="button-spacing" @click.native="clickHandler">
               {{ buttonText }}
           </AppButton>
         </form>
         <p v-if="error">{{ error }}</p>
-        <p class="back-link"><router-link to="/">Back to Home</router-link></p>
       </div>
     </Card>
   </div>
@@ -27,26 +27,45 @@ export default {
       type: Function,
       required: true
     },
+    link: {
+      text: String,
+      name: String
+    },
     title: String,
     error: String,
-    buttonText: String
+    buttonText: String,
+    flavour: String
   },
   components: { AppButton, Card }
 }
 </script>
 
 <style scoped>
+h1 {
+  margin: 20px;
+  font: var(--header-1);
+}
+
+h2 {
+  font: var(--header-2);
+  margin: 20px;
+}
+
+h1, h2 {
+  text-align: center;
+}
+
 .auth-form {
   font: var(--body-copy-1);
   display: grid;
-  grid-row-gap: 20px;
   grid-auto-flow: row;
+  grid-gap: 20px;
 }
 
 .button-spacing {
-    width: 80%;
-    margin: auto;
-    margin-top: 30px;
+  width: 80%;
+  margin: auto;
+  margin-top: 30px;
 }
 
 .app-auth-form {
@@ -59,24 +78,18 @@ export default {
 }
 
 .card-content {
+  max-width: 340px;
   width: 320px;
   min-height: 300px;
   padding: 0px 10px;
   margin-bottom: 20px;
 }
 
-.back-link {
+.help-link {
+  margin: 20px 0 0;
+  font: var(--body-copy-1);
+  text-align:right;
   color: var(--theme);
-  display: block;
-  margin-top: 20px;
-  position: absolute;
-  top: 10px;
-  right: 20px;
 }
 
-@media screen and (min-width: 768px) {
-    .card-content {
-        width: 450px;
-    }
-}
 </style>

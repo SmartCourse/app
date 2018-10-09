@@ -34,7 +34,7 @@ button:disabled {
 }
 
 .standard-button {
-    background-color: var(--theme);
+    background-color: black;
     color: var(--white);
     border: none;
 }

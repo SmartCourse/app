@@ -19,5 +19,10 @@ export default {
   border-style: none;
   outline: none;
   border-bottom: 1px solid var(--color-light-gray);
+  transition: border 0.3s ease-in;
+}
+
+.auth-input:active, .auth-input:focus {
+  border-bottom: 1px solid var(--theme-light);
 }
 </style>

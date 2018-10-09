@@ -2,7 +2,7 @@
   <div class="course-info">
     <div>
       <p>
-        <b>Description</b>
+        <b class="description">Description</b>
       </p>
       <p class="text-body" v-html="courseInfo.description"></p> <!-- description may contain <p> tags -->
     </div>
@@ -33,10 +33,17 @@ export default {
 
 <style scoped>
 .course-info {
-    padding: 0 10px;
+    background-color: white;
+    padding: 0 10px 10px;
+}
+
+.description {
+  font: var(--header-4);
+  font-weight: bold;
 }
 
 p {
   font: var(--body-copy-1);
 }
+
 </style>

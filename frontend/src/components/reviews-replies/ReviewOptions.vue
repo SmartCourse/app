@@ -40,8 +40,8 @@ export default {
 
 .options {
     display: grid;
-    grid-auto-columns: 0.5fr;
-    grid-gap: 10px;
+    grid-auto-columns: 1fr;
+    grid-gap: auto;
 }
 
 .option {

@@ -10,7 +10,7 @@
 
       <transition-group name='fade' tag='ul' v-if="replies.length">
         <li v-for="answer in replies" :key="answer.id">
-          <ReplyCard :comment="answer" />
+          <ReplyCard :comment="answer" :type="commentType" :id="id" :code="code" />
         </li>
       </transition-group>
     </section>
@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      commentType: 'Reply'
+      commentType: 'Reply' // If changed, also modify CommentCards
     }
   },
   computed: {
@@ -59,7 +59,7 @@ export default {
         // this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
         return
       }
-      this.$store.dispatch('reviews/postReply', {form: replyForm, code: this.code, id: this.review.id})
+      this.$store.dispatch('reviews/postReply', { form: replyForm, code: this.code, id: this.review.id })
     }
   },
   created () {

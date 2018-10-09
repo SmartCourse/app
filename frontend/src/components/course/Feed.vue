@@ -1,5 +1,5 @@
 <template>
-  <div class="Feed">
+  <div class="feed">
     <section class="questions">
       <ol>
         <li :key="item.id" v-for="item in items">
@@ -26,3 +26,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.feed {
+  min-height: 150px;
+  background-color: red;
+}
+</style>

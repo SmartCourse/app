@@ -11,9 +11,8 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    background-color: var(--white);
     margin-top: 2px;
-    padding: 10px;
+    padding: 0 10px;
     min-height: 50vh;
 }
 
