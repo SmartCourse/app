@@ -12,7 +12,7 @@
 
 <script>
 import QuestionCard from '@/components/questions-answers/QuestionCard'
-import ReviewCard from '@/components/reviews-replies/ReviewCard'
+import ReviewCard from '@/components/course/FeedCard'
 
 export default {
   name: 'Feed',
