@@ -179,6 +179,183 @@ function initCourseTable(db) {
     return Promise.all(promises)
 }
 
+function initQuestionsTable(db) {
+    const questionTypes = [
+        {
+            title: 'Course Textbook',
+            body: 'Hi, I was just wondering if this course had a textbook and what the textbook might be? thnx'
+        },
+        {
+            title: 'Contact Hours',
+            body: 'Thinking of taking some harder courses this semester so just wondering how many contact hours this course has.'
+        },
+        {
+            title: 'When to take?',
+            body: 'Does this course run in s1 as well as s2? Can\'t find anything in the handbook'
+        },
+        {
+            title: 'Group Project',
+            body: 'How many people per group for the group project?'
+        },
+        {
+            title: 'Will this help me?',
+            body: 'I want to learn a certain skill but not sure if this course is relevant to what I need, can you give suggestions...'
+        },
+        {
+            title: 'Similar courses',
+            body: 'I really liked this course. What courses cover similar topics/content, cheers'
+        }
+    ]
+
+    const maxQuestionsPerCourse = 5
+    const numQuestionsTypes = questionTypes.length
+
+    let questions = []
+
+    // For each of the courses
+    for (const i in courseData) {
+        // Get it's course code
+        const code = courseData[i].code
+        // Determine how many questions to add
+        const numQuestions = Math.floor(Math.random() * maxQuestionsPerCourse + 1)
+
+        // Now create each of the questions
+        for (let i = 0; i < numQuestions; i++) {
+            // Determine the question type
+            const index = Math.floor(Math.random() * numQuestionsTypes)
+            // Create the question
+            const question = { code: code, userID: i, ...questionTypes[index] }
+            // Add the question to the list
+            questions.push(question)
+        }
+    }
+
+    // Prepare query
+    const columns = Object.keys(questions[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO question (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    // Do insertions and return promise for all of them to be completed
+    const promises = questions.map(q => {
+        insertDB(db, 'question', q, prep)
+            .then(id => initComments(db, { questionID: id }))
+    })
+    return Promise.all(promises)
+}
+
+function initReviewTable(db) {
+    const reviewTypes = [
+        {
+            title: 'Wow',
+            body: 'This course is great 10/10, would recommend!'
+        },
+        {
+            title: 'Challenging!',
+            body: 'This course was great and the lec is extremely passionate and helpful. However the workload is insane so make sure you\'re ready'
+        },
+        {
+            title: 'Very Unhappy',
+            body: 'This course was was ran extremely poorly, content was bland, and everything was a mess.'
+        },
+        {
+            title: 'Core course',
+            body: 'Didn\'t like this course very much, was fair boring, wouldn\'t have done it if it wasn\'t a core course'
+        },
+        {
+            title: 'You MUST do this course',
+            body: 'Whether you\'re interested in the course or not you should definitely do it, it\'s extremely helpful and should be a core course imo'
+        },
+        {
+            title: 'My favourite course so far',
+            body: 'This is by far my favourite course, I loved doing all the little challenges and activities and felt like the course had a great community helping each other'
+        }
+    ]
+
+    const maxReviewsPerCourse = 5
+    const numReviewTypes = reviewTypes.length
+
+    let reviews = []
+
+    // For each of the courses
+    for (const i in courseData) {
+        // Get it's course code
+        const code = courseData[i].code
+        // Determine how many questions to add
+        const numReviews = Math.floor(Math.random() * maxReviewsPerCourse + 1)
+
+        // Now create each of the questions
+        for (let i = 0; i < numReviews; i++) {
+            // Determine the question type
+            const index = Math.floor(Math.random() * numReviewTypes)
+            // Create the question
+            const review = {
+                code: code,
+                userID: i,
+                recommend: 0,
+                enjoy: 0,
+                ...reviewTypes[index] }
+            // Add the question to the list
+            reviews.push(review)
+        }
+    }
+
+    // Prepare query
+    const columns = Object.keys(reviews[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO review (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    // Do insertions and return promise for all of them to be completed
+    const promises = reviews.map(r => {
+        insertDB(db, 'review', r, prep)
+            .then(id => initComments(db, { ReviewID: id }))
+    })
+    return Promise.all(promises)
+}
+
+function initComments(db, parent) {
+    const commentTypes = [
+        {
+            body: 'Wow Comments!'
+        },
+        {
+            body: 'Generic Comment'
+        },
+        {
+            body: 'This is a comment!'
+        }
+    ]
+
+    const maxCommentsPerParent = 5
+    const numCommentTypes = commentTypes.length
+
+    let comments = []
+
+    const numComments = Math.floor(Math.random() * maxCommentsPerParent + 1)
+
+    for (let i = 0; i < numComments; i++) {
+        const index = Math.floor(Math.random() * numCommentTypes)
+        const comment = {
+            ...parent,
+            commentParent: 1,
+            userID: 1,
+            ...commentTypes[index]
+        }
+        comments.push(comment)
+    }
+
+    const columns = Object.keys(comments[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO comment (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    const promises = comments.map(c => {
+        insertDB(db, 'comment', c, prep)
+    })
+    return Promise.all(promises)
+}
+
 /**
  * Initiates a new SQL database by creating the tables with some UNSW data
  * @param   {object} SQLObject
@@ -197,7 +374,8 @@ function createDB(db) {
     ])
         .then(() => {
             console.log('Created tables')
-            return Promise.all([initUniTable(db), initSubjectTable(db), initCourseTable(db)])
+            return Promise.all([initUniTable(db), initSubjectTable(db), initCourseTable(db),
+                initQuestionsTable(db), initReviewTable(db)])
         })
         .then(() => {
             console.log('Initialised tables')
