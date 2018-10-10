@@ -183,31 +183,32 @@ function initQuestionsTable(db) {
     const questionTypes = [
         {
             title: 'Course Textbook',
-            body: 'Hi, I was just wondering if this course had a textbook and what the textbook might be? thnx'
+            body: 'hendrerit dolor magna eget est lorem ipsum dolor sit amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas integer eget aliquet nibh praesent tristique magna sit amet purus gravida quis blandit turpis cursus in hac habitasse platea dictumst quisque sagittis purus sit'
         },
         {
             title: 'Contact Hours',
-            body: 'Thinking of taking some harder courses this semester so just wondering how many contact hours this course has.'
+            body: 'pellentesque diam volutpat commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec pretium vulputate sapien nec sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc sed velit dignissim sodales ut eu sem integer vitae justo eget magna fermentum iaculis eu non diam phasellus vestibulum lorem sed risus ultricies tristique nulla aliquet enim tortor at auctor urna nunc id cursus metus aliquam eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper eget duis at tellus at urna condimentum mattis pellentesque id nibh tortor id aliquet lectus proin nibh nisl condimentum id venenatis a condimentum'
         },
         {
             title: 'When to take?',
-            body: 'Does this course run in s1 as well as s2? Can\'t find anything in the handbook'
+            body: 'leo vel orci porta non pulvinar neque laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt eget nullam non nisi est sit amet facilisis magna etiam tempor orci eu lobortis elementum nibh tellus molestie nunc non blandit massa enim nec dui nunc mattis enim ut tellus elementum sagittis vitae et leo duis ut diam quam nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque'
         },
         {
             title: 'Group Project',
-            body: 'How many people per group for the group project?'
+            body: 'pulvinar etiam non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi nullam'
         },
         {
             title: 'Will this help me?',
-            body: 'I want to learn a certain skill but not sure if this course is relevant to what I need, can you give suggestions...'
+            body: 'nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae'
         },
         {
             title: 'Similar courses',
-            body: 'I really liked this course. What courses cover similar topics/content, cheers'
+            body: 'non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum odio eu feugiat pretium nibh ipsum consequat nisl vel pretium lectus quam id leo in vitae turpis massa sed elementum tempus egestas sed sed risus pretium quam vulputate dignissim suspendisse'
         }
     ]
 
-    const maxQuestionsPerCourse = 5
+    const minRange = 10 // Between [minRange, minRange+maxRange]
+    const maxRange = 5
     const numQuestionsTypes = questionTypes.length
 
     let questions = []
@@ -217,7 +218,7 @@ function initQuestionsTable(db) {
         // Get it's course code
         const code = courseData[i].code
         // Determine how many questions to add
-        const numQuestions = Math.floor(Math.random() * maxQuestionsPerCourse + 1)
+        const numQuestions = Math.floor(Math.random() * maxRange + minRange)
 
         // Now create each of the questions
         for (let i = 0; i < numQuestions; i++) {
@@ -247,32 +248,33 @@ function initQuestionsTable(db) {
 function initReviewTable(db) {
     const reviewTypes = [
         {
-            title: 'Wow',
-            body: 'This course is great 10/10, would recommend!'
-        },
-        {
-            title: 'Challenging!',
-            body: 'This course was great and the lec is extremely passionate and helpful. However the workload is insane so make sure you\'re ready'
-        },
-        {
-            title: 'Very Unhappy',
-            body: 'This course was was ran extremely poorly, content was bland, and everything was a mess.'
-        },
-        {
-            title: 'Core course',
-            body: 'Didn\'t like this course very much, was fair boring, wouldn\'t have done it if it wasn\'t a core course'
+            title: 'My favourite course so far',
+            body: 'hendrerit dolor magna eget est lorem ipsum dolor sit amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas integer eget aliquet nibh praesent tristique magna sit amet purus gravida quis blandit turpis cursus in hac habitasse platea dictumst quisque sagittis purus sit'
         },
         {
             title: 'You MUST do this course',
-            body: 'Whether you\'re interested in the course or not you should definitely do it, it\'s extremely helpful and should be a core course imo'
+            body: 'pellentesque diam volutpat commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec pretium vulputate sapien nec sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc sed velit dignissim sodales ut eu sem integer vitae justo eget magna fermentum iaculis eu non diam phasellus vestibulum lorem sed risus ultricies tristique nulla aliquet enim tortor at auctor urna nunc id cursus metus aliquam eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper eget duis at tellus at urna condimentum mattis pellentesque id nibh tortor id aliquet lectus proin nibh nisl condimentum id venenatis a condimentum'
         },
         {
-            title: 'My favourite course so far',
-            body: 'This is by far my favourite course, I loved doing all the little challenges and activities and felt like the course had a great community helping each other'
+            title: 'Core course',
+            body: 'leo vel orci porta non pulvinar neque laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt eget nullam non nisi est sit amet facilisis magna etiam tempor orci eu lobortis elementum nibh tellus molestie nunc non blandit massa enim nec dui nunc mattis enim ut tellus elementum sagittis vitae et leo duis ut diam quam nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque'
+        },
+        {
+            title: 'Very Unhappy',
+            body: 'pulvinar etiam non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi nullam'
+        },
+        {
+            title: 'Challenging',
+            body: 'nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae'
+        },
+        {
+            title: 'Wow',
+            body: 'non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum odio eu feugiat pretium nibh ipsum consequat nisl vel pretium lectus quam id leo in vitae turpis massa sed elementum tempus egestas sed sed risus pretium quam vulputate dignissim suspendisse'
         }
     ]
 
-    const maxReviewsPerCourse = 5
+    const minRange = 10 // Between [minRange, minRange+maxRange]
+    const maxRange = 5
     const numReviewTypes = reviewTypes.length
 
     let reviews = []
@@ -282,7 +284,7 @@ function initReviewTable(db) {
         // Get it's course code
         const code = courseData[i].code
         // Determine how many questions to add
-        const numReviews = Math.floor(Math.random() * maxReviewsPerCourse + 1)
+        const numReviews = Math.floor(Math.random() * maxRange + minRange)
 
         // Now create each of the questions
         for (let i = 0; i < numReviews; i++) {
@@ -317,22 +319,32 @@ function initReviewTable(db) {
 function initComments(db, parent) {
     const commentTypes = [
         {
-            body: 'Wow Comments!'
+            body: 'hendrerit dolor magna eget est lorem ipsum dolor sit amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas integer eget aliquet nibh praesent tristique magna sit amet purus gravida quis blandit turpis cursus in hac habitasse platea dictumst quisque sagittis purus sit hendrerit dolor magna eget est lorem ipsum dolor sit amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas integer eget aliquet nibh praesent tristique magna sit amet purus gravida quis blandit turpis cursus in hac habitasse platea dictumst quisque sagittis purus sit'
         },
         {
-            body: 'Generic Comment'
+            body: 'pellentesque diam volutpat commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec pretium vulputate sapien nec sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc sed velit dignissim sodales ut eu sem integer vitae justo eget magna fermentum iaculis eu non diam phasellus vestibulum lorem sed risus ultricies tristique nulla aliquet enim tortor at auctor urna nunc id cursus metus aliquam eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper eget duis at tellus at urna condimentum mattis pellentesque id nibh tortor id aliquet lectus proin nibh nisl condimentum id venenatis a condimentum'
         },
         {
-            body: 'This is a comment!'
+            body: 'leo vel orci porta non pulvinar neque laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt eget nullam non nisi est sit amet facilisis magna etiam tempor orci eu lobortis elementum nibh tellus molestie nunc non blandit massa enim nec dui nunc mattis enim ut tellus elementum sagittis vitae et leo duis ut diam quam nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque leo vel orci porta non pulvinar neque laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt eget nullam non nisi est sit amet facilisis magna etiam tempor orci eu lobortis elementum nibh tellus molestie nunc non blandit massa enim nec dui nunc mattis enim ut tellus elementum sagittis vitae et leo duis ut diam quam nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque'
+        },
+        {
+            body: 'pulvinar etiam non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi nullam'
+        },
+        {
+            body: 'nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae'
+        },
+        {
+            body: 'non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum odio eu feugiat pretium nibh ipsum consequat nisl vel pretium lectus quam id leo in vitae turpis massa sed elementum tempus egestas sed sed risus pretium quam vulputate dignissim suspendisse'
         }
     ]
 
-    const maxCommentsPerParent = 5
+    const minRange = 10 // Between [minRange, minRange+maxRange]
+    const maxRange = 5
     const numCommentTypes = commentTypes.length
 
     let comments = []
 
-    const numComments = Math.floor(Math.random() * maxCommentsPerParent + 1)
+    const numComments = Math.floor(Math.random() * maxRange + minRange)
 
     for (let i = 0; i < numComments; i++) {
         const index = Math.floor(Math.random() * numCommentTypes)
