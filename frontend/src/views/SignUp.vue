@@ -60,7 +60,9 @@ export default {
     createProfile() {
       const { displayName } = this
       this.$store.dispatch('auth/createProfile', { user: this.authObject, displayName })
-        .then(this.$router.push('/'))
+        .then(() => {
+          if (this.isLoggedIn && this.hasProfile) this.$router.push('/')
+        })
         .catch(e => {})
     }
   },
