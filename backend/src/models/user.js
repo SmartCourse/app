@@ -6,7 +6,7 @@ class User {
     }
 
     /**
-     * TODO Return specialised information for auth'd user
+     * Return specialised information for auth'd user
      * @param {string} id The id of the auth'd user
      */
     getProfile(id) {
