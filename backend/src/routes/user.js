@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { isAuthorized, isFirebaseAuthorized } = require('../utils/helpers')
-const { getSelf, getUser, createUser } = require('../controllers/user')
+const { getSelf, getUser, createUser, updateUser } = require('../controllers/user')
 
 /* Get public data for a specific user */
 router.get('/:id', getUser)
@@ -15,6 +15,7 @@ router.use(isAuthorized)
 
 /* provide frontend with any user specific data */
 router.get('/', getSelf)
+router.put('/', updateUser)
 
 
 module.exports = router

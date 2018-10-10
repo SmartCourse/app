@@ -25,3 +25,8 @@ exports.createUser = function({ authorized: { email, uid }, body: { displayName 
     return responseHandler(userModel.createUser({ email, uid, displayName }), res)
         .catch(errorHandler(res))
 }
+
+exports.updateUser = function({ user: { id }, body: { degree, gradYear, description, picture } }, res) {
+    return responseHandler(userModel.updateUser(id, { degree, gradYear, description, picture }), res)
+        .catch(errorHandler(res))
+}

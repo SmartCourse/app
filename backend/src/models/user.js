@@ -6,12 +6,12 @@ class User {
     }
 
     /**
-     * TODO Return specialsed information for auth'd user
+     * TODO Return specialised information for auth'd user
      * @param {string} id The id of the auth'd user
      */
     getProfile(id) {
         return this.db
-            .query('SELECT * FROM user WHERE id=?', [id])
+            .query('SELECT id, email, displayName, joined, degree, gradYear, description, picture, joined FROM user WHERE id=?', [id])
     }
 
     /**
@@ -43,6 +43,12 @@ class User {
         return this.db
             .insert('user', { displayName, email, uid })
             .then(id => this.getProfile(id))
+    }
+
+    updateUser(id, data) {
+        return this.db
+            .update('user', data, { id })
+            .then(() => this.getProfile(id))
     }
 }
 
