@@ -3,8 +3,8 @@
       <div class="content">
           <CardHeader>Submit Your Question</CardHeader>
           <form>
-            <AppInput v-model="title" placeholder="Question title" />
-            <textarea placeholder="Your question here.." v-model="body"></textarea><br>
+            <AppInput type="text" placeholder="Question title" v-model="title" />
+            <AppInput type="textarea" placeholder="Your question here.." v-model="body"/><br>
             <AppButton @click.native="callback({title, body})">Ask</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>

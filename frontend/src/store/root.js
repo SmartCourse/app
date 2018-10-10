@@ -3,6 +3,7 @@ import { get } from '../utils/api'
 /* root application state */
 const state = {
   loading: false,
+  error: '',
   // cached courses
   courses: [],
   // firebase authObject
@@ -16,7 +17,10 @@ const getters = {
   // logged into firebase (authenticated account)
   isLoggedIn: ({ userAuthObject }) => !!Object.keys(userAuthObject).length,
   // logged into backend (existing profile)
-  hasProfile: ({ profile }) => !!Object.keys(profile).length
+  hasProfile: ({ profile }) => !!Object.keys(profile).length,
+  profile: ({ profile }) => profile,
+  loading: ({ loading }) => loading,
+  error: ({ error }) => error
 }
 
 const actions = {

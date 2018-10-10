@@ -9,9 +9,9 @@
               Please think carefully about your feedback before you submit it.
             </p>
             <span class="required">*</span>
-            <AppInput placeholder="Review title..." v-model="title" style="margin:8px auto;"/><br>
+            <AppInput type="text" placeholder="Review title..." v-model="title" style="margin:8px auto;"/><br>
             <span class="required">*</span>
-            <textarea placeholder="Your review here..." v-model="body"></textarea><br>
+            <AppInput type="textarea" placeholder="Your review here..." v-model="body"/><br>
 
             <InputOptions v-model="recommend" :options="['Yes', 'No']">
               Would you recommend this course to a friend? <span class="required">*</span>

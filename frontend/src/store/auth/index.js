@@ -39,7 +39,7 @@ const actions = {
       .catch(error => {
         commit('ERROR', error.message)
         commit('SET_PROFILE', {}, { root: true })
-        if (!error.code || error.code != 403) {
+        if (!error.code || error.code !== 403) {
           auth.signOut()
           commit('SET_USER', {}, { root: true })
         }
@@ -94,6 +94,7 @@ const actions = {
    * Called on application boot once firebase has been initialised
    */
   checkAuth({ commit }) {
+    commit('SET_LOADING', true)
     return new Promise((resolve, reject) => {
       const unsubscribe = auth.onAuthStateChanged(user => {
         unsubscribe()
@@ -111,7 +112,7 @@ const actions = {
       .catch(error => {
         commit('ERROR', error.message)
         commit('SET_PROFILE', {}, { root: true })
-        if (!error.code || error.code != 403) {
+        if (!error.code || error.code !== 403) {
           auth.signOut()
           commit('SET_USER', {}, { root: true })
         }
