@@ -19,11 +19,11 @@ exports.getReviewComments = function ({ params, query }, res) {
         commentModel.getComments({ reviewID: params.id }, pageNumber, pageSize),
         commentModel.getCommentCount({ reviewID: params.id })
     ]).then((values) => {
-        const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize) / pageSize)
+        const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize - 1) / pageSize)
         return {
             'meta': {
                 'curr': pageNumber,
-                'last': lastPage,
+                'last': lastPage || 1,
                 'pageSize': pageSize
             },
             'data': values[0]
