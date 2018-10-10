@@ -3,7 +3,7 @@
 
       <div class='button-container'>
           <router-link :to="{ name: 'newReview', params: {code} }">
-              <AppButton>Add Review</AppButton>
+              <AppButton>Write Review</AppButton>
           </router-link>
       </div>
 
@@ -64,8 +64,8 @@ export default {
 </script>
 
 <style scoped>
+
 .button-container {
-  transform: translateY(-50px);
   margin-bottom: 10px;
   text-align: right;
 }

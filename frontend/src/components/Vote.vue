@@ -43,6 +43,4 @@ export default {
   color: var(--black);
 }
 
-
-
 </style>

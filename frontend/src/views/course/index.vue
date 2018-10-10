@@ -89,7 +89,8 @@ export default {
     display: grid;
     grid-auto-columns: 2fr 1fr;
     grid-gap: 10px;
-    max-height: 300px;
+    max-height: 320px;
+    overflow-y: hidden;
 }
 
 .key-data {
@@ -133,7 +134,6 @@ h2, h3 {
     grid-row: 2;
     background-color: var(--white);
     margin-top: 10px;
-    padding: 10px;
     min-height: 150px;
 }
 
