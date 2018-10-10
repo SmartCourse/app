@@ -13,12 +13,8 @@ exports.getUser = function({id}, res) {
  * provide frontend with any user specific data
  */
 exports.getSelf = function(req, res) {
-    const errorResponse = errorHandler(res)
-    if (!req.user) {
-        return errorResponse({ message: 'Invalid Credentials' })
-    }
-    // fine for now, should include profile data
-    return res.json(req.user)
+    return responseHandler(userModel.getProfile(req.user.id), res)
+        .catch(errorHandler(res))
 }
 
 exports.createUser = function({ authorized: { email, uid }, body: { displayName } }, res) {

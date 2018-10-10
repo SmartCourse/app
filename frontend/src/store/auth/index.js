@@ -1,7 +1,7 @@
 // firebase authentication class
 import auth from './config'
 
-import { createProfile, getSelf } from '@/utils/api/auth'
+import { createProfile, updateProfile, getSelf } from '@/utils/api/auth'
 
 const state = {
   loading: false,
@@ -82,6 +82,20 @@ const actions = {
   createProfile({ commit }, { user, displayName }) {
     commit('SET_LOADING', true)
     return createProfile(user, { displayName })
+      .then((profile) => commit('SET_PROFILE', profile, { root: true }))
+      .catch(error => {
+        commit('ERROR', error.message)
+        throw error
+      })
+      .finally(() => commit('SET_LOADING', false))
+  },
+
+  /**
+  * Update user profile
+  **/
+  updateProfile({ commit }, { user, data }) {
+    commit('SET_LOADING', true)
+    return updateProfile(user, data)
       .then((profile) => commit('SET_PROFILE', profile, { root: true }))
       .catch(error => {
         commit('ERROR', error.message)

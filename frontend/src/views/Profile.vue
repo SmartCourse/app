@@ -21,7 +21,7 @@
 
             </div>
             <div v-else-if="!loading && !hasProfile">
-                <router-link :to='"/signup"'>Click here</router-link> to create a profile.
+                <router-link style="color:var(--theme)" :to='"/signup"'>Click here</router-link> to create a profile.
             </div>
             <LoadingSpinner v-else/>
         </Card>
@@ -31,9 +31,9 @@
 </template>
 
 <script>
-import Card from '@/components/Card'
-import AppInput from '@/components/AppInput'
 import AppButton from '@/components/AppButton'
+import AppInput from '@/components/AppInput'
+import Card from '@/components/Card'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -47,11 +47,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([ 'isLoggedIn', 'hasProfile', 'profile' ]),
+    ...mapGetters([ 'isLoggedIn', 'hasProfile', 'profile', 'authObject' ]),
     ...mapGetters('auth', [ 'loading', 'error' ])
   },
   methods: {
     updateProfile() {
+      const data = { picture: this.picture, degree: this.degree, gradYear: this.gradYear, description: this.description }
+      this.$store.dispatch('auth/updateProfile', { user: this.authObject, data })
     }
   },
   mounted() {

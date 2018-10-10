@@ -11,7 +11,7 @@ class User {
      */
     getProfile(id) {
         return this.db
-            .query('SELECT id, email, displayName, joined, degree, gradYear, description, picture, joined FROM user WHERE id=?', [id])
+            .query('SELECT id, email, displayName, degree, gradYear, description, picture, joined FROM user WHERE id=?', [id])
     }
 
     /**
@@ -22,11 +22,11 @@ class User {
      */
     getPublicProfile(id) {
         return this.db
-            .query('SELECT id, displayName, joined, degree, gradYear, description, picture FROM user WHERE id=?', [id])
+            .query('SELECT id, displayName, degree, gradYear, description, picture, joined FROM user WHERE id=?', [id])
     }
 
     /**
-     * Alternative getter to get the relevant user's details
+     * Get all users details by UID. Used by authentication system
      * @param {uid} uid uid string
      * @returns {object} user object
      */

@@ -1,4 +1,4 @@
-import { get, post } from '.'
+import { get, post, put } from '.'
 
 /**
  * Add authtoken to request
@@ -34,6 +34,11 @@ export function getSelf(user) {
 export function createProfile(user, data) {
   return getAuthHeaders(user)
     .then(options => post('/user', { ...options, data }))
+}
+
+export function updateProfile(user, data) {
+  return getAuthHeaders(user)
+    .then(options => put('/user', { ...options, data }))
 }
 
 /**

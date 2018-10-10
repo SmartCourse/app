@@ -12,7 +12,7 @@ function createUserTable (db) {
             joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             reputation INTEGER DEFAULT '0',
             degree TEXT,
-            gradYear TIMESTAMP DEFAULT '2018',
+            gradYear TIMESTAMP,
             description TEXT,
             picture TEXT
             )`,
