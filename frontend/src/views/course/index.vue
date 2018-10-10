@@ -24,14 +24,15 @@
         </div>
     </div>
     <div class="course-content">
-        <router-link :to="{name: 'info'}">
-            <TabButton :active="this.$route.name == 'info'">Reviews</TabButton>
-        </router-link>
+        <router-view>
+            <router-link :to="{name: 'info'}">
+                <TabButton :active="this.$route.name == 'info'">Reviews</TabButton>
+            </router-link>
 
-        <router-link :to="{name: 'questions'}">
-            <TabButton :active="this.$route.name == 'questions'">Questions</TabButton>
-        </router-link>
-        <router-view/>
+            <router-link :to="{name: 'questions'}">
+                <TabButton :active="this.$route.name == 'questions'">Questions</TabButton>
+            </router-link>
+        </router-view>
     </div>
 
   </div>

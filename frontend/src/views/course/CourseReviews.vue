@@ -1,7 +1,9 @@
 <template>
     <div class="course-reviews">
-
-      <div class='button-container'>
+      <div class='options'>
+          <div class="tabs">
+            <slot/>
+          </div>
           <router-link :to="{ name: 'newReview', params: {code} }">
               <AppButton>Write Review</AppButton>
           </router-link>
@@ -65,8 +67,9 @@ export default {
 
 <style scoped>
 
-.button-container {
-  margin-bottom: 10px;
-  text-align: right;
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
 }
 </style>

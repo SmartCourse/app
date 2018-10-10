@@ -59,16 +59,9 @@ export default {
   min-width: 310px;
   display: grid;
   grid-template-columns: 50px 1fr;
+  margin: 0;
   grid-gap: 10px;
 }
-
-/*
-.header, .meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-*/
 
 .info {
   display: grid;
@@ -108,7 +101,6 @@ export default {
 
 h3 {
   display: inline-block;
-  margin: 10px 0;
   font: var(--header-4);
   font-weight: bolder;
 }
@@ -130,7 +122,10 @@ p {
 @media screen and (max-width: 500px) {
   .info {
     grid-gap: 5px;
-    grid-template-columns: 1fr 100px;
+    grid-template-columns: 1fr 60px;
+  }
+  .likes {
+    display: none;
   }
 }
 
