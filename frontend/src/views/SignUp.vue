@@ -5,9 +5,13 @@
       :buttonText="'Sign Up'"
       :error="error"
       :clickHandler="clickHandler"
+      :link="{
+        text: 'Already have an account?',
+        name: 'Login'
+      }"
     >
       <AuthInput type="text" placeholder="Display Name"/>
-      <AuthInput type="text" v-model="email" placeholder="Email"/>
+      <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>
       <AuthInput type="password" v-model="password" placeholder="Password"/>
     </AppAuthForm>
     <LoadingSpinner v-else/>

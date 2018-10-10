@@ -6,13 +6,23 @@ const firebase = require('./auth')
 const compression = require('compression')
 const app = express()
 
+// for json parsing
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
+
+// for gzipping
 app.use(compression())
-app.use(express.static(path.join(__dirname, '../public')))
+
+// for caching
+app.use(express.static(path.join(__dirname, '../public'), {
+    maxAge: '30d'
+}))
+
+// for auth tokens
 app.use(firebase)
 
+// for setting cors headers
 const { cors, corsProd } = require('./utils/cors')
 
 if (app.get('env') === 'development') {

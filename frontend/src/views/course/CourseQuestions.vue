@@ -68,4 +68,9 @@ export default {
     margin-bottom: 10px;
     text-align: right;
 }
+
+h3 {
+  text-align: center;
+  font: var(--header-4);
+}
 </style>

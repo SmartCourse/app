@@ -5,7 +5,7 @@
           <form>
             <textarea placeholder="Your input here.." v-model="body"></textarea><br>
             <!-- should probs be a separate component -->
-            <AppButton @click.native="callback({body})">{{ type }}</AppButton>
+            <AppButton @click.native="callback({body}); body=''">{{ type }}</AppButton>
             <!-- errors will be injected here -->
             <slot></slot>
           </form>

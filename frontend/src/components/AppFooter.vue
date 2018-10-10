@@ -64,7 +64,7 @@ export default {
 }
 
 .logo-container > h1 {
-  margin: 40px auto;
+  margin: auto;
 }
 
 .links {
@@ -117,7 +117,7 @@ p {
     border-bottom: var(--border);
   }
 
-  logo-container > h1 {
+  .logo-container > h1 {
     margin: auto;
   }
 }

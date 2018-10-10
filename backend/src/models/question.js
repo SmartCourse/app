@@ -11,8 +11,7 @@ class Question {
      * @returns {object}             Single question
      */
     getQuestion(questionID) {
-        return this.db
-            .query('SELECT * FROM question WHERE id=?', [questionID])
+        return this.db.query('SELECT * FROM question WHERE id=?', [questionID])
     }
 
     /**

@@ -50,7 +50,7 @@ describe('Test answer routes', () => {
 
         it('returns the answer we POSTed', () =>
             request.then(({ body }) =>
-                expect(body.body).to.equal('superruuu____testu'))
+                expect(body[0].body).to.equal('superruuu____testu'))
         )
     })
 

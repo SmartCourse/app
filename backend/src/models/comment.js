@@ -11,7 +11,7 @@ class Comment {
      * @param   {number} pageNumber
      * @returns {Array}
      */
-    postComment(queryObject, { body, userID = 1 }) {
+    postComment(queryObject, { body, userID }) {
         const [ key, value ] = Object.entries(queryObject)[0]
         return this.db
             .insert('comment', { [key]: value, body, userID })

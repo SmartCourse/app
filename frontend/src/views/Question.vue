@@ -10,7 +10,7 @@
 
       <!--<transition-group name='fade' tag='ul' v-if="answers.length">-->
         <li v-for="answer in answers" :key="answer.id">
-          <AnswerCard :comment="answer" />
+          <AnswerCard :comment="answer" :type="commentType" :id="id" :code="code"/>
         </li>
       <!--</transition-group>-->
 
@@ -49,7 +49,7 @@ export default {
   },
   data() {
     return {
-      commentType: 'Answer'
+      commentType: 'Answer' // If changed, also modify CommentCards
     }
   },
   computed: {
