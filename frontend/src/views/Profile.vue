@@ -14,7 +14,7 @@
                   Degree: <AppInput spellcheck="false" type="text" v-model="degree" placeholder=""/>
                   Graduation Year: <AppInput spellcheck="false" type="text" v-model="gradYear" placeholder=""/>
                   Description: <AppInput spellcheck="false" type="textarea" v-model="description" placeholder=""/>
-                  <AppButton class="button-spacing" @click.native="">
+                  <AppButton class="button-spacing" @click.native="updateProfile()">
                       Update Profile
                   </AppButton>
                 </form>
@@ -39,24 +39,28 @@ import { mapGetters } from 'vuex'
 export default {
   components: { AppInput, AppButton, Card },
   data() {
-      return {
-          picture: '',
-          degree: '',
-          gradYear: '',
-          description: ''
-      }
+    return {
+      picture: '',
+      degree: '',
+      gradYear: '',
+      description: ''
+    }
   },
   computed: {
     ...mapGetters([ 'isLoggedIn', 'hasProfile', 'profile' ]),
     ...mapGetters('auth', [ 'loading', 'error' ])
   },
+  methods: {
+    updateProfile() {
+    }
+  },
   mounted() {
     // TODO this doesn't work if page reloaded because auth gets checked after mounting
     if (this.hasProfile) {
-        this.picture = this.profile.picture
-        this.degree = this.profile.degree
-        this.gradYear = this.profile.gradYear
-        this.description = this.profile.description
+      this.picture = this.profile.picture
+      this.degree = this.profile.degree
+      this.gradYear = this.profile.gradYear
+      this.description = this.profile.description
     }
   }
 }
