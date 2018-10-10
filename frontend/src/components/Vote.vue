@@ -29,10 +29,10 @@ export default {
 }
 
 .likes {
-  background-color: yellow;
+  background-color: var(--very-light-grey);
   border-radius: 100%;
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
   padding: 10px;
   font-size: 24px;
   line-height: 40px;
