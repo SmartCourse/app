@@ -9,9 +9,9 @@
               Please think carefully about your feedback before you submit it.
             </p>
             <span class="required">*</span>
-            <AppInput type="text" placeholder="Review title..." v-model="title" style="margin:8px auto;"/><br>
+            <AppInput placeholder="Review title..." v-model="title" style="margin:8px auto;"/><br>
             <span class="required">*</span>
-            <AppInput type="textarea" placeholder="Your review here..." v-model="body"/><br>
+            <textarea placeholder="Your review here..." v-model="body"></textarea><br>
 
             <InputOptions v-model="recommend" :options="['Yes', 'No']">
               Would you recommend this course to a friend? <span class="required">*</span>
@@ -82,23 +82,6 @@ export default {
 
 .content {
   padding: 20px;
-}
-
-textarea {
-  border: var(--border);
-  border-radius: 2px;
-  font: inherit;
-  resize: none;
-  padding: 10px;
-  outline: none;
-  margin: 10px 0px;
-  width: calc(100% - 20px);
-  height: 100px;
-  transition: 0.2s border ease-in-out;
-}
-
-textarea:focus, textarea:active {
-  border: 1px solid #acc;
 }
 
 .submit {

@@ -11,9 +11,9 @@
                 <h2 class="name">{{ profile.displayName }}</h2>
                 <h3 class="email">{{ profile.email }}</h3>
                 <form class="form">
-                  Degree: <AppInput spellcheck="false" type="text" v-model="degree" placeholder=""/>
-                  Graduation Year: <AppInput spellcheck="false" type="text" v-model="gradYear" placeholder=""/>
-                  Description: <AppInput spellcheck="false" type="textarea" v-model="description" placeholder=""/>
+                  Degree: <AppInput spellcheck="false" type="text" v-model="degree"/>
+                  Graduation Year: <AppInput spellcheck="false" type="text" v-model="gradYear"/>
+                  Description: <textarea v-model="description"></textarea>
                   <AppButton class="button-spacing" @click.native="updateProfile()">
                       Update Profile
                   </AppButton>
@@ -50,6 +50,16 @@ export default {
     ...mapGetters([ 'isLoggedIn', 'hasProfile', 'profile', 'authObject' ]),
     ...mapGetters('auth', [ 'loading', 'error' ])
   },
+  watch: {
+    hasProfile (oldState, newState) {
+      if (this.hasProfile) {
+        this.picture = this.profile.picture
+        this.degree = this.profile.degree
+        this.gradYear = this.profile.gradYear
+        this.description = this.profile.description
+      }
+    }
+  },
   methods: {
     updateProfile() {
       const data = { picture: this.picture, degree: this.degree, gradYear: this.gradYear, description: this.description }
@@ -57,7 +67,6 @@ export default {
     }
   },
   mounted() {
-    // TODO this doesn't work if page reloaded because auth gets checked after mounting
     if (this.hasProfile) {
       this.picture = this.profile.picture
       this.degree = this.profile.degree
