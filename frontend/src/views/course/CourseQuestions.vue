@@ -10,7 +10,7 @@
       </Options>
 
       <Feed
-        feedType="QuestionCard"
+        feedType="Question"
         :items="questions"
       />
 

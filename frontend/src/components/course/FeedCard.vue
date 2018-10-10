@@ -1,15 +1,18 @@
 <template>
   <Card class="feed-card">
-    <UserMini/>
+    <UserMini :user="author"/>
     <div class="info">
-      <router-link tag="div" class="header" :to="{ name: 'review', params: { code, id }}">
+      <router-link tag="div" class="header" :to="{ name: routeName, params: { code, id }}">
         <h3 class="header-title">{{ title }}</h3>
       </router-link>
       <p class="published">
         <time>{{ published }}</time>
       </p>
-      <p :class="positiveOrNegativeClass">
+      <p v-if="cardType === 'Review'" :class="positiveOrNegativeClass">
         <b>{{ positiveOrNegativeText }}</b>
+      </p>
+      <p v-else>
+        <b>Know the answer to this question?</b>
       </p>
       <p class="likes">{{ likes || 0 }} users found this helpful</p>
     </div>
@@ -20,8 +23,6 @@
 import Card from '@/components/Card'
 import UserMini from '@/components/User/Mini'
 
-const randomNumber = Math.random()
-
 export default {
   props: {
     title: String,
@@ -29,7 +30,13 @@ export default {
     published: String,
     author: Number,
     code: String,
-    id: String
+    id: String,
+    cardType: String
+  },
+  data() {
+    return {
+      randomNumber: Math.random()
+    }
   },
   components: {
     Card,
@@ -38,14 +45,14 @@ export default {
   computed: {
     /* TODO use recommendation */
     positiveOrNegativeText() {
-      return randomNumber > 0.5 ? 'Recommended' : 'Not Recommended'
+      return this.randomNumber > 0.5 ? 'Recommended' : 'Not Recommended'
     },
     positiveOrNegativeClass() {
-      return randomNumber > 0.5 ? 'positive' : 'negative'
+      return this.randomNumber > 0.5 ? 'positive' : 'negative'
+    },
+    routeName() {
+      return this.cardType === 'Review' ? 'review' : 'question'
     }
-  },
-  mounted() {
-    console.log(this.props)
   }
 }
 </script>

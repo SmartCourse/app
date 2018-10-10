@@ -10,7 +10,7 @@
       </Options>
 
       <Feed
-        feedType="ReviewCard"
+        feedType="Review"
         :items="reviews"
       />
 
