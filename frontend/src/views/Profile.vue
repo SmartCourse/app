@@ -6,7 +6,7 @@
             <div v-if="!loading && hasProfile">
 
                 <figure>
-                  <img class="avatar" :src="profile.picture || 'https://travis-ci.com/images/logos/TravisCI-Mascot-3.png'"/>
+                  <img class="avatar" :src="picture || '/defaultpicture.png'"/>
                 </figure>
                 <h2 class="name">{{ profile.displayName }}</h2>
                 <h3 class="email">{{ profile.email }}</h3>
@@ -40,6 +40,7 @@ export default {
   components: { AppInput, AppButton, Card },
   data() {
       return {
+          picture: '',
           degree: '',
           gradYear: '',
           description: ''
@@ -50,7 +51,9 @@ export default {
     ...mapGetters('auth', [ 'loading', 'error' ])
   },
   mounted() {
+    // TODO this doesn't work if page reloaded because auth gets checked after mounting
     if (this.hasProfile) {
+        this.picture = this.profile.picture
         this.degree = this.profile.degree
         this.gradYear = this.profile.gradYear
         this.description = this.profile.description
@@ -75,7 +78,6 @@ p {
 }
 
 figure {
-    border: var(--border);
     border-radius: 100%;
     margin: auto;
     width: 120px;
@@ -84,9 +86,10 @@ figure {
 }
 
 .avatar {
-    margin: 8px;
-    width: 100px;
+    margin: 0;
+    width: inherit;
     height: auto;
+    border-radius: 100%;
 }
 
 .form {
