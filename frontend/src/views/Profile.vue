@@ -11,6 +11,7 @@
                 <h2 class="name">{{ profile.displayName }}</h2>
                 <h3 class="email">{{ profile.email }}</h3>
                 <form class="form">
+                  Picture URL: <AppInput spellcheck="false" type="text" v-model="picture"/>
                   Degree: <AppInput spellcheck="false" type="text" v-model="degree"/>
                   Graduation Year: <AppInput spellcheck="false" type="text" v-model="gradYear"/>
                   Description: <textarea v-model="description"></textarea>
@@ -97,14 +98,17 @@ figure {
     margin: auto;
     width: 120px;
     height: 120px;
+    overflow: hidden;
     background-color: var(--theme-light);
 }
 
 .avatar {
-    margin: 0;
-    width: inherit;
-    height: auto;
-    border-radius: 100%;
+    /* TODO make this work properly... */
+    max-height:100%;
+    min-width:100%;
+    min-height:100%;
+    /*margin-left: -50%;
+    margin-top: -50%;*/
 }
 
 .form {
