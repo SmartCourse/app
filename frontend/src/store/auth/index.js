@@ -132,6 +132,13 @@ const actions = {
         }
       })
       .finally(() => commit('SET_LOADING', false))
+  },
+
+  sendPasswordResetEmail({ commit }, { email }) {
+    commit('SET_LOADING', true)
+    return auth.sendPasswordResetEmail(email)
+      .catch(error => commit('ERROR', error.message))
+      .finally(() => commit('SET_LOADING', false))
   }
 }
 
