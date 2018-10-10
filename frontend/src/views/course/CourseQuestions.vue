@@ -1,11 +1,13 @@
 <template>
     <div class="course-questions">
-
-      <div class='button-container'>
-          <router-link :to="{ name: 'newQuestion', params: {code} }">
-              <AppButton>Ask Question</AppButton>
-          </router-link>
-      </div>
+      <!-- Controls inserted here -->
+      <Options
+        buttonText="Ask a Question"
+        routeName="newQuestion"
+        :code="code"
+      >
+        <slot/>
+      </Options>
 
       <Feed
         feedType="QuestionCard"
@@ -24,15 +26,15 @@
 <script>
 // @ is an alias to /src
 import Feed from '@/components/course/Feed'
-import AppButton from '@/components/AppButton'
 import AppPageSelector from '@/components/AppPageSelector'
+import Options from '@/components/course/Controls'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'courseQuestions',
   components: {
+    Options,
     Feed,
-    AppButton,
     AppPageSelector
   },
   props: {

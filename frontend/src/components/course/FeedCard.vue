@@ -1,10 +1,6 @@
 <template>
   <Card class="feed-card">
-    <div class="user">
-      <div class="letter rating">
-        {{ ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'].map((l) => l.toUpperCase())[Math.floor(Math.random() * 26)] /* should be likes */}}
-      </div>
-    </div>
+    <UserMini/>
     <div class="info">
       <router-link tag="div" class="header" :to="{ name: 'review', params: { code, id }}">
         <h3 class="header-title">{{ title }}</h3>
@@ -22,6 +18,7 @@
 
 <script>
 import Card from '@/components/Card'
+import UserMini from '@/components/User/Mini'
 
 const randomNumber = Math.random()
 
@@ -35,7 +32,8 @@ export default {
     id: String
   },
   components: {
-    Card
+    Card,
+    UserMini
   },
   computed: {
     /* TODO use recommendation */
@@ -69,26 +67,8 @@ export default {
   grid-template-columns: 1fr 200px;
 }
 
-.user {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .published, .likes {
   text-align: right;
-}
-
-.rating {
-  padding: 10px;
-  background-color: #aaa;
-  color: white;
-  margin: 5px 0;
-  width: 20px;
-  height:20px;
-  line-height: 20px;
-  text-align: center;
-  border-radius: 100%;
 }
 
 .positive {
@@ -100,7 +80,6 @@ export default {
 }
 
 h3 {
-  display: inline-block;
   font: var(--header-4);
   font-weight: bolder;
 }
@@ -110,7 +89,6 @@ p, h3 {
 }
 
 p {
-  display: inline;
   font: var(--body-copy-2);
 }
 

@@ -13,7 +13,6 @@
                         <OverallRating :rating="courseRatings && courseRatings[0]"/>
                     </div>
                 </div>
-
                 <CourseLinks   :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
                 <CourseRatings v-if="courseRatings" :ratings="courseRatings.slice(1)"/>
             </div>

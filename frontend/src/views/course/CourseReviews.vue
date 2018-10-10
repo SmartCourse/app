@@ -1,13 +1,13 @@
 <template>
     <div class="course-reviews">
-      <div class='options'>
-          <div class="tabs">
-            <slot/>
-          </div>
-          <router-link :to="{ name: 'newReview', params: {code} }">
-              <AppButton>Write Review</AppButton>
-          </router-link>
-      </div>
+      <!-- Controls inserted here -->
+      <Options
+        buttonText="Write Review"
+        routeName="newReview"
+        :code="code"
+      >
+        <slot/>
+      </Options>
 
       <Feed
         feedType="ReviewCard"
@@ -26,8 +26,8 @@
 <script>
 // @ is an alias to /src
 import Feed from '@/components/course/Feed'
-import AppButton from '@/components/AppButton'
 import AppPageSelector from '@/components/AppPageSelector'
+import Options from '@/components/course/Controls'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -37,8 +37,8 @@ export default {
   },
   components: {
     Feed,
-    AppButton,
-    AppPageSelector
+    AppPageSelector,
+    Options
   },
   computed: {
     ...mapGetters('course', {
@@ -64,12 +64,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-.options {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-</style>
