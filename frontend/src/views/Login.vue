@@ -42,6 +42,7 @@ export default {
     clickHandler() {
       const { email, password } = this
       this.$store.dispatch('auth/signIn', { email, password })
+        .catch(()=>{})
         .then(() => {
           if (this.isLoggedIn) {
             if (this.hasProfile) {

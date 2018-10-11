@@ -116,23 +116,16 @@ const actions = {
       }, reject)
     })
       .then((user) => {
+        if (user === null) throw Error('Not logged in')
         commit('SET_USER', user, { root: true })
-    })
-      .finally(() => {
-        commit('SET_LOADING', false)
+        return getSelf(user)
       })
-  },
-
-  getProfile({ commit, rootState }) {
-    commit('SET_LOADING', true)
-    return getSelf(rootState.userAuthObject)
       .then(profile => {
         commit('SET_PROFILE', profile, { root: true })
       })
       .catch(error => {
         commit('ERROR', error.message)
         commit('SET_PROFILE', {}, { root: true })
-        // idk if this can happen but meh
         if (!error.code || error.code !== 403) {
           auth.signOut()
           commit('SET_USER', {}, { root: true })
