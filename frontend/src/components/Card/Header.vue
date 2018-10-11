@@ -6,7 +6,7 @@
 
 <style scoped>
 h3 {
-  margin-top: 0;
+  margin: 0 0 10px;
   font: var(--header-3);
 }
 </style>

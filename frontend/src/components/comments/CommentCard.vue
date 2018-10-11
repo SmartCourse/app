@@ -7,7 +7,7 @@
             </div>
             <aside class="user">
                 <User :image="'https://travis-ci.com/images/logos/TravisCI-Mascot-3.png'"/>
-                <p class="date">Posted: <time>{{ comment.published }}</time></p>
+                <!-- <p class="date">Posted: <time>{{ comment.published }}</time></p> -->
             </aside>
         </div>
     </Card>

@@ -81,7 +81,7 @@ export default {
 }
 
 .content {
-  padding: 20px;
+  padding: 10px 20px;
 }
 
 textarea {
