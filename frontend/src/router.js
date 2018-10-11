@@ -121,6 +121,11 @@ export default new Router({
       component: () => import('./views/ForgotPassword')
     },
     {
+      path: '/terms-of-service',
+      name: 'terms-of-service',
+      component: () => import('./views/TermsOfService')
+    },
+    {
       path: '/fonts',
       component: () => import('./views/Design')
     },
