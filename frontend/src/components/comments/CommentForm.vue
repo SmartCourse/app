@@ -59,11 +59,4 @@ textarea {
 textarea:focus, textarea:active {
   border: 1px solid #acc;
 }
-
-@media screen and (max-width: 450px) {
-  .content {
-    width: 95%;
-    padding: 0px;
-  }
-}
 </style>

@@ -18,24 +18,23 @@ export default {
 
 <style scoped>
 .vote {
-  font-size: 40px;
+  color: var(--soft-black);
+  font-size: 32px;
   margin: 0;
   cursor: pointer;
 }
 
 .vote .likes {
     line-height: 24px;
-    margin: 10px 0px;
 }
 
 .likes {
-  background-color: var(--very-light-grey);
   border-radius: 100%;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   padding: 10px;
   font-size: 24px;
-  line-height: 40px;
+  line-height: 30px;
   margin: 0;
 }
 
