@@ -7,7 +7,8 @@
             </div>
             <aside class="user">
                 <User :image="'https://travis-ci.com/images/logos/TravisCI-Mascot-3.png'"/>
-                <!-- <p class="date">Posted: <time>{{ comment.published }}</time></p> -->
+                <!-- Fix me later -->
+                <p class="date">Posted: <time>{{ comment.published }}</time></p>
             </aside>
         </div>
     </Card>
@@ -15,7 +16,7 @@
 
 <script>
 import Card from '@/components/Card'
-import User from '@/components/UserSummary'
+import User from '@/components/User'
 import Vote from '@/components/Vote'
 
 export default {
