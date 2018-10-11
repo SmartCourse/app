@@ -9,8 +9,7 @@
       :link="{
         text: 'Forgot your password?',
         name: 'Forgot Password'
-      }"
-    >
+      }">
       <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>
       <AuthInput type="password" v-model="password" placeholder="Password"/>
     </AppAuthForm>

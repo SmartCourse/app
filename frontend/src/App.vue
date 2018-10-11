@@ -22,6 +22,7 @@ export default {
   },
   created() {
     this.$store.dispatch('auth/checkAuth')
+      .then(() => this.$store.dispatch('auth/getProfile'))
     this.$store.dispatch('subject/getSubjects')
   }
 }

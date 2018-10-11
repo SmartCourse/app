@@ -7,11 +7,16 @@
         <Search class="mini" v-if="$route.name !== 'home'"/>
         <!-- hacky padding div -->
         <div v-else/>
-        <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/login">Login</router-link></h3>
-        <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/signup">Sign Up</router-link></h3>
-        <h3 v-if="isLoggedIn && !hasProfile"><router-link class="link-item" to="/signup">Profile</router-link></h3>
-        <h3 v-if="hasProfile"><router-link class="link-item" to="/profile">Profile</router-link></h3>
-        <h3 v-if="isLoggedIn" @click="$store.dispatch('auth/logout')" class="link-item">Logout</h3>
+        <span v-if="!loading">
+            <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/login">Login</router-link></h3>
+            <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/signup">Sign Up</router-link></h3>
+            <h3 v-if="isLoggedIn && !hasProfile"><router-link class="link-item" to="/signup">Profile</router-link></h3>
+            <h3 v-if="hasProfile"><router-link class="link-item" to="/profile">Profile</router-link></h3>
+            <h3 v-if="isLoggedIn" @click="$store.dispatch('auth/logout')" class="link-item">Logout</h3>
+        </span>
+        <span v-else>
+            <LoadingSpinner style="height:50px;"/>
+        </span>
       </div>
     </div>
 </template>
@@ -23,7 +28,8 @@ import { mapGetters } from 'vuex'
 export default {
   components: { Search },
   computed: {
-    ...mapGetters([ 'isLoggedIn', 'hasProfile' ])
+    ...mapGetters([ 'isLoggedIn', 'hasProfile' ]),
+    ...mapGetters('auth', [ 'loading' ])
   }
 }
 </script>
