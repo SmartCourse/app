@@ -36,7 +36,7 @@ export default {
   },
   // reroute whenever auth loading state changes
   watch: {
-      loading() { this.reroute() }
+    loading() { this.reroute() }
   },
   methods: {
     clickHandler() {

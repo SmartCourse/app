@@ -60,7 +60,6 @@ const mutations = {
 /* successful signIn returns an UserAuth object which has field user */
 const actions = {
   async signIn({ commit, dispatch, state }, { email, password }) {
-
     commit('SET_LOADING', true)
     try {
       // this returns the 'usercredential' which is not the user object -.-
