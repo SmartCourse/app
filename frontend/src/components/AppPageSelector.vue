@@ -44,6 +44,7 @@ export default {
 
 <style>
 .button-container {
-    text-align:center;
+  padding: 10px 0;
+  text-align:center;
 }
 </style>

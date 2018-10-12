@@ -1,8 +1,8 @@
 <template>
     <div class="meta-fields">
-        <p v-on:click="upvote" class="vote">&plus;</p>
+        <p v-on:click="upvote" class="material-icons vote">keyboard_arrow_up</p>
         <p class="likes">{{ likes }}</p>
-        <p v-on:click="downvote" class="vote">&minus;</p>
+        <p v-on:click="downvote" class="material-icons vote">keyboard_arrow_down</p>
     </div>
 </template>
 
@@ -18,27 +18,28 @@ export default {
 
 <style scoped>
 .vote {
-  font-size: 40px;
+  color: var(--soft-black);
+  font-size: 32px;
   margin: 0;
-  font-weight: bold;
   cursor: pointer;
-}
-
-.likes {
-  font-size: 24px;
-  margin: 0;
-}
-
-.vote:first-of-type {
-  color: rgba(48, 179, 48, 0.637);
-}
-
-.vote:last-of-type {
-  color: rgba(224, 79, 79, 0.74);
 }
 
 .vote .likes {
     line-height: 24px;
-    margin: 10px 0px;
 }
+
+.likes {
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  padding: 10px;
+  font-size: 24px;
+  line-height: 30px;
+  margin: 0;
+}
+
+.vote:hover, .vote:focus {
+  color: var(--black);
+}
+
 </style>

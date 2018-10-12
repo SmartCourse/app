@@ -42,7 +42,7 @@ export default {
 <style scoped lang='less'>
 
 .content {
-  padding: 20px;
+  padding: 10px 20px;
 }
 
 textarea {
