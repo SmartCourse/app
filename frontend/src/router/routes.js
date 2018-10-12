@@ -77,7 +77,10 @@ export default new Router({
       props: ({ params: { code } }) => ({
         code
       }),
-      component: newQuestionView
+      component: newQuestionView,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/course/:code([\\w]{8})/question/:id',
@@ -94,7 +97,10 @@ export default new Router({
       props: ({ params: { code } }) => ({
         code
       }),
-      component: newReviewView
+      component: newReviewView,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/course/:code([\\w]{8})/review/:id',
@@ -113,7 +119,7 @@ export default new Router({
     {
       path: '/create-profile',
       name: 'Create Profile',
-      component: () => import('./views/CreateProfile')
+      component: () => import('../views/CreateProfile')
     },
     {
       path: '/login',
@@ -123,7 +129,10 @@ export default new Router({
     {
       path: '/profile',
       name: 'Profile',
-      component: () => import('../views/Profile')
+      component: () => import('../views/Profile'),
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/password-reset',

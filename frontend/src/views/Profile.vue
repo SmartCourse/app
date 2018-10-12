@@ -68,8 +68,6 @@ export default {
         if (!this.hasProfile) {
           this.$router.push('/signup')
         }
-      } else {
-        this.$router.push('/login')
       }
     }
   },
