@@ -2,24 +2,14 @@ import { get } from '../utils/api'
 
 /* root application state */
 const state = {
-  loading: false,
   error: '',
   // cached courses
-  courses: [],
-  // firebase authObject
-  userAuthObject: {},
-  // our own user data
-  profile: {}
+  courses: []
 }
 
 const getters = {
-  authObject: ({ userAuthObject }) => userAuthObject,
-  // logged into firebase (authenticated account)
-  isLoggedIn: ({ userAuthObject }) => !!Object.keys(userAuthObject).length,
-  // logged into backend (existing profile)
-  hasProfile: ({ profile, userAuthObject }) => !!Object.keys(profile).length && !!Object.keys(userAuthObject).length,
-  profile: ({ profile }) => profile,
-  loading: ({ loading }) => loading,
+  loading: ({ auth, course, questions, reviews, subject }) =>
+    [auth.loading, course.loading, questions.loading, reviews.loading, subject.loading].reduce((acc, curr) => acc || curr, false),
   error: ({ error }) => error
 }
 
@@ -42,16 +32,6 @@ const mutations = {
   },
   POPULATE_SEARCH(state, data) {
     state.courses = data
-  },
-  /**
-   * @param {*} state The root state
-   * @param {*} user  The logged in user object or null
-   */
-  SET_USER(state, user) {
-    state.userAuthObject = user || {}
-  },
-  SET_PROFILE(state, profile) {
-    state.profile = profile || {}
   }
 }
 

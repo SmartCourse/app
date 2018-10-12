@@ -1,6 +1,6 @@
 <template>
   <div class="auth-page">
-    <AppAuthForm v-if="!loading && !isLoggedIn"
+    <AppAuthForm v-if="!loading && !isFirebaseAuthorised"
       :title="'Sign Up'"
       :buttonText="'Sign Up'"
       :error="error"
@@ -13,7 +13,7 @@
       <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>
       <AuthInput type="password" v-model="password" placeholder="Password"/>
     </AppAuthForm>
-    <AppAuthForm v-else-if="!loading && isLoggedIn && !hasProfile"
+    <AppAuthForm v-else-if="!loading && !hasProfile"
       :title="'Create Profile'"
       :buttonText="'Create Profile'"
       :error="error"
@@ -25,9 +25,6 @@
     >
       <AuthInput spellcheck="false" type="text" v-model="displayName" placeholder="Choose a display name"/>
     </AppAuthForm>
-    <div v-else-if="!loading">
-        You are already signed in.
-    </div>
     <LoadingSpinner v-else/>
   </div>
 </template>
@@ -48,22 +45,23 @@ export default {
   },
   components: { AppAuthForm, AuthInput },
   computed: {
-    ...mapGetters('auth', [ 'error', 'loading' ]),
-    ...mapGetters([ 'isLoggedIn', 'hasProfile', 'authObject' ])
+    ...mapGetters('auth', [ 'loading', 'error', 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile' ])
+  },
+  // reroute whenever auth loading state changes
+  watch: {
+      loading() { this.reroute() }
   },
   methods: {
     createAccount() {
       const { email, password } = this
       this.$store.dispatch('auth/createAccount', { email, password })
-        .catch(e => {})
     },
     createProfile() {
       const { displayName } = this
-      this.$store.dispatch('auth/createProfile', { user: this.authObject, displayName })
-        .then(() => {
-          if (this.isLoggedIn && this.hasProfile) this.$router.push('/')
-        })
-        .catch(e => {})
+      this.$store.dispatch('auth/createProfile', { displayName })
+    },
+    reroute() {
+      if (this.isLoggedIn) this.$router.push('/')
     }
   },
   created() {

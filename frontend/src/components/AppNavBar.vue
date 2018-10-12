@@ -1,22 +1,22 @@
 <template>
     <div id="nav">
-      <router-link class="link-item" to="/">
+      <div class="logo-span">
+        <router-link class="link-item" to="/">
           <AppLogo :first="'S'" :last="'C'"/>
-      </router-link>
+        </router-link>
+        <!-- global loading state -->
+        <LoadingSpinner style="height:50px;width:auto;margin:10px;" v-if="loading" />
+      </div>
+
       <div class="links">
         <Search class="mini" v-if="$route.name !== 'home'"/>
         <!-- hacky padding div -->
         <div v-else/>
-        <span v-if="!loading">
-            <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/login">Login</router-link></h3>
-            <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/signup">Sign Up</router-link></h3>
-            <h3 v-if="isLoggedIn && !hasProfile"><router-link class="link-item" to="/signup">Profile</router-link></h3>
-            <h3 v-if="hasProfile"><router-link class="link-item" to="/profile">Profile</router-link></h3>
-            <h3 v-if="isLoggedIn" @click="$store.dispatch('auth/logout')" class="link-item">Logout</h3>
-        </span>
-        <span v-else>
-            <LoadingSpinner style="height:50px;"/>
-        </span>
+        <h3 v-if="!isFirebaseAuthorised"><router-link class="link-item" to="/login">Login</router-link></h3>
+        <h3 v-if="!isFirebaseAuthorised"><router-link class="link-item" to="/signup">Sign Up</router-link></h3>
+        <h3 v-if="isFirebaseAuthorised && !hasProfile"><router-link class="link-item" to="/signup">Profile</router-link></h3>
+        <h3 v-if="isLoggedIn"><router-link class="link-item" to="/profile">Profile</router-link></h3>
+        <h3 v-if="isFirebaseAuthorised" @click="logout()" class="link-item">Logout</h3>
       </div>
     </div>
 </template>
@@ -28,8 +28,14 @@ import { mapGetters } from 'vuex'
 export default {
   components: { Search },
   computed: {
-    ...mapGetters([ 'isLoggedIn', 'hasProfile' ]),
-    ...mapGetters('auth', [ 'loading' ])
+    ...mapGetters([ 'loading' ]),
+    ...mapGetters('auth', [ 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile' ])
+  },
+  methods: {
+    logout() {
+        this.$store.dispatch('auth/logout')
+          //.then(() => this.$router.push("/"))
+    }
   }
 }
 </script>
@@ -45,6 +51,12 @@ export default {
     border-bottom: var(--border);
     background-color: var(--white);
     font-size: var(--font-small);
+}
+
+.logo-span {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
 }
 
 .links {

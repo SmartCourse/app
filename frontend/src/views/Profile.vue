@@ -3,7 +3,7 @@
 
         <div class="profile">
         <Card>
-            <div v-if="!loading && hasProfile">
+            <div v-if="!loading && isLoggedIn">
 
                 <figure>
                   <img class="avatar" :src="picture || '/defaultpicture.png'"/>
@@ -20,9 +20,6 @@
                   </AppButton>
                 </form>
 
-            </div>
-            <div v-else-if="!loading && !hasProfile">
-                <router-link style="color:var(--theme)" :to='"/signup"'>Click here</router-link> to create a profile.
             </div>
             <LoadingSpinner v-else/>
         </Card>
@@ -48,8 +45,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([ 'isLoggedIn', 'hasProfile', 'profile', 'authObject' ]),
-    ...mapGetters('auth', [ 'loading', 'error' ])
+    ...mapGetters('auth', [ 'loading', 'error', 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile', 'profile' ])
   },
   watch: {
     hasProfile (oldState, newState) {
@@ -59,12 +55,22 @@ export default {
         this.gradYear = this.profile.gradYear
         this.description = this.profile.description
       }
-    }
+    },
+    loading() { this.reroute() }
   },
   methods: {
     updateProfile() {
       const data = { picture: this.picture, degree: this.degree, gradYear: this.gradYear, description: this.description }
-      this.$store.dispatch('auth/updateProfile', { user: this.authObject, data })
+      this.$store.dispatch('auth/updateProfile', { data })
+    },
+    reroute() {
+      if (this.isFirebaseAuthorised) {
+        if (!this.hasProfile) {
+          this.$router.push('/signup')
+        }
+      } else {
+        this.$router.push('/login')
+      }
     }
   },
   mounted() {
