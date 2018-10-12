@@ -1,8 +1,5 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from './views/Home'
 
-Vue.use(Router)
+import Home from './views/Home'
 
 const questionView = () => import('./views/Question')
 const reviewView = () => import('./views/Review')
@@ -14,7 +11,7 @@ const subjectList = () => import('./views/SubjectList')
 const subjectCourses = () => import('./views/SubjectCourses')
 const ErrorPage = () => import('./views/404')
 
-export default new Router({
+export default {
   mode: 'history',
   scrollBehavior (to, from, savedPosition) {
     // scroll to top of page on following a route, unless history state used
@@ -135,4 +132,4 @@ export default new Router({
       component: ErrorPage
     }
   ]
-})
+}
