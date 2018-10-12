@@ -6,7 +6,6 @@
             :buttonText="'Reset Password'"
             :error="error"
             >
-            <!--h3><i class="material-icons">warning</i> Warning </h3-->
             <p>Confirm your email address below and we'll send you a link to reset your password.</p>
             <AuthInput v-model="email" placeholder="Write your email here" />
         </AuthForm>

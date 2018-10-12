@@ -111,6 +111,11 @@ export default new Router({
       component: () => import('./views/SignUp')
     },
     {
+      path: '/create-profile',
+      name: 'Create Profile',
+      component: () => import('./views/CreateProfile')
+    },
+    {
       path: '/login',
       name: 'Login',
       component: () => import('./views/Login')

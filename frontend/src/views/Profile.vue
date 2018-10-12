@@ -3,7 +3,7 @@
 
         <div class="profile">
         <Card>
-            <div v-if="!loading && isLoggedIn">
+            <div v-if="!loading">
 
                 <figure>
                   <img class="avatar" :src="picture || '/defaultpicture.png'"/>

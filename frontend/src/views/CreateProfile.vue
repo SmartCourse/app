@@ -1,17 +1,16 @@
 <template>
   <div class="auth-page">
     <AppAuthForm v-if="!loading"
-      :title="'Sign Up'"
-      :buttonText="'Sign Up'"
+      :title="'Create Profile'"
+      :buttonText="'Create Profile'"
       :error="error"
-      :clickHandler="createAccount"
+      :clickHandler="createProfile"
       :link="{
-        text: 'Already have an account?',
-        name: 'Login'
+        text: '',
+        name: ''
       }"
     >
-      <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>
-      <AuthInput type="password" v-model="password" placeholder="Password"/>
+      <AuthInput spellcheck="false" type="text" v-model="displayName" placeholder="Choose a display name"/>
     </AppAuthForm>
     <LoadingSpinner v-else/>
   </div>
@@ -23,11 +22,10 @@ import AppAuthForm from '@/components/Authentication/Form'
 import AuthInput from '@/components/Authentication/Input'
 
 export default {
-  name: 'signup',
+  name: 'createprofile',
   data() {
     return {
-      email: '',
-      password: ''
+      displayName: ''
     }
   },
   components: { AppAuthForm, AuthInput },
@@ -39,13 +37,13 @@ export default {
     loading() { this.reroute() }
   },
   methods: {
-    createAccount() {
-      const { email, password } = this
-      this.$store.dispatch('auth/createAccount', { email, password })
+    createProfile() {
+      const { displayName } = this
+      this.$store.dispatch('auth/createProfile', { displayName })
     },
     reroute() {
       if (this.isLoggedIn) this.$router.push('/')
-      if (this.isFirebaseAuthorised && !this.hasProfile) this.$router.push('/create-profile')
+      else if (!this.isFirebaseAuthorised) this.$router.push('/signup')
     }
   },
   created() {

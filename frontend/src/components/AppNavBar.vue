@@ -5,7 +5,7 @@
           <AppLogo :first="'S'" :last="'C'"/>
         </router-link>
         <!-- global loading state -->
-        <LoadingSpinner style="height:50px;width:auto;margin:10px;" v-if="loading" />
+        <!--LoadingSpinner style="height:50px;width:auto;margin:10px;" v-if="loading" /-->
       </div>
 
       <div class="links">
@@ -14,7 +14,7 @@
         <div v-else/>
         <h3 v-if="!isFirebaseAuthorised"><router-link class="link-item" to="/login">Login</router-link></h3>
         <h3 v-if="!isFirebaseAuthorised"><router-link class="link-item" to="/signup">Sign Up</router-link></h3>
-        <h3 v-if="isFirebaseAuthorised && !hasProfile"><router-link class="link-item" to="/signup">Profile</router-link></h3>
+        <h3 v-if="isFirebaseAuthorised && !hasProfile"><router-link class="link-item" to="/create-profile">Profile</router-link></h3>
         <h3 v-if="isLoggedIn"><router-link class="link-item" to="/profile">Profile</router-link></h3>
         <h3 v-if="isFirebaseAuthorised" @click="logout()" class="link-item">Logout</h3>
       </div>

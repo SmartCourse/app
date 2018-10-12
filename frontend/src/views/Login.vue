@@ -1,6 +1,6 @@
 <template>
 <div class="auth-page">
-    <AppAuthForm v-if="!loading && !isLoggedIn"
+    <AppAuthForm v-if="!loading"
       :title="'Login'"
       :buttonText="'Log In'"
       :flavour="'Welcome back.'"
@@ -49,7 +49,7 @@ export default {
         if (this.hasProfile) {
           this.$router.push('/')
         } else {
-          this.$router.push('/signup')
+          this.$router.push('/create-profile')
         }
       }
     }
