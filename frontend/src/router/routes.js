@@ -1,17 +1,20 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+import Home from '../views/Home'
 
-import Home from './views/Home'
+Vue.use(Router)
 
-const questionView = () => import('./views/Question')
-const reviewView = () => import('./views/Review')
-const newQuestionView = () => import('./views/NewQuestion')
-const newReviewView = () => import('./views/NewReview')
-const courseQuestions = () => import('./views/course/CourseQuestions')
-const courseReviews = () => import('./views/course/CourseReviews')
-const subjectList = () => import('./views/SubjectList')
-const subjectCourses = () => import('./views/SubjectCourses')
-const ErrorPage = () => import('./views/404')
+const questionView = () => import('../views/Question')
+const reviewView = () => import('../views/Review')
+const newQuestionView = () => import('../views/NewQuestion')
+const newReviewView = () => import('../views/NewReview')
+const courseQuestions = () => import('../views/course/CourseQuestions')
+const courseReviews = () => import('../views/course/CourseReviews')
+const subjectList = () => import('../views/SubjectList')
+const subjectCourses = () => import('../views/SubjectCourses')
+const ErrorPage = () => import('../views/404')
 
-export default {
+export default new Router({
   mode: 'history',
   scrollBehavior (to, from, savedPosition) {
     // scroll to top of page on following a route, unless history state used
@@ -66,7 +69,7 @@ export default {
       // route level code-splitting
       // this generates a separate chunk (course.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('./views/course')
+      component: () => import('../views/course')
     },
     {
       path: '/course/:code([\\w]{8})/question/new',
@@ -105,26 +108,26 @@ export default {
     {
       path: '/signup',
       name: 'Sign Up',
-      component: () => import('./views/SignUp')
+      component: () => import('../views/SignUp')
     },
     {
       path: '/login',
       name: 'Login',
-      component: () => import('./views/Login')
+      component: () => import('../views/Login')
     },
     {
       path: '/profile',
       name: 'Profile',
-      component: () => import('./views/Profile')
+      component: () => import('../views/Profile')
     },
     {
       path: '/password-reset',
       name: 'Forgot Password',
-      component: () => import('./views/ForgotPassword')
+      component: () => import('../views/ForgotPassword')
     },
     {
       path: '/fonts',
-      component: () => import('./views/Design')
+      component: () => import('../views/Design')
     },
     {
       // match any other route
@@ -132,4 +135,4 @@ export default {
       component: ErrorPage
     }
   ]
-}
+})

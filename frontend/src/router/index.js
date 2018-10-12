@@ -1,12 +1,5 @@
-import routes from '.'
+import router from './routes'
 import store from '../store'
-import Vue from 'vue'
-import Router from 'vue-router'
-
-Vue.use(Router)
-
-// requires meta field to be be added to routes object
-const router = new Router(routes)
 
 router.beforeEach((to, from, next) => {
   const authState = store.getters['auth/isLoggedIn']
