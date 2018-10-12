@@ -23,11 +23,11 @@ class Review {
      * @param   {number}  pageNumber    The page number for which we want to get questions.
      * @returns {Array}
      */
-    getReviews(code, pageNumber, PAGE_SIZE) {
-        const offset = (PAGE_SIZE * pageNumber) - PAGE_SIZE
+    getReviews(code, pageNumber, pageSize) {
+        const offset = (pageSize * pageNumber) - pageSize
         return this.db
             .queryAll('SELECT * FROM review WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
-                [code, offset, PAGE_SIZE])
+                [code, offset, pageSize])
     }
 
     /**

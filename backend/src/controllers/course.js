@@ -19,20 +19,21 @@ exports.getCourse = function ({ params }, res) {
 
 /* Get all questions for a course */
 exports.getCourseQuestions = function ({ params, query }, res) {
-    let p = parseInt(query.p)
-    const pageNumber = p || 1
+    const pageNumber = parseInt(query.p) || 1
+    // TODO get page size from query
+    const pageSize = PAGE_SIZE
 
     const getCourseQuestions = Promise.all([
-        questionModel.getQuestions(params.code, pageNumber, PAGE_SIZE),
+        questionModel.getQuestions(params.code, pageNumber, pageSize),
         questionModel.getQuestionCount(params.code)
     ])
         .then(function(values) {
-            const lastPage = Math.trunc((values[1][0]['COUNT()'] + PAGE_SIZE) / PAGE_SIZE)
+            const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize) / pageSize)
             return {
                 'meta': {
                     'curr': pageNumber,
                     'last': lastPage,
-                    'PAGE_SIZE': PAGE_SIZE
+                    'pageSize': pageSize
                 },
                 'data': values[0]
             }
@@ -44,20 +45,21 @@ exports.getCourseQuestions = function ({ params, query }, res) {
 
 /* Get all reviews for a course */
 exports.getCourseReviews = function ({ params, query }, res) {
-    let p = parseInt(query.p)
-    const pageNumber = p || 1
+    const pageNumber = parseInt(query.p) || 1
+    // TODO get page size from query
+    const pageSize = PAGE_SIZE
 
     const getCourseReviews = new Promise((resolve, reject) => {
         Promise.all([
-            reviewModel.getReviews(params.code, pageNumber, PAGE_SIZE),
+            reviewModel.getReviews(params.code, pageNumber, pageSize),
             reviewModel.getReviewCount(params.code)
         ]).then(function(values) {
-            const lastPage = Math.trunc((values[1][0]['COUNT()'] + PAGE_SIZE) / PAGE_SIZE)
+            const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize) / pageSize)
             resolve({
                 'meta': {
                     'curr': pageNumber,
                     'last': lastPage,
-                    'PAGE_SIZE': PAGE_SIZE
+                    'pageSize':pageSize
                 },
                 'data': values[0]
             })
