@@ -1,48 +1,117 @@
 <template>
   <Card class="feed-card">
-    <div class="header">
-      <h3>{{  'A fun course!'/* title */ }}</h3><p>{{ published }}</p>
+    <UserMini :user="author"/>
+    <div class="info">
+      <router-link tag="div" class="header" :to="{ name: routeName, params: { code, id }}">
+        <h3 class="header-title">{{ title }}</h3>
+      </router-link>
+      <p class="published">
+        <time>{{ published }}</time>
+      </p>
+      <p v-if="cardType === 'Review'" :class="positiveOrNegativeClass">
+        <b>{{ positiveOrNegativeText }}</b>
+      </p>
+      <p v-else>
+        <b>Know the answer to this question?</b>
+      </p>
+      <p class="likes">{{ likes || 0 }} users found this helpful</p>
     </div>
-     <div class="meta">
-       <p><i class="material-icons">account</i>Jeff Goldblum</p>
-    </div>
-    
   </Card>
 </template>
 
 <script>
 import Card from '@/components/Card'
+import UserMini from '@/components/User/Mini'
 
 export default {
   props: {
     title: String,
     likes: Number,
     published: String,
-    author: Number
+    author: Number,
+    code: String,
+    id: String,
+    cardType: String
+  },
+  data() {
+    return {
+      randomNumber: Math.random()
+    }
   },
   components: {
-    Card
+    Card,
+    UserMini
+  },
+  computed: {
+    /* TODO use recommendation */
+    positiveOrNegativeText() {
+      return this.randomNumber > 0.5 ? 'Recommended' : 'Not Recommended'
+    },
+    positiveOrNegativeClass() {
+      return this.randomNumber > 0.5 ? 'positive' : 'negative'
+    },
+    routeName() {
+      return this.cardType === 'Review' ? 'review' : 'question'
+    }
   }
 }
 </script>
 
 <style scoped>
-.header {
-  border-bottom: var(--border);
+
+.feed-card {
+  border-radius: 0;
+  min-width: 310px;
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  margin: 0;
+  grid-gap: 10px;
+}
+
+.info {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: 1fr 200px;
+}
+
+.published, .likes {
+  text-align: right;
+}
+
+.positive {
+  color:rgba(1, 151, 1, 0.5);
+}
+
+.negative {
+  color: rgba(200, 0, 0, 0.5);
 }
 
 h3 {
-  display: inline-block;
-  margin: 10px 0;
-  font: var(--header-3);
+  font: var(--header-4);
   font-weight: bolder;
 }
 
+p, h3 {
+  margin: 0 5px;
+}
+
 p {
-  display: inline;
-  font: var(--body-copy-1);
+  font: var(--body-copy-2);
+}
+
+.header-title:hover, .user:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+@media screen and (max-width: 500px) {
+  .info {
+    grid-gap: 5px;
+    grid-template-columns: 1fr 60px;
+  }
+  .likes {
+    display: none;
+  }
 }
 
 </style>
-
-

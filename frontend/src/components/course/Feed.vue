@@ -3,7 +3,7 @@
     <section class="questions">
       <ol>
         <li :key="item.id" v-for="item in items">
-          <component :is="feedType" v-bind="item"/>
+          <FeedCard v-bind="item" :cardType="feedType"/>
         </li>
       </ol>
     </section>
@@ -11,14 +11,13 @@
 </template>
 
 <script>
-import QuestionCard from '@/components/questions-answers/QuestionCard'
-import ReviewCard from '@/components/course/FeedCard'
+
+import FeedCard from '@/components/course/FeedCard'
 
 export default {
   name: 'Feed',
   components: {
-    QuestionCard,
-    ReviewCard
+    FeedCard
   },
   props: {
     feedType: String,
@@ -30,6 +29,5 @@ export default {
 <style scoped>
 .feed {
   min-height: 150px;
-  background-color: red;
 }
 </style>

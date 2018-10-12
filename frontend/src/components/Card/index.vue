@@ -8,7 +8,6 @@
 .card {
   position: relative;
   margin-bottom: 10px;
-  /* border: var(--border); */
   border-radius: 4px;
   padding: 10px;
   background-color:var(--white);

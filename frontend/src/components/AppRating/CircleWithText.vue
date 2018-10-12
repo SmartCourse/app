@@ -6,7 +6,7 @@
   </div>
   <div v-else class="rating no-review">
     <p class="material-icons">error</p>
-    <p>This course has not been reviewed yet.</p>
+    <p>This course is yet to be reviewed.</p>
   </div>
 </div>
 </template>
@@ -34,10 +34,16 @@ export default {
 }
 
 .no-review {
+  padding: 10px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+p.material-icons {
+  color: black;
+  font-size: 30px;
 }
 
 .no-review > p {

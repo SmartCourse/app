@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import ReviewCard from '@/components/reviews-replies/ReviewCard'
+import CardHeader from '@/components/Card/Header'
 
 describe('ReviewCard.vue', () => {
   before(function () {
@@ -25,7 +26,7 @@ describe('ReviewCard.vue', () => {
   })
 
   it('renders review title', function () {
-    expect(this.wrapper.find('h2').text()).to.include(this.card.title)
+    expect(this.wrapper.find(CardHeader).text()).to.include(this.card.title)
   })
 
   it('renders review publish time', function () {
