@@ -4,18 +4,16 @@
         <router-link class="link-item" to="/">
           <AppLogo :first="'S'" :last="'C'"/>
         </router-link>
-        <!-- global loading state -->
-        <!--LoadingSpinner style="height:50px;width:auto;margin:10px;" v-if="loading" /-->
       </div>
 
       <div class="links">
-        <Search class="mini" v-if="$route.name !== 'home'"/>
+        <Search class="mini" v-if="$route.name !== 'home' && $route.name !== 'subjectList'"/>
         <div class="nav-menu">
             <div class="menu-items">
-                <h3 v-if="!isFirebaseAuthorised"><router-link class="link-item" to="/login">Login</router-link></h3>
-                <h3 v-if="!isFirebaseAuthorised"><router-link class="link-item" to="/signup">Sign Up</router-link></h3>
-                <h3 v-if="isFirebaseAuthorised && !hasProfile"><router-link class="link-item" to="/create-profile">Profile</router-link></h3>
-                <h3 v-if="isLoggedIn"><router-link class="link-item" to="/profile">Profile</router-link></h3>
+                <router-link tag="h3" v-if="!isFirebaseAuthorised" class="link-item" to="/login">Login</router-link>
+                <router-link tag="h3" v-if="!isFirebaseAuthorised" class="link-item" to="/signup">Sign Up</router-link>
+                <router-link tag="h3" v-if="isFirebaseAuthorised && !hasProfile" class="link-item" to="/create-profile">Profile</router-link>
+                <router-link tag="h3" v-if="isLoggedIn" class="link-item" to="/profile">Profile</router-link>
                 <h3 v-if="isFirebaseAuthorised" @click="logout()" class="link-item">Logout</h3>
             </div>
         </div>
@@ -85,6 +83,10 @@ export default {
 @media screen and (max-width: 768px) {
     #nav {
         font-size: var(--font-small-mobile);
+    }
+
+    .menu-items .link-item {
+        font: var(--header-4-mobile);
     }
 
 }

@@ -13,12 +13,12 @@
                         <OverallRating :rating="courseRatings[0]"/>
                     </div>
                 </div>
-                <CourseLinks   :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
-                <div class="ratings-big">
-                    <CourseRatings v-if="courseRatings" :ratings="courseRatings.slice(1)"/>
+                <CourseLinks :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
+                <div class="ratings-big" v-if="ratingsExist">
+                    <CourseRatings :ratings="courseRatings.slice(1)"/>
                 </div>
                 <div class="ratings-small">
-                    <CourseRatings v-if="courseRatings" :ratings="courseRatings"/>
+                    <CourseRatings v-if="ratingsExist" :ratings="courseRatings"/>
                 </div>
             </div>
         </div>
@@ -30,11 +30,11 @@
     <div class="course-content">
         <router-view>
             <router-link :to="{name: 'info'}">
-                <TabButton :active="this.$route.name == 'info'">Reviews</TabButton>
+                <TabButton :active="this.$route.name === 'info'">Reviews</TabButton>
             </router-link>
 
             <router-link :to="{name: 'questions'}">
-                <TabButton :active="this.$route.name == 'questions'">Questions</TabButton>
+                <TabButton :active="this.$route.name === 'questions'">Questions</TabButton>
             </router-link>
         </router-view>
     </div>
@@ -68,7 +68,10 @@ export default {
     ...mapGetters('course', {
       courseInfo: 'course',
       courseRatings: 'ratings'
-    })
+    }),
+    ratingsExist() {
+        return this.courseRatings && this.courseRatings[0].value >= 0
+    }
   },
   created () {
     this.$store.dispatch('course/getCourse', this.code)
