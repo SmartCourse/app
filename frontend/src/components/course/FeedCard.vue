@@ -31,7 +31,8 @@ export default {
     author: Number,
     code: String,
     id: String,
-    cardType: String
+    cardType: String,
+    recommend: Number
   },
   data() {
     return {
@@ -45,14 +46,19 @@ export default {
   computed: {
     /* TODO use recommendation */
     positiveOrNegativeText() {
-      return this.randomNumber > 0.5 ? 'Recommended' : 'Not Recommended'
+      const { recommend } = this
+      return recommend ? 'Recommended' : 'Not Recommended'
     },
     positiveOrNegativeClass() {
-      return this.randomNumber > 0.5 ? 'positive' : 'negative'
+      const { recommend } = this
+      return recommend ? 'positive' : 'negative'
     },
     routeName() {
       return this.cardType === 'Review' ? 'review' : 'question'
     }
+  },
+  mounted() {
+    console.log('new FeedCard with likes:', this.likes)
   }
 }
 </script>

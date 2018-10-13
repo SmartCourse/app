@@ -50,7 +50,7 @@ html, body {
   --white: #fefefe;
   --soft-white: #aaa;
   --black: #111;
-  --soft-black: rgba(#111, 0.65);
+  --soft-black: rgba(#111, 0.5);
   --black-p: rgba(0,0,0,.72);
   // borders
   --color-gray: #d5d5d5;

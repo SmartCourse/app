@@ -22,6 +22,7 @@ export default {
   font-size: 32px;
   margin: 0;
   cursor: pointer;
+  user-select: none;
 }
 
 .vote .likes {
