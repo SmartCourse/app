@@ -62,6 +62,7 @@ html, body {
   --box-shadow-active: 0px 0px 0px 1px #ddd;
   --theme: #00a99d;
   --theme-light: rgba(102, 203, 196);
+  --color-blue: #2196f3;
   // font format
   --header-1: 600 3rem /1.2 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
   --header-1-mobile: 600 2rem /1.1 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;

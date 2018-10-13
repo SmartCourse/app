@@ -14,7 +14,12 @@
                     </div>
                 </div>
                 <CourseLinks   :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
-                <CourseRatings v-if="courseRatings" :ratings="courseRatings.slice(1)"/>
+                <div class="ratings-big">
+                    <CourseRatings v-if="courseRatings" :ratings="courseRatings.slice(1)"/>
+                </div>
+                <div class="ratings-small">
+                    <CourseRatings v-if="courseRatings" :ratings="courseRatings"/>
+                </div>
             </div>
         </div>
 
@@ -89,7 +94,7 @@ export default {
     display: grid;
     grid-auto-columns: 2fr 1fr;
     grid-gap: 10px;
-    height: 350px;
+    max-height: 380px;
     overflow-y: hidden;
 }
 
@@ -141,6 +146,10 @@ h2, h3 {
     min-height: 150px;
 }
 
+.ratings-small {
+    display: none;
+}
+
 @media screen and (max-width: 600px) {
     .course-info {
         display: none;
@@ -148,6 +157,14 @@ h2, h3 {
 
     .right {
         display: none;
+    }
+
+    .ratings-big {
+        display: none;
+    }
+
+    .ratings-small {
+        display: block;
     }
 }
 </style>

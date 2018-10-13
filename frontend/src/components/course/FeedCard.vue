@@ -12,7 +12,7 @@
         <b>{{ positiveOrNegativeText }}</b>
       </p>
       <p v-else>
-        <b>Know the answer to this question?</b>
+        Know the answer to this question?
       </p>
       <p class="likes">{{ likes || 0 }} users found this helpful</p>
     </div>
@@ -111,6 +111,11 @@ p {
   }
   .likes {
     display: none;
+  }
+
+  h3 {
+    font: var(--header-4-mobile);
+    font-weight: bolder;
   }
 }
 
