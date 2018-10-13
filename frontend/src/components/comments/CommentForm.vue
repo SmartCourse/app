@@ -40,7 +40,7 @@ export default {
 <style scoped lang='less'>
 
 .content {
-  padding: 20px;
+  padding: 10px 20px;
 }
 
 textarea {
@@ -58,12 +58,5 @@ textarea {
 
 textarea:focus, textarea:active {
   border: 1px solid #acc;
-}
-
-@media screen and (max-width: 450px) {
-  .content {
-    width: 95%;
-    padding: 0px;
-  }
 }
 </style>
