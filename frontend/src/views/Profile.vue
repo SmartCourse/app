@@ -66,8 +66,10 @@ export default {
     reroute() {
       if (this.isFirebaseAuthorised) {
         if (!this.hasProfile) {
-          this.$router.push('/signup')
+          this.$router.push('/create-profile')
         }
+      } else {
+        this.$router.push('/login')
       }
     }
   },
