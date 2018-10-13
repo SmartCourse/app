@@ -132,4 +132,21 @@ input, textarea {
   border: none;
 }
 
+textarea {
+  border: var(--border);
+  border-radius: 2px;
+  font: inherit;
+  resize: none;
+  padding: 10px;
+  outline: none;
+  margin: 10px 0px;
+  width: calc(100% - 20px);
+  height: 100px;
+  transition: 0.2s border ease-in-out;
+}
+
+textarea:focus, textarea:active {
+  border: 1px solid #acc;
+}
+
 </style>

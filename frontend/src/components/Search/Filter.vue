@@ -3,11 +3,14 @@
 </template>
 
 <script>
-export default {
+import SearchBar from './Input'
 
+export default {
+    
 }
 </script>
 
 <style scoped>
+
 
 </style>
