@@ -2,6 +2,7 @@
   <div class="main-content subject-course">
     <AppBreadCrumb/>
     <TilesContainer v-if="courses.length">
+      <div class="hello">Hello</div>
       <Tile :key="item.code" v-for="item in courses">
         <router-link v-if="item.code" class="tile-header" tag="div" :to="{ name: 'info', params: { code:item.code }}">
           <h4>
@@ -64,4 +65,3 @@ export default {
 </script>
 
 <style scoped src='../css/subject.less' lang='less'>
-</style>

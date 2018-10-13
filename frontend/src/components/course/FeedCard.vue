@@ -46,12 +46,10 @@ export default {
   computed: {
     /* TODO use recommendation */
     positiveOrNegativeText() {
-      const { recommend } = this
-      return recommend ? 'Recommended' : 'Not Recommended'
+      return this.recommend ? 'Recommended' : 'Not Recommended'
     },
     positiveOrNegativeClass() {
-      const { recommend } = this
-      return recommend ? 'positive' : 'negative'
+      return this.recommend ? 'positive' : 'negative'
     },
     routeName() {
       return this.cardType === 'Review' ? 'review' : 'question'

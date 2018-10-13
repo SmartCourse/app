@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import Search from '@/components/AppSearch'
+import Search from '@/components/Search'
 
 export default {
   components: { Search },
