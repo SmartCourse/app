@@ -10,12 +10,6 @@ router.beforeEach((to, from, next) => {
     } else {
       next('/login')
     }
-  } else if (to.matched.some(record => record.meta.preAuth)) {
-    if (!authState) {
-      next()
-    } else {
-      next('/subjects')
-    }
   } else {
     next()
   }
