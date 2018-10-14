@@ -54,7 +54,8 @@ export default {
         }
       }
 
-      return list
+      // only first three items
+      return list.slice(0, 3)
     }
   }
 }

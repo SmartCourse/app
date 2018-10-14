@@ -1,4 +1,4 @@
-const { ANONYMOUS } = require('../models/constants')
+const { ANONYMOUS, PAGE_SIZE } = require('../models/constants')
 const courseModel = require('../models/course')()
 const questionModel = require('../models/question')()
 const reviewModel = require('../models/review')()
@@ -19,9 +19,9 @@ exports.getCourse = function ({ params }, res) {
 
 /* Get all questions for a course */
 exports.getCourseQuestions = function ({ params, query }, res) {
-    let p = parseInt(query.p)
-    const pageNumber = p || ANONYMOUS
-    const pageSize = 10
+    const pageNumber = parseInt(query.p) || 1
+    // TODO get page size from query
+    const pageSize = PAGE_SIZE
 
     const getCourseQuestions = Promise.all([
         questionModel.getQuestions(params.code, pageNumber, pageSize),
@@ -45,9 +45,9 @@ exports.getCourseQuestions = function ({ params, query }, res) {
 
 /* Get all reviews for a course */
 exports.getCourseReviews = function ({ params, query }, res) {
-    let p = parseInt(query.p)
-    const pageNumber = p || ANONYMOUS
-    const pageSize = 10
+    const pageNumber = parseInt(query.p) || 1
+    // TODO get page size from query
+    const pageSize = PAGE_SIZE
 
     const getCourseReviews = new Promise((resolve, reject) => {
         Promise.all([
@@ -59,7 +59,7 @@ exports.getCourseReviews = function ({ params, query }, res) {
                 'meta': {
                     'curr': pageNumber,
                     'last': lastPage,
-                    'pageSize': pageSize
+                    'pageSize':pageSize
                 },
                 'data': values[0]
             })
@@ -71,14 +71,14 @@ exports.getCourseReviews = function ({ params, query }, res) {
 }
 
 exports.postQuestion = function ({ user, params, body }, res) {
-    body.userID = user || ANONYMOUS
+    body.userID = user && user.id || ANONYMOUS
     responseHandler(questionModel.postQuestion(params.code, body), res)
         .catch(errorHandler(res))
 }
 
 /* POST new review */
 exports.postReview = function ({ user, params, body }, res) {
-    body.userID = user || ANONYMOUS
+    body.userID = user && user.id || ANONYMOUS
     responseHandler(reviewModel.postReview(params.code, body), res)
         .catch(errorHandler(res))
 }

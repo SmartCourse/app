@@ -1,4 +1,4 @@
-import { get, post } from '.'
+import { get, post, put } from '.'
 
 /**
  * Add authtoken to request
@@ -23,9 +23,7 @@ export function getAuthHeaders(user) {
  */
 export function getSelf(user) {
   return getAuthHeaders(user)
-    .then(options =>
-      get('/user', options))
-    .catch(err => console.warn(err))
+    .then(options => get('/user', options))
 }
 
 /**
@@ -33,9 +31,14 @@ export function getSelf(user) {
  * entry for the user
  * @param {*} user The user object provided by firebase
  */
-export function createUser(user) {
+export function createProfile(user, data) {
   return getAuthHeaders(user)
-    .then(options => post('/user', options))
+    .then(options => post('/user', { ...options, data }))
+}
+
+export function updateProfile(user, data) {
+  return getAuthHeaders(user)
+    .then(options => put('/user', { ...options, data }))
 }
 
 /**

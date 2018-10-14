@@ -6,12 +6,12 @@ class User {
     }
 
     /**
-     * TODO Return specialsed information for auth'd user
+     * Return specialised information for auth'd user
      * @param {string} id The id of the auth'd user
      */
     getProfile(id) {
         return this.db
-            .query('SELECT * FROM user WHERE id=?', [id])
+            .query('SELECT id, email, displayName, degree, gradYear, description, picture, joined FROM user WHERE id=?', [id])
     }
 
     /**
@@ -20,13 +20,13 @@ class User {
      * @param   {number}  id   Required id param.
      * @returns {object}
      */
-    getUser(id) {
+    getPublicProfile(id) {
         return this.db
-            .query('SELECT * FROM user WHERE id=?', [id])
+            .query('SELECT id, displayName, degree, gradYear, description, picture, joined FROM user WHERE id=?', [id])
     }
 
     /**
-     * Alternative getter to get the relevant user's details
+     * Get all users details by UID. Used by authentication system
      * @param {uid} uid uid string
      * @returns {object} user object
      */
@@ -43,6 +43,19 @@ class User {
         return this.db
             .insert('user', { displayName, email, uid })
             .then(id => this.getProfile(id))
+            .catch(error => {
+                // kinda hacky
+                if (error.errno === 19 && error.message.includes("displayName")) {
+                    throw(Error("That display name is taken! Sorry!"))
+                }
+                throw(error)
+            })
+    }
+
+    updateUser(id, data) {
+        return this.db
+            .update('user', data, { id })
+            .then(() => this.getProfile(id))
     }
 }
 

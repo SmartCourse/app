@@ -19,6 +19,5 @@ export default {
 <style scoped>
 .ratings {
   padding: 10px 0;
-  border-bottom: var(--border);
 }
 </style>
