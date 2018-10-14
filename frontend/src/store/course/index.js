@@ -32,12 +32,9 @@ const getters = {
     {text: 'Teaching', value: course.teaching || 0},
     {text: 'Workload', value: course.workload || 0}
   ],
-  questions: ({questions}) => {
-    console.log(questions[0])
-    return questions
-  },
+  questions: ({questions}) => questions,
   questionsMeta: ({questionsMeta}) => questionsMeta,
-  reviews: ({reviews}) => { console.log(reviews[0]); return reviews },
+  reviews: ({reviews}) => reviews,
   reviewsMeta: ({reviewsMeta}) => reviewsMeta,
   loading: ({loading}) => loading,
   error: ({error}) => error

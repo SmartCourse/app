@@ -144,7 +144,7 @@ h2, h3 {
 
 .course-content {
     grid-row: 2;
-    background-color: var(--white);
+    /*background-color: var(--white);*/
     margin-top: 10px;
     min-height: 150px;
 }

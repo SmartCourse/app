@@ -2,7 +2,7 @@
   <div class="PageSelector">
     <div class='button-container'>
       <AppButton @click.native="goPrevPage()" :alt="false">&laquo;</AppButton>
-      <AppButton :disabled="true">{{currPage}}</AppButton>
+      <AppButton disabled="true">{{currPage}}</AppButton>
       <AppButton @click.native="goNextPage()" :alt="false">&raquo;</AppButton>
     </div>
   </div>
@@ -42,9 +42,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .button-container {
   padding: 10px 0;
   text-align:center;
+}
+
+.button-container > button {
+  margin: 5px;
 }
 </style>
