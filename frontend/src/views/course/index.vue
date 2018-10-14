@@ -70,7 +70,7 @@ export default {
       courseRatings: 'ratings'
     }),
     ratingsExist() {
-        return this.courseRatings && this.courseRatings[0].value >= 0
+      return this.courseRatings && this.courseRatings[0].value >= 0
     }
   },
   created () {

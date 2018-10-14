@@ -1,5 +1,6 @@
 <template>
-
+    <!-- Add real card shape -->
+    <div></div>
 </template>
 
 <script>
