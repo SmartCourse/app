@@ -12,6 +12,7 @@ exports.getReview = function ({ params }, res) {
         likesModel.getLikes({ type: 'review', id: params.id })
     ])
         .then(([review, likes]) => { return { ...review, ...likes } })
+
     responseHandler(getReview, res)
         .catch(errorHandler(res))
 }
