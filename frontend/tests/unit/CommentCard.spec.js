@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
-import CommentCard from '@/components/comments/CommentCard'
+import CommentCard from '@/components/Comments/CommentCard'
 
 describe('CommentCard.vue', () => {
   before(function () {

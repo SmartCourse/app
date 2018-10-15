@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { mount, RouterLinkStub } from '@vue/test-utils'
-import QuestionCard from '@/components/questions-answers/QuestionCard'
+import QuestionCard from '@/components/Questions/QuestionCard'
 
 describe('QuestionCard.vue', () => {
   before(function () {

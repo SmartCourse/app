@@ -58,7 +58,7 @@
 
 <script>
 import AppButton from '@/components/AppButton'
-import QuestionCard from '@/components/questions-answers/QuestionCard'
+import QuestionCard from '@/components/Questions/QuestionCard'
 import AppRatingCircle from '@/components/AppRating/Circle'
 import AppRatingBar from '@/components/AppRating/Bar'
 
