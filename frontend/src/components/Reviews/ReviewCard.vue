@@ -1,7 +1,7 @@
 <template>
     <Card>
         <div class="card-content">
-            <Vote v-bind:likes="likes" :upvote="upvote" :downvote="downvote" />
+            <Vote :likes="likes" :upvote="upvote" :downvote="downvote" />
             <div class="content">
                 <!-- v-if here just stops router error due to async data -->
                 <router-link v-if="code" :to="{ name: 'review', params: { code, id }}">

@@ -17,6 +17,10 @@ export default {
 </script>
 
 <style scoped>
+.meta-fields {
+  margin: 0 auto;
+}
+
 .vote {
   color: var(--soft-black);
   font-size: 32px;
@@ -26,17 +30,17 @@ export default {
 }
 
 .vote .likes {
-    line-height: 24px;
+    line-height: 20px;
 }
 
 .likes {
   border-radius: 100%;
-  width: 30px;
-  height: 30px;
-  padding: 10px;
-  font-size: 24px;
-  line-height: 30px;
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  line-height: 32px;
   margin: 0;
+  text-align: center;
 }
 
 .vote:hover, .vote:focus {

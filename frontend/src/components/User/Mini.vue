@@ -1,7 +1,7 @@
 <template>
-    <div class="user">
+    <div class="avatar">
         <div :class="`${background} letter`">
-        {{ ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'].map((l) => l.toUpperCase())[Math.floor(Math.random() * 26)] /* should be likes */}}
+          {{ name.charAt(0) }}
         </div>
     </div>
 </template>
@@ -9,12 +9,16 @@
 <script>
 export default {
   props: {
-    user: Number
+    userID: Number,
+    name: {
+      type: String,
+      default: 'Anon'
+    }
   },
   computed: {
     background() {
       let cls = 'black'
-      const id = this.user % 6
+      const id = this.userID % 6
       switch (id) {
       case 1: cls = 'green'
         break
@@ -63,20 +67,20 @@ export default {
   padding: 10px;
   color: white;
   margin: 5px 0;
-  width: 20px;
-  height:20px;
-  line-height: 20px;
+  width: 25px;
+  height:25px;
+  line-height: 25px;
   text-align: center;
   border-radius: 100%;
 }
 
-.user {
+.avatar {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.user:hover {
+.avatar:hover {
   cursor: pointer;
   opacity: 0.5;
 }
