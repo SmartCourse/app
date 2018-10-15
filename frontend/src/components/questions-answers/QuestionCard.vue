@@ -36,11 +36,21 @@ export default {
   },
   methods: {
     upvote() {
+      const authState = this.$store.getters['auth/isLoggedIn']
+      if (!authState) {
+        this.$router.push('/login')
+        return
+      }
       const { code, id } = this
       this.$store.dispatch('questions/putLikes',
         { code, id, data: { value: 1 } })
     },
     downvote() {
+      const authState = this.$store.getters['auth/isLoggedIn']
+      if (!authState) {
+        this.$router.push('/login')
+        return
+      }
       const { code, id } = this
       this.$store.dispatch('questions/putLikes',
         { code, id, data: { value: -1 } })

@@ -29,6 +29,12 @@ export default {
   },
   methods: {
     upvote() {
+      const authState = this.$store.getters['auth/isLoggedIn']
+      if (!authState) {
+        this.$router.push('/login')
+        return
+      }
+
       const { type, code, id, comment } = this
       if (type === 'Answer') {
         this.$store.dispatch('questions/putAnswerLikes',
@@ -39,6 +45,11 @@ export default {
       }
     },
     downvote() {
+      const authState = this.$store.getters['auth/isLoggedIn']
+      if (!authState) {
+        this.$router.push('/login')
+        return
+      }
       const { type, code, id, comment } = this
       if (type === 'Answer') {
         this.$store.dispatch('questions/putAnswerLikes',
