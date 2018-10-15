@@ -13,7 +13,6 @@
                         <OverallRating :rating="courseRatings[0]"/>
                     </div>
                 </div>
-
                 <CourseLinks   :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
                 <CourseRatings v-if="courseRatings" :ratings="courseRatings.slice(1)"/>
             </div>
@@ -24,14 +23,15 @@
         </div>
     </div>
     <div class="course-content">
-        <router-link :to="{name: 'info'}">
-            <TabButton :active="this.$route.name == 'info'">Reviews</TabButton>
-        </router-link>
+        <router-view>
+            <router-link :to="{name: 'info'}">
+                <TabButton :active="this.$route.name == 'info'">Reviews</TabButton>
+            </router-link>
 
-        <router-link :to="{name: 'questions'}">
-            <TabButton :active="this.$route.name == 'questions'">Questions</TabButton>
-        </router-link>
-        <router-view/>
+            <router-link :to="{name: 'questions'}">
+                <TabButton :active="this.$route.name == 'questions'">Questions</TabButton>
+            </router-link>
+        </router-view>
     </div>
 
   </div>
@@ -89,7 +89,8 @@ export default {
     display: grid;
     grid-auto-columns: 2fr 1fr;
     grid-gap: 10px;
-    max-height: 300px;
+    height: 350px;
+    overflow-y: hidden;
 }
 
 .key-data {
@@ -99,6 +100,10 @@ export default {
 
 .left, .right {
     grid-row: 1;
+}
+
+.right {
+    margin: auto;
 }
 
 h2 {
@@ -133,7 +138,6 @@ h2, h3 {
     grid-row: 2;
     background-color: var(--white);
     margin-top: 10px;
-    padding: 10px;
     min-height: 150px;
 }
 

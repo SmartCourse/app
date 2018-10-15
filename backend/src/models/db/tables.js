@@ -6,14 +6,15 @@ function createUserTable (db) {
     return new Promise((resolve, reject) => {
         db.run(`CREATE TABLE user (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            uid TEXT NOT NULL,
-            displayName TEXT DEFAULT 'ANON',
+            uid TEXT UNIQUE NOT NULL,
+            displayName TEXT UNIQUE NOT NULL,
             email TEXT UNIQUE NOT NULL,
             joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             reputation INTEGER DEFAULT '0',
             degree TEXT,
-            gradYear TIMESTAMP DEFAULT '2018',
-            description TEXT
+            gradYear TIMESTAMP,
+            description TEXT,
+            picture TEXT
             )`,
         (err) => err ? reject(err) : resolve('Created User Table'))
     })
@@ -179,6 +180,195 @@ function initCourseTable(db) {
     return Promise.all(promises)
 }
 
+function initQuestionsTable(db) {
+    const questionTypes = [
+        {
+            title: 'Course Textbook',
+            body: 'hendrerit dolor magna eget est lorem ipsum dolor sit amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas integer eget aliquet nibh praesent tristique magna sit amet purus gravida quis blandit turpis cursus in hac habitasse platea dictumst quisque sagittis purus sit'
+        },
+        {
+            title: 'Contact Hours',
+            body: 'pellentesque diam volutpat commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec pretium vulputate sapien nec sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc sed velit dignissim sodales ut eu sem integer vitae justo eget magna fermentum iaculis eu non diam phasellus vestibulum lorem sed risus ultricies tristique nulla aliquet enim tortor at auctor urna nunc id cursus metus aliquam eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper eget duis at tellus at urna condimentum mattis pellentesque id nibh tortor id aliquet lectus proin nibh nisl condimentum id venenatis a condimentum'
+        },
+        {
+            title: 'When to take?',
+            body: 'leo vel orci porta non pulvinar neque laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt eget nullam non nisi est sit amet facilisis magna etiam tempor orci eu lobortis elementum nibh tellus molestie nunc non blandit massa enim nec dui nunc mattis enim ut tellus elementum sagittis vitae et leo duis ut diam quam nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque'
+        },
+        {
+            title: 'Group Project',
+            body: 'pulvinar etiam non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi nullam'
+        },
+        {
+            title: 'Will this help me?',
+            body: 'nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae'
+        },
+        {
+            title: 'Similar courses',
+            body: 'non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum odio eu feugiat pretium nibh ipsum consequat nisl vel pretium lectus quam id leo in vitae turpis massa sed elementum tempus egestas sed sed risus pretium quam vulputate dignissim suspendisse'
+        }
+    ]
+
+    const minRange = 10 // Between [minRange, minRange+maxRange]
+    const maxRange = 5
+    const numQuestionsTypes = questionTypes.length
+
+    let questions = []
+
+    // For each of the courses
+    for (const i in courseData) {
+        // Get it's course code
+        const code = courseData[i].code
+        // Determine how many questions to add
+        const numQuestions = Math.floor(Math.random() * maxRange + minRange)
+
+        // Now create each of the questions
+        for (let i = 0; i < numQuestions; i++) {
+            // Determine the question type
+            const index = Math.floor(Math.random() * numQuestionsTypes)
+            // Create the question
+            const question = { code: code, userID: i, ...questionTypes[index] }
+            // Add the question to the list
+            questions.push(question)
+        }
+    }
+
+    // Prepare query
+    const columns = Object.keys(questions[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO question (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    // Do insertions and return promise for all of them to be completed
+    const promises = questions.map(q => {
+        insertDB(db, 'question', q, prep)
+            .then(id => initComments(db, { questionID: id }))
+    })
+    return Promise.all(promises)
+}
+
+function initReviewTable(db) {
+    const reviewTypes = [
+        {
+            title: 'My favourite course so far',
+            body: 'hendrerit dolor magna eget est lorem ipsum dolor sit amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas integer eget aliquet nibh praesent tristique magna sit amet purus gravida quis blandit turpis cursus in hac habitasse platea dictumst quisque sagittis purus sit'
+        },
+        {
+            title: 'You MUST do this course',
+            body: 'pellentesque diam volutpat commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec pretium vulputate sapien nec sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc sed velit dignissim sodales ut eu sem integer vitae justo eget magna fermentum iaculis eu non diam phasellus vestibulum lorem sed risus ultricies tristique nulla aliquet enim tortor at auctor urna nunc id cursus metus aliquam eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper eget duis at tellus at urna condimentum mattis pellentesque id nibh tortor id aliquet lectus proin nibh nisl condimentum id venenatis a condimentum'
+        },
+        {
+            title: 'Core course',
+            body: 'leo vel orci porta non pulvinar neque laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt eget nullam non nisi est sit amet facilisis magna etiam tempor orci eu lobortis elementum nibh tellus molestie nunc non blandit massa enim nec dui nunc mattis enim ut tellus elementum sagittis vitae et leo duis ut diam quam nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque'
+        },
+        {
+            title: 'Very Unhappy',
+            body: 'pulvinar etiam non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi nullam'
+        },
+        {
+            title: 'Challenging',
+            body: 'nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae'
+        },
+        {
+            title: 'Wow',
+            body: 'non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum odio eu feugiat pretium nibh ipsum consequat nisl vel pretium lectus quam id leo in vitae turpis massa sed elementum tempus egestas sed sed risus pretium quam vulputate dignissim suspendisse'
+        }
+    ]
+
+    const minRange = 10 // Between [minRange, minRange+maxRange]
+    const maxRange = 5
+    const numReviewTypes = reviewTypes.length
+
+    let reviews = []
+
+    // For each of the courses
+    for (const i in courseData) {
+        // Get it's course code
+        const code = courseData[i].code
+        // Determine how many questions to add
+        const numReviews = Math.floor(Math.random() * maxRange + minRange)
+
+        // Now create each of the questions
+        for (let i = 0; i < numReviews; i++) {
+            // Determine the question type
+            const index = Math.floor(Math.random() * numReviewTypes)
+            // Create the question
+            const review = {
+                code: code,
+                userID: i,
+                recommend: 0,
+                enjoy: 0,
+                ...reviewTypes[index] }
+            // Add the question to the list
+            reviews.push(review)
+        }
+    }
+
+    // Prepare query
+    const columns = Object.keys(reviews[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO review (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    // Do insertions and return promise for all of them to be completed
+    const promises = reviews.map(r => {
+        insertDB(db, 'review', r, prep)
+            .then(id => initComments(db, { ReviewID: id }))
+    })
+    return Promise.all(promises)
+}
+
+function initComments(db, parent) {
+    const commentTypes = [
+        {
+            body: 'hendrerit dolor magna eget est lorem ipsum dolor sit amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas integer eget aliquet nibh praesent tristique magna sit amet purus gravida quis blandit turpis cursus in hac habitasse platea dictumst quisque sagittis purus sit hendrerit dolor magna eget est lorem ipsum dolor sit amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas integer eget aliquet nibh praesent tristique magna sit amet purus gravida quis blandit turpis cursus in hac habitasse platea dictumst quisque sagittis purus sit'
+        },
+        {
+            body: 'pellentesque diam volutpat commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec pretium vulputate sapien nec sagittis aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc sed velit dignissim sodales ut eu sem integer vitae justo eget magna fermentum iaculis eu non diam phasellus vestibulum lorem sed risus ultricies tristique nulla aliquet enim tortor at auctor urna nunc id cursus metus aliquam eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci a scelerisque purus semper eget duis at tellus at urna condimentum mattis pellentesque id nibh tortor id aliquet lectus proin nibh nisl condimentum id venenatis a condimentum'
+        },
+        {
+            body: 'leo vel orci porta non pulvinar neque laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt eget nullam non nisi est sit amet facilisis magna etiam tempor orci eu lobortis elementum nibh tellus molestie nunc non blandit massa enim nec dui nunc mattis enim ut tellus elementum sagittis vitae et leo duis ut diam quam nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque leo vel orci porta non pulvinar neque laoreet suspendisse interdum consectetur libero id faucibus nisl tincidunt eget nullam non nisi est sit amet facilisis magna etiam tempor orci eu lobortis elementum nibh tellus molestie nunc non blandit massa enim nec dui nunc mattis enim ut tellus elementum sagittis vitae et leo duis ut diam quam nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque'
+        },
+        {
+            body: 'pulvinar etiam non quam lacus suspendisse faucibus interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi nullam'
+        },
+        {
+            body: 'nulla porttitor massa id neque aliquam vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet nulla malesuada pellentesque elit eget gravida cum sociis natoque penatibus et magnis dis parturient montes nascetur ridiculus mus mauris vitae'
+        },
+        {
+            body: 'non tellus orci ac auctor augue mauris augue neque gravida in fermentum et sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum odio eu feugiat pretium nibh ipsum consequat nisl vel pretium lectus quam id leo in vitae turpis massa sed elementum tempus egestas sed sed risus pretium quam vulputate dignissim suspendisse'
+        }
+    ]
+
+    const minRange = 10 // Between [minRange, minRange+maxRange]
+    const maxRange = 5
+    const numCommentTypes = commentTypes.length
+
+    let comments = []
+
+    const numComments = Math.floor(Math.random() * maxRange + minRange)
+
+    for (let i = 0; i < numComments; i++) {
+        const index = Math.floor(Math.random() * numCommentTypes)
+        const comment = {
+            ...parent,
+            commentParent: 1,
+            userID: 1,
+            ...commentTypes[index]
+        }
+        comments.push(comment)
+    }
+
+    const columns = Object.keys(comments[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO comment (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    const promises = comments.map(c => {
+        insertDB(db, 'comment', c, prep)
+    })
+    return Promise.all(promises)
+}
+
 /**
  * Initiates a new SQL database by creating the tables with some UNSW data
  * @param   {object} SQLObject
@@ -197,7 +387,8 @@ function createDB(db) {
     ])
         .then(() => {
             console.log('Created tables')
-            return Promise.all([initUniTable(db), initSubjectTable(db), initCourseTable(db)])
+            return Promise.all([initUniTable(db), initSubjectTable(db), initCourseTable(db),
+                initQuestionsTable(db), initReviewTable(db)])
         })
         .then(() => {
             console.log('Initialised tables')

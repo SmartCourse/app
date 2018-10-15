@@ -2,18 +2,15 @@ import { get } from '../utils/api'
 
 /* root application state */
 const state = {
-  loading: false,
+  error: '',
   // cached courses
-  courses: [],
-  // fire authObject
-  userAuthObject: {},
-  // our own user data
-  profile: {}
+  courses: []
 }
 
 const getters = {
-  isLoggedIn: ({ userAuthObject }) => !!userAuthObject,
-  authObject: ({ userAuthObject }) => userAuthObject
+  loading: ({ auth, course, questions, reviews, subject }) =>
+    [auth.loading, course.loading, questions.loading, reviews.loading, subject.loading].reduce((acc, curr) => acc || curr, false),
+  error: ({ error }) => error
 }
 
 const actions = {
@@ -35,13 +32,6 @@ const mutations = {
   },
   POPULATE_SEARCH(state, data) {
     state.courses = data
-  },
-  /**
-   * @param {*} state The root state
-   * @param {*} user  The logged in user object or null
-   */
-  SET_USER(state, user) {
-    state.userAuthObject = user
   }
 }
 

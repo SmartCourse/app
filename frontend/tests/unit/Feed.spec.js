@@ -1,8 +1,7 @@
 import { expect } from 'chai'
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import Feed from '@/components/course/Feed'
-import ReviewCard from '@/components/reviews-replies/ReviewCard'
-import QuestionCard from '@/components/questions-answers/QuestionCard'
+import FeedCard from '@/components/course/FeedCard'
 
 describe('Feed.vue Reviews', () => {
   before(function() {
@@ -12,7 +11,7 @@ describe('Feed.vue Reviews', () => {
     ]
     this.wrapper = mount(Feed, {
       propsData: {
-        feedType: 'ReviewCard',
+        feedType: 'Review',
         items: this.items
       },
       stubs: {
@@ -22,7 +21,7 @@ describe('Feed.vue Reviews', () => {
   })
 
   it('Has correct number and type of items', function () {
-    expect(this.wrapper.findAll(ReviewCard).length).to.equal(this.items.length)
+    expect(this.wrapper.findAll(FeedCard).length).to.equal(this.items.length)
   })
 })
 
@@ -36,7 +35,7 @@ describe('Feed.vue Questions', () => {
     ]
     this.wrapper = mount(Feed, {
       propsData: {
-        feedType: 'QuestionCard',
+        feedType: 'Question',
         items: this.items
       },
       stubs: {
@@ -46,6 +45,6 @@ describe('Feed.vue Questions', () => {
   })
 
   it('Has correct number and type of items', function () {
-    expect(this.wrapper.findAll(QuestionCard).length).to.equal(this.items.length)
+    expect(this.wrapper.findAll(FeedCard).length).to.equal(this.items.length)
   })
 })

@@ -1,7 +1,8 @@
-const { ANONYMOUS } = require('../models/constants')
+const { ANONYMOUS, PAGE_SIZE } = require('../models/constants')
 const courseModel = require('../models/course')()
 const questionModel = require('../models/question')()
 const reviewModel = require('../models/review')()
+const likesModel = require('../models/likes')()
 const errorHandler = require('./error')
 const { responseHandler } = require('../utils/helpers')
 
@@ -19,23 +20,31 @@ exports.getCourse = function ({ params }, res) {
 
 /* Get all questions for a course */
 exports.getCourseQuestions = function ({ params, query }, res) {
-    let p = parseInt(query.p)
-    const pageNumber = p || 1
-    const pageSize = 10
+    const pageNumber = parseInt(query.p) || 1
+    // TODO get page size from query
+    const pageSize = PAGE_SIZE
 
     const getCourseQuestions = Promise.all([
         questionModel.getQuestions(params.code, pageNumber, pageSize),
         questionModel.getQuestionCount(params.code)
-    ]).then((values) => {
-        const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize - 1) / pageSize)
-        return {
-            'meta': {
-                'curr': pageNumber,
-                'last': lastPage || 1,
-                'pageSize': pageSize
-            },
-            'data': values[0]
-        }
+    ]).then(([questions, questionCount]) => {
+        // Get the likes for each question
+        const promises = questions.map(question => likesModel.getLikes({ type: 'question', id: question.id }))
+        return Promise.all(promises)
+            .then((likes) => {
+                for (var i = 0; i < questions.length; i++) {
+                    questions[i].likes = likes[i].likes
+                }
+                const lastPage = Math.trunc((questionCount[0]['COUNT()'] + pageSize -1) / pageSize)
+                return {
+                    'meta': {
+                        'curr': pageNumber,
+                        'last': lastPage || 1,
+                        'pageSize': pageSize
+                    },
+                    'data': questions
+                }
+            })
     })
 
     responseHandler(getCourseQuestions, res)
@@ -44,23 +53,33 @@ exports.getCourseQuestions = function ({ params, query }, res) {
 
 /* Get all reviews for a course */
 exports.getCourseReviews = function ({ params, query }, res) {
-    let p = parseInt(query.p)
-    const pageNumber = p || 1
-    const pageSize = 10
+    const pageNumber = parseInt(query.p) || 1
+    // TODO get page size from query
+    const pageSize = PAGE_SIZE
 
-    const getCourseReviews = Promise.all([
-        reviewModel.getReviews(params.code, pageNumber, pageSize),
-        reviewModel.getReviewCount(params.code)
-    ]).then((values) => {
-        const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize - 1) / pageSize)
-        return {
-            'meta': {
-                'curr': pageNumber,
-                'last': lastPage || 1,
-                'pageSize': pageSize
-            },
-            'data': values[0]
-        }
+    const getCourseReviews = new Promise((resolve, reject) => {
+        Promise.all([
+            reviewModel.getReviews(params.code, pageNumber, pageSize),
+            reviewModel.getReviewCount(params.code)
+        ]).then(([reviews, reviewCount]) => {
+            // Get the likes for each review
+            const promises = reviews.map(review => likesModel.getLikes({ type: 'review', id: review.id }))
+            return Promise.all(promises)
+                .then((likes) => {
+                    for (var i = 0; i < reviews.length; i++) {
+                        reviews[i].likes = likes[i].likes
+                    }
+                    const lastPage = Math.trunc((reviewCount[0]['COUNT()'] + pageSize -1) / pageSize)
+                    resolve({
+                        'meta': {
+                            'curr': pageNumber,
+                            'last': lastPage || 1,
+                            'pageSize': pageSize
+                        },
+                        'data': reviews
+                    })
+                })
+        })
     })
 
     responseHandler(getCourseReviews, res)
@@ -68,14 +87,14 @@ exports.getCourseReviews = function ({ params, query }, res) {
 }
 
 exports.postQuestion = function ({ user, params, body }, res) {
-    body.userID = user || ANONYMOUS
+    body.userID = user && user.id || ANONYMOUS
     responseHandler(questionModel.postQuestion(params.code, body), res)
         .catch(errorHandler(res))
 }
 
 /* POST new review */
 exports.postReview = function ({ user, params, body }, res) {
-    body.userID = user || ANONYMOUS
+    body.userID = user && user.id || ANONYMOUS
     responseHandler(reviewModel.postReview(params.code, body), res)
         .catch(errorHandler(res))
 }

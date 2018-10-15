@@ -8,3 +8,6 @@ exports.MIN_ENJOY = 1
 exports.MAX_ENJOY = 5
 exports.MIN_OPTION = 0
 exports.MAX_OPTION = 3
+
+// Paging Constants
+exports.PAGE_SIZE = 10

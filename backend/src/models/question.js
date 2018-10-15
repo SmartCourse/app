@@ -29,7 +29,7 @@ class Question {
 
     /**
      * Gets the total number of questions for a course
-     * @param   {string} code        The code of the course
+     * @param   {string} code        The code of the course duh
      * @returns {object}
      */
     getQuestionCount(code) {
