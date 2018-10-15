@@ -6,12 +6,14 @@ const errorHandler = require('./error')
 const { responseHandler } = require('../utils/helpers')
 
 /* GET question data. */
-exports.getQuestion = function ({ params }, res) {
+exports.getQuestion = function ({ user, params }, res) {
+    const userID = user && user.id || ANONYMOUS
     const getQuestion = Promise.all([
         questionModel.getQuestion(params.id),
-        likesModel.getLikes({ type: 'question', id: params.id })
+        likesModel.getLikes({ type: 'question', id: params.id }),
+        likesModel.getUserLiked({ type: 'question', id: params.id, userID })
     ])
-        .then(([question, likes]) => { return { ...question, ...likes } })
+        .then(([question, likes, userLiked]) => { return { ...question, ...likes, ...userLiked } })
 
     responseHandler(getQuestion, res)
         .catch(errorHandler(res))

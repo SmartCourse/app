@@ -17,13 +17,14 @@ export function answerMapper({ id, questionID, likes, userID, body, timestamp })
   }
 }
 
-export function questionMapper({ id, code, likes, userID, title, body, timestamp }) {
+export function questionMapper({ id, code, likes, userLiked, userID, title, body, timestamp }) {
   return {
     id: String(id),
     code,
     title,
     body,
     likes,
+    userLiked,
     author: userID,
     published: format(timestamp, 'DD/MM/YY')
   }
