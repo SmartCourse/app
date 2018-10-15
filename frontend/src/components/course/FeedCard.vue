@@ -49,9 +49,6 @@ export default {
     routeName() {
       return this.cardType === 'Review' ? 'review' : 'question'
     }
-  },
-  mounted() {
-    console.log('new FeedCard with likes:', this.likes)
   }
 }
 </script>
