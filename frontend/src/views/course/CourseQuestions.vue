@@ -25,9 +25,9 @@
 
 <script>
 // @ is an alias to /src
-import Feed from '@/components/course/Feed'
+import Feed from '@/components/Course/Feed'
 import AppPageSelector from '@/components/AppPageSelector'
-import Options from '@/components/course/Controls'
+import Options from '@/components/Course/Controls'
 import { mapGetters } from 'vuex'
 
 export default {

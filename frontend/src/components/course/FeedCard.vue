@@ -34,11 +34,6 @@ export default {
     cardType: String,
     recommend: Number
   },
-  data() {
-    return {
-      randomNumber: Math.random()
-    }
-  },
   components: {
     Card,
     UserMini

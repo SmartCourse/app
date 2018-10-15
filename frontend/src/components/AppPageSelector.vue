@@ -1,5 +1,5 @@
 <template>
-  <div class="PageSelector">
+  <div class="PageSelector" v-if="lastPage">
     <div class='button-container'>
       <AppButton @click.native="goPrevPage()" :alt="false">&laquo;</AppButton>
       <AppButton disabled="true">{{currPage}}</AppButton>

@@ -44,10 +44,10 @@
 
 <script>
 // @ is an alias to /src
-import TabButton from '@/components/course/TabButton'
-import CourseRatings from '@/components/course/Ratings'
+import TabButton from '@/components/Course/TabButton'
+import CourseRatings from '@/components/Course/Ratings'
 import OverallRating from '@/components/AppRating/CircleWithText'
-import CourseLinks from '@/components/course/Links'
+import CourseLinks from '@/components/Course/Links'
 import CourseInfo from './CourseInfo'
 
 import { mapGetters } from 'vuex'

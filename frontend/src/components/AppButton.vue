@@ -19,7 +19,7 @@ export default {
 button {
     cursor: pointer;
     padding: 10px 20px;
-    margin: 4px 0;
+    margin: 4px;
     font: inherit;
     font-weight: bolder;
     outline: none;
@@ -34,7 +34,7 @@ button:disabled {
 }
 
 .standard-button {
-    background-color: var(--black);
+    background-color: var(--theme);
     color: var(--white);
     border: none;
 }
