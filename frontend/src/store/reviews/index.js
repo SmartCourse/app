@@ -39,8 +39,9 @@ const mutations = {
     state.reviewObj.replies = replies.map(replyMapper)
   },
   FOCUS_LIKES (state, { likes }) {
+    const oldLikes = state.reviewObj.review.likes
     state.reviewObj.review.likes = likes
-    // TODO - ALREADY UPVOTED
+    state.reviewObj.review.userLiked += likes - oldLikes
   },
   API_ERROR (state, { code, message }) {
     state.error.code = code

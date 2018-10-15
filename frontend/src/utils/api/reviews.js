@@ -6,23 +6,25 @@ export function getReview(course, id) {
   return get(`/course/${course}/review/${id}`)
 }
 
-export function replyMapper({ id, likes, userID, body, timestamp }) {
+export function replyMapper({ id, likes, userLiked, userID, body, timestamp }) {
   return {
     id: String(id),
     body,
     likes,
+    userLiked,
     author: userID,
     published: format(timestamp, 'DD/MM/YY')
   }
 }
 
-export function reviewMapper({ id, code, title, body, likes, recommend, userID, timestamp }) {
+export function reviewMapper({ id, code, title, body, likes, userLiked, recommend, userID, timestamp }) {
   return {
     id: String(id),
     code,
     title,
     body,
     likes,
+    userLiked,
     recommend,
     author: userID,
     published: format(timestamp, 'DD/MM/YY')

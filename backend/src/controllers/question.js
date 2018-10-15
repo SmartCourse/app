@@ -20,20 +20,32 @@ exports.getQuestion = function ({ user, params }, res) {
 }
 
 /* GET question ansewrs. */
-exports.getQuestionAnswers = function ({ params, query }, res) {
+exports.getQuestionAnswers = function ({ user, params, query }, res) {
+    const userID = user && user.id || ANONYMOUS
     const getAnswers = new Promise((resolve, reject) => {
         // Get the answers
         commentModel.getComments({ questionID: params.id }, query.p)
-            // Get the likes for each answer
             .then((answers) => {
-                const promises = answers.map(answer => likesModel.getLikes({ type: 'answer', id: answer.id }))
-                return Promise.all(promises)
+                // Get the likes for each answer
+                const likesPromises = answers.map(answer => likesModel.getLikes(
+                    { type: 'answer', id: answer.id }))
+                const p1 = Promise.all(likesPromises)
                     .then((likes) => {
                         for (var i = 0; i < answers.length; i++) {
                             answers[i].likes = likes[i].likes
                         }
-                        resolve(answers)
                     })
+                // Get what the user has liked for each answer
+                const userLikesPromises = answers.map(answer => likesModel.getUserLiked(
+                    { type: 'answer', id: answer.id, userID }))
+                const p2 = Promise.all(userLikesPromises)
+                    .then((likes) => {
+                        for (var i = 0; i < answers.length; i++) {
+                            answers[i].userLiked = likes[i].userLiked
+                        }
+                    })
+                return Promise.all([p1, p2])
+                    .then(() => resolve(answers))
             })
             .catch(err => reject(err))
     })
@@ -46,7 +58,7 @@ exports.getQuestionAnswers = function ({ params, query }, res) {
 exports.postAnswer = function ({ user, params, query, body }, res) {
     body.userID = user && user.id || ANONYMOUS
     commentModel.postComment({ questionID: params.id }, body)
-        .then(exports.getQuestionAnswers({ params, query }, res))
+        .then(exports.getQuestionAnswers({ user, params, query }, res))
         .catch(errorHandler(res))
 }
 
@@ -73,5 +85,5 @@ exports.getAnswerLikes = function ({ params }, res) {
 exports.putAnswerLikes = function ({ user, params, body, query }, res) {
     body.userID = user && user.id || ANONYMOUS
     likesModel.putLikes({ type: 'answer', id: params.answerID, ...body })
-        .then(exports.getQuestionAnswers({ params, query }, res))
+        .then(exports.getQuestionAnswers({ user, params, query }, res))
 }

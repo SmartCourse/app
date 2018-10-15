@@ -6,12 +6,13 @@ export function getQuestion(course, id) {
   return get(`/course/${course}/question/${id}`)
 }
 
-export function answerMapper({ id, questionID, likes, userID, body, timestamp }) {
+export function answerMapper({ id, questionID, likes, userLiked, userID, body, timestamp }) {
   return {
     id: String(id),
     questionID: String(questionID),
     body,
     likes,
+    userLiked,
     author: userID,
     published: format(timestamp, 'DD/MM/YY')
   }

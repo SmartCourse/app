@@ -1,7 +1,7 @@
 <template>
     <Card>
         <div class="card-content">
-            <Vote v-bind:likes="likes" :upvote="upvote" :downvote="downvote" />
+            <Vote :likes="likes" :userLiked="userLiked" :upvote="upvote" :downvote="downvote" />
             <div class="content">
                 <!-- v-if here just stops router error due to async data -->
                 <router-link v-if="code" :to="{ name: 'review', params: { code, id }}">
@@ -31,6 +31,7 @@ export default {
     id: String,
     author: Number,
     likes: Number,
+    userLiked: Number,
     title: String,
     body: String,
     published: String
@@ -42,9 +43,10 @@ export default {
         this.$router.push('/login')
         return
       }
-      const { code, id } = this
+      const { code, id, userLiked } = this
+      const value = userLiked === -1 ? 0 : 1
       this.$store.dispatch('reviews/putLikes',
-        { code, id, data: { value: 1 } })
+        { code, id, data: { value } })
     },
     downvote() {
       const authState = this.$store.getters['auth/isLoggedIn']
@@ -52,9 +54,10 @@ export default {
         this.$router.push('/login')
         return
       }
-      const { code, id } = this
+      const { code, id, userLiked } = this
+      const value = userLiked === 1 ? 0 : -1
       this.$store.dispatch('reviews/putLikes',
-        { code, id, data: { value: -1 } })
+        { code, id, data: { value } })
     }
   }
 }

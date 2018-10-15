@@ -21,11 +21,6 @@ async function responseCheck(res) {
 function request (path, { headers, method, data }) {
   // eventually add cors and auth headers
   const url = `${API_URL}${path}`
-
-  if (method === 'GET') {
-    return fetch(url, { headers })
-  }
-
   const auth = store.getters['auth/userAuthObject']
   const body = data ? JSON.stringify(data) : null
   headers = {

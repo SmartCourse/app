@@ -1,5 +1,5 @@
 // User Constants
-exports.ANONYMOUS = 1
+exports.ANONYMOUS = 0
 
 // Review Constants
 exports.DONT_RECOMMEND = 0
