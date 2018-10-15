@@ -26,7 +26,7 @@ function request (path, { headers, method, data }) {
     return fetch(url, { headers })
   }
 
-  const auth = store.getters.authObject
+  const auth = store.getters['auth/userAuthObject']
   const body = data ? JSON.stringify(data) : null
   headers = {
     'Content-Type': 'application/json',
