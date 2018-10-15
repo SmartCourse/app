@@ -16,7 +16,7 @@ const getters = {
 // logged into firebase (authenticated account)
   isFirebaseAuthorised: ({ userAuthObject }) => !!userAuthObject,
   // TODO not sure if this is useful...
-  hasProfile: ({ profile, userAuthObject }) => !!profile,
+  hasProfile: ({ profile }) => !!profile,
   // logged into backend (existing profile) and authed with firebase
   isLoggedIn: ({ profile, userAuthObject }) => !!profile && !!userAuthObject,
 
