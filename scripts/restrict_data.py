@@ -11,18 +11,27 @@ for i, subject in enumerate(data):
         req = course['requirements']
         dlimit = 200
         rlimit = 150
+        total = dlimit + rlimit
 
         # if there is no requirements add a palceholder
         if (len(req) == 0):
             req = 'No requirements found.'
-
+        
         # check if filtering is needed
-        if (len(des) + des.count('\n') * 40 + len(req) + req.count('\n') * 40 < 350):
+        if (len(des) + des.count('\n') * 40 + len(req) + req.count('\n') * 40 < total):
             continue
 
         # account for newlines taking up space
         dlimit -= des.count('\n') * 40
         rlimit -= req.count('\n') * 40
+
+        # adjust limits
+        if (len(des) < dlimit):
+            free_lines = (dlimit - len(des)) / 40
+            rlimit += free_lines * 35
+        elif (len(req) < rlimit):
+            free_lines = (rlimit - len(req)) / 40
+            dlimit += free_lines * 35
 
         # check if we are actually cutting one of these down
         des_cut = len(des) > dlimit

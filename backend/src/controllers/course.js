@@ -2,6 +2,7 @@ const { ANONYMOUS, PAGE_SIZE } = require('../models/constants')
 const courseModel = require('../models/course')()
 const questionModel = require('../models/question')()
 const reviewModel = require('../models/review')()
+const likesModel = require('../models/likes')()
 const errorHandler = require('./error')
 const { responseHandler } = require('../utils/helpers')
 
@@ -26,18 +27,25 @@ exports.getCourseQuestions = function ({ params, query }, res) {
     const getCourseQuestions = Promise.all([
         questionModel.getQuestions(params.code, pageNumber, pageSize),
         questionModel.getQuestionCount(params.code)
-    ])
-        .then(function(values) {
-            const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize) / pageSize)
-            return {
-                'meta': {
-                    'curr': pageNumber,
-                    'last': lastPage,
-                    'pageSize': pageSize
-                },
-                'data': values[0]
-            }
-        })
+    ]).then(function([questions, questionCount]) {
+        // Get the likes for each question
+        const promises = questions.map(question => likesModel.getLikes({ type: 'question', id: question.id }))
+        return Promise.all(promises)
+            .then((likes) => {
+                for (var i = 0; i < questions.length; i++) {
+                    questions[i].likes = likes[i].likes
+                }
+                const lastPage = Math.trunc((questionCount[0]['COUNT()'] + pageSize) / pageSize)
+                return {
+                    'meta': {
+                        'curr': pageNumber,
+                        'last': lastPage,
+                        'pageSize': pageSize
+                    },
+                    'data': questions
+                }
+            })
+    })
 
     responseHandler(getCourseQuestions, res)
         .catch(errorHandler(res))
@@ -53,16 +61,24 @@ exports.getCourseReviews = function ({ params, query }, res) {
         Promise.all([
             reviewModel.getReviews(params.code, pageNumber, pageSize),
             reviewModel.getReviewCount(params.code)
-        ]).then(function(values) {
-            const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize) / pageSize)
-            resolve({
-                'meta': {
-                    'curr': pageNumber,
-                    'last': lastPage,
-                    'pageSize':pageSize
-                },
-                'data': values[0]
-            })
+        ]).then(function([reviews, reviewCount]) {
+            // Get the likes for each review
+            const promises = reviews.map(review => likesModel.getLikes({ type: 'review', id: review.id }))
+            return Promise.all(promises)
+                .then((likes) => {
+                    for (var i = 0; i < reviews.length; i++) {
+                        reviews[i].likes = likes[i].likes
+                    }
+                    const lastPage = Math.trunc((reviewCount[0]['COUNT()'] + pageSize) / pageSize)
+                    resolve({
+                        'meta': {
+                            'curr': pageNumber,
+                            'last': lastPage,
+                            'pageSize': pageSize
+                        },
+                        'data': reviews
+                    })
+                })
         })
     })
 
