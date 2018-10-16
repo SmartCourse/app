@@ -8,8 +8,8 @@ import { doRequestFactory } from '@/store/utils'
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
 const state = {
-  loading: false,
-  search: '',
+  loadingAnswers: false,
+  loadingQuestion: false,
   questionObj: {
     question: {},
     answers: []
@@ -23,13 +23,17 @@ const state = {
 const getters = {
   question: ({ questionObj: { question } }) => question,
   answers: ({ questionObj: { answers } }) => answers,
-  loading: ({ loading }) => loading,
+  loadingAnswers: ({ loadingAnswers }) => loadingAnswers,
+  loadingQuestion: ({ loadingQuestion }) => loadingQuestion,
   error: ({ error }) => error
 }
 
 const mutations = {
-  TOGGLE_LOADING (state, bool) {
-    state.loading = bool
+  TOGGLE_LOADING_ANSWERS (state, bool) {
+    state.loadingAnswers = bool
+  },
+  TOGGLE_LOADING_QUESTION (state, bool) {
+    state.loadingQuestion = bool
   },
   FOCUS_QUESTION (state, question) {
     state.questionObj.question = questionMapper(question)
@@ -53,28 +57,28 @@ const mutations = {
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
   async getQuestion ({ dispatch }, { code, id }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_QUESTION, args: [code, id] })
+    return dispatch('doRequest', { action: ACTIONS.GET_QUESTION, load:'TOGGLE_LOADING_QUESTION', args: [code, id] })
   },
   async postQuestion ({ dispatch }, { code, form }) {
-    return dispatch('doRequest', { action: ACTIONS.POST_QUESTION, args: [code, form] })
+    return dispatch('doRequest', { action: ACTIONS.POST_QUESTION, load:'TOGGLE_LOADING_QUESTION', args: [code, form] })
   },
   async getAnswers ({ dispatch }, { code, id }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_ANSWERS, args: [code, id] })
+    return dispatch('doRequest', { action: ACTIONS.GET_ANSWERS, load:'TOGGLE_LOADING_ANSWERS', args: [code, id] })
   },
   async postAnswer ({ dispatch }, { id, code, form }) {
-    return dispatch('doRequest', { action: ACTIONS.POST_ANSWER, args: [code, id, form] })
+    return dispatch('doRequest', { action: ACTIONS.POST_ANSWER, load:'TOGGLE_LOADING_ANSWERS', args: [code, id, form] })
   },
   async getLikes ({ dispatch }, { id, code }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_LIKES, args: [code, id] })
+    return dispatch('doRequest', { action: ACTIONS.GET_LIKES, load:'TOGGLE_LOADING_QUESTION', args: [code, id] })
   },
   async putLikes ({ dispatch }, { id, code, data }) {
-    return dispatch('doRequest', { action: ACTIONS.PUT_LIKES, args: [code, id, data] })
+    return dispatch('doRequest', { action: ACTIONS.PUT_LIKES, load:'TOGGLE_LOADING_QUESTION', args: [code, id, data] })
   },
   async getAnswerLikes ({ dispatch }, { id, code, commentID }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_ANSWER_LIKES, args: [code, id, commentID] })
+    return dispatch('doRequest', { action: ACTIONS.GET_ANSWER_LIKES, load:'TOGGLE_LOADING_ANSWERS', args: [code, id, commentID] })
   },
   async putAnswerLikes ({ dispatch }, { id, code, commentID, data }) {
-    return dispatch('doRequest', { action: ACTIONS.PUT_ANSWER_LIKES, args: [code, id, commentID, data] })
+    return dispatch('doRequest', { action: ACTIONS.PUT_ANSWER_LIKES, load:'TOGGLE_LOADING_ANSWERS', args: [code, id, commentID, data] })
   }
 }
 
