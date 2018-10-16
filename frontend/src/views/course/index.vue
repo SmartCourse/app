@@ -89,7 +89,7 @@ export default {
     display: grid;
     grid-auto-columns: 2fr 1fr;
     grid-gap: 10px;
-    height: 350px;
+    max-height: 350px;
     overflow-y: hidden;
 }
 
