@@ -19,7 +19,7 @@ exports.cors = function(req, res, next) {
 
 exports.corsProd = function(req, res, next) {
     let allowDomain = 'https://smartcourse.me'
-    if (req.headers.referer.startsWith('https://www.smartcourse.me')) {
+    if (req.headers.referer && req.headers.referer.startsWith('https://www.smartcourse.me')) {
         allowDomain = 'https://www.smartcourse.me'
     }
     res.header('Access-Control-Allow-Origin', allowDomain)

@@ -20,7 +20,7 @@ export default {
       type: Boolean,
       default: true
     },
-    disabledMsg: String,
+    disabledMsg: Object,
     disabled: Boolean
   }
 }
