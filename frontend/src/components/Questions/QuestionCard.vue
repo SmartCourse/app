@@ -1,6 +1,6 @@
 <template>
     <PostCard
-        :vote="{ upvote, downvote, likes }"
+        :vote="{ upvote, downvote, likes, disabled: !authenticated }"
         :title="title"
         :body="body"
         :user="user"
@@ -23,6 +23,11 @@ export default {
     body: String,
     // TODO fix
     published: String
+  },
+  computed: {
+    authenticated: function() {
+      return this.$store.getters['auth/isLoggedIn']
+    }
   },
   methods: {
     upvote() {

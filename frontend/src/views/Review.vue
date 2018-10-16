@@ -53,12 +53,6 @@ export default {
   },
   methods: {
     submitReply (replyForm) {
-      const authState = this.$store.getters['auth/isLoggedIn']
-      if (!authState) {
-        this.$router.push('/login')
-        return
-      }
-
       // check that they actually typed something
       if (replyForm.body === '') {
         // this.answerFormResponse.text = "Please type an answer!"

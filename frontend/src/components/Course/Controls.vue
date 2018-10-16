@@ -4,7 +4,9 @@
             <slot/>
         </div>
         <router-link :to="{ name: routeName, params: {code} }">
-            <AppButton :disabled="!(authenticated)" :hover="hover">{{buttonText}}</AppButton>
+            <AppButton :disabled="!(authenticated)" :disabledMsg="disabledMsg">
+              {{buttonText}}
+            </AppButton>
         </router-link>
     </div>
 </template>
@@ -23,8 +25,11 @@ export default {
     authenticated: function() {
       return this.$store.getters['auth/isLoggedIn']
     },
-    hover: function() {
-      return 'TROLOLOL'
+    disabledMsg: function() {
+      return {
+        content: 'You Must Be Logged In To ' + this.buttonText,
+        placement: 'left'
+      }
     }
   }
 }
