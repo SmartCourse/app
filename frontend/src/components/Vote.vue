@@ -19,7 +19,7 @@ export default {
     likes: Number,
     upvote: Function,
     downvote: Function,
-    disabled: Boolean,
+    disabled: Boolean
   },
   data() {
     return {
