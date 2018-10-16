@@ -16,7 +16,8 @@
 
       <span>
         <input type="checkbox" v-model="tos"> By signing up I agree to the
-        <router-link :to="{name: 'terms-of-service'}" class="help-link">Terms of Service</router-link>
+        <router-link :to="{name: 'terms-of-service'}" target="_blank" class="help-link">Terms of Service</router-link> and
+        <router-link :to="{name: 'privacy-policy'}" target="_blank" class="help-link">Privacy Policy</router-link>.
       </span>
 
     </AppAuthForm>
