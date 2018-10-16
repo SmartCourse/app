@@ -8,11 +8,18 @@
             v-if="error.code">{{error.message}}</span>
       </AnswerForm>
 
-      <transition-group name='fade' tag='ul' v-if="answers.length">
+      <!--<transition-group name='fade' tag='ul' v-if="answers.length">-->
         <li v-for="answer in answers" :key="answer.id">
           <AnswerCard :comment="answer" :type="commentType" :id="id" :code="code"/>
         </li>
-      </transition-group>
+      <!--</transition-group>-->
+
+      <AppPageSelector v-if="meta.last != 1"
+        :currPage="meta.curr"
+        :lastPage="meta.last"
+        :update="refreshAnswers"
+      />
+
     </section>
 </template>
 
@@ -20,13 +27,15 @@
 import QuestionCard from '@/components/questions-answers/QuestionCard'
 import AnswerCard from '@/components/comments/CommentCard'
 import AnswerForm from '@/components/comments/CommentForm'
+import AppPageSelector from '@/components/AppPageSelector'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     QuestionCard,
     AnswerCard,
-    AnswerForm
+    AnswerForm,
+    AppPageSelector
   },
   props: {
     code: {
@@ -47,6 +56,7 @@ export default {
     ...mapGetters('questions', {
       question: 'question',
       answers: 'answers',
+      meta: 'answersMeta',
       loading: 'loading',
       error: 'error'
     })
@@ -59,11 +69,19 @@ export default {
         // this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
         return
       }
-      this.$store.dispatch('questions/postAnswer', { form: answerForm, code: this.code, id: this.question.id })
+      this.$store.dispatch('questions/postAnswer', {form: answerForm, code: this.code, id: this.question.id})
+    },
+    refreshAnswers (pageNumber) {
+      this.$store.dispatch('questions/getAnswers',
+        {
+          id: this.id,
+          code: this.code,
+          pageNumber
+        })
     }
   },
   created () {
-    this.$store.dispatch('questions/getAnswers', { id: this.id, code: this.code })
+    this.$store.dispatch('questions/getAnswers', { id: this.id, code: this.code, pageNumber: 1 })
     this.$store.dispatch('questions/getQuestion', { id: this.id, code: this.code })
   }
 }

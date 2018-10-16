@@ -13,6 +13,7 @@ const state = {
   search: '',
   reviewObj: {
     review: {},
+    repliesMeta: {},
     replies: []
   },
   error: {
@@ -22,10 +23,11 @@ const state = {
 }
 
 const getters = {
-  review: ({ reviewObj: { review } }) => review,
-  replies: ({ reviewObj: { replies } }) => replies,
-  loading: ({ loading }) => loading,
-  error: ({ error }) => error
+  review: ({reviewObj: {review}}) => review,
+  replies: ({reviewObj: {replies}}) => replies,
+  repliesMeta: ({reviewObj: {repliesMeta}}) => repliesMeta,
+  loading: ({loading}) => loading,
+  error: ({error}) => error
 }
 
 const mutations = {
@@ -35,8 +37,9 @@ const mutations = {
   FOCUS_REVIEW (state, review) {
     state.reviewObj.review = reviewMapper(review)
   },
-  FOCUS_REPLIES (state, replies) {
-    state.reviewObj.replies = replies.map(replyMapper)
+  FOCUS_REPLIES (state, {meta, data}) {
+    state.reviewObj.replies = data.map(replyMapper)
+    state.reviewObj.repliesMeta = meta
   },
   FOCUS_LIKES (state, { likes }) {
     state.reviewObj.review.likes = likes
@@ -60,8 +63,8 @@ const actions = {
     const mappedForm = newReviewMapper(form)
     return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, args: [code, mappedForm] })
   },
-  async getReplies ({ dispatch }, { code, id }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, args: [code, id] })
+  async getReplies ({dispatch}, { code, id, pageNumber }) {
+    return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, args: [code, id, pageNumber] })
   },
   async postReply ({ dispatch }, { code, id, form }) {
     return dispatch('doRequest', { action: ACTIONS.POST_REPLY, args: [code, id, form] })

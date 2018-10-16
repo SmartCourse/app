@@ -19,21 +19,31 @@ exports.getReview = function ({ params }, res) {
 
 /* GET top level review replies . */
 exports.getReviewComments = function ({ params, query }, res) {
-    const getReplies = new Promise((resolve, reject) => {
-        // Get the replies
-        commentModel.getComments({ reviewID: params.id }, query.p)
-            // Get the likes for each reply
-            .then((replies) => {
-                const promises = replies.map(reply => likesModel.getLikes({ type: 'reply', id: reply.id }))
-                return Promise.all(promises)
-                    .then((likes) => {
-                        for (var i = 0; i < replies.length; i++) {
-                            replies[i].likes = likes[i].likes
-                        }
-                        resolve(replies)
-                    })
+    let p = parseInt(query.p)
+    const pageNumber = p || 1
+    const pageSize = 10
+
+    const getReplies = Promise.all([
+        commentModel.getComments({ reviewID: params.id }, pageNumber, pageSize),
+        commentModel.getCommentCount({ reviewID: params.id })
+    ]).then((values) => {
+        let replies = values[0]
+        const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize - 1) / pageSize)
+        const promises = replies.map(reply => likesModel.getLikes({ type: 'reply', id: reply.id }))
+        return Promise.all(promises)
+            .then((likes) => {
+                for (var i = 0; i < replies.length; i++) {
+                    replies[i].likes = likes[i].likes
+                }
+                return {
+                    'meta': {
+                        'curr': pageNumber,
+                        'last': lastPage || 1,
+                        'pageSize': pageSize
+                    },
+                    'data': replies
+                }
             })
-            .catch(err => reject(err))
     })
 
     responseHandler(getReplies, res)

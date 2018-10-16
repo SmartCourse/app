@@ -19,21 +19,31 @@ exports.getQuestion = function ({ params }, res) {
 
 /* GET question ansewrs. */
 exports.getQuestionAnswers = function ({ params, query }, res) {
-    const getAnswers = new Promise((resolve, reject) => {
-        // Get the answers
-        commentModel.getComments({ questionID: params.id }, query.p)
-            // Get the likes for each answer
-            .then((answers) => {
-                const promises = answers.map(answer => likesModel.getLikes({ type: 'answer', id: answer.id }))
-                return Promise.all(promises)
-                    .then((likes) => {
-                        for (var i = 0; i < answers.length; i++) {
-                            answers[i].likes = likes[i].likes
-                        }
-                        resolve(answers)
-                    })
+    let p = parseInt(query.p)
+    const pageNumber = p || 1
+    const pageSize = 10
+
+    const getAnswers = Promise.all([
+        commentModel.getComments({ questionID: params.id }, pageNumber, pageSize),
+        commentModel.getCommentCount({ questionID: params.id })
+    ]).then((values) => {
+        let answers = values[0]
+        const lastPage = Math.trunc((values[1][0]['COUNT()'] + pageSize - 1) / pageSize)
+        const promises = answers.map(answer => likesModel.getLikes({ type: 'answer', id: answer.id }))
+        return Promise.all(promises)
+            .then((likes) => {
+                for (var i = 0; i < answers.length; i++) {
+                    answers[i].likes = likes[i].likes
+                }
+                return {
+                    'meta': {
+                        'curr': pageNumber,
+                        'last': lastPage || 1,
+                        'pageSize': pageSize
+                    },
+                    'data': answers
+                }
             })
-            .catch(err => reject(err))
     })
 
     responseHandler(getAnswers, res)

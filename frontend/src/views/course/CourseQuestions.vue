@@ -51,7 +51,7 @@ export default {
       this.$store.dispatch('course/getQuestions',
         {
           id: this.code,
-          pageNumber: pageNumber
+          pageNumber
         })
     }
   },
