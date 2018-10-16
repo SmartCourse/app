@@ -6,19 +6,21 @@ const state = {
   error: '',
   loading: false,
   // cached courses
-  courses: []
+  courseMap: {},  // this allows us to update courses efficiently
+  courseList: []
 }
 
 const getters = {
   loading: ({ loading }) => loading,
   error: ({ error }) => error,
-  courses: ({ courses }) => courses
+  // convert object to list
+  courses: ({ courseList }) => courseList
 }
 
 const actions = {
   getCourses({ commit, state }) {
     // avoid repeats of this
-    if (state.courses.length) {
+    if (state.courseList.length) {
       return
     }
     commit('TOGGLE_LOADING', true)
@@ -33,8 +35,20 @@ const mutations = {
   TOGGLE_LOADING(state, bool) {
     state.loading = bool
   },
-  REFRESH_COURSES(state, data) {
-    state.courses = data.map(courseMapper)
+  REFRESH_COURSES(state, courses) {
+    state.courseList = courses
+    // convert list of courses to object
+    state.courseMap = courses
+      .map(courseMapper)
+      .reduce((acc, course, index) => {
+        acc[course.code] = {...course, index} // store the index into the list
+        return acc
+      }, {})
+  },
+  UPDATE_COURSE(state, course) {
+    const index = state.courseMap[course.code].index
+    state.courseMap[course.code] = { ...course, index }
+    state.courseList[index] = course
   }
 }
 

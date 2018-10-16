@@ -69,8 +69,9 @@ const actions = {
   async getReviews ({ dispatch }, { id, pageNumber }) {
     return dispatch('doRequest', { action: ACTIONS.GET_REVIEWS, args: [id, pageNumber] })
   },
-  async getCourse ({ dispatch }, id) {
-    return dispatch('doRequest', { action: ACTIONS.GET_COURSE, args: [id] })
+  async getCourse ({ state, commit, dispatch }, id) {
+    await dispatch('doRequest', { action: ACTIONS.GET_COURSE, args: [id] })
+    commit('UPDATE_COURSE', state.course, { root: true })
   }
 }
 
