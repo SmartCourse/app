@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
-import ReviewForm from '@/components/reviews-replies/ReviewForm'
-import Options from '@/components/reviews-replies/ReviewOptions'
+import ReviewForm from '@/components/Reviews/ReviewForm'
+import Options from '@/components/Reviews/ReviewOptions'
 import AppButton from '@/components/AppButton'
 
 describe('ReviewForm.vue', () => {

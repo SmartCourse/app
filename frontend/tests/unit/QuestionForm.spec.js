@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
-import QuestionForm from '@/components/questions-answers/QuestionForm'
+import QuestionForm from '@/components/Questions/QuestionForm'
 import AppButton from '@/components/AppButton'
 
 describe('QuestionForm.vue', () => {

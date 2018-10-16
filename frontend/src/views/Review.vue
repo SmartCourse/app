@@ -17,9 +17,9 @@
 </template>
 
 <script>
-import ReviewCard from '@/components/reviews-replies/ReviewCard'
-import ReplyCard from '@/components/comments/CommentCard'
-import ReplyForm from '@/components/comments/CommentForm'
+import ReviewCard from '@/components/Reviews/ReviewCard'
+import ReplyCard from '@/components/Comments/CommentCard'
+import ReplyForm from '@/components/Comments/CommentForm'
 import { mapGetters } from 'vuex'
 
 export default {
