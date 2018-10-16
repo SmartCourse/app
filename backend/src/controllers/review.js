@@ -12,6 +12,7 @@ exports.getReview = function ({ params }, res) {
         likesModel.getLikes({ type: 'review', id: params.id })
     ])
         .then(([review, likes]) => { return { ...review, ...likes } })
+
     responseHandler(getReview, res)
         .catch(errorHandler(res))
 }
@@ -41,7 +42,7 @@ exports.getReviewComments = function ({ params, query }, res) {
 
 /* POST new comment. */
 exports.postComment = function ({ user, params, query, body }, res) {
-    body.userID = user || ANONYMOUS
+    body.userID = user && user.id || ANONYMOUS
     commentModel.postComment({ reviewID: params.id }, body)
         .then(exports.getReviewComments({ params, query }, res))
         .catch(errorHandler(res))
@@ -55,7 +56,7 @@ exports.getReviewLikes = function ({ params }, res) {
 
 /* PUT updated likes value */
 exports.putReviewLikes = function ({ user, params, body }, res) {
-    body.userID = user || ANONYMOUS
+    body.userID = user && user.id || ANONYMOUS
     responseHandler(likesModel.putLikes({ type: 'review', ...params, ...body }), res)
         .catch(errorHandler(res))
 }
@@ -68,7 +69,7 @@ exports.getReplyLikes = function ({ params }, res) {
 
 /* PUT updated reply likes value */
 exports.putReplyLikes = function ({ user, params, body, query }, res) {
-    body.userID = user || ANONYMOUS
+    body.userID = user && user.id || ANONYMOUS
     likesModel.putLikes({ type: 'reply', id: params.replyID, ...body })
         .then(exports.getReviewComments({ params, query }, res))
 }

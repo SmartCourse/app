@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import QuestionForm from '@/components/questions-answers/QuestionForm'
+import QuestionForm from '@/components/Questions/QuestionForm'
 import { mapGetters } from 'vuex'
 
 export default {

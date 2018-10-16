@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { mount, RouterLinkStub } from '@vue/test-utils'
-import Feed from '@/components/course/Feed'
-import FeedCard from '@/components/course/FeedCard'
+import Feed from '@/components/Course/Feed'
+import FeedCard from '@/components/Course/FeedCard'
 
 describe('Feed.vue Reviews', () => {
   before(function() {

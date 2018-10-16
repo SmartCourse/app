@@ -11,12 +11,19 @@ exports.responseHandler = function(fn, response) {
 
 exports.toLowerCase = str => str.toLowerCase()
 
-exports.isAuthorized = function(req, res, next) {
+exports.isFirebaseAuthorized = function(req, res, next) {
     if (!req.authorized) {
         return res.status(401).json({ code: 401, message: 'Unauthorized' })
     }
     next()
 }
+exports.isAuthorized = function(req, res, next) {
+    if (!req.user) {
+        return res.status(403).json({ code: 403, message: 'No user profile' })
+    }
+    next()
+}
+
 
 /**
  * Convert a string to utf8

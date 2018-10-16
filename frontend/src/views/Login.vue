@@ -9,8 +9,7 @@
       :link="{
         text: 'Forgot your password?',
         name: 'Forgot Password'
-      }"
-    >
+      }">
       <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>
       <AuthInput type="password" v-model="password" placeholder="Password"/>
     </AppAuthForm>
@@ -33,14 +32,26 @@ export default {
   },
   components: { AppAuthForm, AuthInput },
   computed: {
-    ...mapGetters('auth', [ 'error', 'loading' ])
+    ...mapGetters('auth', [ 'loading', 'error', 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile' ])
+  },
+  // reroute whenever auth loading state changes
+  watch: {
+    loading() { this.reroute() }
   },
   methods: {
     clickHandler() {
       const { email, password } = this
       this.$store.dispatch('auth/signIn', { email, password })
-        .then(() => this.$router.push('/'))
-        .catch(e => {})
+    },
+    reroute() {
+      // we need to check the store to determine state
+      if (this.isFirebaseAuthorised) {
+        if (this.hasProfile) {
+          this.$router.push('/')
+        } else {
+          this.$router.push('/create-profile')
+        }
+      }
     }
   },
   created() {

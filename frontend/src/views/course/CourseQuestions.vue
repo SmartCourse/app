@@ -25,9 +25,9 @@
 
 <script>
 // @ is an alias to /src
-import Feed from '@/components/course/Feed'
+import Feed from '@/components/Course/Feed'
 import AppPageSelector from '@/components/AppPageSelector'
-import Options from '@/components/course/Controls'
+import Options from '@/components/Course/Controls'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -64,15 +64,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.button-container {
-    margin-bottom: 10px;
-    text-align: right;
-}
-
-h3 {
-  text-align: center;
-  font: var(--header-4);
-}
-</style>

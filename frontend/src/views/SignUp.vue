@@ -4,13 +4,12 @@
       :title="'Sign Up'"
       :buttonText="'Sign Up'"
       :error="error"
-      :clickHandler="clickHandler"
+      :clickHandler="createAccount"
       :link="{
         text: 'Already have an account?',
         name: 'Login'
       }"
     >
-      <AuthInput type="text" placeholder="Display Name"/>
       <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>
       <AuthInput type="password" v-model="password" placeholder="Password"/>
     </AppAuthForm>
@@ -33,14 +32,20 @@ export default {
   },
   components: { AppAuthForm, AuthInput },
   computed: {
-    ...mapGetters('auth', [ 'error', 'loading' ])
+    ...mapGetters('auth', [ 'loading', 'error', 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile' ])
+  },
+  // reroute whenever auth loading state changes
+  watch: {
+    loading() { this.reroute() }
   },
   methods: {
-    clickHandler() {
+    createAccount() {
       const { email, password } = this
-      this.$store.dispatch('auth/signUp', { email, password })
-        .then(() => this.$router.push('/'))
-        .catch(e => {})
+      this.$store.dispatch('auth/createAccount', { email, password })
+    },
+    reroute() {
+      if (this.isLoggedIn) this.$router.push('/')
+      if (this.isFirebaseAuthorised && !this.hasProfile) this.$router.push('/create-profile')
     }
   },
   created() {

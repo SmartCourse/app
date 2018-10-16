@@ -64,4 +64,3 @@ export default {
 </script>
 
 <style scoped src='../css/subject.less' lang='less'>
-</style>
