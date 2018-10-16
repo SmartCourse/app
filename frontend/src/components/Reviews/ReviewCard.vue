@@ -1,31 +1,18 @@
 <template>
-    <Card>
-        <div class="card-content">
-            <Vote :likes="likes" :upvote="upvote" :downvote="downvote" />
-            <div class="content">
-                <!-- v-if here just stops router error due to async data -->
-                <router-link v-if="code" :to="{ name: 'review', params: { code, id }}">
-                    <CardHeader>{{ title }}</CardHeader>
-                </router-link>
-                <p>{{ body }}</p>
-            </div>
-            <aside class="user">
-                <User :image="'https://travis-ci.com/images/logos/TravisCI-Mascot-1.png'"/>
-                <!-- Fix me later -->
-                <p  class="date">Posted: <time>{{ published }}</time></p>
-            </aside>
-        </div>
-    </Card>
+    <PostCard
+        :vote="{ upvote, downvote, likes }"
+        :title="title"
+        :body="body"
+        :user="user"
+        :published="published"
+    />
 </template>
 
 <script>
-import Card from '@/components/Card'
-import User from '@/components/User'
-import Vote from '@/components/Vote'
-import CardHeader from '@/components/Card/Header'
+import PostCard from '@/components/Card/Large'
 
 export default {
-  components: { Card, User, Vote, CardHeader },
+  components: { PostCard },
   props: {
     code: String,
     id: String,

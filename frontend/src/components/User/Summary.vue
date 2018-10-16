@@ -2,7 +2,7 @@
     <div class="user">
         <Mini :userID="userID" :name="name"/>
         <div class="user-info">
-            <Name :name="name" :degree="'B. Arts'" />
+            <Name :name="name" :degree="degree" />
             <p><time>{{ published }} ago</time></p>
         </div>
     </div>
@@ -19,13 +19,15 @@ export default {
   },
   props: {
     /* name/displayName */
-    name: String,
+    name: { default: 'Anonymous', type: String },
     /* Requred for linking */
     userID: Number,
     /* provided by container */
-    degree: String,
-    /* Epoch time -- or this should be time ago */
-    published: String
+    degree: { default: 'B. Sci', type: String },
+    /* This should be a pre massaged Date string that reflects time since published */
+    published: String,
+    /* User repuation */
+    reputation: { default: 0, type: Number }
   }
 }
 </script>

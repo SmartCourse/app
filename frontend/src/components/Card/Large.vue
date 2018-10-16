@@ -1,10 +1,12 @@
 <template>
     <Card>
+        <!-- Add badges here in future -->
         <CardHeader>{{ title }}</CardHeader>
         <!-- User block -->
-        <User :name="'Alex Hinds'" :published="'10 days'"/>
+        <User v-bind="user" :published="published"/>
+        <!-- Content block and user interaction -->
         <div class="content">
-            <Votes :likes="10" :upvote="() => {}" :downvote="() => {}" />
+            <Vote v-bind="vote" />
             <p>{{ body }}</p>
         </div>
     </Card>
@@ -14,18 +16,26 @@
 import Card from '.'
 import CardHeader from './Header'
 import User from '@/components/User/Summary'
-import Votes from '@/components/Vote'
+import Vote from '@/components/Vote'
 
 export default {
   components: {
     Card,
     CardHeader,
     User,
-    Votes
+    Vote
   },
   props: {
+    /* post title */
     title: String,
-    body: String
+    /* post body */
+    body: String,
+    /* post vote object, verify at lower level */
+    vote: Object,
+    /* user object, verify at lower level */
+    user: Object,
+    /* Date string */
+    published: String
   }
 }
 </script>
@@ -38,6 +48,7 @@ export default {
 }
 
 p {
+    font: var(--body-copy-2);
     padding: 5px;
 }
 </style>

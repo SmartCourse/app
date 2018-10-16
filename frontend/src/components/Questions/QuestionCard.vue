@@ -1,37 +1,27 @@
 <template>
-    <Card>
-        <div class="card-content">
-            <Vote v-bind:likes="likes" :upvote="upvote" :downvote="downvote" />
-            <div class="content">
-                <!-- v-if here just stops router error due to async data -->
-                <router-link v-if="code" tag="h2" :to="{ name: 'question', params: { code, id }}">
-                    {{ title }}
-                </router-link>
-                <p>{{ body }}</p>
-            </div>
-            <aside class="user">
-                <User :author="author" :image="'https://travis-ci.com/images/logos/TravisCI-Mascot-1.png'"/>
-                 <!-- Fix me later -->
-                 <p class="date">Asked: <time>{{ published }}</time></p>
-            </aside>
-        </div>
-    </Card>
+    <PostCard
+        :vote="{ upvote, downvote, likes }"
+        :title="title"
+        :body="body"
+        :user="user"
+        :published="published"
+    />
 </template>
 
 <script>
-import Card from '@/components/Card'
-import User from '@/components/User'
-import Vote from '@/components/Vote'
+import PostCard from '@/components/Card/Large'
 
 export default {
-  components: { Card, User, Vote },
+  components: { PostCard },
   props: {
     code: String,
     id: String,
+    // TODO fix author, should be a prepopulated user object
     author: Number,
     likes: Number,
     title: String,
     body: String,
+    // TODO fix
     published: String
   },
   methods: {
@@ -48,6 +38,3 @@ export default {
   }
 }
 </script>
-
-<style scoped src='../../css/card.less' lang='less'>
-</style>

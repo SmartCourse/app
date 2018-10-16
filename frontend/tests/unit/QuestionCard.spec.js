@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { mount, RouterLinkStub } from '@vue/test-utils'
 import QuestionCard from '@/components/Questions/QuestionCard'
 
-describe('QuestionCard.vue', () => {
+describe.skip('QuestionCard.vue', () => {
   before(function () {
     this.card = {
       id: '1',

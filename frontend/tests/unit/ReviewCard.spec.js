@@ -3,7 +3,7 @@ import { mount, RouterLinkStub } from '@vue/test-utils'
 import ReviewCard from '@/components/Reviews/ReviewCard'
 import CardHeader from '@/components/Card/Header'
 
-describe('ReviewCard.vue', () => {
+describe.skip('ReviewCard.vue', () => {
   before(function () {
     this.card = {
       id: '1',

@@ -46,8 +46,11 @@
                 <AppButton>Submit</AppButton>
                 <AppButton :alt="false">Cancel</AppButton>
                 <QuestionCard
+                    :vote="{ upvote: () => {}, downvote: () => {}, likes: 10 }"
                     :title="'This is a standard length title'"
                     :body="'This is a longer body, that includes a lot more words than the title, but isn\'t too long!'"
+                    :published="'10 days'"
+                    :user="{ userID: 1, name: 'Alex Hinds', degree: 'B. Arts', reputiation: 10 }"
                 />
                 <AppRatingCircle :value="20"/>
                 <app-rating-bar :value="20"/>
@@ -71,7 +74,7 @@ export default {
     section {
         padding: 20px;
         margin: 40px auto;
-        width: 600px;
+        max-width: 700px;
     }
 
     section:first-of-type {
