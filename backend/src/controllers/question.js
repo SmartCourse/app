@@ -2,6 +2,7 @@ const { ANONYMOUS } = require('../models/constants')
 const questionModel = require('../models/question')()
 const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
+const userModel = require('../models/user')()
 const errorHandler = require('./error')
 const { responseHandler } = require('../utils/helpers')
 
@@ -10,8 +11,14 @@ exports.getQuestion = function ({ params }, res) {
     const getQuestion = Promise.all([
         questionModel.getQuestion(params.id),
         likesModel.getLikes({ type: 'question', id: params.id })
-    ])
-        .then(([question, likes]) => { return { ...question, ...likes } })
+    ]).then(([question, likes]) => {
+        return Promise.all([
+            userModel.getPublicProfile(question.userID)
+        ]).then(([userInfo]) => {
+            delete question.userID
+            return { ...question, ...likes, user: userInfo }
+        })
+    })
 
     responseHandler(getQuestion, res)
         .catch(errorHandler(res))

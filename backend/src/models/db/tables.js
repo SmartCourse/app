@@ -369,6 +369,34 @@ function initComments(db, parent) {
     return Promise.all(promises)
 }
 
+function initUserTable(db) {
+    const maxUsers = 50
+    let users = []
+
+    for (let i = 0; i < maxUsers; i++) {
+        const uid = 'userID' + i
+        const displayName = 'user' + i
+        const email = displayName + '@test.com.au'
+
+        users.push({
+            id: i,
+            uid: uid,
+            displayName: displayName,
+            email: email
+        })
+    }
+
+    // Prepare query
+    const columns = Object.keys(users[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO user (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    // Do insertions and return promise for all of them to be completed
+    const promises = users.map(u => insertDB(db, 'user', u, prep))
+    return Promise.all(promises)
+}
+
 /**
  * Initiates a new SQL database by creating the tables with some UNSW data
  * @param   {object} SQLObject
@@ -388,7 +416,7 @@ function createDB(db) {
         .then(() => {
             console.log('Created tables')
             return Promise.all([initUniTable(db), initSubjectTable(db), initCourseTable(db),
-                initQuestionsTable(db), initReviewTable(db)])
+                initUserTable(db), initQuestionsTable(db), initReviewTable(db)])
         })
         .then(() => {
             console.log('Initialised tables')
