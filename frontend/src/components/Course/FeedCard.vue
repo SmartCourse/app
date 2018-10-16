@@ -12,7 +12,7 @@
         <b>{{ positiveOrNegativeText }}</b>
       </p>
       <p v-else>
-        <b>Know the answer to this question?</b>
+        Know the answer to this question?
       </p>
       <p class="likes">{{ likes || 0 }} users found this helpful</p>
     </div>
@@ -31,12 +31,8 @@ export default {
     author: Number,
     code: String,
     id: String,
-    cardType: String
-  },
-  data() {
-    return {
-      randomNumber: Math.random()
-    }
+    cardType: String,
+    recommend: Number
   },
   components: {
     Card,
@@ -45,10 +41,10 @@ export default {
   computed: {
     /* TODO use recommendation */
     positiveOrNegativeText() {
-      return this.randomNumber > 0.5 ? 'Recommended' : 'Not Recommended'
+      return this.recommend ? 'Recommended' : 'Not Recommended'
     },
     positiveOrNegativeClass() {
-      return this.randomNumber > 0.5 ? 'positive' : 'negative'
+      return this.recommend ? 'positive' : 'negative'
     },
     routeName() {
       return this.cardType === 'Review' ? 'review' : 'question'
@@ -111,6 +107,11 @@ p {
   }
   .likes {
     display: none;
+  }
+
+  h3 {
+    font: var(--header-4-mobile);
+    font-weight: bolder;
   }
 }
 

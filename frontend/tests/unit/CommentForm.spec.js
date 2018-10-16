@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
-import CommentForm from '@/components/comments/CommentForm'
+import CommentForm from '@/components/Comments/CommentForm'
 import AppButton from '@/components/AppButton'
 
 describe('CommentForm.vue', () => {
