@@ -17,5 +17,4 @@ router.use(isAuthorized)
 router.get('/', getSelf)
 router.put('/', updateUser)
 
-
 module.exports = router

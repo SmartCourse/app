@@ -2,7 +2,9 @@
     <CardForm :title="`Submit ${type}`">
       <textarea placeholder="Your input here.." v-model="body"></textarea><br>
       <!-- should probs be a separate component -->
-      <AppButton @click.native="callback({body}); body=''">{{ type }}</AppButton>
+      <AppButton :disabled="!(authenticated)" :disabledMsg="disabledMsg" @click.native="callback({body}); body=''">
+        {{ type }}
+      </AppButton>
       <!-- errors will be injected here -->
       <slot></slot>
   </CardForm>
@@ -20,7 +22,16 @@ export default {
   },
   props: {
     type: String,
-    callback: Function
+    callback: Function,
+    authenticated: Boolean
+  },
+  computed: {
+    disabledMsg: function() {
+      return {
+        content: 'You Must Be Logged In To ' + this.type,
+        placement: 'right'
+      }
+    }
   },
   data () {
     return {
