@@ -1,26 +1,18 @@
 <template>
-    <Card>
-        <div class="card-content">
-            <Vote v-bind:likes="comment.likes" :upvote="upvote" :downvote="downvote" />
-            <div class="content">
-                <p>{{ comment.body }}</p>
-            </div>
-            <aside class="user">
-                <User :image="'https://travis-ci.com/images/logos/TravisCI-Mascot-3.png'"/>
-                <!-- Fix me later -->
-                <p class="date">Posted: <time>{{ comment.published }}</time></p>
-            </aside>
-        </div>
-    </Card>
+    <PostCard
+      :published="comment.published"
+      :body="comment.body"
+      :vote="{ upvote, downvote, likes: comment.likes }"
+      :user="{ userID: comment.author }"
+    >
+    </PostCard>
 </template>
 
 <script>
-import Card from '@/components/Card'
-import User from '@/components/User'
-import Vote from '@/components/Vote'
+import PostCard from '@/components/Card/Large'
 
 export default {
-  components: { Card, User, Vote },
+  components: { PostCard },
   props: {
     type: String,
     id: String,
@@ -51,6 +43,3 @@ export default {
   }
 }
 </script>
-
-<style scoped src='../../css/card.less' lang='less'>
-</style>
