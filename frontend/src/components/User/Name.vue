@@ -2,16 +2,21 @@
     <div class="inline">
         <h3 class="name">{{ name }}</h3>
         <p class="role">{{ degree }}</p>
-        <p class="reputation">{{ reputation }}<i class="material-icons">star</i></p>
+        <Reputation>{{ reputation }}</Reputation>
     </div>
 </template>
 
 <script>
+import Reputation from './Reputation'
+
 export default {
   props: {
     name: String,
     degree: String,
     reputation: Number
+  },
+  components: {
+    Reputation
   }
 }
 </script>
@@ -22,25 +27,15 @@ export default {
     font: var(--header-4);
 }
 
-.role, .reputation {
-    font: var(--body-copy-2);
-}
-
 .role {
+    font: var(--body-copy-2);
     border: var(--border);
 }
 
-.name, .role, .reputation {
+.name, .role {
     padding: 5px;
     margin: 0;
     line-height: 10px;
-}
-
-.material-icons {
-    width: 16px;
-    height: 16px;
-    font-size: inherit;
-    vertical-align: middle;
 }
 
 .inline {

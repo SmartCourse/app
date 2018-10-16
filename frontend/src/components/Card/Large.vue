@@ -1,7 +1,7 @@
 <template>
     <Card>
         <!-- Add badges here in future -->
-        <CardHeader>{{ title }}</CardHeader>
+        <CardHeader v-if="title">{{ title }}</CardHeader>
         <!-- User block -->
         <User v-bind="user" :published="published"/>
         <!-- Content block and user interaction -->
@@ -48,6 +48,7 @@ export default {
 }
 
 p {
+    margin: 10px 0;
     font: var(--body-copy-2);
     padding: 5px;
 }

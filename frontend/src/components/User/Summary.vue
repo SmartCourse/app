@@ -2,7 +2,7 @@
     <div class="user">
         <Mini :userID="userID" :name="name"/>
         <div class="user-info">
-            <Name :name="name" :degree="degree" />
+            <Name :name="name" :degree="degree" :reputation="reputation" />
             <p><time>{{ published }} ago</time></p>
         </div>
     </div>
