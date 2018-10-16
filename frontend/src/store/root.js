@@ -6,7 +6,7 @@ const state = {
   error: '',
   loading: false,
   // cached courses
-  courseMap: {},  // this allows us to update courses efficiently
+  courseMap: {}, // this allows us to update courses efficiently
   courseList: []
 }
 

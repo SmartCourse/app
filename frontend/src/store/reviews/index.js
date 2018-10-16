@@ -58,29 +58,29 @@ const mutations = {
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
   async getReview ({ dispatch }, { code, id }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REVIEW, load:'TOGGLE_LOADING_REVIEW', args: [code, id] })
+    return dispatch('doRequest', { action: ACTIONS.GET_REVIEW, load: 'TOGGLE_LOADING_REVIEW', args: [code, id] })
   },
   async postReview ({ dispatch }, { code, form }) {
     const mappedForm = newReviewMapper(form)
-    return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, load:'TOGGLE_LOADING_REVIEW', args: [code, mappedForm] })
+    return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, load: 'TOGGLE_LOADING_REVIEW', args: [code, mappedForm] })
   },
   async getReplies ({ dispatch }, { code, id }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, load:'TOGGLE_LOADING_REPLIES', args: [code, id] })
+    return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, load: 'TOGGLE_LOADING_REPLIES', args: [code, id] })
   },
   async postReply ({ dispatch }, { code, id, form }) {
-    return dispatch('doRequest', { action: ACTIONS.POST_REPLY, load:'TOGGLE_LOADING_REPLIES', args: [code, id, form] })
+    return dispatch('doRequest', { action: ACTIONS.POST_REPLY, load: 'TOGGLE_LOADING_REPLIES', args: [code, id, form] })
   },
   async getLikes ({ dispatch }, { id, code }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_LIKES, load:'TOGGLE_LOADING_REVIEW', args: [code, id] })
+    return dispatch('doRequest', { action: ACTIONS.GET_LIKES, load: 'TOGGLE_LOADING_REVIEW', args: [code, id] })
   },
   async putLikes ({ dispatch }, { id, code, data }) {
-    return dispatch('doRequest', { action: ACTIONS.PUT_LIKES, load:'TOGGLE_LOADING_REVIEW', args: [code, id, data] })
+    return dispatch('doRequest', { action: ACTIONS.PUT_LIKES, load: 'TOGGLE_LOADING_REVIEW', args: [code, id, data] })
   },
   async getReplyLikes ({ dispatch }, { id, code, commentID }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REPLY_LIKES, load:'TOGGLE_LOADING_REPLIES', args: [code, id, commentID] })
+    return dispatch('doRequest', { action: ACTIONS.GET_REPLY_LIKES, load: 'TOGGLE_LOADING_REPLIES', args: [code, id, commentID] })
   },
   async putReplyLikes ({ dispatch }, { id, code, commentID, data }) {
-    return dispatch('doRequest', { action: ACTIONS.PUT_REPLY_LIKES, load:'TOGGLE_LOADING_REPLIES', args: [code, id, commentID, data] })
+    return dispatch('doRequest', { action: ACTIONS.PUT_REPLY_LIKES, load: 'TOGGLE_LOADING_REPLIES', args: [code, id, commentID, data] })
   }
 }
 
