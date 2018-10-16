@@ -60,7 +60,7 @@ export default {
 }
 
 .black {
-  background-color: #aaa;
+  background-color: var(--soft-black);
 }
 
 .letter {
