@@ -27,7 +27,7 @@ exports.getCourseQuestions = function ({ params, query }, res) {
     const getCourseQuestions = Promise.all([
         questionModel.getQuestions(params.code, pageNumber, pageSize),
         questionModel.getQuestionCount(params.code)
-    ]).then(([questions, questionCount]) => {
+    ]).then(function([questions, questionCount]) {
         // Get the likes for each question
         const promises = questions.map(question => likesModel.getLikes({ type: 'question', id: question.id }))
         return Promise.all(promises)
@@ -35,11 +35,11 @@ exports.getCourseQuestions = function ({ params, query }, res) {
                 for (var i = 0; i < questions.length; i++) {
                     questions[i].likes = likes[i].likes
                 }
-                const lastPage = Math.trunc((questionCount[0]['COUNT()'] + pageSize -1) / pageSize)
+                const lastPage = Math.trunc((questionCount[0]['COUNT()'] + pageSize) / pageSize)
                 return {
                     'meta': {
                         'curr': pageNumber,
-                        'last': lastPage || 1,
+                        'last': lastPage,
                         'pageSize': pageSize
                     },
                     'data': questions
@@ -61,7 +61,7 @@ exports.getCourseReviews = function ({ params, query }, res) {
         Promise.all([
             reviewModel.getReviews(params.code, pageNumber, pageSize),
             reviewModel.getReviewCount(params.code)
-        ]).then(([reviews, reviewCount]) => {
+        ]).then(function([reviews, reviewCount]) {
             // Get the likes for each review
             const promises = reviews.map(review => likesModel.getLikes({ type: 'review', id: review.id }))
             return Promise.all(promises)
@@ -69,11 +69,11 @@ exports.getCourseReviews = function ({ params, query }, res) {
                     for (var i = 0; i < reviews.length; i++) {
                         reviews[i].likes = likes[i].likes
                     }
-                    const lastPage = Math.trunc((reviewCount[0]['COUNT()'] + pageSize -1) / pageSize)
+                    const lastPage = Math.trunc((reviewCount[0]['COUNT()'] + pageSize) / pageSize)
                     resolve({
                         'meta': {
                             'curr': pageNumber,
-                            'last': lastPage || 1,
+                            'last': lastPage,
                             'pageSize': pageSize
                         },
                         'data': reviews

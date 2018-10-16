@@ -51,7 +51,7 @@ export default {
       this.$store.dispatch('course/getReviews',
         {
           id: this.code,
-          pageNumber
+          pageNumber: pageNumber
         })
     }
   },

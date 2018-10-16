@@ -20,29 +20,16 @@ class Comment {
     }
 
     /**
+     * // TODO - PAGING
      * Get all of dem comments for a specific question
      * @param   {object} queryObject
      * @param   {number} pageNumber
      * @returns {Array}
      */
-    getComments(queryObject, pageNumber, pageSize) {
+    getComments(queryObject, pageNumber = 1) {
         const [ key, value ] = Object.entries(queryObject)[0]
-        const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll(`SELECT * FROM comment WHERE ${key}=? ORDER BY timestamp DESC LIMIT ?, ?`,
-                [value, offset, pageSize])
-    }
-
-    /**
-     * Gets the total number of comments for a question/review
-     * @param   {string} code        The code of the course
-     * @returns {object}
-     */
-    getCommentCount(queryObject) {
-        const [key, value] = Object.entries(queryObject)[0]
-        return this.db
-            .queryAll(`SELECT COUNT() FROM comment WHERE ${key}=?`,
-                [value])
+            .queryAll(`SELECT * FROM comment WHERE ${key}=?`, [value])
     }
 
     /**

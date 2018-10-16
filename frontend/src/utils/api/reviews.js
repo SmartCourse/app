@@ -49,8 +49,8 @@ export function postReview(course, data) {
   return post(`/course/${course}/review`, { data })
 }
 
-export function getReplies(course, id, pageNumber) {
-  return get(`/course/${course}/review/${id}/comments?p=${pageNumber}`)
+export function getReplies(course, id) {
+  return get(`/course/${course}/review/${id}/comments`)
 }
 
 /**
