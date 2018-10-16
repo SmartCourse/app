@@ -24,7 +24,6 @@
       <div style="text-align:center" v-else-if="loadingAnswers">
         <LoadingSpinner/>
       </div>
-
     </section>
 </template>
 

@@ -1,22 +1,27 @@
 <template>
     <section class="main-content">
       <AppBreadCrumb/>
-      <div v-if="!loading">
-        <ReviewCard v-bind="review"/>
 
-        <ReplyForm @submitCommentForm="submitReply" :type="commentType" :callback="submitReply">
-          <span class="form-failure"
-              v-if="error.code">{{error.message}}</span>
-        </ReplyForm>
-
-        <transition-group name='fade' tag='ul' v-if="replies.length">
-          <li v-for="answer in replies" :key="answer.id">
-            <ReplyCard :comment="answer" :type="commentType" :id="id" :code="code" />
-          </li>
-        </transition-group>
+      <ReviewCard v-bind="review" v-if="!loadingReview"/>
+      <div style="text-align:center" v-else>
+        <LoadingSpinner/>
       </div>
 
-      <div style="text-align:center" v-else>
+      <ReplyForm
+        @submitCommentForm="submitReply"
+        :type="commentType"
+        :callback="submitReply"
+      >
+        <span class="form-failure"
+            v-if="error.code">{{error.message}}</span>
+      </ReplyForm>
+
+      <transition-group name='fade' tag='ul' v-if="!loadingReplies && replies.length">
+        <li v-for="answer in replies" :key="answer.id">
+          <ReplyCard :comment="answer" :type="commentType" :id="id" :code="code" />
+        </li>
+      </transition-group>
+      <div style="text-align:center" v-else-if="loadingReplies">
         <LoadingSpinner/>
       </div>
     </section>
@@ -53,7 +58,8 @@ export default {
     ...mapGetters('reviews', {
       review: 'review',
       replies: 'replies',
-      loading: 'loading',
+      loadingReview: 'loadingReview',
+      loadingReplies: 'loadingReplies',
       error: 'error'
     })
   },
