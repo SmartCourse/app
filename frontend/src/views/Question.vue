@@ -1,16 +1,16 @@
 <template>
     <section class="main-content">
       <AppBreadCrumb/>
-      <QuestionCard v-bind="question"/>
+      <QuestionCard v-bind="question" :authenticated="authenticated"/>
 
-      <AnswerForm @submitCommentForm="submitAnswer" :type="commentType" :callback="submitAnswer">
+      <AnswerForm @submitCommentForm="submitAnswer" :type="commentType" :callback="submitAnswer" :authenticated="authenticated">
         <span class="form-failure"
             v-if="error.code">{{error.message}}</span>
       </AnswerForm>
 
       <transition-group name='fade' tag='ul' v-if="answers.length">
         <li v-for="answer in answers" :key="answer.id">
-          <AnswerCard :comment="answer" :type="commentType" :id="id" :code="code"/>
+          <AnswerCard :comment="answer" :type="commentType" :id="id" :code="code" :authenticated="authenticated"/>
         </li>
       </transition-group>
     </section>
@@ -49,7 +49,10 @@ export default {
       answers: 'answers',
       loading: 'loading',
       error: 'error'
-    })
+    }),
+    authenticated: function() {
+      return this.$store.getters['auth/isLoggedIn']
+    }
   },
   methods: {
     submitAnswer (answerForm) {

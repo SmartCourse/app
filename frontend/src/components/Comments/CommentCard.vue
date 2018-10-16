@@ -17,12 +17,8 @@ export default {
     type: String,
     id: String,
     code: String,
-    comment: Object
-  },
-  computed: {
-    authenticated: function() {
-      return this.$store.getters['auth/isLoggedIn']
-    }
+    comment: Object,
+    authenticated: Boolean
   },
   methods: {
     upvote() {

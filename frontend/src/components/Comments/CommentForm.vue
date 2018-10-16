@@ -22,12 +22,10 @@ export default {
   },
   props: {
     type: String,
-    callback: Function
+    callback: Function,
+    authenticated: Boolean
   },
   computed: {
-    authenticated: function() {
-      return this.$store.getters['auth/isLoggedIn']
-    },
     disabledMsg: function() {
       return {
         content: 'You Must Be Logged In To ' + this.type,

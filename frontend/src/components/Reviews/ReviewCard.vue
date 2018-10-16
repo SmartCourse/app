@@ -20,12 +20,8 @@ export default {
     likes: Number,
     title: String,
     body: String,
-    published: String
-  },
-  computed: {
-    authenticated: function() {
-      return this.$store.getters['auth/isLoggedIn']
-    }
+    published: String,
+    authenticated: Boolean
   },
   methods: {
     upvote() {

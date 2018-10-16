@@ -22,12 +22,8 @@ export default {
     title: String,
     body: String,
     // TODO fix
-    published: String
-  },
-  computed: {
-    authenticated: function() {
-      return this.$store.getters['auth/isLoggedIn']
-    }
+    published: String,
+    authenticated: Boolean
   },
   methods: {
     upvote() {
