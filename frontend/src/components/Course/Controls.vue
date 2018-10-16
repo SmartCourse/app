@@ -4,7 +4,7 @@
             <slot/>
         </div>
         <router-link :to="{ name: routeName, params: {code} }">
-            <AppButton> {{ buttonText }} </AppButton>
+            <AppButton :disabled="!(authenticated)" :hover="hover">{{buttonText}}</AppButton>
         </router-link>
     </div>
 </template>
@@ -18,7 +18,15 @@ export default {
     routeName: String,
     buttonText: String
   },
-  components: { AppButton }
+  components: { AppButton },
+  computed: {
+    authenticated: function() {
+      return this.$store.getters['auth/isLoggedIn']
+    },
+    hover: function() {
+      return 'TROLOLOL'
+    }
+  }
 }
 </script>
 
