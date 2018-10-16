@@ -12,7 +12,7 @@ export function replyMapper({ id, likes, userID, body, timestamp }) {
     body,
     likes,
     author: userID,
-    published: formatDistanceStrict(timestamp, new Date(), { addSuffix: true })
+    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true })
   }
 }
 
@@ -25,7 +25,7 @@ export function reviewMapper({ id, code, title, body, likes, recommend, userID, 
     likes,
     recommend,
     author: userID,
-    published: formatDistanceStrict(timestamp, new Date(), { addSuffix: true })
+    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true })
   }
 }
 
