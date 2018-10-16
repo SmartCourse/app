@@ -9,13 +9,15 @@
         <slot/>
       </Options>
 
-      <Feed
-        feedType="Question"
-        :items="questions"
-        v-if="!loading"
-      />
+      <transition name="fade-slide">
+        <Feed
+          feedType="Question"
+          :items="questions"
+          v-if="!loading"
+        />
+      </transition>
 
-      <div style="text-align:center;" v-else>
+      <div style="text-align:center;" v-if="loading">
         <LoadingSpinner/>
       </div>
 

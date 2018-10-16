@@ -2,8 +2,10 @@
     <section class="main-content">
       <AppBreadCrumb/>
 
-      <QuestionCard v-bind="question" v-if="!loadingQuestion"/>
-      <div style="text-align:center" v-else>
+      <transition name="fade-slide">
+        <QuestionCard v-bind="question"  v-if="!loadingQuestion"/>
+      </transition>
+      <div style="text-align:center" v-if="loadingQuestion">
         <LoadingSpinner/>
       </div>
 
@@ -12,16 +14,15 @@
         :type="commentType"
         :callback="submitAnswer"
       >
-        <span class="form-failure"
-            v-if="error.code">{{error.message}}</span>
+        <span class="form-failure" v-if="error.code">{{error.message}}</span>
       </AnswerForm>
 
-      <transition-group name='fade' tag='ul' v-if="!loadingAnswers && answers.length">
+      <transition-group name='fade-slide' tag='ul' v-if="answers.length">
         <li v-for="answer in answers" :key="answer.id">
           <AnswerCard :comment="answer" :type="commentType" :id="id" :code="code"/>
         </li>
       </transition-group>
-      <div style="text-align:center" v-else-if="loadingAnswers">
+      <div style="text-align:center" v-if="loadingAnswers">
         <LoadingSpinner/>
       </div>
     </section>
@@ -80,12 +81,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 1s;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-</style>

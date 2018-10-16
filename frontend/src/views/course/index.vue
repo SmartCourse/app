@@ -2,32 +2,37 @@
   <div class="main-content">
     <AppBreadCrumb/>
       <div class="course">
-        <div class="course-header" v-if="!loading">
-            <div class="course-header-title">
-                <div class="key-data">
-                    <div class="left">
-                        <h2>{{ courseInfo.code }}</h2>
-                        <h3>{{ courseInfo.name }}</h3>
-                    </div>
-                    <div class="right">
-                        <OverallRating :rating="courseRatings[0]"/>
-                    </div>
-                </div>
-                <CourseLinks :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
-                <div class="ratings-big" v-if="ratingsExist">
-                    <CourseRatings :ratings="courseRatings.slice(1)"/>
-                </div>
-                <div class="ratings-small">
-                    <CourseRatings v-if="ratingsExist" :ratings="courseRatings"/>
-                </div>
-            </div>
-        </div>
 
-        <div class="course-info" v-if="!loading">
-            <CourseInfo :code="code"/>
-        </div>
+        <transition name="fade-slide">
+          <div class="course-header" v-if="!loading">
+              <div class="course-header-title">
+                  <div class="key-data">
+                      <div class="left">
+                          <h2>{{ courseInfo.code }}</h2>
+                          <h3>{{ courseInfo.name }}</h3>
+                      </div>
+                      <div class="right">
+                          <OverallRating :rating="courseRatings[0]"/>
+                      </div>
+                  </div>
+                  <CourseLinks :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
+                  <div class="ratings-big" v-if="ratingsExist">
+                      <CourseRatings :ratings="courseRatings.slice(1)"/>
+                  </div>
+                  <div class="ratings-small">
+                      <CourseRatings v-if="ratingsExist" :ratings="courseRatings"/>
+                  </div>
+              </div>
+          </div>
+        </transition>
 
-        <LoadingSpinner v-else />
+        <transition name="fade-slide">
+          <div class="course-info" v-if="!loading">
+              <CourseInfo :code="code"/>
+          </div>
+        </transition>
+
+        <LoadingSpinner v-if="loading" />
 
       </div>
     <div class="course-content">

@@ -150,4 +150,12 @@ textarea:focus, textarea:active {
   border: 1px solid #acc;
 }
 
+.fade-slide-enter-active {
+  transition: all 0.5s;
+}
+.fade-slide-enter {
+  opacity: 0;
+  transform:translateY(10px);
+}
+
 </style>

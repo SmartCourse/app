@@ -2,8 +2,10 @@
     <section class="main-content">
       <AppBreadCrumb/>
 
-      <ReviewCard v-bind="review" v-if="!loadingReview"/>
-      <div style="text-align:center" v-else>
+      <transition name="fade-slide">
+        <ReviewCard v-bind="review" v-if="!loadingReview"/>
+      </transition>
+      <div style="text-align:center" v-if="loadingReview">
         <LoadingSpinner/>
       </div>
 
@@ -16,7 +18,7 @@
             v-if="error.code">{{error.message}}</span>
       </ReplyForm>
 
-      <transition-group name='fade' tag='ul' v-if="!loadingReplies && replies.length">
+      <transition-group name='fade-slide' tag='ul' v-if="replies.length">
         <li v-for="answer in replies" :key="answer.id">
           <ReplyCard :comment="answer" :type="commentType" :id="id" :code="code" />
         </li>
@@ -80,12 +82,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 1s;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-</style>
