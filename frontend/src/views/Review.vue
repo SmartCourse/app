@@ -8,18 +8,11 @@
             v-if="error.code">{{error.message}}</span>
       </ReplyForm>
 
-      <!--<transition-group name='fade' tag='ul' v-if="replies.length">-->
+      <transition-group name='fade' tag='ul' v-if="replies.length">
         <li v-for="answer in replies" :key="answer.id">
           <ReplyCard :comment="answer" :type="commentType" :id="id" :code="code" />
         </li>
-      <!--</transition-group>-->
-
-      <AppPageSelector v-if="meta.last != 1"
-        :currPage="meta.curr"
-        :lastPage="meta.last"
-        :update="refreshReplies"
-      />
-
+      </transition-group>
     </section>
 </template>
 
@@ -27,15 +20,13 @@
 import ReviewCard from '@/components/reviews-replies/ReviewCard'
 import ReplyCard from '@/components/comments/CommentCard'
 import ReplyForm from '@/components/comments/CommentForm'
-import AppPageSelector from '@/components/AppPageSelector'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     ReviewCard,
     ReplyCard,
-    ReplyForm,
-    AppPageSelector
+    ReplyForm
   },
   props: {
     code: {
@@ -56,7 +47,6 @@ export default {
     ...mapGetters('reviews', {
       review: 'review',
       replies: 'replies',
-      meta: 'repliesMeta',
       loading: 'loading',
       error: 'error'
     })
@@ -69,20 +59,12 @@ export default {
         // this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
         return
       }
-      this.$store.dispatch('reviews/postReply', {form: replyForm, code: this.code, id: this.review.id})
-    },
-    refreshReplies (pageNumber) {
-      this.$store.dispatch('reviews/getReplies',
-        {
-          id: this.id,
-          code: this.code,
-          pageNumber
-        })
+      this.$store.dispatch('reviews/postReply', { form: replyForm, code: this.code, id: this.review.id })
     }
   },
   created () {
     this.$store.dispatch('reviews/getReview', { id: this.id, code: this.code })
-    this.$store.dispatch('reviews/getReplies', { id: this.id, code: this.code, pageNumber: 1 })
+    this.$store.dispatch('reviews/getReplies', { id: this.id, code: this.code })
   }
 }
 </script>

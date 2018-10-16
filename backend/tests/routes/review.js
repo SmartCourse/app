@@ -40,7 +40,7 @@ describe('Review route testing', function () {
 
         it('comment list is an array', () =>
             request.then(({ body }) =>
-                expect(body.data).is.a('array'))
+                expect(body).is.a('array'))
         )
     })
 })

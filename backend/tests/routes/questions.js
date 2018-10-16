@@ -48,8 +48,10 @@ describe('Test answer routes', () => {
         })
 
         it('returns the answer we POSTed', () =>
-            request.then(({ body }) =>
-                expect(body.data[0].body).to.be.a('string'))
+            request.then(({ body }) => {
+                // expect(body[0].body).to.equal('superruuu____testu'))
+                expect(body[0].body).is.a('string')
+            })
         )
     })
 
@@ -67,12 +69,12 @@ describe('Test answer routes', () => {
 
         it('has the right number of answers', () =>
             request.then(({ body }) =>
-                assert(body.data.length >= 1))
+                assert(body.length >= 1))
         )
 
         it('has a valid answer', () =>
             request.then(({ body }) =>
-                expect(body.data[0].body).to.be.a('string'))
+                expect(body[0].body).to.be.a('string'))
         )
     })
 
