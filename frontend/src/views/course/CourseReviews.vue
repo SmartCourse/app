@@ -49,7 +49,7 @@ export default {
     ...mapGetters('course', {
       reviews: 'reviews',
       meta: 'reviewsMeta',
-      loading: 'loading'
+      loading: 'loadingFeed'
     })
   },
   methods: {

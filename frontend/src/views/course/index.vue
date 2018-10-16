@@ -71,7 +71,7 @@ export default {
     ...mapGetters('course', {
       courseInfo: 'course',
       courseRatings: 'ratings',
-      loading: 'loading'
+      loading: 'loadingCourse'
     }),
     ratingsExist() {
       return this.courseRatings && this.courseRatings[0].value >= 0
