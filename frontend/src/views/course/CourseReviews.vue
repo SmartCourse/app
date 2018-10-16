@@ -12,7 +12,12 @@
       <Feed
         feedType="Review"
         :items="reviews"
+        v-if="!loading"
       />
+
+      <div style="text-align:center;" v-else>
+        <LoadingSpinner/>
+      </div>
 
       <AppPageSelector v-if="meta.last != 1"
         :currPage="meta.curr"
@@ -43,7 +48,8 @@ export default {
   computed: {
     ...mapGetters('course', {
       reviews: 'reviews',
-      meta: 'reviewsMeta'
+      meta: 'reviewsMeta',
+      loading: 'loading'
     })
   },
   methods: {

@@ -1,8 +1,8 @@
 <template>
   <div class="main-content">
     <AppBreadCrumb/>
-    <div class="course">
-        <div class="course-header">
+      <div class="course">
+        <div class="course-header" v-if="!loading">
             <div class="course-header-title">
                 <div class="key-data">
                     <div class="left">
@@ -23,10 +23,13 @@
             </div>
         </div>
 
-        <div class="course-info">
+        <div class="course-info" v-if="!loading">
             <CourseInfo :code="code"/>
         </div>
-    </div>
+
+        <LoadingSpinner v-else />
+
+      </div>
     <div class="course-content">
         <router-view>
             <router-link :to="{name: 'info'}">
@@ -67,7 +70,8 @@ export default {
   computed: {
     ...mapGetters('course', {
       courseInfo: 'course',
-      courseRatings: 'ratings'
+      courseRatings: 'ratings',
+      loading: 'loading'
     }),
     ratingsExist() {
       return this.courseRatings && this.courseRatings[0].value >= 0

@@ -21,6 +21,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('getCourses')
     this.$store.dispatch('auth/checkAuth')
     this.$store.dispatch('subject/getSubjects')
   }

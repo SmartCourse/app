@@ -14,7 +14,10 @@
           <a class="handbook-link" target=_blank :href="item.handbookURL">Handbook Link</a>
         </Tile>
     </TilesContainer>
-    <h2 class="sorry" v-else>Sorry, there are no subjects that match that keyword.</h2>
+    <h2 class="sorry" v-else-if="!loading">Sorry, there are no subjects that match that keyword.</h2>
+    <div style="text-align:center;" v-else>
+      <LoadingSpinner/>
+    </div>
   </div>
 </template>
 
@@ -33,9 +36,11 @@ export default {
   },
   computed: {
     ...mapGetters('subject', {
-      subjects: 'subjectList'
+      subjects: 'subjectList',
+      loading: 'loading'
     }),
     filtered() {
+      if (this.loading) return []
       const lower = this.search.toLowerCase()
       return this.subjects
         .filter(item => item.code.toLowerCase().match(lower) || item.name.toLowerCase().match(lower))

@@ -1,18 +1,24 @@
 <template>
     <section class="main-content">
       <AppBreadCrumb/>
-      <ReviewCard v-bind="review"/>
+      <div v-if="!loading">
+        <ReviewCard v-bind="review"/>
 
-      <ReplyForm @submitCommentForm="submitReply" :type="commentType" :callback="submitReply">
-        <span class="form-failure"
-            v-if="error.code">{{error.message}}</span>
-      </ReplyForm>
+        <ReplyForm @submitCommentForm="submitReply" :type="commentType" :callback="submitReply">
+          <span class="form-failure"
+              v-if="error.code">{{error.message}}</span>
+        </ReplyForm>
 
-      <transition-group name='fade' tag='ul' v-if="replies.length">
-        <li v-for="answer in replies" :key="answer.id">
-          <ReplyCard :comment="answer" :type="commentType" :id="id" :code="code" />
-        </li>
-      </transition-group>
+        <transition-group name='fade' tag='ul' v-if="replies.length">
+          <li v-for="answer in replies" :key="answer.id">
+            <ReplyCard :comment="answer" :type="commentType" :id="id" :code="code" />
+          </li>
+        </transition-group>
+      </div>
+
+      <div style="text-align:center" v-else>
+        <LoadingSpinner/>
+      </div>
     </section>
 </template>
 
