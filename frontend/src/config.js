@@ -5,6 +5,9 @@ import LoadingSpinner from '@/components/LoadingSpinner'
 import AppLogo from '@/components/AppLogo'
 import AppBreadCrumb from '@/components/AppBreadCrumb'
 
+// import VTooltip from 'v-tooltip'
+// Vue.use(VTooltip)
+
 Vue.config.productionTip = false
 
 // TODO remove me

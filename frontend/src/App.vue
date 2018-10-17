@@ -151,11 +151,14 @@ textarea:focus, textarea:active {
 }
 
 .fade-slide-enter-active {
-  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 .fade-slide-enter {
   opacity: 0;
-  transform:translateY(10px);
+}
+
+.tooltip {
+  display: block !important;
 }
 
 </style>
