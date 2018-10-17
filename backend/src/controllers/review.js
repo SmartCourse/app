@@ -26,21 +26,24 @@ exports.getReview = function ({ params }, res) {
 
 /* GET top level review replies . */
 exports.getReviewComments = function ({ params, query }, res) {
-    const getReplies = Promise.all([
+    const getReplies = new Promise((resolve, reject) =>
         commentModel.getComments({ reviewID: params.id }, query.p)
-    ]).then((replies) => {
-        return Promise.all([
-            Promise.all(replies.map(reply => likesModel.getLikes({ type: 'reply', id: reply.id }))),
-            Promise.all(replies.map(reply => userModel.getPublicProfile(reply.userID)))
-        ]).then(([likes, users]) => {
-            for (var i = 0; i < replies.length; i++) {
+          .then((replies) => {
+            return Promise.all([
+              Promise.all(replies.map(reply => likesModel.getLikes({ type: 'reply', id: reply.id }))),
+              Promise.all(replies.map(reply => userModel.getPublicProfile(reply.userID)))
+            ])
+            .then(([likes, users]) => {
+              for (var i = 0; i < replies.length; i++) {
                 delete replies[i].userID
                 replies[i].likes = likes[i].likes
                 replies[i].user = users[i]
-            }
-            return replies
-        })
-    })
+              }
+              resolve(replies)
+            })
+          })
+          .catch(err => reject(err))
+        )
 
     responseHandler(getReplies, res)
         .catch(errorHandler(res))

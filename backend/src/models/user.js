@@ -11,7 +11,7 @@ class User {
      */
     getProfile(id) {
         return this.db
-            .query('SELECT id, email, displayName, degree, gradYear, description, picture, joined FROM user WHERE id=?', [id])
+            .query('SELECT id, email, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
     }
 
     /**
@@ -22,7 +22,7 @@ class User {
      */
     getPublicProfile(id) {
         return this.db
-            .query('SELECT id, displayName, degree, gradYear, description, picture, joined FROM user WHERE id=?', [id])
+            .query('SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
     }
 
     /**
