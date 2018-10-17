@@ -2,9 +2,12 @@
     <CardForm :title="`Submit ${type}`">
       <textarea placeholder="Your input here.." v-model="body"></textarea><br>
       <!-- should probs be a separate component -->
-      <AppButton :disabled="!(authenticated)" :disabledMsg="disabledMsg" @click.native="callback({body}); body=''">
+      <AppButtonToolTip 
+        @click.native="callback({body}); body='';" 
+        :disabled="!authenticated" 
+        :disabledMessage="disabledMessage">
         {{ type }}
-      </AppButton>
+      </AppButtonToolTip>
       <!-- errors will be injected here -->
       <slot></slot>
   </CardForm>
@@ -12,30 +15,26 @@
 
 <script>
 import CardForm from '@/components/Card/Form'
-import AppButton from '@/components/AppButton'
+import AppButtonToolTip from '@/components/AppButton/WithToolTip'
 
 export default {
   name: 'CommentForm',
   components: {
     CardForm,
-    AppButton
+    AppButtonToolTip
   },
   props: {
     type: String,
     callback: Function,
     authenticated: Boolean
   },
-  computed: {
-    disabledMsg: function() {
-      return {
-        content: 'You Must Be Logged In To ' + this.type,
-        placement: 'right'
-      }
-    }
-  },
   data () {
     return {
-      body: ''
+      body: '',
+      disabledMessage: {
+        content: 'You must be to logged in for this functionality.',
+        placement: 'right'
+      }
     }
   }
 }

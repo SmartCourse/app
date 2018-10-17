@@ -9,17 +9,11 @@
         <slot/>
       </Options>
 
-      <transition name="fade-slide">
-        <Feed
-          feedType="Review"
-          :items="reviews"
-          v-if="!loading"
-        />
-      </transition>
-
-      <div style="text-align:center;" v-if="loading">
-        <LoadingSpinner/>
-      </div>
+      <Feed
+        feedType="Review"
+        :items="reviews"
+        v-if="!loading"
+      />
 
       <AppPageSelector v-if="meta.last != 1"
         :currPage="meta.curr"

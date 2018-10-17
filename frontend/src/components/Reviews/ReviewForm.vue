@@ -1,8 +1,7 @@
 <template>
     <CardForm title="Submit Your Review">
       <p>
-        Reviews are the lifeblood of SmartCourse. Your feedback helps
-        to inform others -- other students, teachers and the university.
+        Your feedback helps to inform others -- other students, teachers and the university.
         Please think carefully about your feedback before you submit it.
       </p>
       <span class="required">*</span>
@@ -30,7 +29,13 @@
         How would you rate the workload of this course?
       </InputOptions>
 
-      <AppButton :disabled="!(recommend && enjoy && body && title)" class='submit' @click.native="callback({title, body, recommend, enjoy, difficulty, teaching, workload})">Submit</AppButton>
+      <AppButton
+        :disabled="!(recommend && enjoy && body && title)"
+        class='submit'
+        @click.native="callback({title, body, recommend, enjoy, difficulty, teaching, workload})"
+      >
+        Submit
+      </AppButton>
       <!-- errors will be injected here -->
       <slot></slot>
   </CardForm>

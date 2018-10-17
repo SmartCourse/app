@@ -2,9 +2,7 @@
   <div class="main-content">
     <AppBreadCrumb/>
       <div class="course">
-
-        <transition name="fade-slide">
-          <div class="course-header" v-if="!loading">
+          <div class="course-header">
               <div class="course-header-title">
                   <div class="key-data">
                       <div class="left">
@@ -24,16 +22,9 @@
                   </div>
               </div>
           </div>
-        </transition>
-
-        <transition name="fade-slide">
-          <div class="course-info" v-if="!loading">
+          <div class="course-info">
               <CourseInfo :code="code"/>
           </div>
-        </transition>
-
-        <LoadingSpinner v-if="loading" />
-
       </div>
     <div class="course-content">
         <router-view>
@@ -151,15 +142,7 @@ h2, h3 {
 }
 
 @media screen and (max-width: 600px) {
-    .course-info {
-        display: none;
-    }
-
-    .right {
-        display: none;
-    }
-
-    .ratings-big {
+    .course-info, .right, .ratings-big {
         display: none;
     }
 
