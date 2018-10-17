@@ -1,5 +1,8 @@
 const courseData = require('./courses')
 const subjectData = require('./subjects')
+const { DONT_RECOMMEND, RECOMMEND, MIN_ENJOY, MAX_ENJOY, MIN_OPTION, MAX_OPTION } = require('../constants')
+
+const NUM_DUMMY_USERS = 50
 
 // TODO - STUB USER TABLE (REFACTOR FOR AUTH)
 function createUserTable (db) {
@@ -226,7 +229,7 @@ function initQuestionsTable(db) {
             // Determine the question type
             const index = Math.floor(Math.random() * numQuestionsTypes)
             // Create the question
-            const question = { code: code, userID: i, ...questionTypes[index] }
+            const question = { code: code, userID: Math.round(Math.random()*NUM_DUMMY_USERS), ...questionTypes[index] }
             // Add the question to the list
             questions.push(question)
         }
@@ -294,9 +297,9 @@ function initReviewTable(db) {
             // Create the question
             const review = {
                 code: code,
-                userID: i,
-                recommend: 0,
-                enjoy: 0,
+                userID: Math.round(Math.random()*NUM_DUMMY_USERS),
+                recommend: Math.round(Math.random()),
+                enjoy: Math.round(Math.random()*(MAX_ENJOY-MIN_ENJOY)+MIN_ENJOY),
                 ...reviewTypes[index] }
             // Add the question to the list
             reviews.push(review)
@@ -352,7 +355,7 @@ function initComments(db, parent) {
         const comment = {
             ...parent,
             commentParent: 1,
-            userID: 1,
+            userID: Math.round(Math.random()*NUM_DUMMY_USERS),
             ...commentTypes[index]
         }
         comments.push(comment)
@@ -370,19 +373,58 @@ function initComments(db, parent) {
 }
 
 function initUserTable(db) {
-    const maxUsers = 50
+    const userNames = [
+      "Frud",
+      "Angoleena",
+      "Alhecks",
+      "Brob",
+      "Sarha",
+      "Hurry",
+      "Janes",
+      "Thim",
+      "Bretty",
+      "Bruna",
+      "Nack",
+      "Alfronds",
+      "Latchlan",
+      "Juke",
+      "Erdward"
+    ]
+    const degrees = [
+      "B. Sci",
+      "Bachelor of Medicine",
+      "Bachelor of Arts",
+      "Computer Science",
+      "Masters of IT",
+      "MBA",
+      "Law Undergrad",
+      "Engineering",
+      "Elec Eng",
+      "Environmental Science",
+      "B. Eng",
+      "Bachelor of Mechanical Engineering",
+      "Bachelor of Chemical Engineering",
+      "PHD Physics",
+      "Bachelor of Science",
+      "Bachelor of Philosophy",
+      "Aerospace Engineering",
+      ""
+    ]
+
     let users = []
 
-    for (let i = 0; i < maxUsers; i++) {
+    for (let i = 0; i < NUM_DUMMY_USERS; i++) {
         const uid = 'userID' + i
-        const displayName = 'user' + i
+        const displayName = userNames[Math.floor(Math.random() * userNames.length)] + i
         const email = displayName + '@test.com.au'
+        const degree = degrees[Math.floor(Math.random() * degrees.length)]
 
         users.push({
             id: i,
             uid: uid,
             displayName: displayName,
-            email: email
+            email: email,
+            degree: degree
         })
     }
 
@@ -421,7 +463,7 @@ function createDB(db) {
         .then(() => {
             console.log('Initialised tables')
         })
-        .catch(() => console.warn())
+        .catch((error) => console.warn(error))
 }
 
 // Insert given JSON object into database table.
