@@ -10,7 +10,11 @@ describe('CommentCard.vue', () => {
       likes: 10,
       published: new Date().toDateString(),
       body:
-        'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto'
+        'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
+      user: {
+        displayName: 'Henry',
+        id: 0
+      }
     }
     this.wrapper = mount(CommentCard, {
       propsData: { comment: this.card },
