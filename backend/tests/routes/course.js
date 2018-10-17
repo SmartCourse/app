@@ -1,6 +1,28 @@
+const fetch = require('node-fetch')
 const app = require('../../src')
 const supertest = require('supertest')(app)
 const { expect } = require('chai')
+
+before(() => {
+    return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
+        {
+            'credentials': 'omit',
+            'headers': {},
+            'referrer': 'http://localhost:8080/login',
+            'referrerPolicy': 'no-referrer-when-downgrade',
+            'body': '{"email":"backendtest@test.com","password":"backendtest","returnSecureToken":true}',
+            'method': 'POST',
+            'mode': 'cors'
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            global.idToken = data.idToken
+            return supertest.post('/api/user')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .send({ displayName: 'BackendTester' })
+        })
+})
 
 describe('Course route testing', () => {
     describe('GET /api/course', () => {
@@ -63,6 +85,7 @@ describe('Course route testing', () => {
             request = supertest
                 .post('/api/course/ACCT1501/question')
                 .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
                 .send({ body: 'testu', title: 'jeff' })
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -126,6 +149,7 @@ describe('Course route testing', () => {
             request = supertest
                 .post('/api/course/COMP4920/review')
                 .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
                 .send(form)
                 .expect('Content-Type', /json/)
                 .expect(200)

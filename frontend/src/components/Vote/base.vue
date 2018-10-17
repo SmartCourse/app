@@ -47,4 +47,13 @@ export default {
   color: var(--black);
 }
 
+.tooltip-wrapper .vote:hover,
+.tooltip-wrapper .vote:focus {
+  color: var(--soft-black);
+  cursor: help;
+}
+
+.disabled {
+    opacity: 0.4;
+}
 </style>

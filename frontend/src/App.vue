@@ -21,6 +21,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('getCourses')
     this.$store.dispatch('auth/checkAuth')
     this.$store.dispatch('subject/getSubjects')
   }
@@ -147,6 +148,17 @@ textarea {
 
 textarea:focus, textarea:active {
   border: 1px solid #acc;
+}
+
+.fade-slide-enter-active {
+  transition: opacity 0.5s ease-in-out;
+}
+.fade-slide-enter {
+  opacity: 0;
+}
+
+.tooltip {
+  display: block !important;
 }
 
 </style>

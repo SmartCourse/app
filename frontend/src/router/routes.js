@@ -129,10 +129,7 @@ export default new Router({
     {
       path: '/profile',
       name: 'Profile',
-      component: () => import('../views/Profile'),
-      meta: {
-        requiresAuth: true
-      }
+      component: () => import('../views/Profile')
     },
     {
       path: '/password-reset',

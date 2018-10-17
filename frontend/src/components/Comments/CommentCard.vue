@@ -2,7 +2,7 @@
     <PostCard
       :published="comment.published"
       :body="comment.body"
-      :vote="{ upvote, downvote, likes: comment.likes }"
+      :vote="{ upvote, downvote, likes: comment.likes, disabled: !authenticated }"
       :user="{ userID: comment.author }"
     >
     </PostCard>
@@ -17,7 +17,8 @@ export default {
     type: String,
     id: String,
     code: String,
-    comment: Object
+    comment: Object,
+    authenticated: Boolean
   },
   methods: {
     upvote() {

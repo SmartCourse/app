@@ -12,6 +12,7 @@
       <Feed
         feedType="Question"
         :items="questions"
+        v-if="!loading"
       />
 
       <AppPageSelector v-if="meta.last != 1"
@@ -43,7 +44,8 @@ export default {
   computed: {
     ...mapGetters('course', {
       questions: 'questions',
-      meta: 'questionsMeta'
+      meta: 'questionsMeta',
+      loading: 'loadingFeed'
     })
   },
   methods: {

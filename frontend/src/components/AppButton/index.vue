@@ -1,5 +1,5 @@
 <template>
-    <button type='button' :class="alt ? 'standard-button' : 'alt-button'">
+    <button type='button' :class="alt ? 'standard-button' : 'alt-button'" >
         <slot></slot>
     </button>
 </template>
@@ -28,7 +28,7 @@ button {
 }
 
 button:disabled {
-    cursor: not-allowed;
+    cursor: help;
     opacity: 0.4;
     box-shadow: none;
 }
