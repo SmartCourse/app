@@ -1,5 +1,5 @@
 import { get, post, put } from './index'
-import format from 'date-fns/format'
+import formatDistanceStrict from 'date-fns/formatDistanceStrict'
 
 /* get question */
 export function getQuestion(course, id) {
@@ -13,7 +13,7 @@ export function answerMapper({ id, questionID, likes, user, body, timestamp }) {
     body,
     likes,
     user,
-    published: format(timestamp, 'DD/MM/YY')
+    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true })
   }
 }
 
@@ -25,7 +25,7 @@ export function questionMapper({ id, code, likes, user, title, body, timestamp }
     body,
     likes,
     user,
-    published: format(timestamp, 'DD/MM/YY')
+    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true })
   }
 }
 

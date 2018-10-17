@@ -3,7 +3,7 @@
         <Mini :name="displayName" :id="id" :picture="picture" />
         <div class="user-info">
             <Name :name="displayName" :degree="degree" :reputation="reputation" />
-            <p><time>{{ published }} ago</time></p>
+            <p><time>{{ published }}</time></p>
         </div>
     </div>
 </template>
