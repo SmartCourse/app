@@ -3,7 +3,7 @@
       <AppBreadCrumb/>
 
       <transition name="fade-slide">
-        <ReviewCard v-bind="review" v-if="!loadingReview"/>
+        <ReviewCard v-bind="review" :authenticated="authenticated" v-if="!loadingReview"/>
       </transition>
       <div style="text-align:center" v-if="loadingReview">
         <LoadingSpinner/>
@@ -13,14 +13,14 @@
         @submitCommentForm="submitReply"
         :type="commentType"
         :callback="submitReply"
+        :authenticated="authenticated"
       >
-        <span class="form-failure"
-            v-if="error.code">{{error.message}}</span>
+        <span class="form-failure" v-if="error.code">{{error.message}}</span>
       </ReplyForm>
 
       <transition-group name='fade-slide' tag='ul' v-if="replies.length">
         <li v-for="answer in replies" :key="answer.id">
-          <ReplyCard :comment="answer" :type="commentType" :id="id" :code="code" />
+          <ReplyCard :comment="answer" :type="commentType" :id="id" :code="code" :authenticated="authenticated"/>
         </li>
       </transition-group>
       <div style="text-align:center" v-else-if="loadingReplies">
@@ -63,10 +63,17 @@ export default {
       loadingReview: 'loadingReview',
       loadingReplies: 'loadingReplies',
       error: 'error'
-    })
+    }),
+    authenticated: function() {
+      return this.$store.getters['auth/isLoggedIn']
+    }
   },
   methods: {
     submitReply (replyForm) {
+      if (!this.authenticated) {
+        this.$router.push('/login')
+        return
+      }
       // check that they actually typed something
       if (replyForm.body === '') {
         // this.answerFormResponse.text = "Please type an answer!"
