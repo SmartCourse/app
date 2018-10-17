@@ -5,8 +5,8 @@
       :aria-disabled="disabled"
       :disabled="disabled"
       :upvote="upvote"
+      :title="disabledMsg.content"
       :class="disabled ? 'tooltip-wrapper disabled': ''"
-      v-tooltip="disabledMsg"
     />
 </template>
 
@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       disabledMsg: {
-        content: 'You must login to rate a response',
+        content: 'You must login to vote',
         placement: 'left'
       }
     }

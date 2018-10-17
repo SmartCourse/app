@@ -50,12 +50,10 @@ export default {
 .tooltip-wrapper .vote:hover,
 .tooltip-wrapper .vote:focus {
   color: var(--soft-black);
-  cursor: not-allowed;
+  cursor: help;
 }
 
 .disabled {
-    cursor: not-allowed;
     opacity: 0.4;
-    box-shadow: none;
 }
 </style>

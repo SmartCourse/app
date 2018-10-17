@@ -1,5 +1,5 @@
 import { get, post, put } from './index'
-import formatDistanceStrict from 'date-fns'
+import formatDistanceStrict from 'date-fns/formatDistanceStrict'
 
 /* get question */
 export function getQuestion(course, id) {

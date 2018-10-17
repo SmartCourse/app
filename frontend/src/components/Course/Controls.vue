@@ -4,10 +4,10 @@
             <slot/>
         </div>
         <router-link :to="{ name: routeName, params: {code} }">
-            <AppButton v-if="authenticated">
-              {{buttonText}}
-            </AppButton>
-            <AppButtonWithToolTip v-else :disabledMsg="disabledMsg">
+            <AppButtonWithToolTip 
+              :disabled="!authenticated" 
+              :disabledMessage="disabledMessage"
+            >
               {{buttonText}}
             </AppButtonWithToolTip>
         </router-link>
@@ -32,8 +32,8 @@ export default {
   },
   data() {
     return {
-      disabledMsg: {
-        content: 'You Must Be Logged In To ' + this.buttonText,
+      disabledMessage: {
+        content: 'You must be logged in to post.',
         placement: 'left'
       }
     }

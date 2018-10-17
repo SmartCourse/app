@@ -1,9 +1,12 @@
 <template>
-    <div class="tooltip-wrapper" v-tooltip="disabledMessage">
-        <AppButton :alt="alt" disabled>
-            <slot></slot>
-        </AppButton>
-    </div>
+    <AppButton 
+        :alt="alt"
+        :disabled="disabled" 
+        :title="disabledMessage.content"
+        :aria-disabled="disabled"
+    >
+        <slot></slot>
+    </AppButton>
 </template>
 
 <script>
@@ -15,17 +18,9 @@ export default {
   },
   props: {
     alt: { type: Boolean, default: true },
-    disabledMessage: Object
+    disabledMessage: Object,
+    disabled: Boolean
   }
 }
 </script>
 
-<style scoped>
-.tooltip-wrapper {
-  display: inline-block;
-}
-
-.tooltip {
-  display: block !important;
-}
-</style>

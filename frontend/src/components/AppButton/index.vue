@@ -28,7 +28,7 @@ button {
 }
 
 button:disabled {
-    cursor: not-allowed;
+    cursor: help;
     opacity: 0.4;
     box-shadow: none;
 }
