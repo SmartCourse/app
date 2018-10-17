@@ -219,7 +219,7 @@ function initQuestionsTable(db) {
 
     // For each of the courses
     for (const i in courseData) {
-        // Get it's course code
+        // Get its course code
         const code = courseData[i].code
         // Determine how many questions to add
         const numQuestions = Math.floor(Math.random() * maxRange + minRange)
@@ -342,13 +342,14 @@ function initComments(db, parent) {
         }
     ]
 
-    const minRange = 10 // Between [minRange, minRange+maxRange]
-    const maxRange = 5
+    const minRange = 0 // Between [minRange, minRange+maxRange]
+    const maxRange = 15
     const numCommentTypes = commentTypes.length
 
     let comments = []
 
     const numComments = Math.floor(Math.random() * maxRange + minRange)
+    if (numComments === 0) return;
 
     for (let i = 0; i < numComments; i++) {
         const index = Math.floor(Math.random() * numCommentTypes)
