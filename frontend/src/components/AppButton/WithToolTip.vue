@@ -1,5 +1,5 @@
 <template>
-    <div class="tooltip-wrapper disabled" v-tooltip="disabledMsg">
+    <div class="tooltip-wrapper" v-tooltip="disabledMessage">
         <AppButton :alt="alt" disabled>
             <slot></slot>
         </AppButton>
@@ -10,13 +10,13 @@
 import AppButton from '.'
 
 export default {
-    components: {
-        AppButton
-    },
-    props: {
-        alt: Boolean,
-        disabledMessage: Object
-    }
+  components: {
+    AppButton
+  },
+  props: {
+    alt: { type: Boolean, default: true },
+    disabledMessage: Object
+  }
 }
 </script>
 
@@ -29,5 +29,3 @@ export default {
   display: block !important;
 }
 </style>
-
-
