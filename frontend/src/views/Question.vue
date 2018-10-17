@@ -1,18 +1,31 @@
 <template>
     <section class="main-content">
       <AppBreadCrumb/>
-      <QuestionCard v-bind="question" :authenticated="authenticated"/>
 
-      <AnswerForm @submitCommentForm="submitAnswer" :type="commentType" :callback="submitAnswer" :authenticated="authenticated">
-        <span class="form-failure"
-            v-if="error.code">{{error.message}}</span>
+      <transition name="fade-slide">
+        <QuestionCard v-bind="question" :authenticated="authenticated" v-if="!loadingQuestion" />
+      </transition>
+      <div style="text-align:center" v-if="loadingQuestion">
+        <LoadingSpinner/>
+      </div>
+
+      <AnswerForm
+        @submitCommentForm="submitAnswer"
+        :type="commentType"
+        :callback="submitAnswer"
+        :authenticated="authenticated"
+      >
+        <span class="form-failure" v-if="error.code">{{error.message}}</span>
       </AnswerForm>
 
-      <transition-group name='fade' tag='ul' v-if="answers.length">
+      <transition-group name='fade-slide' tag='ul' v-if="answers.length">
         <li v-for="answer in answers" :key="answer.id">
           <AnswerCard :comment="answer" :type="commentType" :id="id" :code="code" :authenticated="authenticated"/>
         </li>
       </transition-group>
+      <div style="text-align:center" v-if="loadingAnswers">
+        <LoadingSpinner/>
+      </div>
     </section>
 </template>
 
@@ -47,21 +60,20 @@ export default {
     ...mapGetters('questions', {
       question: 'question',
       answers: 'answers',
-      loading: 'loading',
+      loadingAnswers: 'loadingAnswers',
+      loadingQuestion: 'loadingQuestion',
       error: 'error'
     }),
-    authenticated: function() {
+    authenticated() {
       return this.$store.getters['auth/isLoggedIn']
     }
   },
   methods: {
     submitAnswer (answerForm) {
-      const authState = this.$store.getters['auth/isLoggedIn']
-      if (!authState) {
+      if (!this.authenticated) {
         this.$router.push('/login')
         return
       }
-
       // check that they actually typed something
       if (answerForm.body === '') {
         // this.answerFormResponse.text = "Please type an answer!"
@@ -77,12 +89,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 1s;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-</style>

@@ -3,8 +3,10 @@
 
         <div class="profile">
         <Card>
-            <div v-if="!loading">
 
+            <transition name="fade-slide">
+
+              <div v-if="!loading">
                 <figure>
                   <img class="avatar" :src="picture || '/defaultpicture.png'"/>
                 </figure>
@@ -15,13 +17,17 @@
                   Degree: <AppInput spellcheck="false" type="text" v-model="degree"/>
                   Graduation Year: <AppInput spellcheck="false" type="text" v-model="gradYear"/>
                   Description: <textarea v-model="description"></textarea>
-                  <AppButton class="button-spacing" @click.native="updateProfile()">
+                  <AppButton class="button-spacing" @click.native="updateProfile()" v-if="!loading">
                       Update Profile
                   </AppButton>
                 </form>
+              </div>
+            </transition>
 
+            <div style="height:100vh;margin-top:20vh;" v-if="loading">
+              <LoadingSpinner/>
             </div>
-            <LoadingSpinner v-else/>
+
         </Card>
         </div>
 

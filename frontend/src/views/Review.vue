@@ -1,18 +1,31 @@
 <template>
     <section class="main-content">
       <AppBreadCrumb/>
-      <ReviewCard v-bind="review" :authenticated="authenticated"/>
 
-      <ReplyForm @submitCommentForm="submitReply" :type="commentType" :callback="submitReply" :authenticated="authenticated">
-        <span class="form-failure"
-            v-if="error.code">{{error.message}}</span>
+      <transition name="fade-slide">
+        <ReviewCard v-bind="review" :authenticated="authenticated" v-if="!loadingReview"/>
+      </transition>
+      <div style="text-align:center" v-if="loadingReview">
+        <LoadingSpinner/>
+      </div>
+
+      <ReplyForm
+        @submitCommentForm="submitReply"
+        :type="commentType"
+        :callback="submitReply"
+        :authenticated="authenticated"
+      >
+        <span class="form-failure" v-if="error.code">{{error.message}}</span>
       </ReplyForm>
 
-      <transition-group name='fade' tag='ul' v-if="replies.length">
+      <transition-group name='fade-slide' tag='ul' v-if="replies.length">
         <li v-for="answer in replies" :key="answer.id">
           <ReplyCard :comment="answer" :type="commentType" :id="id" :code="code" :authenticated="authenticated"/>
         </li>
       </transition-group>
+      <div style="text-align:center" v-else-if="loadingReplies">
+        <LoadingSpinner/>
+      </div>
     </section>
 </template>
 
@@ -47,7 +60,8 @@ export default {
     ...mapGetters('reviews', {
       review: 'review',
       replies: 'replies',
-      loading: 'loading',
+      loadingReview: 'loadingReview',
+      loadingReplies: 'loadingReplies',
       error: 'error'
     }),
     authenticated: function() {
@@ -56,6 +70,10 @@ export default {
   },
   methods: {
     submitReply (replyForm) {
+      if (!this.authenticated) {
+        this.$router.push('/login')
+        return
+      }
       // check that they actually typed something
       if (replyForm.body === '') {
         // this.answerFormResponse.text = "Please type an answer!"
@@ -71,12 +89,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 1s;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-</style>

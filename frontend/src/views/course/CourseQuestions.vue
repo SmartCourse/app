@@ -9,10 +9,17 @@
         <slot/>
       </Options>
 
-      <Feed
-        feedType="Question"
-        :items="questions"
-      />
+      <transition name="fade-slide">
+        <Feed
+          feedType="Question"
+          :items="questions"
+          v-if="!loading"
+        />
+      </transition>
+
+      <div style="text-align:center;" v-if="loading">
+        <LoadingSpinner/>
+      </div>
 
       <AppPageSelector v-if="meta.last != 1"
         :currPage="meta.curr"
@@ -43,7 +50,8 @@ export default {
   computed: {
     ...mapGetters('course', {
       questions: 'questions',
-      meta: 'questionsMeta'
+      meta: 'questionsMeta',
+      loading: 'loadingFeed'
     })
   },
   methods: {

@@ -9,10 +9,17 @@
         <slot/>
       </Options>
 
-      <Feed
-        feedType="Review"
-        :items="reviews"
-      />
+      <transition name="fade-slide">
+        <Feed
+          feedType="Review"
+          :items="reviews"
+          v-if="!loading"
+        />
+      </transition>
+
+      <div style="text-align:center;" v-if="loading">
+        <LoadingSpinner/>
+      </div>
 
       <AppPageSelector v-if="meta.last != 1"
         :currPage="meta.curr"
@@ -43,7 +50,8 @@ export default {
   computed: {
     ...mapGetters('course', {
       reviews: 'reviews',
-      meta: 'reviewsMeta'
+      meta: 'reviewsMeta',
+      loading: 'loadingFeed'
     })
   },
   methods: {

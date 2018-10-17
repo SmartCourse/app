@@ -28,7 +28,6 @@ import { mapGetters } from 'vuex'
 export default {
   components: { Search },
   computed: {
-    ...mapGetters([ 'loading' ]),
     ...mapGetters('auth', [ 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile' ])
   },
   methods: {
