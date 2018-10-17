@@ -151,7 +151,7 @@ textarea:focus, textarea:active {
 }
 
 .fade-slide-enter-active {
-  transition: all 0.5s;
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
 .fade-slide-enter {
   opacity: 0;
