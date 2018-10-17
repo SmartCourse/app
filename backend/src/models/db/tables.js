@@ -211,8 +211,8 @@ function initQuestionsTable(db) {
         }
     ]
 
-    const minRange = 10 // Between [minRange, minRange+maxRange]
-    const maxRange = 5
+    const minRange = 0 // Between [minRange, minRange+maxRange]
+    const maxRange = 20
     const numQuestionsTypes = questionTypes.length
 
     let questions = []
@@ -277,8 +277,8 @@ function initReviewTable(db) {
         }
     ]
 
-    const minRange = 10 // Between [minRange, minRange+maxRange]
-    const maxRange = 5
+    const minRange = 0 // Between [minRange, minRange+maxRange]
+    const maxRange = 20
     const numReviewTypes = reviewTypes.length
 
     let reviews = []
@@ -342,14 +342,15 @@ function initComments(db, parent) {
         }
     ]
 
-    const minRange = 0 // Between [minRange, minRange+maxRange]
+    const minRange = -3 // Between [minRange, minRange+maxRange]
     const maxRange = 15
+    const numComments = Math.floor(Math.random() * maxRange + minRange)
+    if (numComments <= 0) return;
+
     const numCommentTypes = commentTypes.length
 
     let comments = []
 
-    const numComments = Math.floor(Math.random() * maxRange + minRange)
-    if (numComments === 0) return;
 
     for (let i = 0; i < numComments; i++) {
         const index = Math.floor(Math.random() * numCommentTypes)
