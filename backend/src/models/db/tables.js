@@ -211,8 +211,8 @@ function initQuestionsTable(db) {
         }
     ]
 
-    const minRange = 0 // Between [minRange, minRange+maxRange]
-    const maxRange = 20
+    const minRange = -2 // Between [minRange, minRange+maxRange]
+    const maxRange = 15
     const numQuestionsTypes = questionTypes.length
 
     let questions = []
@@ -223,6 +223,7 @@ function initQuestionsTable(db) {
         const code = courseData[i].code
         // Determine how many questions to add
         const numQuestions = Math.floor(Math.random() * maxRange + minRange)
+        if (numQuestions <= 0) continue // not strictly necessary... but...meh
 
         // Now create each of the questions
         for (let i = 0; i < numQuestions; i++) {
@@ -244,7 +245,10 @@ function initQuestionsTable(db) {
     // Do insertions and return promise for all of them to be completed
     const promises = questions.map(q => {
         insertDB(db, 'question', q, prep)
-            .then(id => initComments(db, { questionID: id }))
+            .then(id => Promise.all([
+              initComments(db, { questionID: id }),
+              initLikes(db, { objectType: 'question', objectID: id })
+            ]))
     })
     return Promise.all(promises)
 }
@@ -277,7 +281,7 @@ function initReviewTable(db) {
         }
     ]
 
-    const minRange = 0 // Between [minRange, minRange+maxRange]
+    const minRange = -1 // Between [minRange, minRange+maxRange]
     const maxRange = 20
     const numReviewTypes = reviewTypes.length
 
@@ -289,6 +293,7 @@ function initReviewTable(db) {
         const code = courseData[i].code
         // Determine how many questions to add
         const numReviews = Math.floor(Math.random() * maxRange + minRange)
+        if (numReviews <= 0) continue // not strictly necessary... but...meh
 
         // Now create each of the questions
         for (let i = 0; i < numReviews; i++) {
@@ -297,7 +302,7 @@ function initReviewTable(db) {
             // Create the question
             const review = {
                 code: code,
-                userID: Math.round(Math.random()*NUM_DUMMY_USERS),
+                userID: Math.floor(Math.random()*NUM_DUMMY_USERS),
                 recommend: Math.round(Math.random()),
                 enjoy: Math.round(Math.random()*(MAX_ENJOY-MIN_ENJOY)+MIN_ENJOY),
                 ...reviewTypes[index] }
@@ -315,7 +320,10 @@ function initReviewTable(db) {
     // Do insertions and return promise for all of them to be completed
     const promises = reviews.map(r => {
         insertDB(db, 'review', r, prep)
-            .then(id => initComments(db, { ReviewID: id }))
+            .then(id => Promise.all([
+              initComments(db, { reviewID: id }),
+              initLikes(db, { objectType: 'review', objectID: id })
+            ]))
     })
     return Promise.all(promises)
 }
@@ -342,10 +350,11 @@ function initComments(db, parent) {
         }
     ]
 
+    // there should be a good chance of having 0 answers
     const minRange = -3 // Between [minRange, minRange+maxRange]
     const maxRange = 15
     const numComments = Math.floor(Math.random() * maxRange + minRange)
-    if (numComments <= 0) return;
+    if (numComments <= 0) return
 
     const numCommentTypes = commentTypes.length
 
@@ -357,7 +366,7 @@ function initComments(db, parent) {
         const comment = {
             ...parent,
             commentParent: 1,
-            userID: Math.round(Math.random()*NUM_DUMMY_USERS),
+            userID: Math.floor(Math.random()*NUM_DUMMY_USERS),
             ...commentTypes[index]
         }
         comments.push(comment)
@@ -368,8 +377,39 @@ function initComments(db, parent) {
     const query = `INSERT INTO comment (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
 
-    const promises = comments.map(c => {
+    const commentType = 'reviewID' in parent ? 'reply' : 'answer'
+
+    const promises = comments.map(c =>
         insertDB(db, 'comment', c, prep)
+          .then((id) => initLikes(db, { objectType: commentType, objectID: id }))
+      )
+    return Promise.all(promises)
+}
+
+function initLikes(db, parent) {
+  
+    const numLikes = Math.floor(Math.random() * 10)
+    if (numLikes <= 0) return
+    // choose numLikes consecutive users for these likes...
+    const startIndex = Math.floor(Math.random() * NUM_DUMMY_USERS);
+
+    let likes = []
+    for(let i = startIndex; i < startIndex + numLikes; ++i) {
+        likes.push({
+          userID: i % NUM_DUMMY_USERS,
+          // more likely to be positive!
+          value: Math.random() > 0.7 ? -1 : 1,
+          ...parent
+        })
+    }
+
+    const columns = Object.keys(likes[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO like (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    const promises = likes.map(c => {
+        insertDB(db, 'like', c, prep)
     })
     return Promise.all(promises)
 }
