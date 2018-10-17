@@ -50,7 +50,7 @@
                     :title="'This is a standard length title'"
                     :body="'This is a longer body, that includes a lot more words than the title, but isn\'t too long!'"
                     :published="'10 days'"
-                    :user="{ userID: 1, name: 'Alex Hinds', degree: 'B. Arts', reputiation: 10 }"
+                    :user="{ userID: 1, name: 'Alex Hinds', degree: 'B. Arts', reputation: 10 }"
                 />
                 <AppRatingCircle :value="20"/>
                 <app-rating-bar :value="20"/>

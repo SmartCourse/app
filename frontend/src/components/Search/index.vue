@@ -21,6 +21,7 @@
 
 <script>
 import SearchBar from './Input'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -33,9 +34,6 @@ export default {
   },
 
   computed: {
-    courses() {
-      return this.$store.state.courses.map(item => item)
-    },
     suggestions() {
       // Give higher preference to course code before course name
       const lower = this.search.toLowerCase()
@@ -44,15 +42,12 @@ export default {
         .concat(this.courses
           .filter(item => item.name.toLowerCase().match(lower)))
         .slice(0, 5)
-    }
+    },
+    ...mapGetters(['loading', 'courses'])
   },
 
   methods: {
     resetSearch() { this.search = '' }
-  },
-
-  created() {
-    this.$store.dispatch('populateSearch')
   }
 }
 </script>

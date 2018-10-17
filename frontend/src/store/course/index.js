@@ -7,7 +7,8 @@ import { doRequestFactory } from '@/store/utils'
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
 const state = {
-  loading: false,
+  loadingCourse: false,
+  loadingFeed: false,
   questionsMeta: {},
   questions: [],
   reviewsMeta: {},
@@ -36,7 +37,8 @@ const getters = {
   questionsMeta: ({questionsMeta}) => questionsMeta,
   reviews: ({reviews}) => reviews,
   reviewsMeta: ({reviewsMeta}) => reviewsMeta,
-  loading: ({loading}) => loading,
+  loadingCourse: ({loadingCourse}) => loadingCourse,
+  loadingFeed: ({loadingFeed}) => loadingFeed,
   error: ({error}) => error
 }
 
@@ -52,8 +54,11 @@ const mutations = {
   FOCUS_COURSE (state, course) {
     state.course = courseMapper(course)
   },
-  TOGGLE_LOADING (state, bool) {
-    state.loading = bool
+  TOGGLE_LOADING_FEED (state, bool) {
+    state.loadingFeed = bool
+  },
+  TOGGLE_LOADING_COURSE (state, bool) {
+    state.loadingCourse = bool
   },
   API_ERROR (state, { code, message }) {
     state.error.code = code
@@ -64,13 +69,14 @@ const mutations = {
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
   async getQuestions ({ dispatch }, { id, pageNumber }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, args: [id, pageNumber] })
+    return dispatch('doRequest', { action: ACTIONS.GET_QUESTIONS, load: 'TOGGLE_LOADING_FEED', args: [id, pageNumber] })
   },
   async getReviews ({ dispatch }, { id, pageNumber }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REVIEWS, args: [id, pageNumber] })
+    return dispatch('doRequest', { action: ACTIONS.GET_REVIEWS, load: 'TOGGLE_LOADING_FEED', args: [id, pageNumber] })
   },
-  async getCourse ({ dispatch }, id) {
-    return dispatch('doRequest', { action: ACTIONS.GET_COURSE, args: [id] })
+  async getCourse ({ state, commit, dispatch }, id) {
+    await dispatch('doRequest', { action: ACTIONS.GET_COURSE, load: 'TOGGLE_LOADING_COURSE', args: [id] })
+    commit('UPDATE_COURSE', state.course, { root: true })
   }
 }
 
