@@ -16,7 +16,7 @@ export default {
   props: {
     code: String,
     id: String,
-    author: Number,
+    user: Object,
     likes: Number,
     title: String,
     body: String,

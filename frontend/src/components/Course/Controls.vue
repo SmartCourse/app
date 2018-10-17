@@ -4,8 +4,8 @@
             <slot/>
         </div>
         <router-link :to="{ name: routeName, params: {code} }">
-            <AppButtonWithToolTip 
-              :disabled="!authenticated" 
+            <AppButtonWithToolTip
+              :disabled="!authenticated"
               :disabledMessage="disabledMessage"
             >
               {{buttonText}}

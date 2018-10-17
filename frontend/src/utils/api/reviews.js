@@ -6,17 +6,17 @@ export function getReview(course, id) {
   return get(`/course/${course}/review/${id}`)
 }
 
-export function replyMapper({ id, likes, userID, body, timestamp }) {
+export function replyMapper({ id, likes, user, body, timestamp }) {
   return {
     id: String(id),
     body,
     likes,
-    author: userID,
+    user,
     published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true })
   }
 }
 
-export function reviewMapper({ id, code, title, body, likes, recommend, userID, timestamp }) {
+export function reviewMapper({ id, code, title, body, likes, recommend, user, timestamp }) {
   return {
     id: String(id),
     code,
@@ -24,7 +24,7 @@ export function reviewMapper({ id, code, title, body, likes, recommend, userID, 
     body,
     likes,
     recommend,
-    author: userID,
+    user,
     published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true })
   }
 }

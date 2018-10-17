@@ -14,7 +14,7 @@
         <a class="handbook-link" target=_blank :href="item.handbookURL">Handbook Link</a>
       </Tile>
     </TilesContainer>
-    <div class="sorry" v-if="!loading">
+    <div class="sorry" v-else-if="!loading">
         Sorry, it looks like there are no courses for this subject area
     </div>
     <div style="text-align:center;" v-else>
