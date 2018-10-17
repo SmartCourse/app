@@ -1,7 +1,7 @@
 <template>
-    <AppButton 
+    <AppButton
         :alt="alt"
-        :disabled="disabled" 
+        :disabled="disabled"
         :title="disabledMessage.content"
         :aria-disabled="disabled"
     >
@@ -23,4 +23,3 @@ export default {
   }
 }
 </script>
-

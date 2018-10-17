@@ -2,9 +2,9 @@
     <CardForm :title="`Submit ${type}`">
       <textarea placeholder="Your input here.." v-model="body"></textarea><br>
       <!-- should probs be a separate component -->
-      <AppButtonToolTip 
-        @click.native="callback({body}); body='';" 
-        :disabled="!authenticated" 
+      <AppButtonToolTip
+        @click.native="callback({body}); body='';"
+        :disabled="!authenticated"
         :disabledMessage="disabledMessage">
         {{ type }}
       </AppButtonToolTip>
