@@ -1,7 +1,7 @@
 <template>
     <div class="avatar">
         <div :class="`${background} letter`">
-          {{ displayName.charAt(0).toUpperCase() }}
+          {{ name.charAt(0).toUpperCase() }}
         </div>
     </div>
 </template>
@@ -9,13 +9,13 @@
 <script>
 export default {
   props: {
-    displayName: String
+    name: String,
+    id: Number
   },
   computed: {
     background() {
       let cls = 'black'
-      const id = this.userID % 6
-      switch (id) {
+      switch (this.id % 6) {
       case 1: cls = 'green'
         break
       case 2: cls = 'purple'
