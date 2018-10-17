@@ -1,6 +1,6 @@
 <template>
     <div class="user">
-        <Mini :name="displayName" :id="id"/>
+        <Mini :name="displayName" :id="id" :picture="picture" />
         <div class="user-info">
             <Name :name="displayName" :degree="degree" :reputation="reputation" />
             <p><time>{{ published }} ago</time></p>
@@ -23,7 +23,8 @@ export default {
     /* Requred for linking */
     id: Number,
     /* provided by container */
-    degree: { default: '', type: String },
+    degree: String,
+    picture: String,
     /* This should be a pre massaged Date string that reflects time since published */
     published: String,
     /* User repuation */

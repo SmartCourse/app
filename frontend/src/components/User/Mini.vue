@@ -1,8 +1,10 @@
 <template>
     <div class="avatar">
+        <!-- TODO: use picture if present -->
         <div :class="`${background} letter`">
           {{ name.charAt(0).toUpperCase() }}
         </div>
+        <!--div :class="" :style="`background-image:url(${picture});`" v-else /-->
     </div>
 </template>
 
@@ -10,12 +12,13 @@
 export default {
   props: {
     name: String,
-    id: Number
+    id: Number,
+    picture: String
   },
   computed: {
     background() {
       let cls = 'black'
-      switch (this.id % 6) {
+      switch (this.id % 7) {
       case 1: cls = 'green'
         break
       case 2: cls = 'purple'
@@ -25,6 +28,8 @@ export default {
       case 4: cls = 'orange'
         break
       case 5: cls = 'blue'
+        break
+      case 6: cls = 'dark-blue'
         break
       }
       return cls
@@ -55,8 +60,12 @@ export default {
   background-color: #2196f3;
 }
 
+.dark-blue {
+  background-color: #0712f7;
+}
+
 .black {
-  background-color: var(--soft-black);
+  background-color: #373737;
 }
 
 .letter {

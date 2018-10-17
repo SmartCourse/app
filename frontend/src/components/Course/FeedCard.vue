@@ -1,6 +1,6 @@
 <template>
   <Card class="feed-card">
-    <UserMini :name="user.displayName" :id="user.id" />
+    <UserMini :name="user.displayName" :id="user.id" :picture="user.picture" />
     <div class="info">
       <router-link tag="div" class="header" :to="{ name: routeName, params: { code, id }}">
         <h3 class="header-title">{{ title }}</h3>
