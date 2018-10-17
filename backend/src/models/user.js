@@ -45,10 +45,10 @@ class User {
             .then(id => this.getProfile(id))
             .catch(error => {
                 // kinda hacky
-                if (error.errno === 19 && error.message.includes("displayName")) {
-                    throw(Error("That display name is taken! Sorry!"))
+                if (error.errno === 19 && error.message.includes('displayName')) {
+                    throw (Error('That display name is taken! Sorry!'))
                 }
-                throw(error)
+                throw (error)
             })
     }
 

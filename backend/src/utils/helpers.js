@@ -24,7 +24,6 @@ exports.isAuthorized = function(req, res, next) {
     next()
 }
 
-
 /**
  * Convert a string to utf8
  */

@@ -30,20 +30,21 @@ exports.getQuestionAnswers = function ({ params, query }, res) {
         // Get the answers
         commentModel.getComments({ questionID: params.id }, query.p)
             .then((answers) => {
-              return Promise.all([
-                Promise.all(answers.map(answer => likesModel.getLikes({ type: 'answer', id: answer.id }))),
-                Promise.all(answers.map(answer => userModel.getPublicProfile(answer.userID))),
-              ]).then(([likes, users]) => {
-                for (var i = 0; i < answers.length; i++) {
-                  delete answers[i].userID
-                  answers[i].likes = likes[i].likes
-                  answers[i].user = users[i]
-                }
-                resolve(answers)
-              })
+                return Promise.all([
+                    Promise.all(answers.map(answer => likesModel.getLikes({ type: 'answer', id: answer.id }))),
+                    Promise.all(answers.map(answer => userModel.getPublicProfile(answer.userID)))
+                ]).then(([likes, users]) => {
+                    for (var i = 0; i < answers.length; i++) {
+                        delete answers[i].userID
+                        answers[i].likes = likes[i].likes
+                        answers[i].user = users[i]
+                    }
+                    console.log(answers);
+                    resolve(answers)
+                })
             })
             .catch(err => reject(err))
-        )
+    )
 
     responseHandler(getAnswers, res)
         .catch(errorHandler(res))
