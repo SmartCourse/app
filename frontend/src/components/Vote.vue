@@ -1,9 +1,9 @@
 <template>
     <div class="meta-fields">
       <div v-if="disabled" class="tooltip-wrapper disabled" v-tooltip="disabledMsg">
-        <p v-on:click="upvote" class="material-icons vote disabled">keyboard_arrow_up</p>
+        <p class="material-icons vote disabled">keyboard_arrow_up</p>
         <p class="likes">{{ likes }}</p>
-        <p v-on:click="downvote" class="material-icons vote disabled">keyboard_arrow_down</p>
+        <p class="material-icons vote disabled">keyboard_arrow_down</p>
       </div>
       <div v-else>
         <p v-on:click="upvote" class="material-icons vote">keyboard_arrow_up</p>
