@@ -389,8 +389,15 @@ function initUserTable(db) {
       "Alfronds",
       "Latchlan",
       "Juke",
-      "Erdward"
+      "Erdward",
+      "Zabe",
+      "Groben",
+      "Xanarthad",
+      "Henrayetta",
+      "Poldanskri",
+      "Lloiyde"
     ]
+    const suffixes = ['XxX', '!', 's', '!!', 'x']
     const degrees = [
       "B. Sci",
       "Bachelor of Medicine",
@@ -409,6 +416,20 @@ function initUserTable(db) {
       "Bachelor of Science",
       "Bachelor of Philosophy",
       "Aerospace Engineering",
+      "Biology",
+      "Bachelor of Civil Engineering",
+      "Journeyman Underwater Basket Weaver",
+      "Masters of Electrical Engineering",
+      "Bachelor of Science - Mathematics",
+      "Bachelor of Commerce",
+      "B.A.",
+      "Bachelor of Architectural Studies",
+      "Art Theory",
+      // pad this out with blanks to simulate people not selecting a degree...
+      "",
+      "",
+      "",
+      "",
       ""
     ]
 
@@ -416,7 +437,19 @@ function initUserTable(db) {
 
     for (let i = 0; i < NUM_DUMMY_USERS; i++) {
         const uid = 'userID' + i
-        const displayName = userNames[Math.floor(Math.random() * userNames.length)] + i
+        const displayName =
+          userNames[i % userNames.length] +
+          // only append a number if we've run out of names
+          (i < userNames.length ?
+            '' :
+            // then choose between a simulated birth year and a 'cool' suffix
+            (i % 2 ?
+              (90 + Math.trunc(i/userNames.length)) :
+              // only add a number on the suffix if we're past possible combinations without numbers..
+              // multiply i by 3 to make it look like a birthdate or something
+              (suffixes[i % suffixes.length] + (i < (userNames.length + suffixes.length*2) ? '' : i*2))
+            )
+          )
         const email = displayName + '@test.com.au'
         const degree = degrees[Math.floor(Math.random() * degrees.length)]
 
