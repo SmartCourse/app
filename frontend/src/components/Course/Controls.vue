@@ -4,7 +4,9 @@
             <slot/>
         </div>
         <router-link :to="{ name: routeName, params: {code} }">
-            <AppButton> {{ buttonText }} </AppButton>
+            <AppButton :disabled="!(authenticated)" :disabledMsg="disabledMsg">
+              {{buttonText}}
+            </AppButton>
         </router-link>
     </div>
 </template>
@@ -18,7 +20,18 @@ export default {
     routeName: String,
     buttonText: String
   },
-  components: { AppButton }
+  components: { AppButton },
+  computed: {
+    authenticated: function() {
+      return this.$store.getters['auth/isLoggedIn']
+    },
+    disabledMsg: function() {
+      return {
+        content: 'You Must Be Logged In To ' + this.buttonText,
+        placement: 'left'
+      }
+    }
+  }
 }
 </script>
 

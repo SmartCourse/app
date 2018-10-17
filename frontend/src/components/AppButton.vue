@@ -1,7 +1,16 @@
 <template>
-    <button type='button' :class="alt ? 'standard-button' : 'alt-button'">
-        <slot></slot>
-    </button>
+    <div>
+      <div v-if="disabled" class="tooltip-wrapper disabled" v-tooltip="disabledMsg">
+        <button type=button :class="alt ? 'standard-button' : 'alt-button'" disabled>
+            <slot></slot>
+        </button>
+      </div>
+      <div v-else>
+        <button type=button :class="alt ? 'standard-button' : 'alt-button'" >
+            <slot></slot>
+        </button>
+      </div>
+    </div>
 </template>
 
 <script>
@@ -10,7 +19,9 @@ export default {
     alt: {
       type: Boolean,
       default: true
-    }
+    },
+    disabledMsg: Object,
+    disabled: Boolean
   }
 }
 </script>
@@ -51,5 +62,13 @@ button:disabled {
 
 .alt-button:hover {
     box-shadow: var(--box-shadow-active);
+}
+
+.tooltip-wrapper {
+  display: inline-block;
+}
+
+.tooltip {
+  display: block !important;
 }
 </style>

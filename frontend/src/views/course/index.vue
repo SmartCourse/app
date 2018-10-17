@@ -1,32 +1,40 @@
 <template>
   <div class="main-content">
     <AppBreadCrumb/>
-    <div class="course">
-        <div class="course-header">
-            <div class="course-header-title">
-                <div class="key-data">
-                    <div class="left">
-                        <h2>{{ courseInfo.code }}</h2>
-                        <h3>{{ courseInfo.name }}</h3>
-                    </div>
-                    <div class="right">
-                        <OverallRating :rating="courseRatings[0]"/>
-                    </div>
-                </div>
-                <CourseLinks :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
-                <div class="ratings-big" v-if="ratingsExist">
-                    <CourseRatings :ratings="courseRatings.slice(1)"/>
-                </div>
-                <div class="ratings-small">
-                    <CourseRatings v-if="ratingsExist" :ratings="courseRatings"/>
-                </div>
-            </div>
-        </div>
+      <div class="course">
 
-        <div class="course-info">
-            <CourseInfo :code="code"/>
-        </div>
-    </div>
+        <transition name="fade-slide">
+          <div class="course-header" v-if="!loading">
+              <div class="course-header-title">
+                  <div class="key-data">
+                      <div class="left">
+                          <h2>{{ courseInfo.code }}</h2>
+                          <h3>{{ courseInfo.name }}</h3>
+                      </div>
+                      <div class="right">
+                          <OverallRating :rating="courseRatings[0]"/>
+                      </div>
+                  </div>
+                  <CourseLinks :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
+                  <div class="ratings-big" v-if="ratingsExist">
+                      <CourseRatings :ratings="courseRatings.slice(1)"/>
+                  </div>
+                  <div class="ratings-small">
+                      <CourseRatings v-if="ratingsExist" :ratings="courseRatings"/>
+                  </div>
+              </div>
+          </div>
+        </transition>
+
+        <transition name="fade-slide">
+          <div class="course-info" v-if="!loading">
+              <CourseInfo :code="code"/>
+          </div>
+        </transition>
+
+        <LoadingSpinner v-if="loading" />
+
+      </div>
     <div class="course-content">
         <router-view>
             <router-link :to="{name: 'info'}">
@@ -67,7 +75,8 @@ export default {
   computed: {
     ...mapGetters('course', {
       courseInfo: 'course',
-      courseRatings: 'ratings'
+      courseRatings: 'ratings',
+      loading: 'loadingCourse'
     }),
     ratingsExist() {
       return this.courseRatings && this.courseRatings[0].value >= 0
@@ -75,18 +84,6 @@ export default {
   },
   created () {
     this.$store.dispatch('course/getCourse', this.code)
-  },
-  beforeRouteUpdate ({ params: { code } }, from, next) {
-    // called when the route that renders this component has changed,
-    // but this component is reused in the new route.
-    // For example, for a route with dynamic params `/foo/:code`, when we
-    // navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
-    // will be reused, and this hook will be called when that happens.
-    // has access to `this` component instance.
-    if (this.code && this.code !== code) {
-      this.$store.dispatch('course/getCourse', code)
-    }
-    next()
   }
 }
 </script>
