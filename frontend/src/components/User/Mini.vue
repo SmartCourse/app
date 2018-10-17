@@ -1,7 +1,7 @@
 <template>
     <div class="avatar">
         <div :class="`${background} letter`">
-          {{ name.charAt(0) }}
+          {{ displayName.charAt(0).toUpperCase() }}
         </div>
     </div>
 </template>
@@ -9,11 +9,7 @@
 <script>
 export default {
   props: {
-    userID: Number,
-    name: {
-      type: String,
-      default: 'Anon'
-    }
+    displayName: String
   },
   computed: {
     background() {

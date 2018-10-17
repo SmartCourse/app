@@ -1,6 +1,6 @@
 <template>
   <Card class="feed-card">
-    <UserMini :user="author"/>
+    <UserMini :displayName="user.displayName"/>
     <div class="info">
       <router-link tag="div" class="header" :to="{ name: routeName, params: { code, id }}">
         <h3 class="header-title">{{ title }}</h3>
@@ -28,7 +28,7 @@ export default {
     title: String,
     likes: Number,
     published: String,
-    author: Number,
+    user: Object,
     code: String,
     id: String,
     cardType: String,
