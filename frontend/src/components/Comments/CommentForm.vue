@@ -1,13 +1,16 @@
 <template>
     <Card>
-      <aside v-if="closeCallback" v-on:click="closeCallback"><i class="material-icons">close_circle</i></aside>
-      <textarea class="comment-form" placeholder="Your input here.." v-model="body"></textarea><br>
+      <div class="title-container">
+        <h4>{{ title }}</h4>
+        <aside v-if="closeCallback" v-on:click="closeCallback"><i class="material-icons">close_circle</i></aside>
+      </div>
+      <textarea placeholder="" v-model="body"></textarea><br>
       <!-- should probs be a separate component -->
       <AppButtonToolTip
         @click.native="callback({body}); body='';"
         :disabled="!authenticated"
         :disabledMessage="disabledMessage">
-        {{ type }}
+        Submit
       </AppButtonToolTip>
       <!-- errors will be injected here -->
       <slot></slot>
@@ -26,6 +29,7 @@ export default {
   },
   props: {
     type: String,
+    title: String,
     callback: Function,
     authenticated: Boolean,
     closeCallback: Function
@@ -43,11 +47,21 @@ export default {
 </script>
 
 <style scoped>
+h4 {
+  font-weight: normal;
+  margin:0 5px;
+}
+.title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 aside {
-  float:right;
+  /*float:right;*/
   width:24px;
   cursor: pointer;
 }
+
 aside:hover {
   color:var(--color-gray);
 }

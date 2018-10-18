@@ -9,8 +9,8 @@
         <LoadingSpinner/>
       </div>
 
-      <AnswerBar>
-        <h3 style="font: var(--header-4);" v-if="answers.length">{{ answers.length }} Answers</h3>
+      <AnswerBar v-if="answers.length">
+        <h3 style="font: var(--header-4);">{{ answers.length }} Answers</h3>
         <AppButtonToolTip
           v-if="!formToggle"
           @click.native="formToggle = !formToggle"
@@ -23,11 +23,12 @@
 
       <AnswerForm
         @submitCommentForm="submitAnswer"
+        :title="'Post Answer'"
         :type="commentType"
         :callback="(form) => { submitAnswer(form); formToggle = !formToggle }"
-        :closeCallback="() => formToggle = !formToggle"
+        :closeCallback="answers.length ? () => formToggle = !formToggle : null"
         :authenticated="authenticated"
-        v-show="formToggle"
+        v-show="formToggle || !answers.length"
       >
         <span class="form-failure" v-if="error.code">{{error.message}}</span>
       </AnswerForm>
