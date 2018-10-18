@@ -1,11 +1,11 @@
 const express = require('express')
 const subject = express.Router()
-const subjectController = require('../controllers/subject')
+const uniController = require('../controllers/uni')
 
 /* Return all courses in the database */
-subject.get('/', subjectController.getSubjects)
+subject.get('/', uniController.getSubjects)
 
 /* Get the subject data for a specific subject code */
-subject.get('/:code', subjectController.getCourses)
+subject.get('/:code', uniController.getCourses)
 
 module.exports = subject
