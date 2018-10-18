@@ -211,25 +211,26 @@ function initQuestionsTable(db) {
         }
     ]
 
-    const minRange = 10 // Between [minRange, minRange+maxRange]
-    const maxRange = 5
+    const minRange = -2 // Between [minRange, minRange+maxRange]
+    const maxRange = 15
     const numQuestionsTypes = questionTypes.length
 
     let questions = []
 
     // For each of the courses
-    for (const i in courseData) {
-        // Get it's course code
-        const code = courseData[i].code
+    for (const course of courseData) {
+        // Get its course code
+        const { code } = course
         // Determine how many questions to add
         const numQuestions = Math.floor(Math.random() * maxRange + minRange)
+        if (numQuestions <= 0) continue // not strictly necessary... but...meh
 
         // Now create each of the questions
         for (let i = 0; i < numQuestions; i++) {
             // Determine the question type
             const index = Math.floor(Math.random() * numQuestionsTypes)
             // Create the question
-            const question = { code: code, userID: Math.round(Math.random()*NUM_DUMMY_USERS), ...questionTypes[index] }
+            const question = { code, userID: Math.round(Math.random()*NUM_DUMMY_USERS), ...questionTypes[index] }
             // Add the question to the list
             questions.push(question)
         }
@@ -244,7 +245,10 @@ function initQuestionsTable(db) {
     // Do insertions and return promise for all of them to be completed
     const promises = questions.map(q => {
         insertDB(db, 'question', q, prep)
-            .then(id => initComments(db, { questionID: id }))
+            .then(id => Promise.all([
+              initComments(db, { questionID: id }),
+              initLikes(db, { objectType: 'question', objectID: id })
+            ]))
     })
     return Promise.all(promises)
 }
@@ -277,8 +281,8 @@ function initReviewTable(db) {
         }
     ]
 
-    const minRange = 10 // Between [minRange, minRange+maxRange]
-    const maxRange = 5
+    const minRange = -1 // Between [minRange, minRange+maxRange]
+    const maxRange = 20
     const numReviewTypes = reviewTypes.length
 
     let reviews = []
@@ -289,6 +293,7 @@ function initReviewTable(db) {
         const code = courseData[i].code
         // Determine how many questions to add
         const numReviews = Math.floor(Math.random() * maxRange + minRange)
+        if (numReviews <= 0) continue // not strictly necessary... but...meh
 
         // Now create each of the questions
         for (let i = 0; i < numReviews; i++) {
@@ -297,7 +302,7 @@ function initReviewTable(db) {
             // Create the question
             const review = {
                 code: code,
-                userID: Math.round(Math.random()*NUM_DUMMY_USERS),
+                userID: Math.floor(Math.random()*NUM_DUMMY_USERS),
                 recommend: Math.round(Math.random()),
                 enjoy: Math.round(Math.random()*(MAX_ENJOY-MIN_ENJOY)+MIN_ENJOY),
                 ...reviewTypes[index] }
@@ -315,7 +320,10 @@ function initReviewTable(db) {
     // Do insertions and return promise for all of them to be completed
     const promises = reviews.map(r => {
         insertDB(db, 'review', r, prep)
-            .then(id => initComments(db, { ReviewID: id }))
+            .then(id => Promise.all([
+              initComments(db, { reviewID: id }),
+              initLikes(db, { objectType: 'review', objectID: id })
+            ]))
     })
     return Promise.all(promises)
 }
@@ -342,20 +350,23 @@ function initComments(db, parent) {
         }
     ]
 
-    const minRange = 10 // Between [minRange, minRange+maxRange]
-    const maxRange = 5
+    // there should be a good chance of having 0 answers
+    const minRange = -3 // Between [minRange, minRange+maxRange]
+    const maxRange = 15
+    const numComments = Math.floor(Math.random() * maxRange + minRange)
+    if (numComments <= 0) return
+
     const numCommentTypes = commentTypes.length
 
     let comments = []
 
-    const numComments = Math.floor(Math.random() * maxRange + minRange)
 
     for (let i = 0; i < numComments; i++) {
         const index = Math.floor(Math.random() * numCommentTypes)
         const comment = {
             ...parent,
             commentParent: 1,
-            userID: Math.round(Math.random()*NUM_DUMMY_USERS),
+            userID: Math.floor(Math.random()*NUM_DUMMY_USERS),
             ...commentTypes[index]
         }
         comments.push(comment)
@@ -366,56 +377,120 @@ function initComments(db, parent) {
     const query = `INSERT INTO comment (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
 
-    const promises = comments.map(c => {
+    const commentType = 'reviewID' in parent ? 'reply' : 'answer'
+
+    const promises = comments.map(c =>
         insertDB(db, 'comment', c, prep)
+          .then((id) => initLikes(db, { objectType: commentType, objectID: id }))
+      )
+    return Promise.all(promises)
+}
+
+function initLikes(db, parent) {
+
+    const numLikes = Math.floor(Math.random() * 10)
+    if (numLikes <= 0) return
+    // choose numLikes consecutive users for these likes...
+    const startIndex = Math.floor(Math.random() * NUM_DUMMY_USERS);
+
+    let likes = []
+    for(let i = startIndex; i < startIndex + numLikes; ++i) {
+        likes.push({
+          userID: i % NUM_DUMMY_USERS,
+          // more likely to be positive!
+          value: Math.random() > 0.7 ? -1 : 1,
+          ...parent
+        })
+    }
+
+    const columns = Object.keys(likes[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO likes (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    const promises = likes.map(c => {
+        insertDB(db, 'likes', c, prep)
     })
     return Promise.all(promises)
 }
 
 function initUserTable(db) {
     const userNames = [
-      'Frud',
-      'Angoleena',
-      'Alhecks',
-      'Brob',
-      'Sarha',
-      'Hurry',
-      'Janes',
-      'Thim',
-      'Bretty',
-      'Bruna',
-      'Nack',
-      'Alfronds',
-      'Latchlan',
-      'Juke',
-      'Erdward'
+      "Frud",
+      "Angoleena",
+      "Alhecks",
+      "Brob",
+      "Sarha",
+      "Hurry",
+      "Janes",
+      "Thim",
+      "Bretty",
+      "Bruna",
+      "Nack",
+      "Alfronds",
+      "Latchlan",
+      "Juke",
+      "Erdward",
+      "Zabe",
+      "Groben",
+      "Xanarthad",
+      "Henrayetta",
+      "Poldanskri",
+      "Lloiyde"
     ]
+    const suffixes = ['XxX', '!', 's', '!!', '_', '__', 'x']
     const degrees = [
-      'B. Sci',
-      'Bachelor of Medicine',
-      'Bachelor of Arts',
-      'Computer Science',
-      'Masters of IT',
-      'MBA',
-      'Law Undergrad',
-      'Engineering',
-      'Elec Eng',
-      'Environmental Science',
-      'B. Eng',
-      'Bachelor of Mechanical Engineering',
-      'Bachelor of Chemical Engineering',
-      'PHD Physics',
-      'Bachelor of Science',
-      'Bachelor of Philosophy',
-      'Aerospace Engineering',
-      ''
+      "B. Sci",
+      "Bachelor of Medicine",
+      "Bachelor of Arts",
+      "Computer Science",
+      "Masters of IT",
+      "MBA",
+      "Law Undergrad",
+      "Engineering",
+      "Elec Eng",
+      "Environmental Science",
+      "B. Eng",
+      "Bachelor of Mechanical Engineering",
+      "Bachelor of Chemical Engineering",
+      "PHD Physics",
+      "Bachelor of Science",
+      "Bachelor of Philosophy",
+      "Aerospace Engineering",
+      "Biology",
+      "Bachelor of Civil Engineering",
+      "Journeyman Underwater Basket Weaver",
+      "Masters of Electrical Engineering",
+      "Bachelor of Science - Mathematics",
+      "Bachelor of Commerce",
+      "B.A.",
+      "Bachelor of Architectural Studies",
+      "Art Theory",
+      // pad this out with blanks to simulate people not selecting a degree...
+      "",
+      "",
+      "",
+      "",
+      ""
     ]
 
     let users = []
 
     for (let i = 0; i < NUM_DUMMY_USERS; i++) {
         const uid = 'userID' + i
-        const displayName = userNames[Math.floor(Math.random() * userNames.length)] + i
+        const displayName =
+          userNames[i % userNames.length] +
+          // only append a number if we've run out of names
+          (i < userNames.length ?
+            '' :
+            // then choose between a simulated birth year and a 'cool' suffix
+            (i % 2 ?
+              (90 + Math.trunc(i/userNames.length)) :
+              // only add a number on the suffix if we're past possible combinations without numbers..
+              // multiply i by 3 to make it look like a birthdate or something
+              (suffixes[i % suffixes.length] + (i < (userNames.length + suffixes.length*2) ? '' : i*2))
+            )
+          )
         const email = displayName + '@test.com.au'
         const degree = degrees[Math.floor(Math.random() * degrees.length)]
 

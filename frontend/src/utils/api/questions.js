@@ -17,12 +17,13 @@ export function answerMapper({ id, questionID, likes, user, body, timestamp }) {
   }
 }
 
-export function questionMapper({ id, code, likes, user, title, body, timestamp }) {
+export function questionMapper({ id, code, likes, numAnswers, user, title, body, timestamp }) {
   return {
     id: String(id),
     code,
     title,
     body,
+    numAnswers,
     likes,
     user,
     published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true })

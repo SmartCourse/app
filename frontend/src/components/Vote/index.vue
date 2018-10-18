@@ -1,10 +1,10 @@
 <template>
     <BaseVote
       :likes="likes"
-      :downvote="downvote"
+      :downvote="disabled ? () => {} : downvote"
       :aria-disabled="disabled"
       :disabled="disabled"
-      :upvote="upvote"
+      :upvote="disabled ? () => {} : upvote"
       :title="disabledMsg.content"
       :class="disabled ? 'tooltip-wrapper disabled': ''"
     />

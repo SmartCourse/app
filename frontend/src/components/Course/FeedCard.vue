@@ -12,9 +12,10 @@
         <b>{{ positiveOrNegativeText }}</b>
       </p>
       <p v-else>
-        Know the answer to this question?
+        <span v-if="numAnswers === 0">Know the answer to this question?</span>
+        <span v-else>{{ numAnswers }} Answers</span>
       </p>
-      <p class="likes">{{ likes || 0 }} users found this helpful</p>
+      <p class="likes">{{ likes > 0 && likes || 0 }} users found this helpful</p>
     </div>
   </Card>
 </template>
@@ -29,6 +30,7 @@ export default {
     likes: Number,
     published: String,
     user: Object,
+    numAnswers: {type: Number, default: 0},
     code: String,
     id: String,
     cardType: String,
