@@ -4,7 +4,7 @@ const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
 const errorHandler = require('./error')
-const { responseHandler } = require('../utils/helpers')
+const { responseHandler, userLikesMapper } = require('../utils/helpers')
 
 /* GET review for single id. */
 exports.getReview = function ({ params }, res) {
@@ -28,20 +28,14 @@ exports.getReview = function ({ params }, res) {
 exports.getReviewComments = function ({ params, query }, res) {
     const getReplies = new Promise((resolve, reject) =>
         commentModel.getComments({ reviewID: params.id }, query.p)
-            .then((replies) => {
-                return Promise.all([
-                    Promise.all(replies.map(reply => likesModel.getLikes({ type: 'reply', id: reply.id }))),
-                    Promise.all(replies.map(reply => userModel.getPublicProfile(reply.userID)))
-                ])
-                    .then(([likes, users]) => {
-                        for (var i = 0; i < replies.length; i++) {
-                            delete replies[i].userID
-                            replies[i].likes = likes[i].likes
-                            replies[i].user = users[i]
-                        }
-                        resolve(replies)
-                    })
-            })
+            .then(replies => Promise.all([
+                replies,
+                Promise.all(
+                    replies.map(reply => likesModel.getLikes({ type: 'reply', id: reply.id }))
+                )
+            ]))
+            .then(([reviews, likes]) => reviews.map(userLikesMapper(likes)))
+            .then(resolve)
             .catch(err => reject(err))
     )
 

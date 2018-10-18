@@ -4,7 +4,7 @@ const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
 const errorHandler = require('./error')
-const { responseHandler } = require('../utils/helpers')
+const { responseHandler, userLikesMapper } = require('../utils/helpers')
 
 /* GET question data. */
 exports.getQuestion = function ({ params }, res) {
@@ -29,20 +29,14 @@ exports.getQuestionAnswers = function ({ params, query }, res) {
     const getAnswers = new Promise((resolve, reject) =>
         // Get the answers
         commentModel.getComments({ questionID: params.id }, query.p)
-            .then((answers) => {
-                return Promise.all([
-                    Promise.all(answers.map(answer => likesModel.getLikes({ type: 'answer', id: answer.id }))),
-                    Promise.all(answers.map(answer => userModel.getPublicProfile(answer.userID)))
-                ]).then(([likes, users]) => {
-                    for (var i = 0; i < answers.length; i++) {
-                        delete answers[i].userID
-                        answers[i].likes = likes[i].likes
-                        answers[i].user = users[i]
-                    }
-                    console.log(answers);
-                    resolve(answers)
-                })
-            })
+            .then(answers => Promise.all([
+                answers,
+                Promise.all(
+                    answers.map(answer => likesModel.getLikes({ type: 'answer', id: answer.id }))
+                )
+            ]))
+            .then(([answers, likes]) => answers.map(userLikesMapper(likes)))
+            .then(resolve)
             .catch(err => reject(err))
     )
 

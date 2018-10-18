@@ -15,7 +15,7 @@ CREATE TABLE university (
             name TEXT NOT NULL
             )
 
-CREATE TABLE subject (
+CREATE TABLE subjects (
         code TEXT PRIMARY KEY NOT NULL,
         universityID INTEGER NOT NULL,
         name TEXT NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE review (
             FOREIGN KEY (userID) REFERENCES user(id)
             )
 
-CREATE TABLE like (
+CREATE TABLE likes (
         objectType TEXT NOT NULL,
         objectID INTEGER NOT NULL,
         userID INTEGER NOT NULL,
