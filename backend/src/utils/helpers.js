@@ -24,6 +24,31 @@ exports.isAuthorized = function(req, res, next) {
     next()
 }
 
+exports.userLikesMapper = likes => (
+    {
+        userID,
+        displayName,
+        reputation,
+        degree,
+        gradYear,
+        picture,
+        joined,
+        ...rest
+    },
+    index
+) => ({
+    likes: likes[index].likes,
+    user: {
+        id: userID,
+        displayName,
+        reputation,
+        degree,
+        gradYear,
+        picture,
+        joined
+    },
+    ...rest
+})
 
 /**
  * Convert a string to utf8

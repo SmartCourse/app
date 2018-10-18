@@ -33,9 +33,9 @@ function createUniversityTable (db) {
     })
 }
 
-function createSubjectTable(db) {
+function createSubjectsTable(db) {
     return new Promise((resolve, reject) => {
-        db.run(`CREATE TABLE subject (
+        db.run(`CREATE TABLE subjects (
             code TEXT PRIMARY KEY NOT NULL,
             universityID INTEGER NOT NULL,
             name TEXT NOT NULL,
@@ -65,7 +65,7 @@ function createCourseTable (db) {
             workload INTEGER DEFAULT '50',
             tags TEXT,
             FOREIGN KEY (universityID) REFERENCES university(id),
-            FOREIGN KEY (subjectCode) REFERENCES subject(code)
+            FOREIGN KEY (subjectCode) REFERENCES subjects(code)
             )`,
         (err) => err ? reject(err) : resolve('Created Course Table'))
     })
@@ -126,9 +126,9 @@ function createReviewTable (db) {
     })
 }
 
-function createLikeTable (db) {
+function createLikesTable (db) {
     return new Promise((resolve, reject) => {
-        db.run(`CREATE TABLE like (
+        db.run(`CREATE TABLE likes (
             objectType TEXT NOT NULL,
             objectID INTEGER NOT NULL,
             userID INTEGER NOT NULL,
@@ -139,7 +139,7 @@ function createLikeTable (db) {
             if (err) {
                 reject(err)
             } else {
-                db.run('CREATE UNIQUE INDEX id ON like (objectType, objectID, userID)',
+                db.run('CREATE UNIQUE INDEX id ON likes (objectType, objectID, userID)',
                     (err) => err ? reject(err) : resolve('Created Like Table'))
             }
         })
@@ -159,11 +159,11 @@ function initSubjectTable(db) {
     // Prepare query
     const columns = Object.keys(subjects[0])
     const placeholders = columns.map(_ => '?').join()
-    const query = `INSERT INTO subject (${columns}) VALUES (${placeholders})`
+    const query = `INSERT INTO subjects (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
 
     // Do insertions and return promise for all of them to be completed
-    const promises = subjects.map(subj => insertDB(db, 'subject', subj, prep))
+    const promises = subjects.map(subj => insertDB(db, 'subjects', subj, prep))
     return Promise.all(promises)
 }
 
@@ -218,9 +218,9 @@ function initQuestionsTable(db) {
     let questions = []
 
     // For each of the courses
-    for (const i in courseData) {
+    for (const course of courseData) {
         // Get its course code
-        const code = courseData[i].code
+        const { code } = course
         // Determine how many questions to add
         const numQuestions = Math.floor(Math.random() * maxRange + minRange)
         if (numQuestions <= 0) continue // not strictly necessary... but...meh
@@ -230,7 +230,7 @@ function initQuestionsTable(db) {
             // Determine the question type
             const index = Math.floor(Math.random() * numQuestionsTypes)
             // Create the question
-            const question = { code: code, userID: Math.round(Math.random()*NUM_DUMMY_USERS), ...questionTypes[index] }
+            const question = { code, userID: Math.round(Math.random()*NUM_DUMMY_USERS), ...questionTypes[index] }
             // Add the question to the list
             questions.push(question)
         }
@@ -387,7 +387,7 @@ function initComments(db, parent) {
 }
 
 function initLikes(db, parent) {
-  
+
     const numLikes = Math.floor(Math.random() * 10)
     if (numLikes <= 0) return
     // choose numLikes consecutive users for these likes...
@@ -438,7 +438,7 @@ function initUserTable(db) {
       "Poldanskri",
       "Lloiyde"
     ]
-    const suffixes = ['XxX', '!', 's', '!!', 'x']
+    const suffixes = ['XxX', '!', 's', '!!', '_', '__', 'x']
     const degrees = [
       "B. Sci",
       "Bachelor of Medicine",
@@ -523,12 +523,12 @@ function createDB(db) {
     Promise.all([
         createUserTable(db),
         createUniversityTable(db),
-        createSubjectTable(db),
+        createSubjectsTable(db),
         createCourseTable(db),
         createQuestionTable(db),
         createReviewTable(db),
         createCommentTable(db),
-        createLikeTable(db)
+        createLikesTable(db)
     ])
         .then(() => {
             console.log('Created tables')
