@@ -3,7 +3,7 @@ import {
   answerMapper
 } from '@/utils/api/questions'
 
-import { doRequestFactory } from '@/store/utils'
+import { doRequestFactory, sortByHotness } from '@/store/utils'
 
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
@@ -22,7 +22,18 @@ const state = {
 
 const getters = {
   question: ({ questionObj: { question } }) => question,
-  answers: ({ questionObj: { answers } }) => answers,
+  answers: ({ questionObj: { answers } }) => {
+    if (!answers.length) return []
+    // get the most upvoted answer
+    const { ans, index } = answers.reduce(
+      ({ ans, index }, curr, i) => (curr.likes >= ans.likes ? { ans:curr, index:i } : {ans, index}),
+      { ans:{ likes:-1 }, index:-1 }
+    )
+    // remove it & sort
+    const ordered = sortByHotness([...answers.slice(0, index), ...answers.slice(index+1)])
+
+    return [ans, ...ordered]
+  },
   loadingAnswers: ({ loadingAnswers }) => loadingAnswers,
   loadingQuestion: ({ loadingQuestion }) => loadingQuestion,
   error: ({ error }) => error

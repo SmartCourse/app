@@ -1,4 +1,4 @@
-<template>
+  <template>
     <section class="main-content">
       <AppBreadCrumb/>
 
