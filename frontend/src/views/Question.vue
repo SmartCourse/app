@@ -9,8 +9,8 @@
         <LoadingSpinner/>
       </div>
 
-      <AnswerBar :class="formToggle ? 'bar-active' : ''" v-if="answers.length">
-        <h3 style="font: var(--header-4);">{{ answers.length }} Answers</h3>
+      <AnswerBar>
+        <h3 style="font: var(--header-4);" v-if="answers.length">{{ answers.length }} Answers</h3>
         <AppButtonToolTip
           v-if="!formToggle"
           @click.native="formToggle = !formToggle"
@@ -117,7 +117,9 @@ export default {
 .bar-active {
   flex-direction:column;
   align-items:flex-start;
-  padding-left:10px;
+}
+.bar {
+  padding:0 10px;
   padding-bottom:10px;
 }
 </style>
