@@ -1,5 +1,7 @@
 const courseData = require('./courses')
 const subjectData = require('./subjects')
+const degreeData = require('./degrees')
+const facultyData = require('./faculties')
 const { DONT_RECOMMEND, RECOMMEND, MIN_ENJOY, MAX_ENJOY, MIN_OPTION, MAX_OPTION } = require('../constants')
 
 const NUM_DUMMY_USERS = 50
@@ -146,6 +148,29 @@ function createLikesTable (db) {
     })
 }
 
+function createDegreesTable (db) {
+    return new Promise((resolve, reject) => {
+        db.run(`CREATE TABLE degrees (
+            name TEXT PRIMARY KEY NOT NULL,
+            type TEXT NOT NULL,
+            faculty TEXT NOT NULL,
+            tags TEXT,
+            description TEXT,
+            FOREIGN KEY (faculty) REFERENCES faculties(name)
+          )`,
+        (err) => err ? reject(err) : resolve('Created Degrees Table'))
+    })
+}
+
+function createFacultiesTable (db) {
+    return new Promise((resolve, reject) => {
+        db.run(`CREATE TABLE faculties (
+            name TEXT PRIMARY KEY NOT NULL
+          )`,
+        (err) => err ? reject(err) : resolve('Created Faculties Table'))
+    })
+}
+
 function initUniTable(db) {
     const unsw = { name: 'Univerity of New South Wales' }
     return insertDB(db, 'university', unsw)
@@ -179,7 +204,31 @@ function initCourseTable(db) {
     const prep = db.prepare(query)
 
     // Do insertions and return promise for all of them to be completed
-    const promises = courses.map(subj => insertDB(db, 'course', subj, prep))
+    const promises = courses.map(course => insertDB(db, 'course', course, prep))
+    return Promise.all(promises)
+}
+
+function initDegreesTable(db) {
+    // Prepare query
+    const columns = Object.keys(degreeData[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO degrees (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    // Do insertions and return promise for all of them to be completed
+    const promises = degreeData.map(degree => insertDB(db, 'degrees', degree, prep))
+    return Promise.all(promises)
+}
+
+function initFacultiesTable(db) {
+    // Prepare query
+    const columns = ['name']
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO faculties (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    // Do insertions and return promise for all of them to be completed
+    const promises = facultyData.map(faculty => insertDB(db, 'faculties', {name:faculty}, prep))
     return Promise.all(promises)
 }
 
@@ -453,12 +502,14 @@ function createDB(db) {
         createQuestionTable(db),
         createReviewTable(db),
         createCommentTable(db),
-        createLikesTable(db)
+        createLikesTable(db),
+        createDegreesTable(db),
+        createFacultiesTable(db)
     ])
         .then(() => {
             console.log('Created tables')
             return Promise.all([initUniTable(db), initSubjectTable(db), initCourseTable(db),
-                initUserTable(db), initQuestionsTable(db), initReviewTable(db)])
+                initUserTable(db), initQuestionsTable(db), initReviewTable(db), initFacultiesTable(db), initDegreesTable(db)])
         })
         .then(() => {
             console.log('Initialised tables')

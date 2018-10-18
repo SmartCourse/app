@@ -39,10 +39,5 @@ module.exports = [
         node: {
             title: 'Science', slug: 'science'
         }
-    },
-    {
-        node: {
-            title: 'UNSW Canberra', slug: 'unsw-canberra'
-        }
     }
 ]
