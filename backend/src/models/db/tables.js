@@ -1,5 +1,8 @@
 const courseData = require('./courses')
 const subjectData = require('./subjects')
+const { DONT_RECOMMEND, RECOMMEND, MIN_ENJOY, MAX_ENJOY, MIN_OPTION, MAX_OPTION } = require('../constants')
+
+const NUM_DUMMY_USERS = 50
 
 // TODO - STUB USER TABLE (REFACTOR FOR AUTH)
 function createUserTable (db) {
@@ -30,9 +33,9 @@ function createUniversityTable (db) {
     })
 }
 
-function createSubjectTable(db) {
+function createSubjectsTable(db) {
     return new Promise((resolve, reject) => {
-        db.run(`CREATE TABLE subject (
+        db.run(`CREATE TABLE subjects (
             code TEXT PRIMARY KEY NOT NULL,
             universityID INTEGER NOT NULL,
             name TEXT NOT NULL,
@@ -62,7 +65,7 @@ function createCourseTable (db) {
             workload INTEGER DEFAULT '50',
             tags TEXT,
             FOREIGN KEY (universityID) REFERENCES university(id),
-            FOREIGN KEY (subjectCode) REFERENCES subject(code)
+            FOREIGN KEY (subjectCode) REFERENCES subjects(code)
             )`,
         (err) => err ? reject(err) : resolve('Created Course Table'))
     })
@@ -123,9 +126,9 @@ function createReviewTable (db) {
     })
 }
 
-function createLikeTable (db) {
+function createLikesTable (db) {
     return new Promise((resolve, reject) => {
-        db.run(`CREATE TABLE like (
+        db.run(`CREATE TABLE likes (
             objectType TEXT NOT NULL,
             objectID INTEGER NOT NULL,
             userID INTEGER NOT NULL,
@@ -136,7 +139,7 @@ function createLikeTable (db) {
             if (err) {
                 reject(err)
             } else {
-                db.run('CREATE UNIQUE INDEX id ON like (objectType, objectID, userID)',
+                db.run('CREATE UNIQUE INDEX id ON likes (objectType, objectID, userID)',
                     (err) => err ? reject(err) : resolve('Created Like Table'))
             }
         })
@@ -156,11 +159,11 @@ function initSubjectTable(db) {
     // Prepare query
     const columns = Object.keys(subjects[0])
     const placeholders = columns.map(_ => '?').join()
-    const query = `INSERT INTO subject (${columns}) VALUES (${placeholders})`
+    const query = `INSERT INTO subjects (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
 
     // Do insertions and return promise for all of them to be completed
-    const promises = subjects.map(subj => insertDB(db, 'subject', subj, prep))
+    const promises = subjects.map(subj => insertDB(db, 'subjects', subj, prep))
     return Promise.all(promises)
 }
 
@@ -208,25 +211,26 @@ function initQuestionsTable(db) {
         }
     ]
 
-    const minRange = 10 // Between [minRange, minRange+maxRange]
-    const maxRange = 5
+    const minRange = -2 // Between [minRange, minRange+maxRange]
+    const maxRange = 15
     const numQuestionsTypes = questionTypes.length
 
     let questions = []
 
     // For each of the courses
-    for (const i in courseData) {
-        // Get it's course code
-        const code = courseData[i].code
+    for (const course of courseData) {
+        // Get its course code
+        const { code } = course
         // Determine how many questions to add
         const numQuestions = Math.floor(Math.random() * maxRange + minRange)
+        if (numQuestions <= 0) continue // not strictly necessary... but...meh
 
         // Now create each of the questions
         for (let i = 0; i < numQuestions; i++) {
             // Determine the question type
             const index = Math.floor(Math.random() * numQuestionsTypes)
             // Create the question
-            const question = { code: code, userID: i, ...questionTypes[index] }
+            const question = { code, userID: Math.round(Math.random()*NUM_DUMMY_USERS), ...questionTypes[index] }
             // Add the question to the list
             questions.push(question)
         }
@@ -241,7 +245,10 @@ function initQuestionsTable(db) {
     // Do insertions and return promise for all of them to be completed
     const promises = questions.map(q => {
         insertDB(db, 'question', q, prep)
-            .then(id => initComments(db, { questionID: id }))
+            .then(id => Promise.all([
+              initComments(db, { questionID: id }),
+              initLikes(db, { objectType: 'question', objectID: id })
+            ]))
     })
     return Promise.all(promises)
 }
@@ -274,8 +281,8 @@ function initReviewTable(db) {
         }
     ]
 
-    const minRange = 10 // Between [minRange, minRange+maxRange]
-    const maxRange = 5
+    const minRange = -1 // Between [minRange, minRange+maxRange]
+    const maxRange = 20
     const numReviewTypes = reviewTypes.length
 
     let reviews = []
@@ -286,6 +293,7 @@ function initReviewTable(db) {
         const code = courseData[i].code
         // Determine how many questions to add
         const numReviews = Math.floor(Math.random() * maxRange + minRange)
+        if (numReviews <= 0) continue // not strictly necessary... but...meh
 
         // Now create each of the questions
         for (let i = 0; i < numReviews; i++) {
@@ -294,9 +302,9 @@ function initReviewTable(db) {
             // Create the question
             const review = {
                 code: code,
-                userID: i,
-                recommend: 0,
-                enjoy: 0,
+                userID: Math.floor(Math.random()*NUM_DUMMY_USERS),
+                recommend: Math.round(Math.random()),
+                enjoy: Math.round(Math.random()*(MAX_ENJOY-MIN_ENJOY)+MIN_ENJOY),
                 ...reviewTypes[index] }
             // Add the question to the list
             reviews.push(review)
@@ -312,7 +320,10 @@ function initReviewTable(db) {
     // Do insertions and return promise for all of them to be completed
     const promises = reviews.map(r => {
         insertDB(db, 'review', r, prep)
-            .then(id => initComments(db, { ReviewID: id }))
+            .then(id => Promise.all([
+              initComments(db, { reviewID: id }),
+              initLikes(db, { objectType: 'review', objectID: id })
+            ]))
     })
     return Promise.all(promises)
 }
@@ -339,20 +350,23 @@ function initComments(db, parent) {
         }
     ]
 
-    const minRange = 10 // Between [minRange, minRange+maxRange]
-    const maxRange = 5
+    // there should be a good chance of having 0 answers
+    const minRange = -3 // Between [minRange, minRange+maxRange]
+    const maxRange = 15
+    const numComments = Math.floor(Math.random() * maxRange + minRange)
+    if (numComments <= 0) return
+
     const numCommentTypes = commentTypes.length
 
     let comments = []
 
-    const numComments = Math.floor(Math.random() * maxRange + minRange)
 
     for (let i = 0; i < numComments; i++) {
         const index = Math.floor(Math.random() * numCommentTypes)
         const comment = {
             ...parent,
             commentParent: 1,
-            userID: 1,
+            userID: Math.floor(Math.random()*NUM_DUMMY_USERS),
             ...commentTypes[index]
         }
         comments.push(comment)
@@ -363,9 +377,140 @@ function initComments(db, parent) {
     const query = `INSERT INTO comment (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
 
-    const promises = comments.map(c => {
+    const commentType = 'reviewID' in parent ? 'reply' : 'answer'
+
+    const promises = comments.map(c =>
         insertDB(db, 'comment', c, prep)
+          .then((id) => initLikes(db, { objectType: commentType, objectID: id }))
+      )
+    return Promise.all(promises)
+}
+
+function initLikes(db, parent) {
+
+    const numLikes = Math.floor(Math.random() * 10)
+    if (numLikes <= 0) return
+    // choose numLikes consecutive users for these likes...
+    const startIndex = Math.floor(Math.random() * NUM_DUMMY_USERS);
+
+    let likes = []
+    for(let i = startIndex; i < startIndex + numLikes; ++i) {
+        likes.push({
+          userID: i % NUM_DUMMY_USERS,
+          // more likely to be positive!
+          value: Math.random() > 0.7 ? -1 : 1,
+          ...parent
+        })
+    }
+
+    const columns = Object.keys(likes[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO likes (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    const promises = likes.map(c => {
+        insertDB(db, 'likes', c, prep)
     })
+    return Promise.all(promises)
+}
+
+function initUserTable(db) {
+    const userNames = [
+      "Frud",
+      "Angoleena",
+      "Alhecks",
+      "Brob",
+      "Sarha",
+      "Hurry",
+      "Janes",
+      "Thim",
+      "Bretty",
+      "Bruna",
+      "Nack",
+      "Alfronds",
+      "Latchlan",
+      "Juke",
+      "Erdward",
+      "Zabe",
+      "Groben",
+      "Xanarthad",
+      "Henrayetta",
+      "Poldanskri",
+      "Lloiyde"
+    ]
+    const suffixes = ['XxX', '!', 's', '!!', '_', '__', 'x']
+    const degrees = [
+      "B. Sci",
+      "Bachelor of Medicine",
+      "Bachelor of Arts",
+      "Computer Science",
+      "Masters of IT",
+      "MBA",
+      "Law Undergrad",
+      "Engineering",
+      "Elec Eng",
+      "Environmental Science",
+      "B. Eng",
+      "Bachelor of Mechanical Engineering",
+      "Bachelor of Chemical Engineering",
+      "PHD Physics",
+      "Bachelor of Science",
+      "Bachelor of Philosophy",
+      "Aerospace Engineering",
+      "Biology",
+      "Bachelor of Civil Engineering",
+      "Journeyman Underwater Basket Weaver",
+      "Masters of Electrical Engineering",
+      "Bachelor of Science - Mathematics",
+      "Bachelor of Commerce",
+      "B.A.",
+      "Bachelor of Architectural Studies",
+      "Art Theory",
+      // pad this out with blanks to simulate people not selecting a degree...
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+
+    let users = []
+
+    for (let i = 0; i < NUM_DUMMY_USERS; i++) {
+        const uid = 'userID' + i
+        const displayName =
+          userNames[i % userNames.length] +
+          // only append a number if we've run out of names
+          (i < userNames.length ?
+            '' :
+            // then choose between a simulated birth year and a 'cool' suffix
+            (i % 2 ?
+              (90 + Math.trunc(i/userNames.length)) :
+              // only add a number on the suffix if we're past possible combinations without numbers..
+              // multiply i by 3 to make it look like a birthdate or something
+              (suffixes[i % suffixes.length] + (i < (userNames.length + suffixes.length*2) ? '' : i*2))
+            )
+          )
+        const email = displayName + '@test.com.au'
+        const degree = degrees[Math.floor(Math.random() * degrees.length)]
+
+        users.push({
+            id: i,
+            uid: uid,
+            displayName: displayName,
+            email: email,
+            degree: degree
+        })
+    }
+
+    // Prepare query
+    const columns = Object.keys(users[0])
+    const placeholders = columns.map(_ => '?').join()
+    const query = `INSERT INTO user (${columns}) VALUES (${placeholders})`
+    const prep = db.prepare(query)
+
+    // Do insertions and return promise for all of them to be completed
+    const promises = users.map(u => insertDB(db, 'user', u, prep))
     return Promise.all(promises)
 }
 
@@ -378,22 +523,22 @@ function createDB(db) {
     Promise.all([
         createUserTable(db),
         createUniversityTable(db),
-        createSubjectTable(db),
+        createSubjectsTable(db),
         createCourseTable(db),
         createQuestionTable(db),
         createReviewTable(db),
         createCommentTable(db),
-        createLikeTable(db)
+        createLikesTable(db)
     ])
         .then(() => {
             console.log('Created tables')
             return Promise.all([initUniTable(db), initSubjectTable(db), initCourseTable(db),
-                initQuestionsTable(db), initReviewTable(db)])
+                initUserTable(db), initQuestionsTable(db), initReviewTable(db)])
         })
         .then(() => {
             console.log('Initialised tables')
         })
-        .catch(() => console.warn())
+        .catch((error) => console.warn(error))
 }
 
 // Insert given JSON object into database table.

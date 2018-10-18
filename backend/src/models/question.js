@@ -23,7 +23,16 @@ class Question {
     getQuestions(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll('SELECT * FROM question WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
+            .queryAll(
+              `SELECT
+                question.*,
+                COUNT(questionID) AS numAnswers
+               FROM question
+               LEFT JOIN comment ON comment.questionID = question.id
+               WHERE code=?
+               GROUP BY questionID
+               ORDER BY timestamp DESC
+               LIMIT ?, ?`,
                 [code, offset, pageSize])
     }
 

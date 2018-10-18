@@ -1,16 +1,16 @@
 <template>
     <div class='options'>
         <div class="tabs">
-            <slot/>
+          <slot/>
         </div>
-        <router-link :to="{ name: routeName, params: {code} }">
-            <AppButtonWithToolTip 
-              :disabled="!authenticated" 
-              :disabledMessage="disabledMessage"
-            >
-              {{buttonText}}
-            </AppButtonWithToolTip>
-        </router-link>
+
+        <AppButtonWithToolTip
+          :disabled="!authenticated"
+          :disabledMessage="disabledMessage"
+          @click.native="$router.push({ name: routeName, params: {code} })"
+        >
+          {{buttonText}}
+        </AppButtonWithToolTip>
     </div>
 </template>
 

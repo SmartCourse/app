@@ -1,7 +1,7 @@
 <template>
     <div class="inline">
         <h3 class="name">{{ name }}</h3>
-        <p class="role">{{ degree }}</p>
+        <p class="role" v-if="degree">{{ degree }}</p>
         <Reputation>{{ reputation }}</Reputation>
     </div>
 </template>

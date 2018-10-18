@@ -11,7 +11,7 @@ class Subject {
      */
     getSubjects() {
         return this.db
-            .queryAll('SELECT * FROM subject')
+            .queryAll('SELECT * FROM subjects')
     }
 }
 

@@ -11,7 +11,11 @@ describe.skip('QuestionCard.vue', () => {
       title:
         'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
       body:
-        'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto'
+        'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
+      user: {
+        displayName: 'Henry',
+        id: 0
+      }
     }
     this.wrapper = mount(QuestionCard, {
       propsData: { ...this.card, code: 'COMP4920' },

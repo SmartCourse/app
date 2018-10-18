@@ -2,16 +2,23 @@ const { ANONYMOUS } = require('../models/constants')
 const questionModel = require('../models/question')()
 const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
+const userModel = require('../models/user')()
 const errorHandler = require('./error')
-const { responseHandler } = require('../utils/helpers')
+const { responseHandler, userLikesMapper } = require('../utils/helpers')
 
 /* GET question data. */
 exports.getQuestion = function ({ params }, res) {
     const getQuestion = Promise.all([
         questionModel.getQuestion(params.id),
         likesModel.getLikes({ type: 'question', id: params.id })
-    ])
-        .then(([question, likes]) => { return { ...question, ...likes } })
+    ]).then(([question, likes]) => {
+        return Promise.all([
+            userModel.getPublicProfile(question.userID)
+        ]).then(([userInfo]) => {
+            delete question.userID
+            return { ...question, ...likes, user: userInfo }
+        })
+    })
 
     responseHandler(getQuestion, res)
         .catch(errorHandler(res))
@@ -19,22 +26,19 @@ exports.getQuestion = function ({ params }, res) {
 
 /* GET question ansewrs. */
 exports.getQuestionAnswers = function ({ params, query }, res) {
-    const getAnswers = new Promise((resolve, reject) => {
+    const getAnswers = new Promise((resolve, reject) =>
         // Get the answers
         commentModel.getComments({ questionID: params.id }, query.p)
-            // Get the likes for each answer
-            .then((answers) => {
-                const promises = answers.map(answer => likesModel.getLikes({ type: 'answer', id: answer.id }))
-                return Promise.all(promises)
-                    .then((likes) => {
-                        for (var i = 0; i < answers.length; i++) {
-                            answers[i].likes = likes[i].likes
-                        }
-                        resolve(answers)
-                    })
-            })
+            .then(answers => Promise.all([
+                answers,
+                Promise.all(
+                    answers.map(answer => likesModel.getLikes({ type: 'answer', id: answer.id }))
+                )
+            ]))
+            .then(([answers, likes]) => answers.map(userLikesMapper(likes)))
+            .then(resolve)
             .catch(err => reject(err))
-    })
+    )
 
     responseHandler(getAnswers, res)
         .catch(errorHandler(res))

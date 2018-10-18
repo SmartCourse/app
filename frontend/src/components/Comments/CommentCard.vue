@@ -3,7 +3,7 @@
       :published="comment.published"
       :body="comment.body"
       :vote="{ upvote, downvote, likes: comment.likes, disabled: !authenticated }"
-      :user="{ userID: comment.author }"
+      :user="comment.user"
     >
     </PostCard>
 </template>

@@ -1,9 +1,9 @@
 <template>
     <div class="user">
-        <Mini :userID="userID" :name="name"/>
+        <Mini :name="displayName" :id="id" :picture="picture" />
         <div class="user-info">
-            <Name :name="name" :degree="degree" :reputation="reputation" />
-            <p><time>{{ published }} ago</time></p>
+            <Name :name="displayName" :degree="degree" :reputation="reputation" />
+            <p><time>{{ published }}</time></p>
         </div>
     </div>
 </template>
@@ -19,11 +19,12 @@ export default {
   },
   props: {
     /* name/displayName */
-    name: { default: 'Anonymous', type: String },
+    displayName: String,
     /* Requred for linking */
-    userID: Number,
+    id: Number,
     /* provided by container */
-    degree: { default: 'B. Sci', type: String },
+    degree: String,
+    picture: String,
     /* This should be a pre massaged Date string that reflects time since published */
     published: String,
     /* User repuation */

@@ -1,6 +1,6 @@
 <template>
   <Card class="feed-card">
-    <UserMini :user="author"/>
+    <UserMini :name="user.displayName" :id="user.id" :picture="user.picture" />
     <div class="info">
       <router-link tag="div" class="header" :to="{ name: routeName, params: { code, id }}">
         <h3 class="header-title">{{ title }}</h3>
@@ -12,9 +12,10 @@
         <b>{{ positiveOrNegativeText }}</b>
       </p>
       <p v-else>
-        Know the answer to this question?
+        <span v-if="numAnswers === 0">Know the answer to this question?</span>
+        <span v-else>{{ numAnswers }} Answers</span>
       </p>
-      <p class="likes">{{ likes || 0 }} users found this helpful</p>
+      <p class="likes">{{ likes > 0 && likes || 0 }} users found this helpful</p>
     </div>
   </Card>
 </template>
@@ -28,7 +29,8 @@ export default {
     title: String,
     likes: Number,
     published: String,
-    author: Number,
+    user: Object,
+    numAnswers: {type: Number, default: 0},
     code: String,
     id: String,
     cardType: String,

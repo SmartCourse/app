@@ -16,8 +16,7 @@ export default {
   props: {
     code: String,
     id: String,
-    // TODO fix author, should be a prepopulated user object
-    author: Number,
+    user: Object,
     likes: Number,
     title: String,
     body: String,
