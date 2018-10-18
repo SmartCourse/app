@@ -22,18 +22,7 @@ const state = {
 
 const getters = {
   question: ({ questionObj: { question } }) => question,
-  answers: ({ questionObj: { answers } }) => {
-    if (!answers.length) return []
-    // get the most upvoted answer
-    const { ans, index } = answers.reduce(
-      ({ ans, index }, curr, i) => (curr.likes >= ans.likes ? { ans:curr, index:i } : {ans, index}),
-      { ans:{ likes:-1 }, index:-1 }
-    )
-    // remove it & sort
-    const ordered = sortByHotness([...answers.slice(0, index), ...answers.slice(index+1)])
-
-    return [ans, ...ordered]
-  },
+  answers: ({ questionObj: { answers } }) => answers,
   loadingAnswers: ({ loadingAnswers }) => loadingAnswers,
   loadingQuestion: ({ loadingQuestion }) => loadingQuestion,
   error: ({ error }) => error
@@ -50,7 +39,21 @@ const mutations = {
     state.questionObj.question = questionMapper(question)
   },
   FOCUS_ANSWERS (state, answers) {
-    state.questionObj.answers = answers.map(answerMapper)
+    if (!answers.length) {
+      state.questionObj.answers = []
+      return
+    }
+    const mapped = answers.map(answerMapper)
+
+    // get the most upvoted answer
+    const { ans, index } = mapped.reduce(
+      ({ ans, index }, curr, i) => (curr.likes >= ans.likes ? { ans: curr, index: i } : {ans, index}),
+      { ans: { likes: -1 }, index: -1 }
+    )
+    // remove it & sort
+    const ordered = sortByHotness([...mapped.slice(0, index), ...mapped.slice(index + 1)])
+
+    state.questionObj.answers = [ans, ...ordered]
   },
   FOCUS_LIKES (state, { likes }) {
     state.questionObj.question.likes = likes
@@ -80,16 +83,16 @@ const actions = {
     return dispatch('doRequest', { action: ACTIONS.POST_ANSWER, load: 'TOGGLE_LOADING_ANSWERS', args: [code, id, form] })
   },
   async getLikes ({ dispatch }, { id, code }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_LIKES, load: 'TOGGLE_LOADING_QUESTION', args: [code, id] })
+    return dispatch('doRequest', { action: ACTIONS.GET_LIKES, load: '', args: [code, id] })
   },
   async putLikes ({ dispatch }, { id, code, data }) {
-    return dispatch('doRequest', { action: ACTIONS.PUT_LIKES, load: 'TOGGLE_LOADING_QUESTION', args: [code, id, data] })
+    return dispatch('doRequest', { action: ACTIONS.PUT_LIKES, load: '', args: [code, id, data] })
   },
   async getAnswerLikes ({ dispatch }, { id, code, commentID }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_ANSWER_LIKES, load: 'TOGGLE_LOADING_ANSWERS', args: [code, id, commentID] })
+    return dispatch('doRequest', { action: ACTIONS.GET_ANSWER_LIKES, load: '', args: [code, id, commentID] })
   },
   async putAnswerLikes ({ dispatch }, { id, code, commentID, data }) {
-    return dispatch('doRequest', { action: ACTIONS.PUT_ANSWER_LIKES, load: 'TOGGLE_LOADING_ANSWERS', args: [code, id, commentID, data] })
+    return dispatch('doRequest', { action: ACTIONS.PUT_ANSWER_LIKES, load: '', args: [code, id, commentID, data] })
   }
 }
 

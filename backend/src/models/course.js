@@ -25,7 +25,7 @@ class Course {
      */
     getCourse(code) {
         return this.updateCourseRatings(code)
-          .then(() => this.db.query('SELECT * FROM course WHERE code=?', [code]))
+            .then(() => this.db.query('SELECT * FROM course WHERE code=?', [code]))
     }
 
     updateCourseRatings(code) {

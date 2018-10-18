@@ -2,14 +2,14 @@
 // factories
 export function doRequestFactory(REQUEST, COMMITS) {
   return async function ({ commit }, { action, args, load = 'TOGGLE_LOADING' }) {
-    commit(load, true)
+    if (load) commit(load, true)
     try {
       const data = await REQUEST[action](...args)
       commit(COMMITS[action], data)
     } catch (e) {
       commit('API_ERROR', e)
     } finally {
-      commit(load, false)
+      if (load) commit(load, false)
     }
   }
 }
@@ -25,9 +25,12 @@ export function sortByHotness(list) {
   const likesInc = absMinLikes + 1
   // we need the current time to get 'time since' rather than just time...
   const d = Date.now()
-  ordered.sort(({ likes:l1, timestamp:t1 }, { likes:l2, timestamp:t2 }) => (l1+likesInc)/Math.log(d-t1.getTime()) < (l2+likesInc)/Math.log(d-t2.getTime()))
+  ordered.sort(
+    ({ likes: l1, timestamp: t1 }, { likes: l2, timestamp: t2 }) =>
+      (l1 + likesInc) / Math.log(d - t1.getTime() + 1000) < (l2 + likesInc) / Math.log(d - t2.getTime() + 1000)
+  )
   // debugging
-  //const ordered2 = ordered.map(({ likes, timestamp, ...rest }) => ({ hotness: (likes+likesInc)/Math.log(d - timestamp.getTime()), likes, timestamp, ...rest }))
-  //ordered2.sort(({ hotness:h1 }, { hotness:h2 }) => h1 < h2)
+  // const ordered2 = ordered.map(({ likes, timestamp, ...rest }) => ({ hotness: (likes+likesInc)/Math.log(d - timestamp.getTime()), likes, timestamp, ...rest }))
+  // ordered2.sort(({ hotness:h1 }, { hotness:h2 }) => h1 < h2)
   return ordered
 }

@@ -9,11 +9,25 @@
         <LoadingSpinner/>
       </div>
 
+      <AnswerBar :class="formToggle ? 'bar-active' : ''" v-if="answers.length">
+        <h3 style="font: var(--header-4);">{{ answers.length }} Answers</h3>
+        <AppButtonToolTip
+          v-if="!formToggle"
+          @click.native="formToggle = !formToggle"
+          :disabled="!authenticated"
+          :disabledMessage="disabledMessage"
+        >
+          Post Answer
+        </AppButtonToolTip>
+      </AnswerBar>
+
       <AnswerForm
         @submitCommentForm="submitAnswer"
         :type="commentType"
-        :callback="submitAnswer"
+        :callback="(form) => { submitAnswer(form); formToggle = !formToggle }"
+        :closeCallback="() => formToggle = !formToggle"
         :authenticated="authenticated"
+        v-show="formToggle"
       >
         <span class="form-failure" v-if="error.code">{{error.message}}</span>
       </AnswerForm>
@@ -33,13 +47,17 @@
 import QuestionCard from '@/components/Questions/QuestionCard'
 import AnswerCard from '@/components/Comments/CommentCard'
 import AnswerForm from '@/components/Comments/CommentForm'
+import AnswerBar from '@/components/Comments/CommentSpacer'
+import AppButtonToolTip from '@/components/AppButton/WithToolTip'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     QuestionCard,
     AnswerCard,
-    AnswerForm
+    AnswerForm,
+    AnswerBar,
+    AppButtonToolTip
   },
   props: {
     code: {
@@ -53,7 +71,12 @@ export default {
   },
   data() {
     return {
-      commentType: 'Answer' // If changed, also modify CommentCards
+      commentType: 'Answer', // If changed, also modify CommentCards
+      formToggle: false,
+      disabledMessage: {
+        content: 'You must be logged in to answer.',
+        placement: 'right'
+      }
     }
   },
   computed: {
@@ -89,3 +112,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.bar-active {
+  flex-direction:column;
+  align-items:flex-start;
+  padding-left:10px;
+  padding-bottom:10px;
+}
+</style>

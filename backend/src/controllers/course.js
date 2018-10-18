@@ -1,4 +1,4 @@
-const { ANONYMOUS, PAGE_SIZE } = require('../models/constants')
+const { PAGE_SIZE } = require('../models/constants')
 const courseModel = require('../models/course')()
 const questionModel = require('../models/question')()
 const reviewModel = require('../models/review')()
@@ -90,14 +90,14 @@ exports.getCourseReviews = function ({ params, query }, res) {
 }
 
 exports.postQuestion = function ({ user, params, body }, res) {
-    body.userID = user && user.id || ANONYMOUS
+    body.userID = user.id
     responseHandler(questionModel.postQuestion(params.code, body), res)
         .catch(errorHandler(res))
 }
 
 /* POST new review */
 exports.postReview = function ({ user, params, body }, res) {
-    body.userID = user && user.id || ANONYMOUS
+    body.userID = user.id
     responseHandler(reviewModel.postReview(params.code, body), res)
         .catch(errorHandler(res))
 }
