@@ -34,15 +34,15 @@
         <span class="form-failure" v-if="error.code">{{error.message}}</span>
       </AnswerForm>
 
+      <div style="text-align:center" v-if="!loadingQuestion && loadingAnswers">
+        <LoadingSpinner/>
+      </div>
+
       <transition-group name='fade-slide' tag='ul' v-if="answers.length">
         <li v-for="answer in answers" :key="answer.id">
           <AnswerCard :comment="answer" :type="commentType" :id="id" :code="code" :authenticated="authenticated"/>
         </li>
       </transition-group>
-
-      <div style="text-align:center" v-if="!loadingQuestion && loadingAnswers">
-        <LoadingSpinner/>
-      </div>
 
     </section>
 </template>
