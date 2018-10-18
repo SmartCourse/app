@@ -1,9 +1,13 @@
 <template>
-  <div class="bar"><slot/></div>
+  <div>
+    <slot/>
+  </div>
 </template>
 
 <style scoped>
-.bar {
+div {
+  padding:0 10px;
+  padding-bottom:10px;
   display:flex;
   justify-content: space-between;
   align-items: center;

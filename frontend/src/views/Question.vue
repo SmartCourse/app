@@ -25,9 +25,10 @@
         @submitCommentForm="submitAnswer"
         :title="'Post Answer'"
         :type="commentType"
-        :callback="(form) => { submitAnswer(form); formToggle = !formToggle }"
+        :callback="submitAnswer"
         :closeCallback="answers.length ? () => formToggle = !formToggle : null"
         :authenticated="authenticated"
+        v-if="!loadingAnswers"
         v-show="formToggle || !answers.length"
       >
         <span class="form-failure" v-if="error.code">{{error.message}}</span>
@@ -38,9 +39,11 @@
           <AnswerCard :comment="answer" :type="commentType" :id="id" :code="code" :authenticated="authenticated"/>
         </li>
       </transition-group>
-      <div style="text-align:center" v-if="loadingAnswers">
+
+      <div style="text-align:center" v-if="!loadingQuestion && loadingAnswers">
         <LoadingSpinner/>
       </div>
+
     </section>
 </template>
 
@@ -100,11 +103,15 @@ export default {
       }
       // check that they actually typed something
       if (answerForm.body === '') {
+        return
         // this.answerFormResponse.text = "Please type an answer!"
         // this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
-        return
       }
       this.$store.dispatch('questions/postAnswer', { form: answerForm, code: this.code, id: this.question.id })
+      // toggle the form if no error occurred
+        .then(() => {
+          if (!this.error.message) this.formToggle = !this.formToggle
+        })
     }
   },
   created () {
@@ -113,14 +120,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.bar-active {
-  flex-direction:column;
-  align-items:flex-start;
-}
-.bar {
-  padding:0 10px;
-  padding-bottom:10px;
-}
-</style>

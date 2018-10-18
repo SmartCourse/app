@@ -13,7 +13,7 @@
         Submit
       </AppButtonToolTip>
       <!-- errors will be injected here -->
-      <slot></slot>
+      <slot/>
   </Card>
 </template>
 
@@ -48,8 +48,8 @@ export default {
 
 <style scoped>
 h4 {
-  font-weight: normal;
-  margin:0 5px;
+  font: var(--body-copy-1);
+  margin:0 7px;
 }
 .title-container {
   display: flex;
@@ -57,11 +57,9 @@ h4 {
   align-items: center;
 }
 aside {
-  /*float:right;*/
   width:24px;
   cursor: pointer;
 }
-
 aside:hover {
   color:var(--color-gray);
 }
