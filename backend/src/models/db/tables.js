@@ -405,11 +405,11 @@ function initLikes(db, parent) {
 
     const columns = Object.keys(likes[0])
     const placeholders = columns.map(_ => '?').join()
-    const query = `INSERT INTO like (${columns}) VALUES (${placeholders})`
+    const query = `INSERT INTO likes (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
 
     const promises = likes.map(c => {
-        insertDB(db, 'like', c, prep)
+        insertDB(db, 'likes', c, prep)
     })
     return Promise.all(promises)
 }

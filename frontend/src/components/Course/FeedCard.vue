@@ -30,7 +30,7 @@ export default {
     likes: Number,
     published: String,
     user: Object,
-    numAnswers: {Type: Number, Default: 0},
+    numAnswers: {type: Number, default: 0},
     code: String,
     id: String,
     cardType: String,
