@@ -47,7 +47,7 @@ exports.getQuestionAnswers = function ({ params, query }, res) {
 exports.postAnswer = function ({ user, params, query, body }, res) {
     body.userID = user.id
     const promise = new Promise((resolve, reject) =>
-        // Get the answers
+        // post the comment, then get it
         commentModel.postComment({ questionID: params.id }, body)
             .then(answer => resolve(userLikesMapper([{ likes: 0 }])(answer, 0))) // 0 likes for new comment!
             .catch(err => reject(err))

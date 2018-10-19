@@ -45,8 +45,14 @@ exports.getReviewComments = function ({ params, query }, res) {
 /* POST new comment. */
 exports.postComment = function ({ user, params, query, body }, res) {
     body.userID = user.id
-    commentModel.postComment({ reviewID: params.id }, body)
-        .then(exports.getReviewComments({ params, query }, res))
+    const promise = new Promise((resolve, reject) =>
+        // post the comment, then get it
+        commentModel.postComment({ reviewID: params.id }, body)
+            .then(comment => resolve(userLikesMapper([{ likes: 0 }])(comment, 0))) // 0 likes for new comment!
+            .catch(err => reject(err))
+    )
+
+    responseHandler(promise, res)
         .catch(errorHandler(res))
 }
 

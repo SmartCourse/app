@@ -76,7 +76,7 @@ export default {
   data() {
     return {
       commentType: 'Answer', // If changed, also modify CommentCards
-      formToggle: false,
+      formToggle: false
     }
   },
   computed: {

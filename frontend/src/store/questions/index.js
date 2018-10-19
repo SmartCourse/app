@@ -52,7 +52,7 @@ const mutations = {
     )
     // only set answer as 'accepted' if it has >= 2 likes
     if (ans.likes > 1) {
-      ans['accepted'] = true;
+      ans['accepted'] = true
     }
     // remove it & sort
     const ordered = sortByHotness([...mapped.slice(0, index), ...mapped.slice(index + 1)])

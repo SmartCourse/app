@@ -58,8 +58,6 @@ class Review {
         return this.db
             .insert('review', { code, userID, title, body, recommend, enjoy, difficulty, teaching, workload })
             .then((reviewID) => this.getReview(reviewID))
-            // TODO de-expensivify this
-            .then((review) => courseModel.updateCourseRatings(code).then(() => review))
     }
 }
 
