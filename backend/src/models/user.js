@@ -45,20 +45,20 @@ class User {
     getUserReputation(id) {
         return Promise.all([
             this.db.query(`SELECT SUM(value) AS rep 
-                           FROM likes JOIN comment
+                           FROM comment JOIN likes
                            ON likes.objectType = 'answer' AND likes.objectID = comment.id 
                            WHERE likes.userID!=? AND comment.userID=?`, [id, id]),
             this.db.query(`SELECT SUM(value) AS rep 
-                           FROM likes JOIN comment
+                           FROM comment JOIN likes
                            ON likes.objectType = 'reply' AND likes.objectID = comment.id 
                            WHERE likes.userID!=? AND comment.userID=?`, [id, id]),
             this.db.query(`SELECT SUM(value) AS rep 
-                           FROM likes JOIN question
-                           ON likes.objectID = question.id 
+                           FROM question JOIN likes
+                           ON likes.objectType = 'question' likes.objectID = question.id 
                            WHERE likes.userID!=? AND question.userID=?`, [id, id]),
             this.db.query(`SELECT SUM(value) AS rep 
-                           FROM likes JOIN review
-                           ON likes.objectID = review.id 
+                           FROM review JOIN likes
+                           ON likes.objectType = 'review' likes.objectID = review.id 
                            WHERE likes.userID!=? AND review.userID=?`, [id, id])
         ])
             .then((results) => {
