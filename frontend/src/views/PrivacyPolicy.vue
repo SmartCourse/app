@@ -61,11 +61,6 @@ export default {
 </script>
 
 <style>
-ul {
-    margin: 16px;
-}
-
-li { 
-  list-style: disc;
-}
+ul { margin: 16px; }
+li { list-style: disc; }
 </style>

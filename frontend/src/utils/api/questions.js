@@ -1,31 +1,34 @@
 import { get, post, put } from './index'
-import format from 'date-fns/format'
+import formatDistanceStrict from 'date-fns/formatDistanceStrict'
 
 /* get question */
 export function getQuestion(course, id) {
   return get(`/course/${course}/question/${id}`)
 }
 
-export function answerMapper({ id, questionID, likes, userID, body, timestamp }) {
+export function answerMapper({ id, questionID, likes, user, body, timestamp }) {
   return {
     id: String(id),
     questionID: String(questionID),
     body,
     likes,
-    author: userID,
-    published: format(timestamp, 'DD/MM/YY')
+    user,
+    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true }),
+    timestamp: new Date(timestamp + 'Z')
   }
 }
 
-export function questionMapper({ id, code, likes, userID, title, body, timestamp }) {
+export function questionMapper({ id, code, likes, numAnswers, user, title, body, timestamp }) {
   return {
     id: String(id),
     code,
     title,
     body,
+    numAnswers,
     likes,
-    author: userID,
-    published: format(timestamp, 'DD/MM/YY')
+    user,
+    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true }),
+    timestamp: new Date(timestamp + 'Z')
   }
 }
 

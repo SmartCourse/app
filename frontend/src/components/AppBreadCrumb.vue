@@ -54,7 +54,7 @@ export default {
         }
       }
 
-      return list
+      return list.slice(Math.max(0, list.length - 4), list.length - 1)
     }
   }
 }

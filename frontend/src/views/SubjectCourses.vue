@@ -14,8 +14,11 @@
         <a class="handbook-link" target=_blank :href="item.handbookURL">Handbook Link</a>
       </Tile>
     </TilesContainer>
-    <div class="sorry" v-else>
+    <div class="sorry" v-else-if="!loading">
         Sorry, it looks like there are no courses for this subject area
+    </div>
+    <div style="text-align:center;" v-else>
+      <LoadingSpinner/>
     </div>
   </div>
 </template>
@@ -28,8 +31,14 @@ import TilesContainer from '@/components/Tile/Container'
 export default {
   name: 'subjectCourses',
   computed: {
-    ...mapGetters('subject', {
-      courses: 'courses'
+    courses() {
+      if (this.loading) return []
+      // filter courses to ones which match this subject code
+      return this.allCourses.filter(course => course.code.slice(0, 4) === this.code)
+    },
+    ...mapGetters({
+      loading: 'loading',
+      allCourses: 'courses'
     })
   },
   components: {
@@ -38,30 +47,8 @@ export default {
   },
   props: {
     code: String
-  },
-  created() {
-    this.$store.dispatch('subject/getCourses', this.code)
-  },
-  beforeRouteUpdate(
-    {
-      params: { code }
-    },
-    from,
-    next
-  ) {
-    // called when the route that renders this component has changed,
-    // but this component is reused in the new route.
-    // For example, for a route with dynamic params `/foo/:code`, when we
-    // navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
-    // will be reused, and this hook will be called when that happens.
-    // has access to `this` component instance.
-    if (this.code && this.code !== code) {
-      this.$store.dispatch('subject/getCourses', code)
-    }
-    next()
   }
 }
 </script>
 
 <style scoped src='../css/subject.less' lang='less'>
-</style>

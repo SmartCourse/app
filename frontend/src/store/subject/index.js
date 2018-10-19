@@ -1,5 +1,4 @@
 import { subjectMapper } from '@/utils/api/subject'
-import { courseMapper } from '@/utils/api/course'
 
 import { doRequestFactory } from '@/store/utils'
 
@@ -8,7 +7,6 @@ import { REQUEST, COMMITS, ACTIONS } from './constants'
 const state = {
   loading: false,
   subjects: {},
-  courses: [],
   error: {
     code: 0,
     message: ''
@@ -16,7 +14,6 @@ const state = {
 }
 
 const getters = {
-  courses: ({ courses }) => courses,
   // convert subjects object to array [{code, name, handbookURL}, ...]
   subjectList: ({ subjects }) => Object.entries(subjects)
     .map(([code, { name, handbookURL }]) => ({ code, name, handbookURL }))
@@ -36,9 +33,6 @@ const mutations = {
         return acc
       }, {})
   },
-  REFRESH_COURSES (state, courses) {
-    state.courses = courses.map(courseMapper)
-  },
   TOGGLE_LOADING (state, bool) {
     state.loading = bool
   },
@@ -52,9 +46,6 @@ const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
   async getSubjects ({ dispatch }) {
     return dispatch('doRequest', { action: ACTIONS.GET_SUBJECTS, args: [] })
-  },
-  async getCourses ({ dispatch }, subjCode) {
-    return dispatch('doRequest', { action: ACTIONS.GET_COURSES, args: [subjCode] })
   }
 }
 

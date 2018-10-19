@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import ReviewForm from '@/components/reviews-replies/ReviewForm'
+import ReviewForm from '@/components/Reviews/ReviewForm'
 import { mapGetters } from 'vuex'
 
 export default {

@@ -1,27 +1,39 @@
 <template>
     <div id="nav">
-      <router-link class="link-item" to="/">
+      <div class="logo-span">
+        <router-link class="link-item" to="/">
           <AppLogo :first="'S'" :last="'C'"/>
-      </router-link>
+        </router-link>
+      </div>
+
       <div class="links">
-        <Search class="mini" v-if="$route.name !== 'home'"/>
-        <!-- hacky padding div -->
-        <div v-else/>
-        <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/login">Login</router-link></h3>
-        <h3 v-if="!isLoggedIn"><router-link class="link-item" to="/signup">Sign Up</router-link></h3>
-        <h3 v-else @click="$store.dispatch('auth/logout')" class="link-item">Logout</h3>
+        <Search class="mini" v-if="$route.name !== 'home' && $route.name !== 'subjectList'"/>
+        <div class="nav-menu">
+            <div class="menu-items">
+                <router-link tag="h3" v-if="!isFirebaseAuthorised" class="link-item" to="/login">Login</router-link>
+                <router-link tag="h3" v-if="!isFirebaseAuthorised" class="link-item" to="/signup">Sign Up</router-link>
+                <router-link tag="h3" v-if="isFirebaseAuthorised && !hasProfile" class="link-item" to="/create-profile">Create Profile</router-link>
+                <router-link tag="h3" v-if="isLoggedIn" class="link-item" to="/profile">Profile</router-link>
+                <h3 v-if="isFirebaseAuthorised" @click="logout()" class="link-item">Logout</h3>
+            </div>
+        </div>
       </div>
     </div>
 </template>
 
 <script>
-import Search from '@/components/AppSearch'
+import Search from '@/components/Search'
+import { mapGetters } from 'vuex'
 
 export default {
   components: { Search },
   computed: {
-    isLoggedIn() {
-      return this.$store.getters.isLoggedIn
+    ...mapGetters('auth', [ 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile' ])
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('auth/logout')
+      // .then(() => this.$router.push("/"))
     }
   }
 }
@@ -29,15 +41,24 @@ export default {
 
 <style lang="less" scoped>
 
-#nav {
+#nav, .menu-items, .nav-menu {
     display: flex;
-    padding: 0px 20px;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    border-bottom: var(--border);
     background-color: var(--white);
     font-size: var(--font-small);
+}
+
+#nav {
+    padding: 0px 20px;
+    border-bottom: var(--border);
+}
+
+.logo-span {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
 }
 
 .links {
@@ -62,5 +83,10 @@ export default {
     #nav {
         font-size: var(--font-small-mobile);
     }
+
+    .menu-items .link-item {
+        font: var(--header-4-mobile);
+    }
+
 }
 </style>

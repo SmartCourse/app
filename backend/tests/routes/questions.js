@@ -1,7 +1,29 @@
+const fetch = require('node-fetch')
 const app = require('../../src')
 const assert = require('assert')
 const supertest = require('supertest')(app)
 const { expect } = require('chai')
+
+before(() => {
+    return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
+        {
+            'credentials': 'omit',
+            'headers': {},
+            'referrer': 'http://localhost:8080/login',
+            'referrerPolicy': 'no-referrer-when-downgrade',
+            'body': '{"email":"backendtest@test.com","password":"backendtest","returnSecureToken":true}',
+            'method': 'POST',
+            'mode': 'cors'
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            global.idToken = data.idToken
+            return supertest.post('/api/user')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .send({ displayName: 'BackendTester' })
+        })
+})
 
 describe('Test question routes', () => {
     describe('GET /api/course/COMP4920/question/1', () => {
@@ -42,6 +64,7 @@ describe('Test answer routes', () => {
                 .post('/api/course/COMP4920/question/1/answers')
                 .send({ body: 'superruuu____testu' })
                 .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
                 .expect('Content-Type', /json/)
                 .expect(200)
             return request
@@ -50,7 +73,7 @@ describe('Test answer routes', () => {
         it('returns the answer we POSTed', () =>
             request.then(({ body }) => {
                 // expect(body[0].body).to.equal('superruuu____testu'))
-                expect(body[0].body).is.a('string')
+                expect(body.body).is.a('string')
             })
         )
     })
@@ -86,6 +109,7 @@ describe('Test answer routes', () => {
                 .post('/api/course/COMP4920/question/1/answers')
                 .send({ badBody: 'superruuu____testu' })
                 .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
                 .expect('Content-Type', /json/)
                 .expect(400)
             return request

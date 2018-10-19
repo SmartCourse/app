@@ -38,12 +38,12 @@ export default {
 }
 
 .description {
-  font: var(--header-4);
+  font: var(--body-copy-1);
   font-weight: bold;
 }
 
 p {
-  font: var(--body-copy-1);
+  font: var(--body-copy-2);
 }
 
 </style>

@@ -1,47 +1,51 @@
 import { get } from '../utils/api'
+import { courseMapper } from '@/utils/api/course'
 
 /* root application state */
 const state = {
+  error: '',
   loading: false,
   // cached courses
-  courses: [],
-  // fire authObject
-  userAuthObject: {},
-  // our own user data
-  profile: {}
+  courseMap: {}
 }
 
 const getters = {
-  isLoggedIn: ({ userAuthObject }) => !!userAuthObject,
-  authObject: ({ userAuthObject }) => userAuthObject
+  loading: ({ loading }) => loading,
+  error: ({ error }) => error,
+  // convert object to list
+  courses: ({ courseMap }) => Object.values(courseMap)
 }
 
 const actions = {
-  populateSearch({ commit, state }) {
+  getCourses({ commit, getters }) {
     // avoid repeats of this
-    if (state.courses.length) {
+    if (getters.courses.length) {
       return
     }
+    commit('TOGGLE_LOADING', true)
     return get('/course')
-      .then(data => commit('POPULATE_SEARCH', data))
+      .then(data => commit('REFRESH_COURSES', data))
       .catch(err => console.warn(err))
-  },
-  togglePageLoad() {}
+      .finally(() => commit('TOGGLE_LOADING', false))
+  }
 }
 
 const mutations = {
-  SET_LOADING(state, bool) {
+  TOGGLE_LOADING(state, bool) {
     state.loading = bool
   },
-  POPULATE_SEARCH(state, data) {
-    state.courses = data
+  REFRESH_COURSES(state, courses) {
+    // convert list of courses to object
+    state.courseMap = courses
+      .map(courseMapper)
+      .reduce((acc, course) => {
+        acc[course.code] = course
+        return acc
+      }, {})
   },
-  /**
-   * @param {*} state The root state
-   * @param {*} user  The logged in user object or null
-   */
-  SET_USER(state, user) {
-    state.userAuthObject = user
+  UPDATE_COURSE(state, course) {
+    // assumes courseMapper already applied...
+    state.courseMap[course.code] = course
   }
 }
 
