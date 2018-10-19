@@ -3,7 +3,7 @@
       <AppBreadCrumb/>
 
       <transition name="fade-slide">
-        <QuestionCard v-bind="question" :authenticated="authenticated" v-if="!loadingQuestion" />
+        <QuestionCard v-bind="question" :authenticated="isLoggedIn" v-if="!loadingQuestion" />
       </transition>
       <div style="text-align:center" v-if="loadingQuestion">
         <LoadingSpinner/>
@@ -13,9 +13,9 @@
         <h3 style="font: var(--header-4);">{{ answers.length }} Answers</h3>
         <AppButtonToolTip
           v-if="!formToggle"
-          @click.native="formToggle = !formToggle"
-          :disabled="!authenticated"
-          :disabledMessage="disabledMessage"
+          @click.native="formToggle = true"
+          :disabled="!isLoggedIn"
+          :disabledMessage="tooltipMessage"
         >
           Post Answer
         </AppButtonToolTip>
@@ -26,8 +26,8 @@
         :title="'Post Answer'"
         :type="commentType"
         :callback="submitAnswer"
-        :closeCallback="answers.length ? () => formToggle = !formToggle : null"
-        :authenticated="authenticated"
+        :closeCallback="answers.length ? () => formToggle = false : null"
+        :authenticated="isLoggedIn"
         v-if="!loadingAnswers"
         v-show="formToggle || !answers.length"
       >
@@ -40,7 +40,7 @@
 
       <transition-group name='fade-slide' tag='ul' v-if="answers.length">
         <li v-for="answer in answers" :key="answer.id">
-          <AnswerCard :comment="answer" :type="commentType" :id="id" :code="code" :authenticated="authenticated"/>
+          <AnswerCard :comment="answer" :type="commentType" :id="id" :code="code" :authenticated="isLoggedIn"/>
         </li>
       </transition-group>
 
@@ -77,10 +77,6 @@ export default {
     return {
       commentType: 'Answer', // If changed, also modify CommentCards
       formToggle: false,
-      disabledMessage: {
-        content: 'You must be logged in to answer.',
-        placement: 'right'
-      }
     }
   },
   computed: {
@@ -91,13 +87,17 @@ export default {
       loadingQuestion: 'loadingQuestion',
       error: 'error'
     }),
-    authenticated() {
-      return this.$store.getters['auth/isLoggedIn']
+    ...mapGetters('auth', ['isLoggedIn']),
+    tooltipMessage() {
+      return {
+        content: this.isLoggedIn ? '' : 'You must be logged in to answer.',
+        placement: 'right'
+      }
     }
   },
   methods: {
     submitAnswer (answerForm) {
-      if (!this.authenticated) {
+      if (!this.isLoggedIn) {
         this.$router.push('/login')
         return
       }

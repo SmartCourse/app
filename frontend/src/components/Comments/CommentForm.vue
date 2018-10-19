@@ -36,9 +36,13 @@ export default {
   },
   data () {
     return {
-      body: '',
-      disabledMessage: {
-        content: 'You must be logged in for this functionality.',
+      body: ''
+    }
+  },
+  computed: {
+    disabledMessage () {
+      return {
+        content: this.authenticated ? '' : 'You must be logged in to post.',
         placement: 'right'
       }
     }
