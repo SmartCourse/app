@@ -16,7 +16,7 @@ const getters = {
 // logged into firebase (authenticated account)
   isFirebaseAuthorised: ({ userAuthObject }) => !!userAuthObject,
   // TODO not sure if this is useful...
-  hasProfile: ({ profile, userAuthObject }) => !!profile,
+  hasProfile: ({ profile }) => !!profile,
   // logged into backend (existing profile) and authed with firebase
   isLoggedIn: ({ profile, userAuthObject }) => !!profile && !!userAuthObject,
 
@@ -47,11 +47,13 @@ const mutations = {
    */
   SET_PROFILE(state, profile) {
     // anytime we want to set the profile, we want to update the local storage too
+    /*
     if (profile) {
       localStorage.setItem('PROFILE_KEY', JSON.stringify(profile))
     } else {
       localStorage.removeItem('PROFILE_KEY')
     }
+    */
     state.profile = profile
   }
 }
@@ -189,6 +191,7 @@ const actions = {
     }
 
     // get existing profile information if cached
+    /*
     const existing = localStorage.getItem('PROFILE_KEY')
     if (existing) {
       const parsed = JSON.parse(existing)
@@ -197,6 +200,7 @@ const actions = {
       commit('SET_LOADING', false)
       return
     }
+    */
 
     // we're authorized with firebase but there's no valid profile info yet
     await dispatch('getProfile')

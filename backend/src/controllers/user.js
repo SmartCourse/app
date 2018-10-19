@@ -3,8 +3,8 @@ const userModel = require('../models/user')()
 const { responseHandler } = require('../utils/helpers')
 
 /* Get data for a specific user */
-exports.getUser = function({id}, res) {
-    return responseHandler(userModel.getPublicProfile(id), res)
+exports.getUser = function({ params }, res) {
+    return responseHandler(userModel.getPublicProfile(params.id), res)
         .catch(errorHandler(res))
 }
 

@@ -11,8 +11,7 @@
 </template>
 
 <script>
-
-import FeedCard from '@/components/course/FeedCard'
+import FeedCard from '@/components/Course/FeedCard'
 
 export default {
   name: 'Feed',

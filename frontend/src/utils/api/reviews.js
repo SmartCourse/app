@@ -1,23 +1,23 @@
 import { get, post, put } from './index'
-import format from 'date-fns/format'
+import formatDistanceStrict from 'date-fns/formatDistanceStrict'
 
 /* get review */
 export function getReview(course, id) {
   return get(`/course/${course}/review/${id}`)
 }
 
-export function replyMapper({ id, likes, userLiked, userID, body, timestamp }) {
+export function replyMapper({ id, likes, userLiked, user, body, timestamp }) {
   return {
     id: String(id),
     body,
     likes,
     userLiked,
-    author: userID,
-    published: format(timestamp, 'DD/MM/YY')
+    user,
+    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true })
   }
 }
 
-export function reviewMapper({ id, code, title, body, likes, userLiked, recommend, userID, timestamp }) {
+export function reviewMapper({ id, code, title, body, likes, userLiked, recommend, user, timestamp }) {
   return {
     id: String(id),
     code,
@@ -26,8 +26,8 @@ export function reviewMapper({ id, code, title, body, likes, userLiked, recommen
     likes,
     userLiked,
     recommend,
-    author: userID,
-    published: format(timestamp, 'DD/MM/YY')
+    user,
+    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true })
   }
 }
 

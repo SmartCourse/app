@@ -1,9 +1,8 @@
 <template>
     <div class="search">
-        <input
-            type='text'
+        <SearchBar
+            class="search-bar"
             v-model='search'
-            name='search'
             placeholder='Search all courses...'
         />
         <ul v-if="search && suggestions.length">
@@ -21,8 +20,13 @@
 </template>
 
 <script>
+import SearchBar from './Input'
+import { mapGetters } from 'vuex'
 
 export default {
+  components: {
+    SearchBar
+  },
   data() {
     return {
       search: ''
@@ -30,9 +34,6 @@ export default {
   },
 
   computed: {
-    courses() {
-      return this.$store.state.courses.map(item => item)
-    },
     suggestions() {
       // Give higher preference to course code before course name
       const lower = this.search.toLowerCase()
@@ -41,15 +42,12 @@ export default {
         .concat(this.courses
           .filter(item => item.name.toLowerCase().match(lower)))
         .slice(0, 5)
-    }
+    },
+    ...mapGetters(['loading', 'courses'])
   },
 
   methods: {
     resetSearch() { this.search = '' }
-  },
-
-  created() {
-    this.$store.dispatch('populateSearch')
   }
 }
 </script>
@@ -62,49 +60,30 @@ export default {
     margin: 20px auto;
 }
 
-input {
-    margin: auto;
-    outline: none;
-    font: inherit;
+.search-bar, ul {
     width: 500px;
-    transition: border 0.3s ease-in;
-}
-
-input:active, input:focus {
-  border: 1px solid var(--theme-light);
 }
 
 .mini {
     font-size: 1em;
 
-    & input {
+    & .search-bar, ul {
         width: 300px;
     }
-
-    & ul {
-        width: 340px;
-    }
-}
-
-ul, input {
-    border-radius: 0.2em;
-    border: var(--border);
-}
-
-input, li {
-    padding: 10px 20px;
 }
 
 ul {
+    border-radius: 0.2em;
+    border: var(--border);
     position: absolute;
     background: var(--white);
-    width: 540px;
     z-index: 10;
     max-height: 220px;
     overflow-y: scroll;
 }
 
 li {
+    padding: 10px 20px;
     background: var(--white);
     font-size: 0.8em;
 }
@@ -114,22 +93,14 @@ li:hover {
 }
 
 @media screen and (max-width: 740px) {
-    ul {
+    ul, .search-bar {
         width: 330px;
-    }
-
-    input {
-        width: 290px;
     }
 
     .mini {
 
-        & input {
-            width: 100px;
-        }
-
-        & ul {
-            width: 140px;
+        & ul, .search-bar {
+            width: 180px;
         }
     }
 

@@ -1,37 +1,51 @@
 import { get } from '../utils/api'
+import { courseMapper } from '@/utils/api/course'
 
 /* root application state */
 const state = {
   error: '',
+  loading: false,
   // cached courses
-  courses: []
+  courseMap: {}
 }
 
 const getters = {
-  loading: ({ auth, course, questions, reviews, subject }) =>
-    [auth.loading, course.loading, questions.loading, reviews.loading, subject.loading].reduce((acc, curr) => acc || curr, false),
-  error: ({ error }) => error
+  loading: ({ loading }) => loading,
+  error: ({ error }) => error,
+  // convert object to list
+  courses: ({ courseMap }) => Object.values(courseMap)
 }
 
 const actions = {
-  populateSearch({ commit, state }) {
+  getCourses({ commit, getters }) {
     // avoid repeats of this
-    if (state.courses.length) {
+    if (getters.courses.length) {
       return
     }
+    commit('TOGGLE_LOADING', true)
     return get('/course')
-      .then(data => commit('POPULATE_SEARCH', data))
+      .then(data => commit('REFRESH_COURSES', data))
       .catch(err => console.warn(err))
-  },
-  togglePageLoad() {}
+      .finally(() => commit('TOGGLE_LOADING', false))
+  }
 }
 
 const mutations = {
-  SET_LOADING(state, bool) {
+  TOGGLE_LOADING(state, bool) {
     state.loading = bool
   },
-  POPULATE_SEARCH(state, data) {
-    state.courses = data
+  REFRESH_COURSES(state, courses) {
+    // convert list of courses to object
+    state.courseMap = courses
+      .map(courseMapper)
+      .reduce((acc, course) => {
+        acc[course.code] = course
+        return acc
+      }, {})
+  },
+  UPDATE_COURSE(state, course) {
+    // assumes courseMapper already applied...
+    state.courseMap[course.code] = course
   }
 }
 

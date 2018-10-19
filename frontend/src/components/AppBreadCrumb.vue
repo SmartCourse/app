@@ -54,8 +54,7 @@ export default {
         }
       }
 
-      // only first three items
-      return list.slice(0, 3)
+      return list.slice(Math.max(0, list.length - 4), list.length - 1)
     }
   }
 }

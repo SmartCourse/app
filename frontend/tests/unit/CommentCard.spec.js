@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
-import CommentCard from '@/components/comments/CommentCard'
+import CommentCard from '@/components/Comments/CommentCard'
+import Vote from '@/components/Vote'
 
 describe('CommentCard.vue', () => {
   before(function () {
@@ -9,7 +10,11 @@ describe('CommentCard.vue', () => {
       likes: 10,
       published: new Date().toDateString(),
       body:
-        'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto'
+        'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
+      user: {
+        displayName: 'Henry',
+        id: 0
+      }
     }
     this.wrapper = mount(CommentCard, {
       propsData: { comment: this.card },
@@ -18,7 +23,7 @@ describe('CommentCard.vue', () => {
   })
 
   it('renders comment data', function () {
-    expect(this.wrapper.findAll('p').at(1).text()).to.include(this.card.likes)
+    expect(this.wrapper.find(Vote).text()).to.include(this.card.likes)
   })
 
   it('renders comment publish time', function () {
@@ -26,6 +31,6 @@ describe('CommentCard.vue', () => {
   })
 
   it('renders comment body', function () {
-    expect(this.wrapper.findAll('p').at(3).text()).to.include(this.card.body)
+    expect(this.wrapper.find('.content').text()).to.include(this.card.body)
   })
 })

@@ -1,35 +1,39 @@
 <template>
   <div class="main-content">
     <AppBreadCrumb/>
-    <div class="course">
-        <div class="course-header">
-            <div class="course-header-title">
-                <div class="key-data">
-                    <div class="left">
-                        <h2>{{ courseInfo.code }}</h2>
-                        <h3>{{ courseInfo.name }}</h3>
-                    </div>
-                    <div class="right">
-                        <OverallRating :rating="courseRatings[0]"/>
-                    </div>
-                </div>
-                <CourseLinks   :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
-                <CourseRatings v-if="courseRatings" :ratings="courseRatings.slice(1)"/>
-            </div>
-        </div>
-
-        <div class="course-info">
-            <CourseInfo :code="code"/>
-        </div>
-    </div>
+      <div class="course">
+          <div class="course-header">
+              <div class="course-header-title">
+                  <div class="key-data">
+                      <div class="left">
+                          <h2>{{ courseInfo.code }}</h2>
+                          <h3>{{ courseInfo.name }}</h3>
+                      </div>
+                      <div class="right">
+                          <OverallRating :rating="courseRatings[0]"/>
+                      </div>
+                  </div>
+                  <CourseLinks :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
+                  <div class="ratings-big" v-if="ratingsExist">
+                      <CourseRatings :ratings="courseRatings.slice(1)"/>
+                  </div>
+                  <div class="ratings-small">
+                      <CourseRatings v-if="ratingsExist" :ratings="courseRatings"/>
+                  </div>
+              </div>
+          </div>
+          <div class="course-info">
+              <CourseInfo :code="code"/>
+          </div>
+      </div>
     <div class="course-content">
         <router-view>
             <router-link :to="{name: 'info'}">
-                <TabButton :active="this.$route.name == 'info'">Reviews</TabButton>
+                <TabButton :active="this.$route.name === 'info'">Reviews</TabButton>
             </router-link>
 
             <router-link :to="{name: 'questions'}">
-                <TabButton :active="this.$route.name == 'questions'">Questions</TabButton>
+                <TabButton :active="this.$route.name === 'questions'">Questions</TabButton>
             </router-link>
         </router-view>
     </div>
@@ -39,10 +43,10 @@
 
 <script>
 // @ is an alias to /src
-import TabButton from '@/components/course/TabButton'
-import CourseRatings from '@/components/course/Ratings'
+import TabButton from '@/components/Course/TabButton'
+import CourseRatings from '@/components/Course/Ratings'
 import OverallRating from '@/components/AppRating/CircleWithText'
-import CourseLinks from '@/components/course/Links'
+import CourseLinks from '@/components/Course/Links'
 import CourseInfo from './CourseInfo'
 
 import { mapGetters } from 'vuex'
@@ -62,8 +66,12 @@ export default {
   computed: {
     ...mapGetters('course', {
       courseInfo: 'course',
-      courseRatings: 'ratings'
-    })
+      courseRatings: 'ratings',
+      loading: 'loadingCourse'
+    }),
+    ratingsExist() {
+      return this.courseRatings && this.courseRatings[0].value >= 0
+    }
   },
   created () {
     this.$store.dispatch('course/getCourse', this.code)
@@ -89,7 +97,7 @@ export default {
     display: grid;
     grid-auto-columns: 2fr 1fr;
     grid-gap: 10px;
-    height: 350px;
+    max-height: 360px;
     overflow-y: hidden;
 }
 
@@ -136,18 +144,22 @@ h2, h3 {
 
 .course-content {
     grid-row: 2;
-    background-color: var(--white);
+    /*background-color: var(--white);*/
     margin-top: 10px;
     min-height: 150px;
 }
 
+.ratings-small {
+    display: none;
+}
+
 @media screen and (max-width: 600px) {
-    .course-info {
+    .course-info, .right, .ratings-big {
         display: none;
     }
 
-    .right {
-        display: none;
+    .ratings-small {
+        display: block;
     }
 }
 </style>

@@ -1,32 +1,91 @@
 <template>
-    <div class="user">
-        <div class="letter">
-        {{ ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'].map((l) => l.toUpperCase())[Math.floor(Math.random() * 26)] /* should be likes */}}
+    <div class="avatar">
+        <!-- TODO: use picture if present -->
+        <div :class="`${background} letter`">
+          {{ name.charAt(0).toUpperCase() }}
         </div>
+        <!--div :class="" :style="`background-image:url(${picture});`" v-else /-->
     </div>
 </template>
 
+<script>
+export default {
+  props: {
+    name: String,
+    id: Number,
+    picture: String
+  },
+  computed: {
+    background() {
+      let cls = 'black'
+      switch (this.id % 7) {
+      case 1: cls = 'green'
+        break
+      case 2: cls = 'purple'
+        break
+      case 3: cls = 'red'
+        break
+      case 4: cls = 'orange'
+        break
+      case 5: cls = 'blue'
+        break
+      case 6: cls = 'dark-blue'
+        break
+      }
+      return cls
+    }
+  }
+}
+</script>
+
 <style scoped>
+
+.green {
+  background-color: #8bc34a;
+}
+
+.purple {
+  background-color: #673ab7;
+}
+
+.red {
+  background-color: #ff5722;
+}
+
+.orange {
+  background-color: #ff9800;
+}
+
+.blue {
+  background-color: #2196f3;
+}
+
+.dark-blue {
+  background-color: #0712f7;
+}
+
+.black {
+  background-color: #373737;
+}
 
 .letter {
   padding: 10px;
-  background-color: #aaa;
   color: white;
   margin: 5px 0;
-  width: 20px;
-  height:20px;
-  line-height: 20px;
+  width: 25px;
+  height:25px;
+  line-height: 25px;
   text-align: center;
   border-radius: 100%;
 }
 
-.user {
+.avatar {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.user:hover {
+.avatar:hover {
   cursor: pointer;
   opacity: 0.5;
 }

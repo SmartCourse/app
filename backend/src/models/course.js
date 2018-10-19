@@ -24,8 +24,8 @@ class Course {
      * @returns {object}    Info specific to single course.
      */
     getCourse(code) {
-        return this.db
-            .query('SELECT * FROM course WHERE code=?', [code])
+        return this.updateCourseRatings(code)
+          .then(() => this.db.query('SELECT * FROM course WHERE code=?', [code]))
     }
 
     updateCourseRatings(code) {
@@ -37,13 +37,13 @@ class Course {
         return this.db
             .run(`UPDATE course
                     SET
-                      recommend = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(recommend)*100/COUNT(*) END FROM review WHERE code==$code),
+                      recommend = (SELECT CASE WHEN COUNT(*)==0 THEN -1 ELSE SUM(recommend)*100/COUNT(*) END FROM review WHERE code==$code),
                       enjoy = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(enjoy-1)*100/(4*COUNT(*)) END FROM review WHERE code==$code),
                       difficulty = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(difficulty-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND difficulty > 0),
                       teaching = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(teaching-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND teaching > 0),
                       workload = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(workload-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND workload > 0)
                     WHERE code=$code;`
-                  , {$code:code})
+            , { $code: code })
     }
 }
 

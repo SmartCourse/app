@@ -12,7 +12,7 @@ class Comment {
      * @returns {Array}
      */
     postComment(queryObject, { body, userID }) {
-        const [ key, value ] = Object.entries(queryObject)[0]
+        const [key, value] = Object.entries(queryObject)[0]
         return this.db
             .insert('comment', { [key]: value, body, userID })
             /* Still not sure on this, seems wasteful to send all new data */
@@ -27,9 +27,35 @@ class Comment {
      * @returns {Array}
      */
     getComments(queryObject, pageNumber = 1) {
-        const [ key, value ] = Object.entries(queryObject)[0]
+        const [key, value] = Object.entries(queryObject)[0]
         return this.db
-            .queryAll(`SELECT * FROM comment WHERE ${key}=?`, [value])
+            .queryAll(`SELECT
+                u.id as userID,
+                u.displayName,
+                u.degree,
+                u.gradYear,
+                u.description,
+                u.picture,
+                u.reputation,
+                u.joined,
+                c.id,
+                c.questionID,
+                c.reviewID,
+                c.commentParent,
+                c.body,
+                c.timestamp  
+                FROM
+                comment as c  
+                JOIN
+                user as u 
+                    on (
+                        c.userID=u.id
+                    )  
+                WHERE
+                (
+                    c.${key}=?
+                ) ;
+        `, [value])
     }
 
     /**
@@ -47,7 +73,7 @@ let Singleton = null
 /**
  * @param {object} db defaults to the db instance
  */
-module.exports = function(db) {
+module.exports = function (db) {
     if (!db) {
         /* app environment, dev or prod */
         return (Singleton = Singleton ? Singleton : new Comment(require('./db'))) // eslint-disable-line

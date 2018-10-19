@@ -2,8 +2,9 @@ const { ANONYMOUS } = require('../models/constants')
 const questionModel = require('../models/question')()
 const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
+const userModel = require('../models/user')()
 const errorHandler = require('./error')
-const { responseHandler } = require('../utils/helpers')
+const { responseHandler, userLikesMapper } = require('../utils/helpers')
 
 /* GET question data. */
 exports.getQuestion = function ({ user, params }, res) {
@@ -12,8 +13,14 @@ exports.getQuestion = function ({ user, params }, res) {
         questionModel.getQuestion(params.id),
         likesModel.getLikes({ type: 'question', id: params.id }),
         likesModel.getUserLiked({ type: 'question', id: params.id, userID })
-    ])
-        .then(([question, likes, userLiked]) => { return { ...question, ...likes, ...userLiked } })
+    ]).then(([question, likes, userLiked]) => {
+        return Promise.all([
+            userModel.getPublicProfile(question.userID)
+        ]).then(([userInfo]) => {
+            delete question.userID
+            return { ...question, ...likes, ...userLiked, user: userInfo }
+        })
+    })
 
     responseHandler(getQuestion, res)
         .catch(errorHandler(res))
@@ -25,28 +32,19 @@ exports.getQuestionAnswers = function ({ user, params, query }, res) {
     const getAnswers = new Promise((resolve, reject) => {
         // Get the answers
         commentModel.getComments({ questionID: params.id }, query.p)
-            .then((answers) => {
-                // Get the likes for each answer
-                const likesPromises = answers.map(answer => likesModel.getLikes(
-                    { type: 'answer', id: answer.id }))
-                const p1 = Promise.all(likesPromises)
-                    .then((likes) => {
-                        for (var i = 0; i < answers.length; i++) {
-                            answers[i].likes = likes[i].likes
-                        }
-                    })
-                // Get what the user has liked for each answer
-                const userLikesPromises = answers.map(answer => likesModel.getUserLiked(
-                    { type: 'answer', id: answer.id, userID }))
-                const p2 = Promise.all(userLikesPromises)
-                    .then((likes) => {
-                        for (var i = 0; i < answers.length; i++) {
-                            answers[i].userLiked = likes[i].userLiked
-                        }
-                    })
-                return Promise.all([p1, p2])
-                    .then(() => resolve(answers))
-            })
+            .then(answers => Promise.all([
+                answers,
+                Promise.all(
+                    answers.map(answer => likesModel.getLikes(
+                        { type: 'answer', id: answer.id }))
+                ),
+                Promise.all(
+                    answers.map(answer => likesModel.getUserLiked(
+                        { type: 'answer', id: answer.id, userID }))
+                )
+            ]))
+            .then(([answers, likes, userLikes]) => answers.map(userLikesMapper(likes, userLikes)))
+            .then(resolve)
             .catch(err => reject(err))
     })
 

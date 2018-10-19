@@ -21,6 +21,7 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('getCourses')
     this.$store.dispatch('auth/checkAuth')
     this.$store.dispatch('subject/getSubjects')
   }
@@ -50,7 +51,7 @@ html, body {
   --white: #fefefe;
   --soft-white: #aaa;
   --black: #111;
-  --soft-black: rgba(#111, 0.65);
+  --soft-black: rgba(#111, 0.5);
   --black-p: rgba(0,0,0,.72);
   // borders
   --color-gray: #d5d5d5;
@@ -62,6 +63,7 @@ html, body {
   --box-shadow-active: 0px 0px 0px 1px #ddd;
   --theme: #00a99d;
   --theme-light: rgba(102, 203, 196);
+  --color-blue: #2196f3;
   // font format
   --header-1: 600 3rem /1.2 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
   --header-1-mobile: 600 2rem /1.1 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -146,6 +148,17 @@ textarea {
 
 textarea:focus, textarea:active {
   border: 1px solid #acc;
+}
+
+.fade-slide-enter-active {
+  transition: opacity 0.5s ease-in-out;
+}
+.fade-slide-enter {
+  opacity: 0;
+}
+
+.tooltip {
+  display: block !important;
 }
 
 </style>

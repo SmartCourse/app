@@ -1,5 +1,5 @@
 <template>
-  <div class="app-auth-form">
+  <div class="app-auth-form" @keyup.enter="clickHandler">
     <Card>
       <div class="card-content">
         <h2 v-if="title">{{ title }}</h2>

@@ -10,7 +10,7 @@ class Likes {
      */
     getLikes({ type, id }) {
         return this.db
-            .query('SELECT SUM(value) FROM like WHERE objectType=? AND objectID=?',
+            .query('SELECT SUM(value) FROM likes WHERE objectType=? AND objectID=?',
                 [type, id])
             .then((sum) => {
                 const likes = sum['SUM(value)'] ? sum['SUM(value)'] : 0
@@ -22,10 +22,12 @@ class Likes {
      * Get likes for a specific user
      */
     getUserLiked({ type, id, userID }) {
+        console.log('USERRRRRRR' + userID)
         return this.db
-            .query('SELECT value AS userLiked FROM like WHERE objectType=? AND objectID=? AND userID=?',
+            .query('SELECT value AS userLiked FROM likes WHERE objectType=? AND objectID=? AND userID=?',
                 [type, id, userID])
             .then((userLiked) => {
+                console.log('USERRRRRRR LIKED' + userLiked)
                 return userLiked || { userLiked: 0 }
             })
     }
@@ -35,7 +37,7 @@ class Likes {
      */
     putLikes({ type, id, userID, value }) {
         return this.db
-            .insertUnique('like', {
+            .insertUnique('likes', {
                 objectType: type,
                 objectID: id,
                 userID,

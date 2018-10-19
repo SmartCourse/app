@@ -9,8 +9,8 @@ import { doRequestFactory } from '@/store/utils'
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
 const state = {
-  loading: false,
-  search: '',
+  loadingReview: false,
+  loadingReplies: false,
   reviewObj: {
     review: {},
     replies: []
@@ -24,13 +24,17 @@ const state = {
 const getters = {
   review: ({ reviewObj: { review } }) => review,
   replies: ({ reviewObj: { replies } }) => replies,
-  loading: ({ loading }) => loading,
+  loadingReview: ({ loadingReview }) => loadingReview,
+  loadingReplies: ({ loadingReplies }) => loadingReplies,
   error: ({ error }) => error
 }
 
 const mutations = {
-  TOGGLE_LOADING (state, bool) {
-    state.loading = bool
+  TOGGLE_LOADING_REPLIES (state, bool) {
+    state.loadingReplies = bool
+  },
+  TOGGLE_LOADING_REVIEW (state, bool) {
+    state.loadingReview = bool
   },
   FOCUS_REVIEW (state, review) {
     state.reviewObj.review = reviewMapper(review)
@@ -55,29 +59,29 @@ const mutations = {
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
   async getReview ({ dispatch }, { code, id }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REVIEW, args: [code, id] })
+    return dispatch('doRequest', { action: ACTIONS.GET_REVIEW, load: 'TOGGLE_LOADING_REVIEW', args: [code, id] })
   },
   async postReview ({ dispatch }, { code, form }) {
     const mappedForm = newReviewMapper(form)
-    return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, args: [code, mappedForm] })
+    return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, load: 'TOGGLE_LOADING_REVIEW', args: [code, mappedForm] })
   },
   async getReplies ({ dispatch }, { code, id }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, args: [code, id] })
+    return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, load: 'TOGGLE_LOADING_REPLIES', args: [code, id] })
   },
   async postReply ({ dispatch }, { code, id, form }) {
-    return dispatch('doRequest', { action: ACTIONS.POST_REPLY, args: [code, id, form] })
+    return dispatch('doRequest', { action: ACTIONS.POST_REPLY, load: 'TOGGLE_LOADING_REPLIES', args: [code, id, form] })
   },
   async getLikes ({ dispatch }, { id, code }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_LIKES, args: [code, id] })
+    return dispatch('doRequest', { action: ACTIONS.GET_LIKES, load: 'TOGGLE_LOADING_REVIEW', args: [code, id] })
   },
   async putLikes ({ dispatch }, { id, code, data }) {
-    return dispatch('doRequest', { action: ACTIONS.PUT_LIKES, args: [code, id, data] })
+    return dispatch('doRequest', { action: ACTIONS.PUT_LIKES, load: 'TOGGLE_LOADING_REVIEW', args: [code, id, data] })
   },
   async getReplyLikes ({ dispatch }, { id, code, commentID }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REPLY_LIKES, args: [code, id, commentID] })
+    return dispatch('doRequest', { action: ACTIONS.GET_REPLY_LIKES, load: 'TOGGLE_LOADING_REPLIES', args: [code, id, commentID] })
   },
   async putReplyLikes ({ dispatch }, { id, code, commentID, data }) {
-    return dispatch('doRequest', { action: ACTIONS.PUT_REPLY_LIKES, args: [code, id, commentID, data] })
+    return dispatch('doRequest', { action: ACTIONS.PUT_REPLY_LIKES, load: 'TOGGLE_LOADING_REPLIES', args: [code, id, commentID, data] })
   }
 }
 

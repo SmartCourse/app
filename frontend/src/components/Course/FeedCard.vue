@@ -1,6 +1,6 @@
 <template>
   <Card class="feed-card">
-    <UserMini :user="author"/>
+    <UserMini :name="user.displayName" :id="user.id" :picture="user.picture" />
     <div class="info">
       <router-link tag="div" class="header" :to="{ name: routeName, params: { code, id }}">
         <h3 class="header-title">{{ title }}</h3>
@@ -12,9 +12,10 @@
         <b>{{ positiveOrNegativeText }}</b>
       </p>
       <p v-else>
-        <b>Know the answer to this question?</b>
+        <span v-if="numAnswers === 0">Know the answer to this question?</span>
+        <span v-else>{{ numAnswers }} Answers</span>
       </p>
-      <p class="likes">{{ likes || 0 }} users found this helpful</p>
+      <p class="likes">{{ likes > 0 && likes || 0 }} users found this helpful</p>
     </div>
   </Card>
 </template>
@@ -28,15 +29,12 @@ export default {
     title: String,
     likes: Number,
     published: String,
-    author: Number,
+    user: Object,
+    numAnswers: {type: Number, default: 0},
     code: String,
     id: String,
-    cardType: String
-  },
-  data() {
-    return {
-      randomNumber: Math.random()
-    }
+    cardType: String,
+    recommend: Number
   },
   components: {
     Card,
@@ -45,10 +43,10 @@ export default {
   computed: {
     /* TODO use recommendation */
     positiveOrNegativeText() {
-      return this.randomNumber > 0.5 ? 'Recommended' : 'Not Recommended'
+      return this.recommend ? 'Recommended' : 'Not Recommended'
     },
     positiveOrNegativeClass() {
-      return this.randomNumber > 0.5 ? 'positive' : 'negative'
+      return this.recommend ? 'positive' : 'negative'
     },
     routeName() {
       return this.cardType === 'Review' ? 'review' : 'question'
@@ -111,6 +109,11 @@ p {
   }
   .likes {
     display: none;
+  }
+
+  h3 {
+    font: var(--header-4-mobile);
+    font-weight: bolder;
   }
 }
 
