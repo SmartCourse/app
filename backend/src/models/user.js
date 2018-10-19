@@ -15,7 +15,6 @@ class User {
             this.db.query('SELECT id, email, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id]),
             this.getUserReputation(id)
         ]).then(([profile, reputation]) => {
-            console.log({ ...profile, ...reputation })
             return { ...profile, ...reputation }
         })
     }
@@ -42,19 +41,35 @@ class User {
      * @param   {number}  id   Required id param.
      * @returns {object}
      */
+    // join on likes <--> comments join on likes <--> reviews join on likes <--> questions
     getUserReputation(id) {
-        return new Promise((resolve, reject) => {
-            this.db.query('SELECT SUM(value) AS reputation FROM likes WHERE creatorID=? AND userID!=?',
-                [id, id])
-                .then((res) => {
-                    if (!res || res.reputation < 0) {
-                        resolve({ reputation: 0 })
-                    } else {
-                        resolve(res)
-                    }
-                })
-                .catch((err) => reject(err))
-        })
+        return Promise.all([
+            this.db.query(`SELECT SUM(value) AS rep 
+                           FROM likes JOIN comment
+                           ON likes.objectType = 'answer' AND likes.objectID = comment.id 
+                           WHERE likes.userID!=?`, [id]),
+            this.db.query(`SELECT SUM(value) AS rep 
+                           FROM likes JOIN comment
+                           ON likes.objectType = 'reply' AND likes.objectID = comment.id 
+                           WHERE likes.userID!=?`, [id]),
+            this.db.query(`SELECT SUM(value) AS rep 
+                           FROM likes JOIN question
+                           ON likes.objectID = question.id 
+                           WHERE likes.userID!=?`, [id]),
+            this.db.query(`SELECT SUM(value) AS rep 
+                           FROM likes JOIN review
+                           ON likes.objectID = review.id 
+                           WHERE likes.userID!=?`, [id])
+        ])
+            .then((results) => {
+                let reputation = 0
+                results.forEach(({ rep }) => { reputation += rep })
+                if (reputation < 0) {
+                    return { 'reputation': 0 }
+                } else {
+                    return { reputation }
+                }
+            })
     }
 
     /**
@@ -72,6 +87,9 @@ class User {
      *                       contain the user data (probs eventually from an auth token)
      */
     createUser({ displayName, email, uid }) {
+        if (!displayName) {
+            return Promise.reject(Error('You must provide a display name!'))
+        }
         return this.db
             .insert('user', { displayName, email, uid })
             .then(id => this.getProfile(id))

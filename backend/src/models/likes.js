@@ -33,13 +33,12 @@ class Likes {
     /*
      * Put likes
      */
-    putLikes({ type, id, userID, creatorID, value }) {
+    putLikes({ type, id, userID, value }) {
         return this.db
             .insertUnique('likes', {
                 objectType: type,
                 objectID: id,
                 userID,
-                creatorID,
                 value
             })
             .then(() => this.getLikes({ type, id }))

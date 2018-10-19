@@ -27,16 +27,16 @@ export default {
   },
   methods: {
     upvote() {
-      const { code, id, userLiked, user } = this
+      const { code, id, userLiked } = this
       const value = userLiked === -1 ? 0 : 1
       this.$store.dispatch('questions/putLikes',
-        { code, id, data: { creatorID: user.id, value } })
+        { code, id, data: { value } })
     },
     downvote() {
-      const { code, id, userLiked, user } = this
+      const { code, id, userLiked } = this
       const value = userLiked === 1 ? 0 : -1
       this.$store.dispatch('questions/putLikes',
-        { code, id, data: { creatorID: user.id, value } })
+        { code, id, data: { value } })
     }
   }
 }
