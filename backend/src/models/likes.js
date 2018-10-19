@@ -34,13 +34,46 @@ class Likes {
      * Put likes
      */
     putLikes({ type, id, userID, value }) {
-        return this.db
-            .insertUnique('likes', {
-                objectType: type,
-                objectID: id,
-                userID,
-                value
-            })
+
+        // Stuff to update likes
+        const data = {
+            objectType: type,
+            objectID: id,
+            userID,
+            value
+        }
+        const insertValues = Object.values(data)
+        const insertColumns = Object.keys(data)
+        const insertPlaceholders = insertColumns.map(_ => '?').join()
+        const updateLikes = `REPLACE INTO likes (${insertColumns}) VALUES (${insertPlaceholders})`
+
+        // Stuff to update reputation
+        const creatorTable = (type === 'question' || type === 'review') ? type : 'comment'
+        const updateReputation = `UPDATE user
+        SET reputation = (SELECT reputation FROM user WHERE id = ?) + ?
+        WHERE id = ?`
+
+        // Classic
+        const db = this.db._db
+        return new Promise((resolve, reject) => {
+            Promise.all([
+                this.db.query('SELECT * FROM likes WHERE objectType=? AND objectID=? AND userID=?',
+                    [type, id, userID]),
+                this.db.query(`SELECT userID FROM ${creatorTable} WHERE id = ?`,
+                    [id])
+            ])
+                .then(([originalLike, creator]) => {
+                    const oldLike = originalLike && originalLike.value || 0
+                    const creatorID = creator.userID
+                    const repChange = creatorID != userID ? (value - oldLike) : 0
+                    db.serialize(function() {
+                        db.exec('BEGIN TRANSACTION')
+                            .run(updateLikes, [...insertValues])
+                            .run(updateReputation, [creatorID, repChange, creatorID])
+                            .exec('COMMIT', () => resolve(this.lastID))
+                    })
+                })
+        })
             .then(() => this.getLikes({ type, id }))
     }
 }

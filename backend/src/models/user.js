@@ -13,7 +13,6 @@ class User {
     getProfile(id) {
         return Promise.all([
             this.db.query('SELECT id, email, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id]),
-            this.getUserReputation(id)
         ]).then(([profile, reputation]) => {
             return { ...profile, ...reputation }
         })
@@ -28,48 +27,9 @@ class User {
     getPublicProfile(id) {
         return Promise.all([
             this.db.query('SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id]),
-            this.getUserReputation(id)
         ]).then(([profile, reputation]) => {
             return { ...profile, ...reputation }
         })
-    }
-
-    /**
-     * Getter that calculates a user's reputation based on
-     * the number of likes they have received, exluding self
-     * likes.
-     * @param   {number}  id   Required id param.
-     * @returns {object}
-     */
-    // join on likes <--> comments join on likes <--> reviews join on likes <--> questions
-    getUserReputation(id) {
-        return Promise.all([
-            this.db.query(`SELECT SUM(value) AS rep 
-                           FROM comment JOIN likes
-                           ON likes.objectType = 'answer' AND likes.objectID = comment.id 
-                           WHERE likes.userID!=? AND comment.userID=?`, [id, id]),
-            this.db.query(`SELECT SUM(value) AS rep 
-                           FROM comment JOIN likes
-                           ON likes.objectType = 'reply' AND likes.objectID = comment.id 
-                           WHERE likes.userID!=? AND comment.userID=?`, [id, id]),
-            this.db.query(`SELECT SUM(value) AS rep 
-                           FROM question JOIN likes
-                           ON likes.objectType = 'question' AND likes.objectID = question.id 
-                           WHERE likes.userID!=? AND question.userID=?`, [id, id]),
-            this.db.query(`SELECT SUM(value) AS rep 
-                           FROM review JOIN likes
-                           ON likes.objectType = 'review' AND likes.objectID = review.id 
-                           WHERE likes.userID!=? AND review.userID=?`, [id, id])
-        ])
-            .then((results) => {
-                let reputation = 0
-                results.forEach(({ rep }) => { reputation += rep })
-                if (reputation < 0) {
-                    return { 'reputation': 0 }
-                } else {
-                    return { reputation }
-                }
-            })
     }
 
     /**
