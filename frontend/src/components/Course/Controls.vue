@@ -28,13 +28,11 @@ export default {
   computed: {
     authenticated() {
       return this.$store.getters['auth/isLoggedIn']
-    }
-  },
-  data() {
-    return {
-      disabledMessage: {
-        content: 'You must be logged in to post.',
-        placement: 'left'
+    },
+    disabledMessage() {
+      return {
+          content: this.authenticated ? '' : 'You must be logged in to post.',
+          placement: 'left'
       }
     }
   }
