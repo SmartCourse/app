@@ -47,7 +47,7 @@ class Review {
      *                       contain the user data (probs eventually from an auth token)
      */
     postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID }) {
-        if (recommend != DONT_RECOMMEND && recommend != RECOMMEND) throw Error('Invalid recommend value')
+        if (recommend !== DONT_RECOMMEND && recommend !== RECOMMEND) throw Error('Invalid recommend value')
         if (enjoy < MIN_ENJOY || enjoy > MAX_ENJOY) throw Error('Invalid enjoy value')
 
         ;[difficulty, teaching, workload].forEach(item => {
@@ -58,8 +58,6 @@ class Review {
         return this.db
             .insert('review', { code, userID, title, body, recommend, enjoy, difficulty, teaching, workload })
             .then((reviewID) => this.getReview(reviewID))
-            // TODO de-expensivify this
-            .then((review) => courseModel.updateCourseRatings(code).then(() => review))
     }
 }
 

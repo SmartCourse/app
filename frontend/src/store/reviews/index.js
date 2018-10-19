@@ -4,7 +4,7 @@ import {
   newReviewMapper
 } from '@/utils/api/reviews'
 
-import { doRequestFactory } from '@/store/utils'
+import { doRequestFactory, sortByHotness } from '@/store/utils'
 
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
@@ -40,7 +40,7 @@ const mutations = {
     state.reviewObj.review = reviewMapper(review)
   },
   FOCUS_REPLIES (state, replies) {
-    state.reviewObj.replies = replies.map(replyMapper)
+    state.reviewObj.replies = sortByHotness(replies.map(replyMapper))
   },
   FOCUS_LIKES (state, { likes }) {
     const oldLikes = state.reviewObj.review.likes
@@ -72,16 +72,16 @@ const actions = {
     return dispatch('doRequest', { action: ACTIONS.POST_REPLY, load: 'TOGGLE_LOADING_REPLIES', args: [code, id, form] })
   },
   async getLikes ({ dispatch }, { id, code }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_LIKES, load: 'TOGGLE_LOADING_REVIEW', args: [code, id] })
+    return dispatch('doRequest', { action: ACTIONS.GET_LIKES, load: '', args: [code, id] })
   },
   async putLikes ({ dispatch }, { id, code, data }) {
-    return dispatch('doRequest', { action: ACTIONS.PUT_LIKES, load: 'TOGGLE_LOADING_REVIEW', args: [code, id, data] })
+    return dispatch('doRequest', { action: ACTIONS.PUT_LIKES, load: '', args: [code, id, data] })
   },
   async getReplyLikes ({ dispatch }, { id, code, commentID }) {
-    return dispatch('doRequest', { action: ACTIONS.GET_REPLY_LIKES, load: 'TOGGLE_LOADING_REPLIES', args: [code, id, commentID] })
+    return dispatch('doRequest', { action: ACTIONS.GET_REPLY_LIKES, load: '', args: [code, id, commentID] })
   },
   async putReplyLikes ({ dispatch }, { id, code, commentID, data }) {
-    return dispatch('doRequest', { action: ACTIONS.PUT_REPLY_LIKES, load: 'TOGGLE_LOADING_REPLIES', args: [code, id, commentID, data] })
+    return dispatch('doRequest', { action: ACTIONS.PUT_REPLY_LIKES, load: '', args: [code, id, commentID, data] })
   }
 }
 
