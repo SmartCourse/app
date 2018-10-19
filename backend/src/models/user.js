@@ -11,11 +11,11 @@ class User {
      */
 
     getProfile(id) {
-        return Promise.all([
-            this.db.query('SELECT id, email, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id]),
-        ]).then(([profile, reputation]) => {
-            return { ...profile, ...reputation }
-        })
+        return this.db.query('SELECT id, email, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
+            .then((profile) => {
+                if (profile.reputation < 0) profile.reputation = 0
+                return { ...profile }
+            })
     }
 
     /**
@@ -25,11 +25,11 @@ class User {
      * @returns {object}
      */
     getPublicProfile(id) {
-        return Promise.all([
-            this.db.query('SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id]),
-        ]).then(([profile, reputation]) => {
-            return { ...profile, ...reputation }
-        })
+        return this.db.query('SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
+            .then((profile) => {
+                if (profile.reputation < 0) profile.reputation = 0
+                return { ...profile }
+            })
     }
 
     /**

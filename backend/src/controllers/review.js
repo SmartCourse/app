@@ -14,12 +14,11 @@ exports.getReview = function ({ user, params }, res) {
         likesModel.getLikes({ type: 'review', id: params.id }),
         likesModel.getUserLiked({ type: 'review', id: params.id, userID })
     ]).then(([review, likes, userLiked]) => {
-        return Promise.all([
-            userModel.getPublicProfile(review.userID)
-        ]).then(([userInfo]) => {
-            delete review.userID
-            return { ...review, ...likes, ...userLiked, user: userInfo }
-        })
+        return userModel.getPublicProfile(review.userID)
+            .then((userInfo) => {
+                delete review.userID
+                return { ...review, ...likes, ...userLiked, user: userInfo }
+            })
     })
 
     responseHandler(getReview, res)

@@ -42,7 +42,7 @@ exports.userLikesMapper = (likes, userLikes) => (
     user: {
         id: userID,
         displayName,
-        reputation,
+        ...(reputation >= 0 ? { reputation } : { 'reputation': 0 }),
         degree,
         gradYear,
         picture,
