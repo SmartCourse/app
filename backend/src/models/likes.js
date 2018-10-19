@@ -22,12 +22,10 @@ class Likes {
      * Get likes for a specific user
      */
     getUserLiked({ type, id, userID }) {
-        console.log('USERRRRRRR' + userID)
         return this.db
             .query('SELECT value AS userLiked FROM likes WHERE objectType=? AND objectID=? AND userID=?',
                 [type, id, userID])
             .then((userLiked) => {
-                console.log('USERRRRRRR LIKED' + userLiked)
                 return userLiked || { userLiked: 0 }
             })
     }
