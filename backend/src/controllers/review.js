@@ -8,7 +8,6 @@ const { responseHandler, userLikesMapper } = require('../utils/helpers')
 
 /* GET review for single id. */
 exports.getReview = function ({ user, params }, res) {
-    console.log(user)
     const userID = user && user.id || ANONYMOUS
     const getReview = Promise.all([
         reviewModel.getReview(params.id),
