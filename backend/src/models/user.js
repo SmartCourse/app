@@ -54,11 +54,11 @@ class User {
                            WHERE likes.userID!=? AND comment.userID=?`, [id, id]),
             this.db.query(`SELECT SUM(value) AS rep 
                            FROM question JOIN likes
-                           ON likes.objectType = 'question' likes.objectID = question.id 
+                           ON likes.objectType = 'question' AND likes.objectID = question.id 
                            WHERE likes.userID!=? AND question.userID=?`, [id, id]),
             this.db.query(`SELECT SUM(value) AS rep 
                            FROM review JOIN likes
-                           ON likes.objectType = 'review' likes.objectID = review.id 
+                           ON likes.objectType = 'review' AND likes.objectID = review.id 
                            WHERE likes.userID!=? AND review.userID=?`, [id, id])
         ])
             .then((results) => {
