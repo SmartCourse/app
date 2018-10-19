@@ -24,7 +24,7 @@ class Question {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
             .queryAll(
-              `SELECT
+                `SELECT
                 question.*,
                 COUNT(questionID) AS numAnswers
                FROM question
