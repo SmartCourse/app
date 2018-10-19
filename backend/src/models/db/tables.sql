@@ -87,6 +87,8 @@ CREATE TABLE likes (
         objectType TEXT NOT NULL,
         objectID INTEGER NOT NULL,
         userID INTEGER NOT NULL,
+        creatorID INTEGER NOT NULL,
         value INTEGER DEFAULT '0',
-        FOREIGN KEY (userID) REFERENCES user(id)
+        FOREIGN KEY (userID) REFERENCES user(id),
+        FOREIGN KEY (creatorID) REFERENCES user(id)
         )

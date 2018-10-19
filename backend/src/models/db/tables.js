@@ -134,8 +134,10 @@ function createLikesTable (db) {
             objectType TEXT NOT NULL,
             objectID INTEGER NOT NULL,
             userID INTEGER NOT NULL,
+            creatorID INTEGER NOT NULL,
             value INTEGER DEFAULT '0',
-            FOREIGN KEY (userID) REFERENCES user(id)
+            FOREIGN KEY (userID) REFERENCES user(id),
+            FOREIGN KEY (creatorID) REFERENCES user(id)
             )`,
         (err) => {
             if (err) {
@@ -446,6 +448,7 @@ function initLikes(db, parent) {
     for(let i = startIndex; i < startIndex + numLikes; ++i) {
         likes.push({
           userID: i % NUM_DUMMY_USERS,
+          creatorID: (i + 1) % NUM_DUMMY_USERS,
           // more likely to be positive!
           value: Math.random() > 0.7 ? -1 : 1,
           ...parent

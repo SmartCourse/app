@@ -9,9 +9,15 @@ class User {
      * Return specialised information for auth'd user
      * @param {string} id The id of the auth'd user
      */
+
     getProfile(id) {
-        return this.db
-            .query('SELECT id, email, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
+        return Promise.all([
+            this.db.query('SELECT id, email, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id]),
+            this.getUserReputation(id)
+        ]).then(([profile, reputation]) => {
+            console.log({ ...profile, ...reputation })
+            return { ...profile, ...reputation }
+        })
     }
 
     /**
@@ -21,8 +27,34 @@ class User {
      * @returns {object}
      */
     getPublicProfile(id) {
-        return this.db
-            .query('SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
+        return Promise.all([
+            this.db.query('SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id]),
+            this.getUserReputation(id)
+        ]).then(([profile, reputation]) => {
+            return { ...profile, ...reputation }
+        })
+    }
+
+    /**
+     * Getter that calculates a user's reputation based on
+     * the number of likes they have received, exluding self
+     * likes.
+     * @param   {number}  id   Required id param.
+     * @returns {object}
+     */
+    getUserReputation(id) {
+        return new Promise((resolve, reject) => {
+            this.db.query('SELECT SUM(value) AS reputation FROM likes WHERE creatorID=? AND userID!=?',
+                [id, id])
+                .then((res) => {
+                    if (!res || res.reputation < 0) {
+                        resolve({ reputation: 0 })
+                    } else {
+                        resolve(res)
+                    }
+                })
+                .catch((err) => reject(err))
+        })
     }
 
     /**

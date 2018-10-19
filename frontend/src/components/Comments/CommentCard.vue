@@ -24,24 +24,18 @@ export default {
     upvote() {
       const { type, code, id, comment } = this
       const value = comment.userLiked === -1 ? 0 : 1
-      if (type === 'Answer') {
-        this.$store.dispatch('questions/putAnswerLikes',
-          { code, id, commentID: comment.id, data: { value } })
-      } else if (type === 'Reply') {
-        this.$store.dispatch('reviews/putReplyLikes',
-          { code, id, commentID: comment.id, data: { value } })
-      }
+      const method = type === 'Answer'
+        ? 'questions/putAnswerLikes' : 'reviews/putReplyLikes'
+      this.$store.dispatch(method,
+        { code, id, commentID: comment.id, data: { creatorID: comment.user.id, value } })
     },
     downvote() {
       const { type, code, id, comment } = this
       const value = comment.userLiked === 1 ? 0 : -1
-      if (type === 'Answer') {
-        this.$store.dispatch('questions/putAnswerLikes',
-          { code, id, commentID: comment.id, data: { value } })
-      } else if (type === 'Reply') {
-        this.$store.dispatch('reviews/putReplyLikes',
-          { code, id, commentID: comment.id, data: { value } })
-      }
+      const method = type === 'Answer'
+        ? 'questions/putAnswerLikes' : 'reviews/putReplyLikes'
+      this.$store.dispatch(method,
+        { code, id, commentID: comment.id, data: { creatorID: comment.user.id, value } })
     }
   }
 }
