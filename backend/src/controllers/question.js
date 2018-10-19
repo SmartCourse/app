@@ -1,3 +1,4 @@
+const { ANONYMOUS } = require('../models/constants')
 const questionModel = require('../models/question')()
 const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
@@ -7,7 +8,7 @@ const { responseHandler, userLikesMapper } = require('../utils/helpers')
 
 /* GET question data. */
 exports.getQuestion = function ({ user, params }, res) {
-    const userID = user.id
+    const userID = user && user.id || ANONYMOUS
     const getQuestion = Promise.all([
         questionModel.getQuestion(params.id),
         likesModel.getLikes({ type: 'question', id: params.id }),
@@ -27,7 +28,7 @@ exports.getQuestion = function ({ user, params }, res) {
 
 /* GET question ansewrs. */
 exports.getQuestionAnswers = function ({ user, params, query }, res) {
-    const userID = user.id
+    const userID = user && user.id || ANONYMOUS
     const getAnswers = new Promise((resolve, reject) => {
         // Get the answers
         commentModel.getComments({ questionID: params.id }, query.p)
@@ -57,7 +58,10 @@ exports.postAnswer = function ({ user, params, query, body }, res) {
     const promise = new Promise((resolve, reject) =>
         // post the comment, then get it
         commentModel.postComment({ questionID: params.id }, body)
-            .then(answer => resolve(userLikesMapper([{ likes: 0 }])(answer, 0))) // 0 likes for new comment!
+            .then(answer => resolve(userLikesMapper(
+                // 0 likes for new answer!
+                [{ likes: 0 }], [{ userLiked: 0 }])(answer, 0, 0))
+            )
             .catch(err => reject(err))
     )
 

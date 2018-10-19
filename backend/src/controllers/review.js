@@ -1,3 +1,4 @@
+const { ANONYMOUS } = require('../models/constants')
 const reviewModel = require('../models/review')()
 const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
@@ -7,7 +8,7 @@ const { responseHandler, userLikesMapper } = require('../utils/helpers')
 
 /* GET review for single id. */
 exports.getReview = function ({ user, params }, res) {
-    const userID = user.id
+    const userID = user && user.id || ANONYMOUS
     const getReview = Promise.all([
         reviewModel.getReview(params.id),
         likesModel.getLikes({ type: 'review', id: params.id }),
@@ -27,7 +28,7 @@ exports.getReview = function ({ user, params }, res) {
 
 /* GET top level review replies . */
 exports.getReviewComments = function ({ user, params, query }, res) {
-    const userID = user.id
+    const userID = user && user.id || ANONYMOUS
     const getReplies = new Promise((resolve, reject) => {
         // Get the replies
         commentModel.getComments({ reviewID: params.id }, query.p)
@@ -57,7 +58,10 @@ exports.postComment = function ({ user, params, query, body }, res) {
     const promise = new Promise((resolve, reject) =>
         // post the comment, then get it
         commentModel.postComment({ reviewID: params.id }, body)
-            .then(comment => resolve(userLikesMapper([{ likes: 0 }])(comment, 0))) // 0 likes for new comment!
+            .then(comment => resolve(userLikesMapper(
+                // 0 likes for new comment!
+                [{ likes: 0 }], [{ userLiked: 0 }])(comment, 0, 0))
+            )
             .catch(err => reject(err))
     )
 
