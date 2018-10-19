@@ -24,7 +24,7 @@ exports.isAuthorized = function(req, res, next) {
     next()
 }
 
-exports.userLikesMapper = likes => (
+exports.userLikesMapper = (likes, userLikes) => (
     {
         userID,
         displayName,
@@ -38,6 +38,7 @@ exports.userLikesMapper = likes => (
     index
 ) => ({
     likes: likes[index].likes,
+    userLiked: userLikes[index].userLiked,
     user: {
         id: userID,
         displayName,

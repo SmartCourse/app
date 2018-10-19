@@ -10,6 +10,7 @@
 export default {
   props: {
     likes: Number,
+    userLiked: Number,
     upvote: Function,
     downvote: Function
   }

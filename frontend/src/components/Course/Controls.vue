@@ -31,8 +31,8 @@ export default {
     },
     disabledMessage() {
       return {
-          content: this.authenticated ? '' : 'You must be logged in to post.',
-          placement: 'left'
+        content: this.authenticated ? '' : 'You must be logged in to post.',
+        placement: 'left'
       }
     }
   }

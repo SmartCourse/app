@@ -60,8 +60,9 @@ const mutations = {
     state.questionObj.answers = [ans, ...ordered]
   },
   FOCUS_LIKES (state, { likes }) {
+    const oldLikes = state.questionObj.question.likes
     state.questionObj.question.likes = likes
-    // TODO - ALREADY UPVOTED
+    state.questionObj.question.userLiked += likes - oldLikes
   },
   API_ERROR (state, { code, message }) {
     state.error.code = code

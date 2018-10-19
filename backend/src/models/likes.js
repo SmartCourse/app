@@ -6,7 +6,7 @@ class Likes {
     }
 
     /*
-     * Get question likes
+     * Get likes
      */
     getLikes({ type, id }) {
         return this.db
@@ -19,7 +19,19 @@ class Likes {
     }
 
     /*
-     * Put question likes
+     * Get likes for a specific user
+     */
+    getUserLiked({ type, id, userID }) {
+        return this.db
+            .query('SELECT value AS userLiked FROM likes WHERE objectType=? AND objectID=? AND userID=?',
+                [type, id, userID])
+            .then((userLiked) => {
+                return userLiked || { userLiked: 0 }
+            })
+    }
+
+    /*
+     * Put likes
      */
     putLikes({ type, id, userID, value }) {
         return this.db

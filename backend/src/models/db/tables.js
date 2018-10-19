@@ -295,8 +295,8 @@ function initQuestionsTable(db) {
     const promises = questions.map(q => {
         insertDB(db, 'question', q, prep)
             .then(id => Promise.all([
-              initComments(db, { questionID: id }),
-              initLikes(db, { objectType: 'question', objectID: id })
+                initComments(db, { questionID: id }),
+                initLikes(db, { objectType: 'question', objectID: id })
             ]))
     })
     return Promise.all(promises)
