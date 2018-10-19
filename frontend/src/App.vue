@@ -24,6 +24,8 @@ export default {
     this.$store.dispatch('getCourses')
     this.$store.dispatch('auth/checkAuth')
     this.$store.dispatch('subject/getSubjects')
+    this.$store.dispatch('getFaculties')
+    this.$store.dispatch('getDegrees')
   }
 }
 
