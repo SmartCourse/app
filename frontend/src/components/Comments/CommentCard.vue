@@ -4,6 +4,7 @@
       :body="comment.body"
       :vote="{ upvote, downvote, likes: comment.likes, disabled: !authenticated }"
       :user="comment.user"
+      :class="comment.accepted ? 'accepted' : ''"
     >
     </PostCard>
 </template>
@@ -44,3 +45,8 @@ export default {
   }
 }
 </script>
+<style>
+.accepted {
+  border: solid 1px var(--theme-light);
+}
+</style>

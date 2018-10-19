@@ -1,4 +1,3 @@
-const { ANONYMOUS } = require('../models/constants')
 const reviewModel = require('../models/review')()
 const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
@@ -45,9 +44,15 @@ exports.getReviewComments = function ({ params, query }, res) {
 
 /* POST new comment. */
 exports.postComment = function ({ user, params, query, body }, res) {
-    body.userID = user && user.id || ANONYMOUS
-    commentModel.postComment({ reviewID: params.id }, body)
-        .then(exports.getReviewComments({ params, query }, res))
+    body.userID = user.id
+    const promise = new Promise((resolve, reject) =>
+        // post the comment, then get it
+        commentModel.postComment({ reviewID: params.id }, body)
+            .then(comment => resolve(userLikesMapper([{ likes: 0 }])(comment, 0))) // 0 likes for new comment!
+            .catch(err => reject(err))
+    )
+
+    responseHandler(promise, res)
         .catch(errorHandler(res))
 }
 
@@ -59,7 +64,7 @@ exports.getReviewLikes = function ({ params }, res) {
 
 /* PUT updated likes value */
 exports.putReviewLikes = function ({ user, params, body }, res) {
-    body.userID = user && user.id || ANONYMOUS
+    body.userID = user.id
     responseHandler(likesModel.putLikes({ type: 'review', ...params, ...body }), res)
         .catch(errorHandler(res))
 }
@@ -72,7 +77,7 @@ exports.getReplyLikes = function ({ params }, res) {
 
 /* PUT updated reply likes value */
 exports.putReplyLikes = function ({ user, params, body, query }, res) {
-    body.userID = user && user.id || ANONYMOUS
+    body.userID = user.id
     likesModel.putLikes({ type: 'reply', id: params.replyID, ...body })
         .then(exports.getReviewComments({ params, query }, res))
 }
