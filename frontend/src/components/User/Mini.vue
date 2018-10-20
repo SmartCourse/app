@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="{ name: 'Profile', params: { id } }" tag='div' class="avatar">
+    <router-link :to="{ name: 'Profile', params: { id: String(id) } }" tag='div' class="avatar">
         <!-- TODO: use picture if present -->
         <div :class="`${background} letter`">
           {{ name.charAt(0).toUpperCase() }}
@@ -12,7 +12,10 @@
 export default {
   props: {
     name: String,
-    id: Number,
+    id: {
+      type: Number,
+      required: true
+    },
     picture: String
   },
   computed: {

@@ -37,7 +37,10 @@ export default {
     Name
   },
   props: {
-    id: String
+    id: {
+      type: String,
+      required: true
+    }
   },
   computed: {
     ...mapGetters('user', {

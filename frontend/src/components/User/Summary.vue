@@ -21,7 +21,10 @@ export default {
     /* name/displayName */
     displayName: String,
     /* Requred for linking */
-    id: Number,
+    id: {
+      type: Number,
+      required: true
+    },
     /* provided by container */
     degree: String,
     picture: String,
