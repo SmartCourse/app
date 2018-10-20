@@ -1,5 +1,4 @@
 const { DONT_RECOMMEND, RECOMMEND, MIN_ENJOY, MAX_ENJOY, MIN_OPTION, MAX_OPTION } = require('./constants')
-const courseModel = require('../models/course')()
 
 /* All inputs should be validated in this class that are review related */
 class Review {

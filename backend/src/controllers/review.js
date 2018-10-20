@@ -8,7 +8,7 @@ const { responseHandler, userLikesMapper } = require('../utils/helpers')
 
 /* GET review for single id. */
 exports.getReview = function ({ user, params }, res) {
-    const userID = user && user.id || ANONYMOUS
+    const userID = (user && user.id) || ANONYMOUS
     const getReview = Promise.all([
         reviewModel.getReview(params.id),
         likesModel.getLikes({ type: 'review', id: params.id }),
@@ -28,7 +28,7 @@ exports.getReview = function ({ user, params }, res) {
 
 /* GET top level review replies . */
 exports.getReviewComments = function ({ user, params, query }, res) {
-    const userID = user && user.id || ANONYMOUS
+    const userID = (user && user.id) || ANONYMOUS
     const getReplies = new Promise((resolve, reject) => {
         // Get the replies
         commentModel.getComments({ reviewID: params.id }, query.p)
