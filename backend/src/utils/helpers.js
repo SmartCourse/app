@@ -24,6 +24,11 @@ exports.isAuthorized = function(req, res, next) {
     next()
 }
 
+exports.cacheResponse = function(req, res, next) {
+    res.set({ 'Cache-Control': 'public, max-age=31557600' })
+    next()
+}
+
 exports.userLikesMapper = (likes, userLikes) => (
     {
         userID,

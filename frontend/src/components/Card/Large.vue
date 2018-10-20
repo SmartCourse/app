@@ -1,7 +1,10 @@
 <template>
     <Card>
-        <!-- Add badges here in future -->
-        <CardHeader v-if="title">{{ title }}</CardHeader>
+        <div v-if="title" class="space-between">
+            <CardHeader >{{ title }}</CardHeader>
+             <!-- Add badges here in future -->
+            <slot/>
+        </div>
         <!-- User block -->
         <User v-bind="user" :published="published"/>
         <!-- Content block and user interaction -->
@@ -45,6 +48,12 @@ export default {
     display: grid;
     grid-template-columns: 45px auto;
     grid-gap: 10px;
+}
+
+.space-between {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
 }
 
 p {

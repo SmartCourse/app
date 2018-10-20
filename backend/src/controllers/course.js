@@ -40,12 +40,12 @@ exports.getCourseQuestions = function ({ params, query }, res) {
             }
             const lastPage = Math.trunc((questionCount[0]['COUNT()'] + pageSize - 1) / pageSize)
             return {
-                'meta': {
-                    'curr': pageNumber,
-                    'last': lastPage || 1,
-                    'pageSize': pageSize
+                meta: {
+                    curr: pageNumber,
+                    last: lastPage || 1,
+                    pageSize
                 },
-                'data': questions
+                data: questions
             }
         })
     })
@@ -75,12 +75,12 @@ exports.getCourseReviews = function ({ params, query }, res) {
             }
             const lastPage = Math.trunc((reviewCount[0]['COUNT()'] + pageSize - 1) / pageSize)
             return {
-                'meta': {
-                    'curr': pageNumber,
-                    'last': lastPage || 1,
-                    'pageSize': pageSize
+                meta: {
+                    curr: pageNumber,
+                    last: lastPage || 1,
+                    pageSize
                 },
-                'data': reviews
+                data: reviews
             }
         })
     })

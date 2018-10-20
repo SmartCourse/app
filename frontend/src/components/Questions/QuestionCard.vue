@@ -1,6 +1,6 @@
 <template>
     <PostCard
-        :vote="{ upvote, downvote, likes, disabled: !authenticated }"
+        :vote="{ upvote, downvote, userLiked, likes, disabled: !authenticated }"
         :title="title"
         :body="body"
         :user="user"
@@ -28,13 +28,13 @@ export default {
   methods: {
     upvote() {
       const { code, id, userLiked } = this
-      const value = userLiked === -1 ? 0 : 1
+      const value = userLiked === 1 ? 0 : 1
       this.$store.dispatch('questions/putLikes',
         { code, id, data: { value } })
     },
     downvote() {
       const { code, id, userLiked } = this
-      const value = userLiked === 1 ? 0 : -1
+      const value = userLiked === -1 ? 0 : -1
       this.$store.dispatch('questions/putLikes',
         { code, id, data: { value } })
     }
