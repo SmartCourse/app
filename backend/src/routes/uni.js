@@ -1,15 +1,16 @@
 const express = require('express')
-const router = express.Router()
+const uni = express.Router()
+const uniController = require('../controllers/uni')
 
-/* Get ALL universtiies */
-router.get('/', function (req, res) {
-    res.json('<h1>Welcome to the API</h1>')
-})
+const { cacheResponse } = require('../utils/helpers')
 
-/* Get data for a specific university */
-router.get('/:id', function (req, res) {
-    // let uid = req.params.id;
-    res.json({ data: '<h1></h1>' })
-})
+/* This don't change much */
+uni.use(cacheResponse)
 
-module.exports = router
+/* Return all faculties in the database */
+uni.get('/faculties', uniController.getFaculties)
+
+/* Return all degrees in the database */
+uni.get('/degrees', uniController.getDegrees)
+
+module.exports = uni

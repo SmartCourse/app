@@ -37,22 +37,18 @@ const actions = {
     if (getters.faculties.length) {
       return
     }
-    commit('TOGGLE_LOADING', true)
-    return get('/faculties')
+    return get('/uni/faculties')
       .then(data => commit('REFRESH_FACULTIES', data))
       .catch(err => console.warn(err))
-      .finally(() => commit('TOGGLE_LOADING', false))
   },
   getDegrees({ commit, getters }) {
     // avoid repeats of this
     if (getters.degrees.length) {
       return
     }
-    commit('TOGGLE_LOADING', true)
-    return get('/degrees')
+    return get('/uni/degrees')
       .then(data => commit('REFRESH_DEGREES', data))
       .catch(err => console.warn(err))
-      .finally(() => commit('TOGGLE_LOADING', false))
   }
 }
 
