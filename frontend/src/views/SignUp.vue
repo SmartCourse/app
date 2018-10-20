@@ -12,6 +12,13 @@
     >
       <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>
       <AuthInput type="password" v-model="password" placeholder="Password"/>
+
+      <span>
+        <input type="checkbox" v-model="tos"> By signing up I agree to the
+        <router-link :to="{name: 'terms-of-service'}" target="_blank" class="help-link">Terms of Service</router-link> and
+        <router-link :to="{name: 'privacy-policy'}" target="_blank" class="help-link">Privacy Policy</router-link>.
+      </span>
+
     </AppAuthForm>
     <LoadingSpinner v-else/>
   </div>
@@ -27,7 +34,8 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      tos: false
     }
   },
   components: { AppAuthForm, AuthInput },
@@ -40,6 +48,10 @@ export default {
   },
   methods: {
     createAccount() {
+      if (!this.tos) {
+        this.$store.commit('auth/ERROR', 'You must accept the terms of service to proceed.')
+        return
+      }
       const { email, password } = this
       this.$store.dispatch('auth/createAccount', { email, password })
     },
@@ -53,3 +65,14 @@ export default {
   }
 }
 </script>
+
+<style>
+
+.help-link {
+  margin: 20px 0 0;
+  font: var(--body-copy-1);
+  text-align:right;
+  color: var(--theme);
+}
+
+</style>
