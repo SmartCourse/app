@@ -6,6 +6,7 @@
       :disabled="disabled"
       :upvote="disabled ? () => {} : upvote"
       :title="disabledMsg.content"
+      :userLiked="userLiked"
       :class="disabled ? 'tooltip-wrapper disabled': ''"
     />
 </template>
@@ -16,6 +17,7 @@ import BaseVote from './base'
 export default {
   props: {
     likes: Number,
+    userLiked: Number,
     upvote: Function,
     downvote: Function,
     disabled: Boolean

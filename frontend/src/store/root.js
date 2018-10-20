@@ -37,7 +37,7 @@ const actions = {
     if (getters.faculties.length) {
       return
     }
-    return get('/faculties')
+    return get('/uni/faculties')
       .then(data => commit('REFRESH_FACULTIES', data))
       .catch(err => console.warn(err))
   },
@@ -46,7 +46,7 @@ const actions = {
     if (getters.degrees.length) {
       return
     }
-    return get('/degrees')
+    return get('/uni/degrees')
       .then(data => commit('REFRESH_DEGREES', data))
       .catch(err => console.warn(err))
   }

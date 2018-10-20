@@ -1,8 +1,8 @@
 <template>
     <div class="meta-fields">
-        <p v-on:click="upvote" class="material-icons vote">keyboard_arrow_up</p>
+        <p v-on:click="upvote" :class="[userLiked === 1 ? 'voted' : '', 'material-icons vote']">keyboard_arrow_up</p>
         <p class="likes">{{ likes }}</p>
-        <p v-on:click="downvote" class="material-icons vote">keyboard_arrow_down</p>
+        <p v-on:click="downvote" :class="[userLiked === -1 ? 'voted' : '','material-icons vote']">keyboard_arrow_down</p>
     </div>
 </template>
 
@@ -20,6 +20,9 @@ export default {
 <style scoped>
 .meta-fields {
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .vote {
@@ -46,6 +49,10 @@ export default {
 
 .vote:hover, .vote:focus {
   color: var(--black);
+}
+
+.voted {
+  color: var(--theme-light);
 }
 
 .tooltip-wrapper .vote:hover,

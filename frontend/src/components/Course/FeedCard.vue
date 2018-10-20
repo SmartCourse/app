@@ -8,9 +8,7 @@
       <p class="published">
         <time>{{ published }}</time>
       </p>
-      <p v-if="cardType === 'Review'" :class="positiveOrNegativeClass">
-        <b>{{ positiveOrNegativeText }}</b>
-      </p>
+      <Category :recommend="recommend" v-if="cardType === 'Review'"/>
       <p v-else>
         <span v-if="numAnswers === 0">Know the answer to this question?</span>
         <span v-else>{{ numAnswers }} Answers</span>
@@ -23,6 +21,7 @@
 <script>
 import Card from '@/components/Card'
 import UserMini from '@/components/User/Mini'
+import Category from '@/components/Category'
 
 export default {
   props: {
@@ -34,20 +33,15 @@ export default {
     code: String,
     id: String,
     cardType: String,
-    recommend: Number
+    recommend: Boolean
   },
   components: {
     Card,
-    UserMini
+    UserMini,
+    Category
   },
   computed: {
     /* TODO use recommendation */
-    positiveOrNegativeText() {
-      return this.recommend ? 'Recommended' : 'Not Recommended'
-    },
-    positiveOrNegativeClass() {
-      return this.recommend ? 'positive' : 'negative'
-    },
     routeName() {
       return this.cardType === 'Review' ? 'review' : 'question'
     }
@@ -74,14 +68,6 @@ export default {
 
 .published, .likes {
   text-align: right;
-}
-
-.positive {
-  color:rgba(1, 151, 1, 0.5);
-}
-
-.negative {
-  color: rgba(200, 0, 0, 0.5);
 }
 
 h3 {
