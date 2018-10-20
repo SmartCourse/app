@@ -627,7 +627,9 @@ function insertUniqueDB (db, table, data) {
 // TODO - Maybe need a better way todo more complex conditions
 function updateDB (db, table, data, conditions) {
     return new Promise((resolve, reject) => {
-        const [updateColumns, updateValues] = Object.entries(data)
+        const updateValues = Object.values(data)
+        const updateColumns = Object.keys(data)
+
         const updatePlaceholders = updateColumns.map(col => `${col}=?`).join(',')
 
         let query = `UPDATE ${table} SET ${updatePlaceholders}`
