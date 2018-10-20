@@ -20,6 +20,9 @@ export default {
 <style scoped>
 .meta-fields {
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .vote {
@@ -44,8 +47,12 @@ export default {
   text-align: center;
 }
 
-.vote:hover, .vote:focus, .voted {
+.vote:hover, .vote:focus {
   color: var(--black);
+}
+
+.voted {
+  color: var(--theme);
 }
 
 .tooltip-wrapper .vote:hover,

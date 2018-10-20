@@ -10,12 +10,9 @@ class Likes {
      */
     getLikes({ type, id }) {
         return this.db
-            .query('SELECT SUM(value) FROM likes WHERE objectType=? AND objectID=?',
+            .query('SELECT SUM(value) as sum FROM likes WHERE objectType=? AND objectID=?',
                 [type, id])
-            .then((sum) => {
-                const likes = sum['SUM(value)'] ? sum['SUM(value)'] : 0
-                return { likes }
-            })
+            .then(({ sum }) => ({ likes: sum || 0 }))
     }
 
     /*
@@ -25,9 +22,7 @@ class Likes {
         return this.db
             .query('SELECT value AS userLiked FROM likes WHERE objectType=? AND objectID=? AND userID=?',
                 [type, id, userID])
-            .then((userLiked) => {
-                return userLiked || { userLiked: 0 }
-            })
+            .then((userLiked) => ({ userLiked: userLiked || 0 }))
     }
 
     /*
