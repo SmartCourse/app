@@ -1,11 +1,11 @@
 <template>
-    <div class="avatar">
+    <router-link :to="{ name: 'Profile', params: { id } }" tag='div' class="avatar">
         <!-- TODO: use picture if present -->
         <div :class="`${background} letter`">
           {{ name.charAt(0).toUpperCase() }}
         </div>
         <!--div :class="" :style="`background-image:url(${picture});`" v-else /-->
-    </div>
+    </router-link>
 </template>
 
 <script>
