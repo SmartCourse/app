@@ -6,26 +6,31 @@ export function getQuestion(course, id) {
   return get(`/course/${course}/question/${id}`)
 }
 
-export function answerMapper({ id, questionID, likes, user, body, timestamp }) {
+export function answerMapper({ id, questionID, likes, user, userLiked, body, timestamp }) {
   return {
     id: String(id),
     questionID: String(questionID),
     body,
     likes,
+    userLiked,
     user,
-    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true })
+    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true }),
+    timestamp: new Date(timestamp + 'Z')
   }
 }
 
-export function questionMapper({ id, code, likes, user, title, body, timestamp }) {
+export function questionMapper({ id, code, likes, userLiked, numAnswers, user, title, body, timestamp }) {
   return {
     id: String(id),
     code,
     title,
     body,
+    numAnswers,
     likes,
+    userLiked,
     user,
-    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true })
+    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true }),
+    timestamp: new Date(timestamp + 'Z')
   }
 }
 

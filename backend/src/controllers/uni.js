@@ -1,11 +1,23 @@
-const subjectModel = require('../models/subject')()
+const uniModel = require('../models/uni')()
 const courseModel = require('../models/course')()
 const errorHandler = require('./error')
 const { responseHandler } = require('../utils/helpers')
 
 /* Get all subjects */
 exports.getSubjects = function (_, res) {
-    responseHandler(subjectModel.getSubjects(), res)
+    responseHandler(uniModel.getSubjects(), res)
+        .catch(errorHandler(res))
+}
+
+/* Get all degrees */
+exports.getDegrees = function (_, res) {
+    responseHandler(uniModel.getDegrees(), res)
+        .catch(errorHandler(res))
+}
+
+/* Get all faculties */
+exports.getFaculties = function (_, res) {
+    responseHandler(uniModel.getFaculties(), res)
         .catch(errorHandler(res))
 }
 

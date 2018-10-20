@@ -4,19 +4,21 @@ const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
 const errorHandler = require('./error')
-const { responseHandler } = require('../utils/helpers')
+const { responseHandler, userLikesMapper } = require('../utils/helpers')
 
 /* GET review for single id. */
-exports.getReview = function ({ params }, res) {
+exports.getReview = function ({ user, params }, res) {
+    const userID = user && user.id || ANONYMOUS
     const getReview = Promise.all([
         reviewModel.getReview(params.id),
-        likesModel.getLikes({ type: 'review', id: params.id })
-    ]).then(([review, likes]) => {
+        likesModel.getLikes({ type: 'review', id: params.id }),
+        likesModel.getUserLiked({ type: 'review', id: params.id, userID })
+    ]).then(([review, likes, userLiked]) => {
         return Promise.all([
             userModel.getPublicProfile(review.userID)
         ]).then(([userInfo]) => {
             delete review.userID
-            return { ...review, ...likes, user: userInfo }
+            return { ...review, ...likes, ...userLiked, user: userInfo }
         })
     })
 
@@ -25,25 +27,26 @@ exports.getReview = function ({ params }, res) {
 }
 
 /* GET top level review replies . */
-exports.getReviewComments = function ({ params, query }, res) {
-    const getReplies = new Promise((resolve, reject) =>
+exports.getReviewComments = function ({ user, params, query }, res) {
+    const userID = user && user.id || ANONYMOUS
+    const getReplies = new Promise((resolve, reject) => {
+        // Get the replies
         commentModel.getComments({ reviewID: params.id }, query.p)
-          .then((replies) => {
-            return Promise.all([
-              Promise.all(replies.map(reply => likesModel.getLikes({ type: 'reply', id: reply.id }))),
-              Promise.all(replies.map(reply => userModel.getPublicProfile(reply.userID)))
-            ])
-            .then(([likes, users]) => {
-              for (var i = 0; i < replies.length; i++) {
-                delete replies[i].userID
-                replies[i].likes = likes[i].likes
-                replies[i].user = users[i]
-              }
-              resolve(replies)
-            })
-          })
-          .catch(err => reject(err))
-        )
+            .then(replies => Promise.all([
+                replies,
+                Promise.all(
+                    replies.map(reply => likesModel.getLikes(
+                        { type: 'reply', id: reply.id }))
+                ),
+                Promise.all(
+                    replies.map(reply => likesModel.getUserLiked(
+                        { type: 'reply', id: reply.id, userID }))
+                )
+            ]))
+            .then(([reviews, likes, userLikes]) => reviews.map(userLikesMapper(likes, userLikes)))
+            .then(resolve)
+            .catch(err => reject(err))
+    })
 
     responseHandler(getReplies, res)
         .catch(errorHandler(res))
@@ -51,9 +54,18 @@ exports.getReviewComments = function ({ params, query }, res) {
 
 /* POST new comment. */
 exports.postComment = function ({ user, params, query, body }, res) {
-    body.userID = user && user.id || ANONYMOUS
-    commentModel.postComment({ reviewID: params.id }, body)
-        .then(exports.getReviewComments({ params, query }, res))
+    body.userID = user.id
+    const promise = new Promise((resolve, reject) =>
+        // post the comment, then get it
+        commentModel.postComment({ reviewID: params.id }, body)
+            .then(comment => resolve(userLikesMapper(
+                // 0 likes for new comment!
+                [{ likes: 0 }], [{ userLiked: 0 }])(comment, 0, 0))
+            )
+            .catch(err => reject(err))
+    )
+
+    responseHandler(promise, res)
         .catch(errorHandler(res))
 }
 
@@ -65,7 +77,7 @@ exports.getReviewLikes = function ({ params }, res) {
 
 /* PUT updated likes value */
 exports.putReviewLikes = function ({ user, params, body }, res) {
-    body.userID = user && user.id || ANONYMOUS
+    body.userID = user.id
     responseHandler(likesModel.putLikes({ type: 'review', ...params, ...body }), res)
         .catch(errorHandler(res))
 }
@@ -78,7 +90,7 @@ exports.getReplyLikes = function ({ params }, res) {
 
 /* PUT updated reply likes value */
 exports.putReplyLikes = function ({ user, params, body, query }, res) {
-    body.userID = user && user.id || ANONYMOUS
+    body.userID = user.id
     likesModel.putLikes({ type: 'reply', id: params.replyID, ...body })
-        .then(exports.getReviewComments({ params, query }, res))
+        .then(exports.getReviewComments({ user, params, query }, res))
 }

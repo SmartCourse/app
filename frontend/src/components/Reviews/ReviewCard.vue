@@ -18,6 +18,7 @@ export default {
     id: String,
     user: Object,
     likes: Number,
+    userLiked: Number,
     title: String,
     body: String,
     published: String,
@@ -25,14 +26,16 @@ export default {
   },
   methods: {
     upvote() {
-      const { code, id } = this
+      const { code, id, userLiked } = this
+      const value = userLiked === -1 ? 0 : 1
       this.$store.dispatch('reviews/putLikes',
-        { code, id, data: { value: 1 } })
+        { code, id, data: { value } })
     },
     downvote() {
-      const { code, id } = this
+      const { code, id, userLiked } = this
+      const value = userLiked === 1 ? 0 : -1
       this.$store.dispatch('reviews/putLikes',
-        { code, id, data: { value: -1 } })
+        { code, id, data: { value } })
     }
   }
 }

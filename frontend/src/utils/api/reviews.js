@@ -6,26 +6,30 @@ export function getReview(course, id) {
   return get(`/course/${course}/review/${id}`)
 }
 
-export function replyMapper({ id, likes, user, body, timestamp }) {
+export function replyMapper({ id, likes, userLiked, user, body, timestamp }) {
   return {
     id: String(id),
     body,
     likes,
+    userLiked,
     user,
-    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true })
+    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true }),
+    timestamp: new Date(timestamp + 'Z')
   }
 }
 
-export function reviewMapper({ id, code, title, body, likes, recommend, user, timestamp }) {
+export function reviewMapper({ id, code, title, body, likes, userLiked, recommend, user, timestamp }) {
   return {
     id: String(id),
     code,
     title,
     body,
     likes,
+    userLiked,
     recommend,
     user,
-    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true })
+    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true }),
+    timestamp: new Date(timestamp + 'Z')
   }
 }
 

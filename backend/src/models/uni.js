@@ -1,5 +1,5 @@
 /* All inputs should be validated in this class that are subject related */
-class Subject {
+class Uni {
     constructor(db) {
         console.log('initialising ORM subject object')
         this.db = db
@@ -11,7 +11,17 @@ class Subject {
      */
     getSubjects() {
         return this.db
-            .queryAll('SELECT * FROM subject')
+            .queryAll('SELECT * FROM subjects')
+    }
+
+    getDegrees() {
+        return this.db
+            .queryAll('SELECT * FROM degrees')
+    }
+
+    getFaculties() {
+        return this.db
+            .queryAll('SELECT * FROM faculties')
     }
 }
 
@@ -23,8 +33,8 @@ let Singleton = null
 module.exports = function(db) {
     if (!db) {
         /* app environment, dev or prod */
-        return (Singleton = Singleton ? Singleton : new Subject(require('./db'))) // eslint-disable-line
+        return (Singleton = Singleton ? Singleton : new Uni(require('./db'))) // eslint-disable-line
     }
     /* to allow injection */
-    return new Subject(db)
+    return new Uni(db)
 }
