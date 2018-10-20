@@ -52,7 +52,7 @@ export default {
 }
 
 .voted {
-  color: var(--theme);
+  color: var(--theme-light);
 }
 
 .tooltip-wrapper .vote:hover,

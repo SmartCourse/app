@@ -22,7 +22,7 @@ class Likes {
         return this.db
             .query('SELECT value AS userLiked FROM likes WHERE objectType=? AND objectID=? AND userID=?',
                 [type, id, userID])
-            .then((userLiked) => ({ userLiked: userLiked || 0 }))
+            .then(({ userLiked = 0 } = {}) => ({ userLiked }))
     }
 
     /*
