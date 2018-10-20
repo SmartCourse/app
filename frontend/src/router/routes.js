@@ -128,15 +128,7 @@ export default new Router({
     },
     {
       path: '/profile',
-      name: 'My Profile',
-      component: () => import('../views/MyProfile')
-    },
-    {
-      path: '/profile/:id',
       name: 'Profile',
-      props: ({ params: { id } }) => ({
-        id
-      }),
       component: () => import('../views/Profile')
     },
     {
