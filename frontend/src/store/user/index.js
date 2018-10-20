@@ -11,7 +11,6 @@ const state = {
 }
 
 const getters = {
-  // convert subjects object to array [{code, name, handbookURL}, ...]
   userObj: ({ userObj }) => userObj,
   loading: ({ loading }) => loading,
   error: ({ error }) => error
