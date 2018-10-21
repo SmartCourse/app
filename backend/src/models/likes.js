@@ -50,25 +50,21 @@ class Likes {
 
         // Classic
         const db = this.db._db
-        return new Promise((resolve, reject) => {
-            Promise.all([
-                this.db.query('SELECT * FROM likes WHERE objectType=? AND objectID=? AND userID=?',
-                    [type, id, userID]),
-                this.db.query(`SELECT userID FROM ${creatorTable} WHERE id = ?`,
-                    [id])
-            ])
-                .then(([originalLike, creator]) => {
-                    const oldLike = originalLike && originalLike.value || 0
-                    const creatorID = creator.userID
-                    const repChange = creatorID != userID ? (value - oldLike) : 0
-                    db.serialize(function() {
-                        db.exec('BEGIN TRANSACTION')
-                            .run(updateLikes, [...insertValues])
-                            .run(updateReputation, [creatorID, repChange, creatorID])
-                            .exec('COMMIT', () => resolve(this.lastID))
-                    })
-                })
-        })
+        return Promise.all([
+            this.db.query('SELECT * FROM likes WHERE objectType=? AND objectID=? AND userID=?',
+                [type, id, userID]),
+            this.db.query(`SELECT userID FROM ${creatorTable} WHERE id = ?`,
+                [id])
+        ])
+            .then(([originalLike, creator]) => {
+                const oldLike = originalLike && originalLike.value || 0
+                const creatorID = creator.userID
+                const repChange = creatorID != userID ? (value - oldLike) : 0
+                return Promise.all([
+                    db.run(updateLikes, [...insertValues]),
+                    db.run(updateReputation, [creatorID, repChange, creatorID])
+                ])
+            })
             .then(() => this.getLikes({ type, id }))
     }
 }
