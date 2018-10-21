@@ -12,13 +12,13 @@
         </ul>
         <ul class="information">
             <li class="links-header">Information</li>
-            <router-link class="link" tag='li' :to="link.href" v-for="link in info" :key="link.content">
+            <router-link class="link" tag='li' :to="link.href" v-for="link in info" :key="link.content" :style="link.disabled">
                 {{ link.content }}
             </router-link>
         </ul>
         <ul class="socials">
             <li class="links-header">Social</li>
-            <router-link class="link" tag='li' :to="link.href" v-for="link in social" :key="link.content">
+            <router-link class="link" tag='li' :to="link.href" v-for="link in social" :key="link.content" :style="link.disabled">
                 {{ link.content }}
             </router-link>
         </ul>
@@ -37,14 +37,14 @@ export default {
         { content: 'Profile', href: '/profile' }
       ],
       info: [
-        { content: 'Privacy Policy', href: '/' },
-        { content: 'Terms of Use', href: '/' },
-        { content: 'Help', href: '/' },
-        { content: 'UNSW Handbook', href: '/' }
+        { content: 'Privacy Policy', href: '/privacy-policy' },
+        { content: 'Terms of Use', href: '/terms-of-service' },
+        { content: 'Help', href: '/', disabled: 'cursor: not-allowed;' },
+        { content: 'UNSW Handbook', href: '/handbook' }
       ],
       social: [
-        { content: 'facebook', href: '/' },
-        { content: 'twitter', href: '/' }
+        { content: 'facebook', href: '/', disabled: 'cursor: not-allowed;' },
+        { content: 'twitter', href: '/', disabled: 'cursor: not-allowed;' }
       ]
     }
   }

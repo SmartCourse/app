@@ -147,6 +147,12 @@ export default new Router({
       component: () => import('../views/PrivacyPolicy')
     },
     {
+      path: '/handbook',
+      name: 'handbook',
+      beforeEnter() { location.href = 'https://www.handbook.unsw.edu.au/' }
+
+    },
+    {
       path: '/fonts',
       component: () => import('../views/Design')
     },
