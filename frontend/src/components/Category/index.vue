@@ -30,10 +30,10 @@ p {
 }
 
 .positive {
-  color:rgba(1, 151, 1, 0.5);
+  color:var(--color-positive);
 }
 
 .negative {
-  color: rgba(200, 0, 0, 0.5);
+  color:var(--color-negative);
 }
 </style>

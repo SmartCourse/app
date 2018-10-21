@@ -4,10 +4,16 @@
     <FilterSearch v-model="search"/>
     <TilesContainer v-if="filtered.length">
       <Tile :key="item.code" v-for="item in filtered">
-        <router-link v-if="item.code" class="tile-header" tag="div" :to="{ name: 'info', params: { code:item.code }}">
-          <h4>
-            {{ item.code }}
-          </h4>
+        <router-link v-if="item.code" tag="div" class="tile-header" :to="{ name: 'info', params: { code:item.code }}">
+          <div class="tile-header-top">
+            <h4>
+              {{ item.code }}
+            </h4>
+            <h6 v-if="item.recommend > -1" :class="recommendClass(item.recommend)">
+              {{ recommendText(item.recommend) }}
+            </h6>
+            <h6 v-else>No reviews</h6>
+          </div>
           <h5>
             {{ item.name }}
           </h5>
@@ -44,7 +50,11 @@ export default {
     courses() {
       if (this.loading) return []
       // filter courses to ones which match this subject code
-      return this.allCourses.filter(course => course.code.slice(0, 4) === this.code)
+      const filtered = this.allCourses.filter(course => course.code.slice(0, 4) === this.code)
+      // sort them
+      filtered.sort(({recommend:r1}, {recommend:r2}) => r1 < r2)
+
+      return filtered
     },
     filtered() {
       if (this.loading) return []
@@ -56,6 +66,18 @@ export default {
       loading: 'loading',
       allCourses: 'courses'
     })
+  },
+  methods: {
+    recommendClass(recommend) {
+      if (recommend >= 60) return 'positive'
+      else if (recommend <= 40) return 'negative'
+      else return 'neutral'
+    },
+    recommendText(recommend) {
+      if (recommend >= 60) return 'Mostly positive'
+      else if (recommend <= 40) return 'Mostly negative'
+      else return 'Mixed reviews'
+    }
   },
   components: {
     Tile,
@@ -69,3 +91,20 @@ export default {
 </script>
 
 <style scoped src='../css/subject.less' lang='less'/>
+<style scoped>
+h6 {
+    width:120px;
+    text-align:right;
+}
+.positive {
+  color:var(--color-positive);
+}
+
+.neutral {
+  color:var(--soft-black);
+}
+
+.negative {
+  color:var(--color-negative);
+}
+</style>
