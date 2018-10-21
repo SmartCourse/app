@@ -91,5 +91,5 @@ exports.getAnswerLikes = function ({ params }, res) {
 exports.putAnswerLikes = function ({ user, params, body, query }, res) {
     body.userID = user.id
     likesModel.putLikes({ type: 'answer', id: params.answerID, ...body })
-        .then(exports.getQuestionAnswers({ user, params, query }, res))
+        .then(() => exports.getQuestionAnswers({ user, params, query }, res))
 }

@@ -49,26 +49,22 @@ class Likes {
         WHERE id = ?`
 
         // Classic
-        const db = this.db._db
-        return new Promise((resolve, reject) => {
-            return Promise.all([
-                this.db.query('SELECT * FROM likes WHERE objectType=? AND objectID=? AND userID=?',
-                    [type, id, userID]),
-                this.db.query(`SELECT userID FROM ${creatorTable} WHERE id = ?`,
-                    [id])
-            ])
-                .then(([originalLike, creator]) => {
-                    const oldLike = originalLike && originalLike.value || 0
-                    const creatorID = creator.userID
-                    const repChange = creatorID != userID ? (value - oldLike) : 0
-                    return Promise.all([
-                        db.run(updateLikes, [...insertValues]),
-                        db.run(updateReputation, [creatorID, repChange, creatorID])
-                    ])
-                        .then(resolve(this.getLikes({ type, id })))
-                        .catch((err) => reject(err))
-                })
-        })
+        return Promise.all([
+            this.db.query('SELECT * FROM likes WHERE objectType=? AND objectID=? AND userID=?',
+                [type, id, userID]),
+            this.db.query(`SELECT userID FROM ${creatorTable} WHERE id = ?`,
+                [id])
+        ])
+            .then(([originalLike, creator]) => {
+                const oldLike = originalLike && originalLike.value || 0
+                const creatorID = creator.userID
+                const repChange = creatorID != userID ? (value - oldLike) : 0
+                return Promise.all([
+                    this.db.run(updateLikes, [...insertValues]),
+                    this.db.run(updateReputation, [creatorID, repChange, creatorID])
+                ])
+                    .then(() => this.getLikes({ type, id }))
+            })
     }
 }
 
