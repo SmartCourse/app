@@ -1,9 +1,8 @@
 <template>
-    <div class="tos-page">
-        <section class="main-content">
-            <h2>SmartCourse Privacy Policy</h2>
-            The following defines SmartCourse's policy for how we collect, use and share information about you or any information used to whilst provided SmartCourse services.
-
+    <section class="main-content">
+        <AppArticle>
+            <h1>Our Privacy Policy</h1>
+            <p>The following defines SmartCourse's policy for how we collect, use and share information about you or any information used to whilst provided SmartCourse services.</p>
             <h2>Information Collection and use</h2>
             <p>
             We may collect and combine information that is provided by you when you interact with SmartCourse including:
@@ -23,9 +22,10 @@
             </ul>
 
             <h2>How we share this information</h2>
+            <p>
             We share information we have about you for the purposes described in this Privacy Policy, inlcuding to provide Services that you have requested (including when you conneect with third-party apps).
             We do not sell, license or share information that individually identifies our customers with companies, organisations or individuals outside of SmartCourse.
-
+            </p>
             <h3>Public Information</h3>
             <p>
             Due to the nature of the site and the content of SmartCourse being user driven information may be shared publically and able to be viewed on the site by others.
@@ -37,30 +37,37 @@
             </ul>
 
             <h3>With Universities</h3>
-            SmartCourse may provided anonymous and aggregated rating of courses as well as reviews supplied by users to universties.
+
+            <p>
+                SmartCourse may provided anonymous and aggregated rating of courses as well as reviews supplied by users to universties.
+            </p>
 
             <h3>Google's Firebase</h3>
-            SmartCourse uses Google's Firebase service to provide user management and authentication. To use this service SmartCourse will require providing some information to this service.
+            <p>
+                SmartCourse uses Google's Firebase service to provide user management and authentication. To use this service SmartCourse will require providing some information to this service.
             The information provided includes a display name, password and email provided by you upon signup with SmartCourse.
+            </p>
 
             <h2>Changes</h2>
             <p>
             We may update this Privacy Policy from time to time, so you should check it periodically.
             </p>
-
-        </section>
-    </div>
+        </AppArticle>
+    </section>
 </template>
 
 <script>
 
+import AppArticle from '@/components/AppArticle'
+
 export default {
-  name: 'privacy-policy'
+  name: 'privacy-policy',
+  components: { AppArticle }
 }
 
 </script>
 
-<style>
+<style scoped>
 ul { margin: 16px; }
 li { list-style: disc; }
 </style>

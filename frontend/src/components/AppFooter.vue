@@ -40,7 +40,7 @@ export default {
         { content: 'Privacy Policy', href: '/' },
         { content: 'Terms of Use', href: '/' },
         { content: 'Help', href: '/' },
-        { content: 'UNSW Handbook', href: '/' }
+        { content: 'UNSW Handbook', href: 'https://www.handbook.unsw.edu.au' }
       ],
       social: [
         { content: 'facebook', href: '/' },

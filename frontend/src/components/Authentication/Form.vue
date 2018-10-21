@@ -64,8 +64,7 @@ h1, h2 {
 
 .button-spacing {
   width: 80%;
-  margin: auto;
-  margin-top: 30px;
+  margin: 10px auto 0;
 }
 
 .app-auth-form {
@@ -86,7 +85,6 @@ h1, h2 {
 }
 
 .help-link {
-  margin: 20px 0 0;
   font: var(--body-copy-1);
   text-align:right;
   color: var(--theme);

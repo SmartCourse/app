@@ -207,13 +207,19 @@ function initCourseTable(db) {
 
 function initDegreesTable(db) {
     // Prepare query
-    const columns = Object.keys(degreeData[0])
+    // TODO remove me later
+    const mappedDegrees = degreeData.map(({ name, ...rest }) => ({
+        name: name.startsWith('Bachelor of') ? 'B.' + name.split('Bachelor of')[1] : name,
+        ...rest
+    }))
+    console.log(mappedDegrees);
+    const columns = Object.keys(mappedDegrees[0])
     const placeholders = columns.map(_ => '?').join()
     const query = `INSERT INTO degrees (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
 
     // Do insertions and return promise for all of them to be completed
-    return Promise.all(degreeData.map(degree => insertDB(db, 'degrees', degree, prep)))
+    return Promise.all(mappedDegrees.map(degree => insertDB(db, 'degrees', degree, prep)))
 }
 
 function initFacultiesTable(db) {
