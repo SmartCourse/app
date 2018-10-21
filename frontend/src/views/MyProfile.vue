@@ -115,12 +115,12 @@ p {
 
 .profile-header {
     display:flex;
-    align-items: baseline;
+    align-items: center;
     margin-bottom:10px;
 }
 
 .profile-header > * {
-    margin-right: 5px;
+    margin-right: 10px;
 }
 
 .profile {
