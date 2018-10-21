@@ -14,12 +14,11 @@ exports.getQuestion = function ({ user, params }, res) {
         likesModel.getLikes({ type: 'question', id: params.id }),
         likesModel.getUserLiked({ type: 'question', id: params.id, userID })
     ]).then(([question, likes, userLiked]) => {
-        return Promise.all([
-            userModel.getPublicProfile(question.userID)
-        ]).then(([userInfo]) => {
-            delete question.userID
-            return { ...question, ...likes, ...userLiked, user: userInfo }
-        })
+        return userModel.getPublicProfile(question.userID)
+            .then((userInfo) => {
+                delete question.userID
+                return { ...question, ...likes, ...userLiked, user: userInfo }
+            })
     })
 
     responseHandler(getQuestion, res)
@@ -92,5 +91,5 @@ exports.getAnswerLikes = function ({ params }, res) {
 exports.putAnswerLikes = function ({ user, params, body, query }, res) {
     body.userID = user.id
     likesModel.putLikes({ type: 'answer', id: params.answerID, ...body })
-        .then(exports.getQuestionAnswers({ user, params, query }, res))
+        .then(() => exports.getQuestionAnswers({ user, params, query }, res))
 }

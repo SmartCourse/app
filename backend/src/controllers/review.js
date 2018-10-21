@@ -14,12 +14,11 @@ exports.getReview = function ({ user, params }, res) {
         likesModel.getLikes({ type: 'review', id: params.id }),
         likesModel.getUserLiked({ type: 'review', id: params.id, userID })
     ]).then(([review, likes, userLiked]) => {
-        return Promise.all([
-            userModel.getPublicProfile(review.userID)
-        ]).then(([userInfo]) => {
-            delete review.userID
-            return { ...review, ...likes, ...userLiked, user: userInfo }
-        })
+        return userModel.getPublicProfile(review.userID)
+            .then((userInfo) => {
+                delete review.userID
+                return { ...review, ...likes, ...userLiked, user: userInfo }
+            })
     })
 
     responseHandler(getReview, res)
@@ -47,7 +46,7 @@ exports.getReviewComments = function ({ user, params, query }, res) {
             .then(resolve)
             .catch(err => reject(err))
     })
-
+    console.log('WE GUCCI 2')
     responseHandler(getReplies, res)
         .catch(errorHandler(res))
 }
@@ -92,5 +91,5 @@ exports.getReplyLikes = function ({ params }, res) {
 exports.putReplyLikes = function ({ user, params, body, query }, res) {
     body.userID = user.id
     likesModel.putLikes({ type: 'reply', id: params.replyID, ...body })
-        .then(exports.getReviewComments({ user, params, query }, res))
+        .then(() => exports.getReviewComments({ user, params, query }, res))
 }
