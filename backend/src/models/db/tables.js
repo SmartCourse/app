@@ -4,6 +4,10 @@ const degreeData = require('../../../data/degrees')
 const facultyData = require('../../../data/faculties')
 const { DONT_RECOMMEND, RECOMMEND, MIN_ENJOY, MAX_ENJOY, MIN_OPTION, MAX_OPTION } = require('../constants')
 
+// only compute recommendations for this many courses
+// 500 does up to most of BABS
+const COURSE_UPDATE_LIMIT = 500
+
 const NUM_DUMMY_USERS = 50
 
 // TODO - STUB USER TABLE (REFACTOR FOR AUTH)
@@ -292,13 +296,13 @@ function initQuestionsTable(db) {
     const prep = db.prepare(query)
 
     // Do insertions and return promise for all of them to be completed
-    return questions.map(q => {
+    return questions.map(q =>
         insertDB(db, 'question', q, prep)
             .then(id => Promise.all([
                 initComments(db, { questionID: id }),
                 initLikes(db, { objectType: 'question', objectID: id })
             ]))
-    })
+    )
 }
 
 function initReviewTable(db) {
@@ -366,13 +370,13 @@ function initReviewTable(db) {
     const prep = db.prepare(query)
 
     // Do insertions and return promise for all of them to be completed
-    return Promise.all(reviews.map(r => {
+    return Promise.all(reviews.map(r =>
         insertDB(db, 'review', r, prep)
             .then(id => Promise.all([
                 initComments(db, { reviewID: id }),
                 initLikes(db, { objectType: 'review', objectID: id })
             ]))
-    }))
+    ))
 }
 
 function initComments(db, parent) {
@@ -452,9 +456,7 @@ function initLikes(db, parent) {
     const query = `INSERT INTO likes (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
 
-    return Promise.all(likes.map(c => {
-        insertDB(db, 'likes', c, prep)
-    }))
+    return Promise.all(likes.map(c => insertDB(db, 'likes', c, prep)))
 }
 
 function initUserTable(db) {
@@ -556,13 +558,28 @@ function initUserTable(db) {
     return Promise.all(users.map(u => insertDB(db, 'user', u, prep)))
 }
 
+function updateCourseRatings(db, code) {
+    return new Promise((resolve, reject) => {
+        db.run(`UPDATE course
+                    SET
+                      recommend = (SELECT CASE WHEN COUNT(*)==0 THEN -1 ELSE SUM(recommend)*100/COUNT(*) END FROM review WHERE code==$code),
+                      enjoy = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(enjoy-1)*100/(4*COUNT(*)) END FROM review WHERE code==$code),
+                      difficulty = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(difficulty-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND difficulty > 0),
+                      teaching = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(teaching-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND teaching > 0),
+                      workload = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(workload-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND workload > 0)
+                    WHERE code=$code;`,
+            { $code: code },
+            function (err) { err ? reject(err) : resolve() })
+          })
+}
+
 /**
  * Initiates a new SQL database by creating the tables with some UNSW data
  * @param   {object} SQLObject
  * @returns {object} SQLObject
  */
-function createDB(db) {
-    Promise.all([
+async function createDB(db) {
+    await Promise.all([
         createUserTable(db),
         createUniversityTable(db),
         createSubjectsTable(db),
@@ -581,6 +598,12 @@ function createDB(db) {
         })
         .then(() => {
             console.log('Initialised tables')
+            return Promise.all(
+                courseData.slice(0,COURSE_UPDATE_LIMIT).map(({code}) => updateCourseRatings(db, code))
+            )
+        })
+        .then(() => {
+            console.log('Updated course ratings')
         })
         .catch((error) => console.warn(error))
 }

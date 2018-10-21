@@ -77,8 +77,8 @@ exports.getReviewLikes = function ({ params }, res) {
 /* PUT updated likes value */
 exports.putReviewLikes = function ({ user, params, body }, res) {
     body.userID = user.id
-    responseHandler(likesModel.putLikes({ type: 'review', ...params, ...body }), res)
-        .catch(errorHandler(res))
+    likesModel.putLikes({ type: 'review', ...params, ...body })
+        .then(() => exports.getReview({ user, params }, res))
 }
 
 /* GET the reply likes value */

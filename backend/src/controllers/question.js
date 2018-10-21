@@ -85,8 +85,8 @@ exports.getQuestionLikes = function ({ params }, res) {
 /* PUT updated question likes value */
 exports.putQuestionLikes = function ({ user, params, body }, res) {
     body.userID = user.id
-    responseHandler(likesModel.putLikes({ type: 'question', ...params, ...body }), res)
-        .catch(errorHandler(res))
+    likesModel.putLikes({ type: 'question', ...params, ...body })
+        .then(() => exports.getQuestion({ user, params }, res))
 }
 
 /* GET the answer likes value */

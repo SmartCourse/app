@@ -55,6 +55,9 @@ html, body {
   --black: #111;
   --soft-black: rgba(#111, 0.5);
   --black-p: rgba(0,0,0,.72);
+  // recommended / not
+  --color-positive: rgba(1, 160, 1, 0.7);
+  --color-negative: rgba(200, 0, 0, 0.6);
   // borders
   --color-gray: #d5d5d5;
   --color-light-gray: #eaeaea;
