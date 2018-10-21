@@ -7,7 +7,7 @@
       </div>
 
       <div class="links">
-        <Search class="mini" v-if="$route.name !== 'home' && $route.name !== 'subjectList'"/>
+        <Search class="mini" v-if="$route.name !== 'home'"/>
         <div class="nav-menu">
             <div class="menu-items">
                 <router-link tag="h3" v-if="!isFirebaseAuthorised" class="link-item" to="/login">Login</router-link>
