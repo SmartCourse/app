@@ -286,13 +286,13 @@ function initQuestionsTable(db) {
     const prep = db.prepare(query)
 
     // Do insertions and return promise for all of them to be completed
-    return questions.map(q => {
+    return questions.map(q =>
         insertDB(db, 'question', q, prep)
             .then(id => Promise.all([
                 initComments(db, { questionID: id }),
                 initLikes(db, { objectType: 'question', objectID: id })
             ]))
-    })
+    )
 }
 
 function initReviewTable(db) {
@@ -360,13 +360,13 @@ function initReviewTable(db) {
     const prep = db.prepare(query)
 
     // Do insertions and return promise for all of them to be completed
-    return Promise.all(reviews.map(r => {
+    return Promise.all(reviews.map(r =>
         insertDB(db, 'review', r, prep)
             .then(id => Promise.all([
               initComments(db, { reviewID: id }),
               initLikes(db, { objectType: 'review', objectID: id })
             ]))
-    }))
+    ))
 }
 
 function initComments(db, parent) {
@@ -446,9 +446,7 @@ function initLikes(db, parent) {
     const query = `INSERT INTO likes (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
 
-    return Promise.all(likes.map(c => {
-        insertDB(db, 'likes', c, prep)
-    }))
+    return Promise.all(likes.map(c => insertDB(db, 'likes', c, prep)))
 }
 
 function initUserTable(db) {
@@ -551,15 +549,21 @@ function initUserTable(db) {
 }
 
 function updateCourseRatings(db, code) {
-    return db.run(`UPDATE course
+    return new Promise((resolve, reject) => {
+        db.run(`UPDATE course
                     SET
                       recommend = (SELECT CASE WHEN COUNT(*)==0 THEN -1 ELSE SUM(recommend)*100/COUNT(*) END FROM review WHERE code==$code),
                       enjoy = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(enjoy-1)*100/(4*COUNT(*)) END FROM review WHERE code==$code),
                       difficulty = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(difficulty-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND difficulty > 0),
                       teaching = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(teaching-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND teaching > 0),
                       workload = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(workload-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND workload > 0)
-                    WHERE code=$code;`
-            , { $code: code })
+                    WHERE code=$code;`,
+            { $code: code },
+            function (err) {
+              //console.log(code)
+              err ? reject(err) : resolve()
+            })
+          })
 }
 
 /**
@@ -567,8 +571,8 @@ function updateCourseRatings(db, code) {
  * @param   {object} SQLObject
  * @returns {object} SQLObject
  */
-function createDB(db) {
-    Promise.all([
+async function createDB(db) {
+    await Promise.all([
         createUserTable(db),
         createUniversityTable(db),
         createSubjectsTable(db),
@@ -587,9 +591,9 @@ function createDB(db) {
         })
         .then(() => {
             console.log('Initialised tables')
-            return Promise.all([
+            return Promise.all(
                 courseData.map(({code}) => updateCourseRatings(db, code))
-            ])
+            )
         })
         .then(() => {
             console.log('Updated course ratings')
