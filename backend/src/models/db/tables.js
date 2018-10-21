@@ -550,6 +550,18 @@ function initUserTable(db) {
     return Promise.all(users.map(u => insertDB(db, 'user', u, prep)))
 }
 
+function updateCourseRatings(db, code) {
+    return db.run(`UPDATE course
+                    SET
+                      recommend = (SELECT CASE WHEN COUNT(*)==0 THEN -1 ELSE SUM(recommend)*100/COUNT(*) END FROM review WHERE code==$code),
+                      enjoy = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(enjoy-1)*100/(4*COUNT(*)) END FROM review WHERE code==$code),
+                      difficulty = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(difficulty-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND difficulty > 0),
+                      teaching = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(teaching-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND teaching > 0),
+                      workload = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(workload-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND workload > 0)
+                    WHERE code=$code;`
+            , { $code: code })
+}
+
 /**
  * Initiates a new SQL database by creating the tables with some UNSW data
  * @param   {object} SQLObject
@@ -575,6 +587,12 @@ function createDB(db) {
         })
         .then(() => {
             console.log('Initialised tables')
+            return Promise.all([
+                courseData.map(({code}) => updateCourseRatings(db, code))
+            ])
+        })
+        .then(() => {
+            console.log('Updated course ratings')
         })
         .catch((error) => console.warn(error))
 }
