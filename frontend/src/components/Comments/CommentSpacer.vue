@@ -6,9 +6,8 @@
 
 <style scoped>
 div {
-  padding:0 10px;
-  padding-bottom:10px;
-  display:flex;
+  padding: 0 10px 10px;
+  display: flex;
   justify-content: space-between;
   align-items: center;
 }

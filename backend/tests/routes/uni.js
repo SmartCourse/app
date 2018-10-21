@@ -2,17 +2,17 @@ const app = require('../../src')
 const supertest = require('supertest')(app)
 
 describe('Uni route testing', function () {
-    it('uni index', () =>
+    it('GET /degrees', () =>
         supertest
-            .get('/api/uni')
+            .get('/api/uni/degrees')
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200)
     )
 
-    it('uni id 1', () =>
+    it('GET /faculties', () =>
         supertest
-            .get('/api/uni/1')
+            .get('/api/uni/faculties')
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(200)

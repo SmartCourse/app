@@ -2,7 +2,7 @@
     <PostCard
       :published="comment.published"
       :body="comment.body"
-      :vote="{ upvote, downvote, likes: comment.likes, disabled: !authenticated }"
+      :vote="{ upvote, downvote, likes: comment.likes, userLiked: comment.userLiked, disabled: !authenticated }"
       :user="comment.user"
       :class="comment.accepted ? 'accepted' : ''"
     >
@@ -24,7 +24,7 @@ export default {
   methods: {
     upvote() {
       const { type, code, id, comment } = this
-      const value = comment.userLiked === -1 ? 0 : 1
+      const value = comment.userLiked === 1 ? 0 : 1
       if (type === 'Answer') {
         this.$store.dispatch('questions/putAnswerLikes',
           { code, id, commentID: comment.id, data: { value } })
@@ -35,7 +35,7 @@ export default {
     },
     downvote() {
       const { type, code, id, comment } = this
-      const value = comment.userLiked === 1 ? 0 : -1
+      const value = comment.userLiked === -1 ? 0 : -1
       if (type === 'Answer') {
         this.$store.dispatch('questions/putAnswerLikes',
           { code, id, commentID: comment.id, data: { value } })

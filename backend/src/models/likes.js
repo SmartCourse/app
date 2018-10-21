@@ -10,12 +10,9 @@ class Likes {
      */
     getLikes({ type, id }) {
         return this.db
-            .query('SELECT SUM(value) FROM likes WHERE objectType=? AND objectID=?',
+            .query('SELECT SUM(value) as sum FROM likes WHERE objectType=? AND objectID=?',
                 [type, id])
-            .then((sum) => {
-                const likes = sum['SUM(value)'] ? sum['SUM(value)'] : 0
-                return { likes }
-            })
+            .then(({ sum }) => ({ likes: sum || 0 }))
     }
 
     /*
@@ -25,23 +22,49 @@ class Likes {
         return this.db
             .query('SELECT value AS userLiked FROM likes WHERE objectType=? AND objectID=? AND userID=?',
                 [type, id, userID])
-            .then((userLiked) => {
-                return userLiked || { userLiked: 0 }
-            })
+            .then(({ userLiked = 0 } = {}) => ({ userLiked }))
     }
 
     /*
      * Put likes
      */
     putLikes({ type, id, userID, value }) {
-        return this.db
-            .insertUnique('likes', {
-                objectType: type,
-                objectID: id,
-                userID,
-                value
+
+        // Stuff to update likes
+        const data = {
+            objectType: type,
+            objectID: id,
+            userID,
+            value
+        }
+        const insertValues = Object.values(data)
+        const insertColumns = Object.keys(data)
+        const insertPlaceholders = insertColumns.map(_ => '?').join()
+        const updateLikes = `REPLACE INTO likes (${insertColumns}) VALUES (${insertPlaceholders})`
+
+        // Stuff to update reputation
+        const creatorTable = (type === 'question' || type === 'review') ? type : 'comment'
+        const updateReputation = `UPDATE user
+        SET reputation = (SELECT reputation FROM user WHERE id = ?) + ?
+        WHERE id = ?`
+
+        // Classic
+        return Promise.all([
+            this.db.query('SELECT * FROM likes WHERE objectType=? AND objectID=? AND userID=?',
+                [type, id, userID]),
+            this.db.query(`SELECT userID FROM ${creatorTable} WHERE id = ?`,
+                [id])
+        ])
+            .then(([originalLike, creator]) => {
+                const oldLike = originalLike && originalLike.value || 0
+                const creatorID = creator.userID
+                const repChange = creatorID != userID ? (value - oldLike) : 0
+                return Promise.all([
+                    this.db.run(updateLikes, [...insertValues]),
+                    this.db.run(updateReputation, [creatorID, repChange, creatorID])
+                ])
+                    .then(() => this.getLikes({ type, id }))
             })
-            .then(() => this.getLikes({ type, id }))
     }
 }
 

@@ -26,7 +26,7 @@ export function reviewMapper({ id, code, title, body, likes, userLiked, recommen
     body,
     likes,
     userLiked,
-    recommend,
+    recommend: Boolean(recommend),
     user,
     published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true }),
     timestamp: new Date(timestamp + 'Z')

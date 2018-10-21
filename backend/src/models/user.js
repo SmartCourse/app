@@ -9,9 +9,13 @@ class User {
      * Return specialised information for auth'd user
      * @param {string} id The id of the auth'd user
      */
+
     getProfile(id) {
-        return this.db
-            .query('SELECT id, email, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
+        return this.db.query('SELECT id, email, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
+            .then((profile) => {
+                if (profile.reputation < 0) profile.reputation = 0
+                return profile
+            })
     }
 
     /**
@@ -21,8 +25,11 @@ class User {
      * @returns {object}
      */
     getPublicProfile(id) {
-        return this.db
-            .query('SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
+        return this.db.query('SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
+            .then((profile) => {
+                if (profile.reputation < 0) profile.reputation = 0
+                return profile
+            })
     }
 
     /**
@@ -40,6 +47,9 @@ class User {
      *                       contain the user data (probs eventually from an auth token)
      */
     createUser({ displayName, email, uid }) {
+        if (!displayName) {
+            return Promise.reject(Error('You must provide a display name!'))
+        }
         return this.db
             .insert('user', { displayName, email, uid })
             .then(id => this.getProfile(id))

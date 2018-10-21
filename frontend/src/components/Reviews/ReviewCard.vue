@@ -1,18 +1,21 @@
 <template>
     <PostCard
-        :vote="{ upvote, downvote, likes, disabled: !authenticated }"
+        :vote="{ upvote, downvote, userLiked, likes, disabled: !authenticated }"
         :title="title"
         :body="body"
         :user="user"
         :published="published"
-    />
+    >
+      <Category :recommend="recommend"/>
+    </PostCard>
 </template>
 
 <script>
 import PostCard from '@/components/Card/Large'
+import Category from '@/components/Category'
 
 export default {
-  components: { PostCard },
+  components: { PostCard, Category },
   props: {
     code: String,
     id: String,
@@ -22,25 +25,22 @@ export default {
     title: String,
     body: String,
     published: String,
-    authenticated: Boolean
+    authenticated: Boolean,
+    recommend: Boolean
   },
   methods: {
     upvote() {
       const { code, id, userLiked } = this
-      const value = userLiked === -1 ? 0 : 1
+      const value = userLiked === 1 ? 0 : 1
       this.$store.dispatch('reviews/putLikes',
         { code, id, data: { value } })
     },
     downvote() {
       const { code, id, userLiked } = this
-      const value = userLiked === 1 ? 0 : -1
+      const value = userLiked === -1 ? 0 : -1
       this.$store.dispatch('reviews/putLikes',
         { code, id, data: { value } })
     }
   }
 }
 </script>
-
-<style scoped src='../../css/card.less' lang='less'>
-
-</style>
