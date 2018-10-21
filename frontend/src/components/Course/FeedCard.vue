@@ -11,9 +11,9 @@
       <Category :recommend="recommend" v-if="cardType === 'Review'"/>
       <p v-else>
         <span v-if="numAnswers === 0">Know the answer to this question?</span>
-        <span v-else>{{ numAnswers }} Answers</span>
+        <span v-else>{{ numAnswers }} Answer{{ numAnswers > 1 ? 's' : '' }}</span>
       </p>
-      <p class="likes">{{ likes > 0 && likes || 0 }} users found this helpful</p>
+      <p class="likes">{{ likes > 0 && likes || 0 }} user{{ likes != 1 ? 's' : ''}} found this helpful</p>
     </div>
   </Card>
 </template>
