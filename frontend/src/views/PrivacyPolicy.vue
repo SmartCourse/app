@@ -60,7 +60,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 ul { margin: 16px; }
 li { list-style: disc; }
 </style>

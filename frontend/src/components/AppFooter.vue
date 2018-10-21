@@ -12,15 +12,18 @@
         </ul>
         <ul class="information">
             <li class="links-header">Information</li>
-            <router-link class="link" tag='li' :to="link.href" v-for="link in info" :key="link.content">
+            <router-link class="link" tag='li' :to="link.href" v-for="link in info_internal" :key="link.content">
                 {{ link.content }}
             </router-link>
+            <li v-for="link in info_external" :key="link.content">
+                <a :href ="link.href" class="link" >{{ link.content }}</a>
+            </li>
         </ul>
-        <ul class="socials">
-            <li class="links-header">Social</li>
-            <router-link class="link" tag='li' :to="link.href" v-for="link in social" :key="link.content">
-                {{ link.content }}
-            </router-link>
+        <ul class="UNSW">
+            <li class="links-header">UNSW</li>
+            <li v-for="link in unsw_external" :key="link.content">
+                <a :href ="link.href" class="link" >{{ link.content }}</a>
+            </li>
         </ul>
        </section>
       <p>Copyright &copy; SmartCourse 2018</p>
@@ -36,15 +39,18 @@ export default {
         { content: 'Subjects', href: '/subject' },
         { content: 'Profile', href: '/profile' }
       ],
-      info: [
-        { content: 'Privacy Policy', href: '/' },
-        { content: 'Terms of Use', href: '/' },
-        { content: 'Help', href: '/' },
-        { content: 'UNSW Handbook', href: '/' }
+      info_internal: [
+        { content: 'Privacy Policy', href: '/privacy-policy' },
+        { content: 'Terms of Use', href: '/terms-of-service' }
       ],
-      social: [
-        { content: 'facebook', href: '/' },
-        { content: 'twitter', href: '/' }
+      info_external: [
+        { content: 'Contribute', href: 'https://github.com/SmartCourse/app' }
+      ],
+      unsw_external: [
+        { content: 'UNSW Handbook', href: 'https://www.handbook.unsw.edu.au/' },
+        { content: 'UNSW Timetable', href: 'http://timetable.unsw.edu.au/' },
+        { content: 'Class Utils', href: 'http://classutil.unsw.edu.au/' },
+        { content: 'Bojangles', href: 'http://www.tdransfield.net/utilities/bojangles' }
       ]
     }
   }
