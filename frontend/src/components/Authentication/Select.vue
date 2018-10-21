@@ -47,6 +47,8 @@ export default {
 
 .select-style select:focus {
     outline: none;
+    border-bottom: 1px solid var(--theme-light);
 }
+
 </style>
 

@@ -34,7 +34,7 @@ class User {
 
     /**
      * Get all users details by UID. Used by authentication system
-     * @param {uid} uid uid string
+     * @param   {uid} uid uid string
      * @returns {object} user object
      */
     getUserByUID(uid) {
@@ -43,18 +43,22 @@ class User {
     }
 
     /**
-     * @param {object} data  controller passed in object which should
-     *                       contain the user data (probs eventually from an auth token)
+     * @param {object} data             controller passed in object which should
+     *                                  contain the user data (probs eventually from an auth token)
+     * @param {string} data.displayName userName set at signup
+     * @param {string} data.degree      degree   set at signup
+     * @param {number} data.gradYear    gradYear set at signup
      */
-    createUser({ displayName, email, uid }) {
-        if (!displayName) {
+    createUser(data) {
+        const { displayName, degree, gradYear } = data
+        if (!(displayName && degree && gradYear)) {
             return Promise.reject(Error('You must provide a display name!'))
         }
         return this.db
-            .insert('user', { displayName, email, uid })
+            .insert('user', data)
             .then(id => this.getProfile(id))
             .catch(error => {
-                // kinda hacky
+                // TODO kinda hacky
                 if (error.errno === 19 && error.message.includes('displayName')) {
                     throw (Error('That display name is taken! Sorry!'))
                 }

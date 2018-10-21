@@ -111,10 +111,10 @@ const actions = {
   /**
   * Create user profile in the backend
   * Assume existing user
-  **/
-  createProfile({ commit, state }, { displayName }) {
+  */
+  createProfile({ commit, state }, { displayName, gradYear, degree }) {
     commit('SET_LOADING', true)
-    return createProfile(state.userAuthObject, { displayName })
+    return createProfile(state.userAuthObject, { displayName, gradYear, degree })
       .then((profile) => commit('SET_PROFILE', profile))
       .catch(error => commit('ERROR', error.message))
       .finally(() => commit('SET_LOADING', false))

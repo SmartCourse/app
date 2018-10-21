@@ -207,12 +207,12 @@ function initCourseTable(db) {
 
 function initDegreesTable(db) {
     // Prepare query
+    
     // TODO remove me later
     const mappedDegrees = degreeData.map(({ name, ...rest }) => ({
         name: name.startsWith('Bachelor of') ? 'B.' + name.split('Bachelor of')[1] : name,
         ...rest
     }))
-    console.log(mappedDegrees);
     const columns = Object.keys(mappedDegrees[0])
     const placeholders = columns.map(_ => '?').join()
     const query = `INSERT INTO degrees (${columns}) VALUES (${placeholders})`
