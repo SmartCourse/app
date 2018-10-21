@@ -7,11 +7,13 @@ const state = {
   error: {
     code: 0,
     message: ''
-  }
+  },
+  recentQuestions: []
 }
 
 const getters = {
   userObj: ({ userObj }) => userObj,
+  recentQuestions: ({ recentQuestions }) => recentQuestions,
   loading: ({ loading }) => loading,
   error: ({ error }) => error
 }
@@ -19,6 +21,9 @@ const getters = {
 const mutations = {
   REFRESH_USER (state, user) {
     state.userObj = user
+  },
+  REFRESH_QUESTIONS (state, questions) {
+    state.recentQuestions = questions
   },
   TOGGLE_LOADING (state, bool) {
     state.loading = bool
@@ -33,6 +38,10 @@ const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
   async getUser({ dispatch }, { id }) {
     return dispatch('doRequest', { action: ACTIONS.GET_USER, args: [id] })
+  },
+
+  async getUserQuestions({ dispatch }, { id }) {
+    return dispatch('doRequest', { action: ACTIONS.GET_USER_QUESTIONS, args: [id] })
   }
 }
 

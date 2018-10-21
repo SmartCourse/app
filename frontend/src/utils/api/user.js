@@ -4,3 +4,7 @@ import { get } from './index'
 export function getUser(id) {
   return get(`/user/${id}`)
 }
+
+export function getUserQuestions(id) {
+  return get(`/user/${id}/questions`)
+}
