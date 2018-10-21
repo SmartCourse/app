@@ -25,6 +25,14 @@ exports.getQuestion = function ({ user, params }, res) {
         .catch(errorHandler(res))
 }
 
+/* get the questions for a specific user */
+exports.getQuestionsByUserId = function({ params: { id } }, res) {
+    const questions = questionModel.getQuestionsByUserID(id)
+
+    responseHandler(questions, res)
+        .catch(errorHandler(res))
+}
+
 /* GET question ansewrs. */
 exports.getQuestionAnswers = function ({ user, params, query }, res) {
     const userID = (user && user.id) || ANONYMOUS

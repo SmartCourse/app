@@ -28,6 +28,17 @@ describe('User route testing', function() {
                 .expect(401))
     })
 
+    it('/api/user/1/questions', () =>
+        supertest
+            .get('/api/user/1/questions')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .then(({ body }) => {
+                console.log(body)
+            })
+    )
+
     it('/api/user/1', () =>
         supertest
             .get('/api/user/1')

@@ -36,6 +36,19 @@ class Question {
                 [code, offset, pageSize])
     }
 
+    getQuestionsByUserID(uid, limit = 10) {
+        return this.db
+            .queryAll(`SELECT
+            question.*,
+            COUNT(questionID) AS numAnswers
+           FROM question
+           LEFT JOIN comment ON comment.questionID = question.id
+           WHERE question.userID=?
+           GROUP BY questionID
+           ORDER BY timestamp DESC
+           LIMIT ?`, [uid, limit])
+    }
+
     /**
      * Gets the total number of questions for a course
      * @param   {string} code        The code of the course duh
