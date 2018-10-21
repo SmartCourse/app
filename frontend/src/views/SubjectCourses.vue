@@ -115,7 +115,7 @@ h6 {
 .options {
   display:flex;
   align-items: center;
-  margin:0 10px 5px 10px;
+  margin:0 10px 5px 15px;
 }
 .positive {
   color:var(--color-positive);
