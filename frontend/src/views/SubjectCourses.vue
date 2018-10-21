@@ -52,7 +52,7 @@ export default {
       // filter courses to ones which match this subject code
       const filtered = this.allCourses.filter(course => course.code.slice(0, 4) === this.code)
       // sort them
-      filtered.sort(({recommend:r1}, {recommend:r2}) => r1 < r2)
+      filtered.sort(({recommend: r1}, {recommend: r2}) => r1 < r2)
 
       return filtered
     },

@@ -4,6 +4,10 @@ const degreeData = require('../../../data/degrees')
 const facultyData = require('../../../data/faculties')
 const { DONT_RECOMMEND, RECOMMEND, MIN_ENJOY, MAX_ENJOY, MIN_OPTION, MAX_OPTION } = require('../constants')
 
+// only compute recommendations for this many courses
+// 500 does up to most of BABS
+const COURSE_UPDATE_LIMIT = 500
+
 const NUM_DUMMY_USERS = 50
 
 // TODO - STUB USER TABLE (REFACTOR FOR AUTH)
@@ -559,10 +563,7 @@ function updateCourseRatings(db, code) {
                       workload = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(workload-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND workload > 0)
                     WHERE code=$code;`,
             { $code: code },
-            function (err) {
-              //console.log(code)
-              err ? reject(err) : resolve()
-            })
+            function (err) { err ? reject(err) : resolve() })
           })
 }
 
@@ -592,7 +593,7 @@ async function createDB(db) {
         .then(() => {
             console.log('Initialised tables')
             return Promise.all(
-                courseData.map(({code}) => updateCourseRatings(db, code))
+                courseData.slice(0,COURSE_UPDATE_LIMIT).map(({code}) => updateCourseRatings(db, code))
             )
         })
         .then(() => {

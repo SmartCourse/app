@@ -38,7 +38,7 @@
 
             <h3>With Universities</h3>
             SmartCourse may provided anonymous and aggregated rating of courses as well as reviews supplied by users to universties.
-            
+
             <h3>Google's Firebase</h3>
             SmartCourse uses Google's Firebase service to provide user management and authentication. To use this service SmartCourse will require providing some information to this service.
             The information provided includes a display name, password and email provided by you upon signup with SmartCourse.
