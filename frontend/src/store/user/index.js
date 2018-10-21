@@ -1,5 +1,6 @@
 import { doRequestFactory } from '@/store/utils'
 import { REQUEST, COMMITS, ACTIONS } from './constants'
+import { questionMapper } from '@/utils/api/questions'
 
 const state = {
   loading: false,
@@ -13,7 +14,7 @@ const state = {
 
 const getters = {
   userObj: ({ userObj }) => userObj,
-  recentQuestions: ({ recentQuestions }) => recentQuestions,
+  recentQuestions: ({ recentQuestions }) => recentQuestions.map(questionMapper),
   loading: ({ loading }) => loading,
   error: ({ error }) => error
 }

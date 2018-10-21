@@ -1,7 +1,7 @@
 <template>
     <section class="main-content">
         <div class="flex-container">
-          <Card>
+          <Card class="profile">
             <transition name="fade-slide">
               <div v-if="!loading">
                 <div class="header">
@@ -20,7 +20,7 @@
         </Card>
         <div>
           <CardHeader>Recent Questions</CardHeader>
-          <ShortCard 
+          <FeedCard 
             v-for="q in questions" 
             v-bind="q" 
             :key="q.id"
@@ -35,7 +35,7 @@ import Mini from '@/components/User/Mini'
 import Name from '@/components/User/Name'
 import Card from '@/components/Card'
 import CardHeader from '@/components/Card/Header'
-import ShortCard from '@/components/Card/Short'
+import FeedCard from '@/components/Card/Small'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -44,7 +44,7 @@ export default {
     Card,
     Mini,
     Name,
-    ShortCard,
+    FeedCard,
     CardHeader
   },
   props: {
@@ -80,16 +80,29 @@ export default {
     margin: 10px 0px;
 }
 
+.profile {
+  margin: 0px 40px 40px 0;
+}
+
 .flex-container {
   margin: 20px;
   padding: 20px;
   display: flex;
+  align-items: flex-start;
   justify-content: space-around;
 }
 
 @media screen and (max-width: 700px){
   .flex-container {
+    padding: 0;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+  }
+
+  .profile {
+    margin: 10px 0;
   }
 }
 
