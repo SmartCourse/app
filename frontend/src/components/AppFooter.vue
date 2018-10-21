@@ -12,15 +12,18 @@
         </ul>
         <ul class="information">
             <li class="links-header">Information</li>
-            <router-link class="link" tag='li' :to="link.href" v-for="link in info" :key="link.content" :style="link.disabled">
+            <router-link class="link" tag='li' :to="link.href" v-for="link in info_internal" :key="link.content" :style="link.disabled">
                 {{ link.content }}
             </router-link>
+            <li v-for="link in info_external" :key="link.content">
+                <a href ="link.href">{{ link.content }}</a>
+            </li>
         </ul>
         <ul class="socials">
             <li class="links-header">Social</li>
-            <router-link class="link" tag='li' :to="link.href" v-for="link in social" :key="link.content" :style="link.disabled">
-                {{ link.content }}
-            </router-link>
+            <li v-for="link in social_external" :key="link.content">
+                <a href ="link.href" :style="link.disabled">{{ link.content }}</a>
+            </li>
         </ul>
        </section>
       <p>Copyright &copy; SmartCourse 2018</p>
@@ -36,15 +39,18 @@ export default {
         { content: 'Subjects', href: '/subject' },
         { content: 'Profile', href: '/profile' }
       ],
-      info: [
+      info_internal: [
         { content: 'Privacy Policy', href: '/privacy-policy' },
         { content: 'Terms of Use', href: '/terms-of-service' },
-        { content: 'Help', href: '/', disabled: 'cursor: not-allowed;' },
-        { content: 'UNSW Handbook', href: '/handbook' }
+        { content: 'Help', href: '/', disabled: 'cursor: not-allowed;' }
       ],
-      social: [
+      info_external: [
+        { content: 'UNSW Handbook', href: 'https://www.handbook.unsw.edu.au/' }
+      ],
+      social_external: [
         { content: 'facebook', href: '/', disabled: 'cursor: not-allowed;' },
-        { content: 'twitter', href: '/', disabled: 'cursor: not-allowed;' }
+        { content: 'twitter', href: '/', disabled: 'cursor: not-allowed;' },
+        { content: 'contribute', href: 'https://github.com/SmartCourse/app' }
       ]
     }
   }
