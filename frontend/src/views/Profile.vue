@@ -1,139 +1,126 @@
 <template>
     <section class="main-content">
-
-        <div class="profile">
-        <Card>
-
+        <div class="flex-container">
+          <Card class="profile">
             <transition name="fade-slide">
-
               <div v-if="!loading">
-                <figure>
-                  <img class="avatar" :src="picture || '/defaultpicture.png'"/>
-                </figure>
-                <h2 class="name">{{ profile.displayName }}</h2>
-                <h3 class="email">{{ profile.email }}</h3>
-                <form class="form">
-                  Picture URL: <AppInput spellcheck="false" type="text" v-model="picture"/>
-                  Degree: <AppInput spellcheck="false" type="text" v-model="degree"/>
-                  Graduation Year: <AppInput spellcheck="false" type="text" v-model="gradYear"/>
-                  Description: <textarea v-model="description"></textarea>
-                  <AppButton class="button-spacing" @click.native="updateProfile()" v-if="!loading">
-                      Update Profile
-                  </AppButton>
-                </form>
+                <div class="header">
+                  <Mini :name="user.displayName" :id="user.id" :picture="user.picture" />
+                  <h3>{{ user.displayName }}</h3>
+                </div>
+                <div>{{ user.degree }} </div>
+                <div class="grid-container">
+                  <p>Reputation (<i class="material-icons star">star</i>): </p><p class="right">{{ user.reputation }}</p>
+                  <p>Joined: </p><p class="right">{{ user.joined.slice(0,10) }}</p>
+                  <p>Graduation Year: <p class="right">{{ user.gradYear || 2018 }}</p>
+                </div>
+                <div>Description: <br>{{ user.description || 'No description set' }}</div>
               </div>
             </transition>
 
-            <div style="height:100vh;margin-top:20vh;" v-if="loading">
+            <div style="text-align:center" v-if="loading">
               <LoadingSpinner/>
             </div>
-
         </Card>
+        <div>
+          <CardHeader>Recent Questions</CardHeader>
+          <FeedCard
+            v-for="q in questions"
+            v-bind="q"
+            :key="q.id"
+            />
         </div>
-
+        </div>
     </section>
 </template>
 
 <script>
-import AppButton from '@/components/AppButton'
-import AppInput from '@/components/AppInput'
+import Mini from '@/components/User/Mini'
+import Name from '@/components/User/Name'
 import Card from '@/components/Card'
+import CardHeader from '@/components/Card/Header'
+import FeedCard from '@/components/Card/Small'
 import { mapGetters } from 'vuex'
 
 export default {
-  components: { AppInput, AppButton, Card },
-  data() {
-    return {
-      picture: '',
-      degree: '',
-      gradYear: '',
-      description: ''
+  name: 'Profile',
+  components: {
+    Card,
+    Mini,
+    Name,
+    FeedCard,
+    CardHeader
+  },
+  props: {
+    id: {
+      type: String,
+      required: true
     }
   },
   computed: {
-    ...mapGetters('auth', [ 'loading', 'error', 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile', 'profile' ])
+    ...mapGetters('user', {
+      user: 'userObj',
+      questions: 'recentQuestions',
+      loading: 'loading'
+    })
   },
-  watch: {
-    hasProfile (oldState, newState) {
-      if (this.hasProfile) {
-        this.picture = this.profile.picture
-        this.degree = this.profile.degree
-        this.gradYear = this.profile.gradYear
-        this.description = this.profile.description
-      }
-    },
-    loading() { this.reroute() }
-  },
-  methods: {
-    updateProfile() {
-      const data = { picture: this.picture, degree: this.degree, gradYear: this.gradYear, description: this.description }
-      this.$store.dispatch('auth/updateProfile', { data })
-    },
-    reroute() {
-      if (this.isFirebaseAuthorised) {
-        if (!this.hasProfile) {
-          this.$router.push('/create-profile')
-        }
-      } else {
-        this.$router.push('/login')
-      }
-    }
-  },
-  mounted() {
-    if (this.hasProfile) {
-      this.picture = this.profile.picture
-      this.degree = this.profile.degree
-      this.gradYear = this.profile.gradYear
-      this.description = this.profile.description
-    }
+  created () {
+    const { id } = this
+    this.$store.dispatch('user/getUser', { id })
+    this.$store.dispatch('user/getUserQuestions', { id })
   }
 }
 </script>
 
 <style scoped>
-
-.profile {
-    text-align: center;
+p {
+    margin:5px 0px;
+}
+.right {
+    text-align: right;
+}
+.star {
+    font-size:15px;
+}
+.header {
+    display: grid;
+    grid-template-columns: 45px auto;
+    grid-gap: 10px;
 }
 
 .name, .description {
     margin: 10px 0px;
 }
 
-p {
-    text-align: left;
-    font: inherit;
+.profile {
+  margin: 0px 20px 10px 0;
 }
 
-figure {
-    border-radius: 100%;
-    margin: auto;
-    width: 120px;
-    height: 120px;
-    overflow: hidden;
-    background-color: var(--theme-light);
+.grid-container {
+    display:grid;
+    grid-template-columns: auto auto;
+    margin:20px auto;
 }
 
-.avatar {
-    /* TODO make this work properly... */
-    max-height:100%;
-    min-width:100%;
-    min-height:100%;
-    /*margin-left: -50%;
-    margin-top: -50%;*/
+.flex-container {
+  margin: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
 }
 
-.form {
-  text-align:left;
-  font: var(--body-copy-1);
-  display: grid;
-  grid-auto-flow: row;
-  grid-gap: 20px;
+@media screen and (max-width: 700px){
+  .flex-container {
+    padding: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+  }
+
+  .profile {
+    margin: 10px 0;
+  }
 }
 
-.button-spacing {
-  width: 80%;
-  margin: auto;
-  margin-top: 30px;
-}
 </style>

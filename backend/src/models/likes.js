@@ -29,7 +29,6 @@ class Likes {
      * Put likes
      */
     putLikes({ type, id, userID, value }) {
-
         // Stuff to update likes
         const data = {
             objectType: type,

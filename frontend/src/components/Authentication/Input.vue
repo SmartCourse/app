@@ -12,11 +12,11 @@ export default {
 
 <style scoped>
 .auth-input {
+  background-color: transparent;
   font: inherit;
   display: block;
   margin: 10px 0;
   padding: 10px 0;
-  border-style: none;
   outline: none;
   border-bottom: 1px solid var(--color-light-gray);
   transition: border 0.3s ease-in;

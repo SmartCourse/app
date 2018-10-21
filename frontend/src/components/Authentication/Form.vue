@@ -1,6 +1,6 @@
 <template>
   <div class="app-auth-form" @keyup.enter="clickHandler">
-    <Card>
+    <TransparentCard>
       <div class="card-content">
         <h2 v-if="title">{{ title }}</h2>
         <form class="auth-form">
@@ -10,15 +10,15 @@
               {{ buttonText }}
           </AppButton>
         </form>
-        <p v-if="error">{{ error }}</p>
+        <p class="error" v-if="error">{{ error }}</p>
       </div>
-    </Card>
+    </TransparentCard>
   </div>
 </template>
 
 <script>
 import AppButton from '@/components/AppButton'
-import Card from '@/components/Card'
+import TransparentCard from '@/components/Card/Transparent'
 
 export default {
   name: 'auth-form',
@@ -36,7 +36,7 @@ export default {
     buttonText: String,
     flavour: String
   },
-  components: { AppButton, Card }
+  components: { AppButton, TransparentCard }
 }
 </script>
 
@@ -64,8 +64,7 @@ h1, h2 {
 
 .button-spacing {
   width: 80%;
-  margin: auto;
-  margin-top: 30px;
+  margin: 10px auto 0;
 }
 
 .app-auth-form {
@@ -86,10 +85,16 @@ h1, h2 {
 }
 
 .help-link {
-  margin: 20px 0 0;
   font: var(--body-copy-1);
   text-align:right;
   color: var(--theme);
+}
+
+.error {
+  padding: 10px;
+  background-color: var(--white);
+  text-align: center;
+  border: var(--border);
 }
 
 </style>

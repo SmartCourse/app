@@ -8,8 +8,8 @@ describe('User Model', () => {
     })
 
     describe('User creation and retrieval', () => {
-        const addUserObj = { displayName: 'mickey', email: 'potato@potatoman.potato', uid: '1234' }
-        const retrieveUserObj = { email: addUserObj.email, displayName: addUserObj.displayName, degree: null, gradYear: null, description: null, picture: null }
+        const addUserObj = { displayName: 'mickey', gradYear: 2010, degree: 'B. S.', email: 'potato@potatoman.potato', uid: '1234' }
+        const retrieveUserObj = { email: addUserObj.email, displayName: addUserObj.displayName, degree: addUserObj.degree, gradYear: addUserObj.gradYear, description: null, picture: null }
         it('it creates a user and retrieves the profile', () => {
             return userModel
                 .createUser(addUserObj)
@@ -27,7 +27,7 @@ describe('User Model', () => {
 
     describe('User update', () => {
         const credsObj = { displayName: 'mickeyMoo', email: 'tomatoboy@hotmail.zomg' }
-        const addUserObj = { ...credsObj, uid: '4321' }
+        const addUserObj = { ...credsObj, uid: '4321', gradYear: 2020, degree: 'BS in BS' }
         const updateObj = { degree: 'BS in CS', gradYear: 2026, description: 'testu', picture: 'baaaaaa' }
         it('it updates the profile correctly', () => {
             return userModel

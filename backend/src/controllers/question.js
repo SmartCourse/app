@@ -8,7 +8,7 @@ const { responseHandler, userLikesMapper } = require('../utils/helpers')
 
 /* GET question data. */
 exports.getQuestion = function ({ user, params }, res) {
-    const userID = user && user.id || ANONYMOUS
+    const userID = (user && user.id) || ANONYMOUS
     const getQuestion = Promise.all([
         questionModel.getQuestion(params.id),
         likesModel.getLikes({ type: 'question', id: params.id }),
@@ -25,9 +25,17 @@ exports.getQuestion = function ({ user, params }, res) {
         .catch(errorHandler(res))
 }
 
+/* get the questions for a specific user */
+exports.getQuestionsByUserId = function({ params: { id } }, res) {
+    const questions = questionModel.getQuestionsByUserID(id)
+
+    responseHandler(questions, res)
+        .catch(errorHandler(res))
+}
+
 /* GET question ansewrs. */
 exports.getQuestionAnswers = function ({ user, params, query }, res) {
-    const userID = user && user.id || ANONYMOUS
+    const userID = (user && user.id) || ANONYMOUS
     const getAnswers = new Promise((resolve, reject) => {
         // Get the answers
         commentModel.getComments({ questionID: params.id }, query.p)

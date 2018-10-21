@@ -211,13 +211,19 @@ function initCourseTable(db) {
 
 function initDegreesTable(db) {
     // Prepare query
-    const columns = Object.keys(degreeData[0])
+
+    // TODO remove me later
+    const mappedDegrees = degreeData.map(({ name, ...rest }) => ({
+        name: name.startsWith('Bachelor of') ? 'B.' + name.split('Bachelor of')[1] : name,
+        ...rest
+    }))
+    const columns = Object.keys(mappedDegrees[0])
     const placeholders = columns.map(_ => '?').join()
     const query = `INSERT INTO degrees (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
 
     // Do insertions and return promise for all of them to be completed
-    return Promise.all(degreeData.map(degree => insertDB(db, 'degrees', degree, prep)))
+    return Promise.all(mappedDegrees.map(degree => insertDB(db, 'degrees', degree, prep)))
 }
 
 function initFacultiesTable(db) {
@@ -367,8 +373,8 @@ function initReviewTable(db) {
     return Promise.all(reviews.map(r =>
         insertDB(db, 'review', r, prep)
             .then(id => Promise.all([
-              initComments(db, { reviewID: id }),
-              initLikes(db, { objectType: 'review', objectID: id })
+                initComments(db, { reviewID: id }),
+                initLikes(db, { objectType: 'review', objectID: id })
             ]))
     ))
 }
@@ -433,15 +439,15 @@ function initLikes(db, parent) {
     const numLikes = Math.floor(Math.random() * 10)
     if (numLikes <= 0) return
     // choose numLikes consecutive users for these likes...
-    const startIndex = Math.floor(Math.random() * NUM_DUMMY_USERS);
+    const startIndex = Math.floor(Math.random() * NUM_DUMMY_USERS)
 
     let likes = []
     for (let i = startIndex; i < startIndex + numLikes; ++i) {
         likes.push({
-          userID: (i % NUM_DUMMY_USERS) + 1,
-          // more likely to be positive!
-          value: Math.random() > 0.7 ? -1 : 1,
-          ...parent
+            userID: (i % NUM_DUMMY_USERS) + 1,
+            // more likely to be positive!
+            value: Math.random() > 0.7 ? -1 : 1,
+            ...parent
         })
     }
 
@@ -455,62 +461,62 @@ function initLikes(db, parent) {
 
 function initUserTable(db) {
     const userNames = [
-      'Frud',
-      'Angoleena',
-      'Alhecks',
-      'Brob',
-      'Sarha',
-      'Hurry',
-      'Janes',
-      'Thim',
-      'Bretty',
-      'Bruna',
-      'Nack',
-      'Alfronds',
-      'Latchlan',
-      'Juke',
-      'Erdward',
-      'Zabe',
-      'Groben',
-      'Xanarthad',
-      'Henrayetta',
-      'Poldanskri',
-      'Lloiyde'
+        'Frud',
+        'Angoleena',
+        'Alhecks',
+        'Brob',
+        'Sarha',
+        'Hurry',
+        'Janes',
+        'Thim',
+        'Bretty',
+        'Bruna',
+        'Nack',
+        'Alfronds',
+        'Latchlan',
+        'Juke',
+        'Erdward',
+        'Zabe',
+        'Groben',
+        'Xanarthad',
+        'Henrayetta',
+        'Poldanskri',
+        'Lloiyde'
     ]
     const suffixes = ['XxX', '!', 's', '!!', '_', '__', 'x']
     const degrees = [
-      'B. Sci',
-      'Bachelor of Medicine',
-      'Bachelor of Arts',
-      'Computer Science',
-      'Masters of IT',
-      'MBA',
-      'Law Undergrad',
-      'Engineering',
-      'Elec Eng',
-      'Environmental Science',
-      'B. Eng',
-      'Bachelor of Mechanical Engineering',
-      'Bachelor of Chemical Engineering',
-      'PHD Physics',
-      'Bachelor of Science',
-      'Bachelor of Philosophy',
-      'Aerospace Engineering',
-      'Biology',
-      'Bachelor of Civil Engineering',
-      'Journeyman Underwater Basket Weaver',
-      'Masters of Electrical Engineering',
-      'Bachelor of Science - Mathematics',
-      'Bachelor of Commerce',
-      'B.A.',
-      'Bachelor of Architectural Studies',
-      'Art Theory',
-      // pad this out with blanks to simulate people not selecting a degree...
-      '',
-      '',
-      '',
-      '',
-      ''
+        'B. Sci',
+        'Bachelor of Medicine',
+        'Bachelor of Arts',
+        'Computer Science',
+        'Masters of IT',
+        'MBA',
+        'Law Undergrad',
+        'Engineering',
+        'Elec Eng',
+        'Environmental Science',
+        'B. Eng',
+        'Bachelor of Mechanical Engineering',
+        'Bachelor of Chemical Engineering',
+        'PHD Physics',
+        'Bachelor of Science',
+        'Bachelor of Philosophy',
+        'Aerospace Engineering',
+        'Biology',
+        'Bachelor of Civil Engineering',
+        'Journeyman Underwater Basket Weaver',
+        'Masters of Electrical Engineering',
+        'Bachelor of Science - Mathematics',
+        'Bachelor of Commerce',
+        'B.A.',
+        'Bachelor of Architectural Studies',
+        'Art Theory',
+        // pad this out with blanks to simulate people not selecting a degree...
+        '',
+        '',
+        '',
+        '',
+        ''
     ]
 
     let users = []
@@ -520,15 +526,15 @@ function initUserTable(db) {
         const displayName =
           userNames[i % userNames.length] +
           // only append a number if we've run out of names
-          (i < userNames.length ?
-            '' :
-            // then choose between a simulated birth year and a 'cool' suffix
-            (i % 2 ?
-              (90 + Math.trunc(i/userNames.length)) :
+          (i < userNames.length
+              ? ''
+          // then choose between a simulated birth year and a 'cool' suffix
+              : (i % 2
+                  ? (90 + Math.trunc(i / userNames.length))
               // only add a number on the suffix if we're past possible combinations without numbers..
               // multiply i by 3 to make it look like a birthdate or something
-              (suffixes[i % suffixes.length] + (i < (userNames.length + suffixes.length*2) ? '' : i*2))
-            )
+                  : (suffixes[i % suffixes.length] + (i < (userNames.length + suffixes.length * 2) ? '' : i * 2))
+              )
           )
         const email = displayName + '@test.com.au'
         const degree = degrees[Math.floor(Math.random() * degrees.length)]

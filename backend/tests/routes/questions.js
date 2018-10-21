@@ -21,7 +21,7 @@ before(() => {
             return supertest.post('/api/user')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken}`)
-                .send({ displayName: 'BackendTester' })
+                .send({ displayName: 'BackendTester', degree: 'B. Testing', gradYear: 2018 })
         })
 })
 

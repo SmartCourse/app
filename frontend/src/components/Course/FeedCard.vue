@@ -1,10 +1,10 @@
 <template>
   <Card class="feed-card">
-    <UserMini :name="user.displayName" :id="user.id" :picture="user.picture" />
+    <UserMini v-if="user" :name="user.displayName" :id="user.id" :picture="user.picture" />
     <div class="info">
-      <router-link tag="div" class="header" :to="{ name: routeName, params: { code, id }}">
-        <h3 class="header-title">{{ title }}</h3>
-      </router-link>
+      <SecondHeader :routeName="routeName" :code="code" :id="id">
+        {{ title }}
+      </SecondHeader>
       <p class="published">
         <time>{{ published }}</time>
       </p>
@@ -20,6 +20,7 @@
 
 <script>
 import Card from '@/components/Card'
+import SecondHeader from '@/components/Card/SecondaryHeader'
 import UserMini from '@/components/User/Mini'
 import Category from '@/components/Category'
 
@@ -38,7 +39,8 @@ export default {
   components: {
     Card,
     UserMini,
-    Category
+    Category,
+    SecondHeader
   },
   computed: {
     /* TODO use recommendation */
@@ -70,20 +72,12 @@ export default {
   text-align: right;
 }
 
-h3 {
-  font: var(--header-4);
-  font-weight: bolder;
-}
-
-p, h3 {
-  margin: 0 5px;
-}
-
 p {
+  margin: 0 5px;
   font: var(--body-copy-2);
 }
 
-.header-title:hover, .user:hover {
+.user:hover {
   cursor: pointer;
   opacity: 0.5;
 }
@@ -97,10 +91,6 @@ p {
     display: none;
   }
 
-  h3 {
-    font: var(--header-4-mobile);
-    font-weight: bolder;
-  }
 }
 
 </style>

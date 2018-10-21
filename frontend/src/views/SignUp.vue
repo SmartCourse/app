@@ -13,11 +13,11 @@
       <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>
       <AuthInput type="password" v-model="password" placeholder="Password"/>
 
-      <span>
-        <input type="checkbox" v-model="tos"> By signing up I agree to the
-        <router-link :to="{name: 'terms-of-service'}" target="_blank" class="help-link">Terms of Service</router-link> and
-        <router-link :to="{name: 'privacy-policy'}" target="_blank" class="help-link">Privacy Policy</router-link>.
-      </span>
+      <p class="tos">
+        <input type="checkbox" v-model="tos"> By clicking 'Sign Up' you are also agreeing to the SmartCourse
+        <router-link :to="{name: 'terms-of-service'}" target="_blank" class="tos-link">Terms of Service</router-link> and
+        <router-link :to="{name: 'privacy-policy'}" target="_blank" class="tos-link">Privacy Policy</router-link>.
+      </p>
 
     </AppAuthForm>
     <LoadingSpinner v-else/>
@@ -66,13 +66,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
-.help-link {
-  margin: 20px 0 0;
-  font: var(--body-copy-1);
+.tos-link {
   text-align:right;
   color: var(--theme);
 }
 
+.tos {
+  font: var(--body-copy-2);
+}
 </style>
