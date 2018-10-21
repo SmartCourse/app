@@ -2,6 +2,9 @@
   <div class="main-content subject-course">
     <AppBreadCrumb/>
     <FilterSearch v-model="search"/>
+    <div class="options">
+      <p>Sort By:</p> <Radio v-model="sortBy" :options="['Rating', 'Code', 'Name']"/>
+    </div>
     <TilesContainer v-if="filtered.length">
       <Tile :key="item.code" v-for="item in filtered">
         <router-link v-if="item.code" tag="div" class="tile-header" :to="{ name: 'info', params: { code:item.code }}">
@@ -38,28 +41,40 @@ import { mapGetters } from 'vuex'
 import Tile from '@/components/Tile'
 import TilesContainer from '@/components/Tile/Container'
 import FilterSearch from '@/components/Search/Filter'
+import Radio from '@/components/AppRadioOptions'
 
 export default {
   name: 'subjectCourses',
   data() {
     return {
-      search: ''
+      search: '',
+      sortBy: 'Rating'
     }
   },
   computed: {
     courses() {
       if (this.loading) return []
       // filter courses to ones which match this subject code
-      const filtered = this.allCourses.filter(course => course.code.slice(0, 4) === this.code)
-      // sort them
-      filtered.sort(({recommend: r1}, {recommend: r2}) => r1 < r2)
-
-      return filtered
+      return this.allCourses.filter(course => course.code.slice(0, 4) === this.code)
+    },
+    sorted() {
+      if (this.loading) return []
+      // copy
+      const s = this.courses.map(a => a)
+      // sort
+      if (this.sortBy === 'Name') {
+        s.sort(({ name: x }, { name: y }) => x > y)
+      } else if (this.sortBy === 'Code') {
+        s.sort(({ code: x }, { code: y }) => x > y)
+      } else {
+        s.sort(({ recommend: x }, { recommend: y }) => x < y)
+      }
+      return s
     },
     filtered() {
       if (this.loading) return []
       const lower = this.search.toLowerCase()
-      return this.courses
+      return this.sorted
         .filter(item => item.code.toLowerCase().match(lower) || item.name.toLowerCase().match(lower))
     },
     ...mapGetters({
@@ -82,7 +97,8 @@ export default {
   components: {
     Tile,
     TilesContainer,
-    FilterSearch
+    FilterSearch,
+    Radio
   },
   props: {
     code: String
@@ -93,8 +109,13 @@ export default {
 <style scoped src='../css/subject.less' lang='less'/>
 <style scoped>
 h6 {
-    width:120px;
-    text-align:right;
+  width:120px;
+  text-align:right;
+}
+.options {
+  display:flex;
+  align-items: center;
+  margin:10px;
 }
 .positive {
   color:var(--color-positive);
