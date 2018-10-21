@@ -14,7 +14,7 @@ class User {
         return this.db.query('SELECT id, email, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
             .then((profile) => {
                 if (profile.reputation < 0) profile.reputation = 0
-                return { ...profile }
+                return profile
             })
     }
 
@@ -28,7 +28,7 @@ class User {
         return this.db.query('SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
             .then((profile) => {
                 if (profile.reputation < 0) profile.reputation = 0
-                return { ...profile }
+                return profile
             })
     }
 
