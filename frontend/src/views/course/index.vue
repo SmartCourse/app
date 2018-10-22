@@ -97,7 +97,6 @@ export default {
     display: grid;
     grid-auto-columns: 2fr 1fr;
     grid-gap: 10px;
-    max-height: 360px;
     overflow-y: hidden;
 }
 

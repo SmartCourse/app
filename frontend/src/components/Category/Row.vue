@@ -9,7 +9,7 @@
 export default {
     props: {
         title: String,
-        body: String
+        body: [String, Number]
     }
 }
 </script>
