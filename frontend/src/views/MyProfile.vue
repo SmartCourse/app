@@ -1,7 +1,7 @@
 <template>
     <section class="main-content">
 
-        <Card>
+        <TransparentCard>
 
           <div class="profile">
 
@@ -34,7 +34,7 @@
             </div>
 
           </div>
-        </Card>
+        </TransparentCard>
 
     </section>
 </template>
@@ -42,14 +42,14 @@
 <script>
 import AppButton from '@/components/AppButton'
 import AppInput from '@/components/AppInput'
-import Card from '@/components/Card'
+import TransparentCard from '@/components/Card/Transparent'
 import Mini from '@/components/User/Mini'
 import Reputation from '@/components/User/Reputation'
 import AuthSelect from '@/components/Authentication/Select'
 import { mapGetters } from 'vuex'
 
 export default {
-  components: { AppInput, AppButton, Card, Mini, Reputation, AuthSelect },
+  components: { AppInput, AppButton, TransparentCard, Mini, Reputation, AuthSelect },
   data() {
     return {
       degree: '',

@@ -1,6 +1,8 @@
 <template>
     <section class="main-content">
         <div class="flex-container">
+          <div>
+          <CardHeader>User Profile</CardHeader>
           <Card class="profile">
             <transition name="fade-slide">
               <div v-if="!loading">
@@ -8,13 +10,13 @@
                   <Mini :name="user.displayName" :id="user.id" :picture="user.picture" />
                   <h3>{{ user.displayName }}</h3>
                 </div>
-                <div>{{ user.degree }} </div>
-                <div class="grid-container">
-                  <p>Reputation (<i class="material-icons star">star</i>): </p><p class="right">{{ user.reputation }}</p>
-                  <p>Joined: </p><p class="right">{{ user.joined.slice(0,10) }}</p>
-                  <p>Graduation Year: <p class="right">{{ user.gradYear || 2018 }}</p>
+                <div class="data-container">
+                  <Field :title="'Degree'" :body="user.degree"/>
+                  <Field :title="'Joined'" :body="user.joined"/>
+                  <Field :title="'Graduation Year'" :body="user.gradYear || 2018"/>
+                  <Field :title="'Description'" :body=" user.description || 'No description set'"/>
+                  <!-- <p>Reputation <i class="material-icons star">star</i></p> -->
                 </div>
-                <div>Description: <br>{{ user.description || 'No description set' }}</div>
               </div>
             </transition>
 
@@ -22,6 +24,7 @@
               <LoadingSpinner/>
             </div>
         </Card>
+        </div>
         <div>
           <CardHeader>Recent Questions</CardHeader>
           <FeedCard
@@ -40,6 +43,8 @@ import Name from '@/components/User/Name'
 import Card from '@/components/Card'
 import CardHeader from '@/components/Card/Header'
 import FeedCard from '@/components/Card/Small'
+import Field from '@/components/Category/Row'
+
 import { mapGetters } from 'vuex'
 
 export default {
@@ -49,7 +54,8 @@ export default {
     Mini,
     Name,
     FeedCard,
-    CardHeader
+    CardHeader,
+    Field
   },
   props: {
     id: {
@@ -76,9 +82,7 @@ export default {
 p {
     margin:5px 0px;
 }
-.right {
-    text-align: right;
-}
+
 .star {
     font-size:15px;
 }
@@ -93,13 +97,13 @@ p {
 }
 
 .profile {
+  min-width: 200px;
   margin: 0px 20px 10px 0;
 }
 
-.grid-container {
-    display:grid;
-    grid-template-columns: auto auto;
-    margin:20px auto;
+.data-container {
+    display: block;
+    margin: 10px 0;
 }
 
 .flex-container {
