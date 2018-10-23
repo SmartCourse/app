@@ -345,7 +345,7 @@ function initReviewTable(db) {
     const numReviewTypes = reviewTypes.length
 
     // Prepare query
-    const columns = ['code', 'userID', 'recommend', 'enjoy', 'title', 'body']
+    const columns = ['code', 'userID', 'recommend', 'enjoy', 'title', 'body', 'difficulty', 'teaching', 'workload']
     const placeholders = columns.map(_ => '?').join()
     const query = `INSERT INTO review (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
@@ -371,7 +371,10 @@ function initReviewTable(db) {
                 userID: uid,
                 recommend: getRandomIntInclusive(0,1),
                 enjoy: getRandomIntInclusive(MIN_ENJOY, MAX_ENJOY),
-                ...reviewTypes[index]
+                ...reviewTypes[index],
+                difficulty: getRandomIntInclusive(MIN_OPTION, MAX_OPTION),
+                teaching: getRandomIntInclusive(MIN_OPTION, MAX_OPTION),
+                workload: getRandomIntInclusive(MIN_OPTION, MAX_OPTION)
               }
             // Add the question to the list
             promises.push(

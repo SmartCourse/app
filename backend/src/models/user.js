@@ -27,7 +27,6 @@ class User {
     getPublicProfile(id) {
         return this.db.query('SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
             .then((profile) => {
-                console.log(profile)
                 if (profile.reputation < 0) profile.reputation = 0
                 return profile
             })
