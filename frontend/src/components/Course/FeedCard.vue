@@ -8,7 +8,9 @@
       <p class="published">
         <time>{{ published }}</time>
       </p>
-      <Category :recommend="recommend" v-if="cardType === 'Review'"/>
+      <Category :recommend="recommend" v-if="cardType === 'Review'">
+        <p><b>{{ positiveOrNegativeText }}</b></p>
+      </Category>
       <p v-else>
         <span v-if="numAnswers === 0">Know the answer to this question?</span>
         <span v-else>{{ numAnswers }} Answer{{ numAnswers > 1 ? 's' : '' }}</span>
@@ -46,7 +48,10 @@ export default {
     /* TODO use recommendation */
     routeName() {
       return this.cardType === 'Review' ? 'review' : 'question'
-    }
+    },
+    positiveOrNegativeText() {
+      return this.recommend ? 'Recommended' : 'Not Recommended'
+    },
   }
 }
 </script>
@@ -85,7 +90,7 @@ p {
 @media screen and (max-width: 500px) {
   .info {
     grid-gap: 5px;
-    grid-template-columns: 1fr 60px;
+    grid-template-columns: 1fr 120px;
   }
   .likes {
     display: none;

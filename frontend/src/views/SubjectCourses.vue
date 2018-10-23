@@ -12,9 +12,9 @@
             <h4>
               {{ item.code }}
             </h4>
-            <h6 v-if="item.recommend > -1" :class="recommendClass(item.recommend)">
-              {{ recommendText(item.recommend) }}
-            </h6>
+            <Category v-if="item.recommend > -1" :recommend="item.recommend">
+              <h6>{{ recommendText(item.recommend) }}</h6>
+            </Category>
             <h6 v-else>No reviews</h6>
           </div>
           <h5>
@@ -41,6 +41,7 @@ import { mapGetters } from 'vuex'
 import Tile from '@/components/Tile'
 import TilesContainer from '@/components/Tile/Container'
 import FilterSearch from '@/components/Search/Filter'
+import Category from '@/components/Category'
 import Radio from '@/components/AppRadioOptions'
 
 export default {
@@ -83,11 +84,6 @@ export default {
     })
   },
   methods: {
-    recommendClass(recommend) {
-      if (recommend >= 60) return 'positive'
-      else if (recommend <= 40) return 'negative'
-      else return 'neutral'
-    },
     recommendText(recommend) {
       if (recommend >= 60) return 'Mostly positive'
       else if (recommend <= 40) return 'Mostly negative'
@@ -98,7 +94,8 @@ export default {
     Tile,
     TilesContainer,
     FilterSearch,
-    Radio
+    Radio,
+    Category
   },
   props: {
     code: String
@@ -116,16 +113,5 @@ h6 {
   display:flex;
   align-items: center;
   margin:0 10px 5px 15px;
-}
-.positive {
-  color:var(--color-positive);
-}
-
-.neutral {
-  color:var(--soft-black);
-}
-
-.negative {
-  color:var(--color-negative);
 }
 </style>
