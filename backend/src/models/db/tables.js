@@ -309,7 +309,7 @@ function initQuestionsTable(db) {
         }
     }
 
-    return promises
+    return Promise.all(promises)
 }
 
 function initReviewTable(db) {
@@ -385,7 +385,7 @@ function initReviewTable(db) {
     }
 
     // Do insertions and return promise for all of them to be completed
-    return promises
+    return Promise.all(promises)
 }
 
 function initComments(db, parent) {
@@ -564,6 +564,8 @@ function updateCourseRatings(db, code) {
  * @returns {object} SQLObject
  */
 async function createDB(db) {
+    const timeList = [Date.now()/1000]
+    let promises = []
     await Promise.all([
         createUserTable(db),
         createUniversityTable(db),
@@ -577,22 +579,24 @@ async function createDB(db) {
         createFacultiesTable(db)
     ])
         .then(() => {
-            console.log('Created tables')
+            timeList.push(Date.now()/1000)
+            console.log(`Created tables in ${((timeList[1] - timeList[0])).toFixed(3)} seconds`)
             return Promise.all([initUniTable(db), initSubjectTable(db), initCourseTable(db),
                 initQuestionsTable(db), initReviewTable(db), initFacultiesTable(db), initDegreesTable(db)])
         })
         .then(() => {
-            console.log('Initialised most tables')
+            timeList.push(Date.now()/1000)
+            console.log(`Initialised most tables in ${((timeList[2] - timeList[1])).toFixed(3)} seconds`)
             return initUserTable(db)
         })
         .then(() => {
-            console.log('Initialised user table')
-            return Promise.all(
-                courseData.slice(0,COURSE_UPDATE_LIMIT).map(({code}) => updateCourseRatings(db, code))
-            )
+            timeList.push(Date.now()/1000)
+            console.log(`Initialised user table in ${((timeList[3] - timeList[2])).toFixed(3)} seconds`)
+            return Promise.all(courseData.slice(0,COURSE_UPDATE_LIMIT).map(({code}) => updateCourseRatings(db, code)))
         })
         .then(() => {
-            console.log('Updated course ratings')
+            timeList.push(Date.now()/1000)
+            console.log(`Initialised course ratings in ${((timeList[4] - timeList[3])).toFixed(3)} seconds`)
         })
         .catch((error) => console.warn(error))
 }
