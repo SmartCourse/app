@@ -9,12 +9,16 @@ const degreeData = require('../../../data/degrees').map(({ name, ...rest }) => (
     }))
 const { getRandomInt, getRandomIntInclusive } = require('../../utils/helpers')
 
-// only compute recommendations for this many courses
+// only populate questions, reviews, comments, likes for this many courses
 // 500 does up to most of BABS
 const COURSE_UPDATE_LIMIT = 500
 
 const NUM_DUMMY_USERS = 50
 
+// 111 is actually the max number of rows you can insert in one query...
+const MAX_SQLITE_ROWS = 111
+
+// user ids mapped to reputation
 const userRepMap = {}
 
 // TODO - STUB USER TABLE (REFACTOR FOR AUTH)
@@ -272,15 +276,24 @@ function initQuestionsTable(db) {
 
 
     // Prepare query
+    /*
     const columns = ['code', 'userID', 'title', 'body']
     const placeholders = columns.map(_ => '?').join()
     const query = `INSERT INTO question (${columns}) VALUES (${placeholders})`
     const prep = db.prepare(query)
 
     let promises = []
+    */
 
+    // each set 100 questions
+    // we have to do this cos SQLite can only insert so many rows at once
+    let questionSet = []
+    let questions = []
+
+    let c = 0
     // For each of the courses
     for (const course of courseData) {
+        if (c == COURSE_UPDATE_LIMIT) break
         // Get its course code
         const { code } = course
         // Determine how many questions to add
@@ -298,18 +311,22 @@ function initQuestionsTable(db) {
               ...questionTypes[index]
             }
 
-            // Add the question to the list of promises
-            promises.push(
-                insertDB(db, 'question', question, prep)
-                    .then(id => Promise.all([
-                        initComments(db, { questionID: id }),
-                        initLikes(db, { objectType: 'question', objectID: id, userID: uid })
-                    ]))
-              )
+            // Add the question to the list of sets
+            questionSet.push(question)
+            if (questionSet.length >= MAX_SQLITE_ROWS) {
+                questions.push(questionSet)
+                questionSet = []
+            }
         }
+        c++
     }
 
-    return Promise.all(promises)
+    return Promise.all(questions.map(set => bulkInsertDB(db, 'question', set)))
+      .then(() => bulkSelect(db, 'question', ['id', 'userID']))
+      .then((ids) => Promise.all([
+          initComments(db, ids.map(({ id, userID }) => ({ questionID: id, userID }))),
+          initLikes(db, ids.map(({ id, userID }) => ({ objectType: 'question', objectID: id, userID })))
+        ]))
 }
 
 function initReviewTable(db) {
@@ -344,23 +361,20 @@ function initReviewTable(db) {
     const maxRange = 20
     const numReviewTypes = reviewTypes.length
 
-    // Prepare query
-    const columns = ['code', 'userID', 'recommend', 'enjoy', 'title', 'body', 'difficulty', 'teaching', 'workload']
-    const placeholders = columns.map(_ => '?').join()
-    const query = `INSERT INTO review (${columns}) VALUES (${placeholders})`
-    const prep = db.prepare(query)
+    let reviewSet = []
+    let reviews = []
 
-    let promises = []
-
+    let c = 0
     // For each of the courses
     for (const i in courseData) {
+        if (c == COURSE_UPDATE_LIMIT) break
         // Get it's course code
         const code = courseData[i].code
         // Determine how many questions to add
         const numReviews = getRandomIntInclusive(minRange, maxRange)
-        if (numReviews <= 0) continue // not strictly necessary... but...meh
+        if (numReviews <= 0) continue
 
-        // Now create each of the questions
+        // Now create each of the reviews
         for (let i = 0; i < numReviews; i++) {
             // Determine the question type
             const index = getRandomInt(0, numReviewTypes)
@@ -376,22 +390,26 @@ function initReviewTable(db) {
                 teaching: getRandomIntInclusive(MIN_OPTION, MAX_OPTION),
                 workload: getRandomIntInclusive(MIN_OPTION, MAX_OPTION)
               }
-            // Add the question to the list
-            promises.push(
-                insertDB(db, 'review', review, prep)
-                    .then(id => Promise.all([
-                        initComments(db, { reviewID: id }),
-                        initLikes(db, { objectType: 'review', objectID: id, userID: uid })
-                    ]))
-              )
+
+            // add review to set
+            reviewSet.push(review)
+            if (reviewSet.length >= MAX_SQLITE_ROWS) {
+                reviews.push(reviewSet)
+                reviewSet = []
+            }
         }
+        c++
     }
 
-    // Do insertions and return promise for all of them to be completed
-    return Promise.all(promises)
+    return Promise.all(reviews.map(set => bulkInsertDB(db, 'review', set)))
+      .then(() => bulkSelect(db, 'review', ['id', 'userID']))
+      .then((ids) => Promise.all([
+          initComments(db, ids.map(({ id, userID }) => ({ reviewID: id, userID }))),
+          initLikes(db, ids.map(({ id, userID }) => ({ objectType: 'review', objectID: id, userID })))
+        ]))
 }
 
-function initComments(db, parent) {
+function initComments(db, parents) {
     const commentTypes = [
         {
             body: 'hendrerit dolor magna eget est lorem ipsum dolor sit amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas integer eget aliquet nibh praesent tristique magna sit amet purus gravida quis blandit turpis cursus in hac habitasse platea dictumst quisque sagittis purus sit hendrerit dolor magna eget est lorem ipsum dolor sit amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas integer eget aliquet nibh praesent tristique magna sit amet purus gravida quis blandit turpis cursus in hac habitasse platea dictumst quisque sagittis purus sit'
@@ -413,71 +431,77 @@ function initComments(db, parent) {
         }
     ]
 
-    // there should be a good chance of having 0 answers
     const minRange = 3 // Between [minRange, maxRange]
     const maxRange = 15
-    const numComments = getRandomIntInclusive(minRange, maxRange)
-    if (numComments <= 0) return
-
-    const commentType = 'reviewID' in parent ? 'reply' : 'answer'
-
-    const columns = [Object.keys(parent)[0], 'commentParent', 'userID', 'body']
-    const placeholders = columns.map(_ => '?').join()
-    const query = `INSERT INTO comment (${columns}) VALUES (${placeholders})`
-    const prep = db.prepare(query)
-
     const numCommentTypes = commentTypes.length
 
-    let promises = []
+    const commentType = 'reviewID' in parents[0] ? 'reply' : 'answer'
+    const columns = [Object.keys(parents[0])[0], 'commentParent', 'userID', 'body']
 
-    for (let i = 0; i < numComments; i++) {
-        const index = getRandomInt(0, numCommentTypes)
-        const uid = getRandomIntInclusive(1, NUM_DUMMY_USERS)
-        const comment = {
-            ...parent,
-            commentParent: 1,
-            userID: uid,
-            ...commentTypes[index]
+    let commentSet = []
+    let comments = []
+
+    for (parent of parents) {
+
+        const numComments = getRandomIntInclusive(minRange, maxRange)
+        if (numComments <= 0) continue
+
+        for (let i = 0; i < numComments; i++) {
+            const index = getRandomInt(0, numCommentTypes)
+            const uid = getRandomIntInclusive(1, NUM_DUMMY_USERS)
+            const comment = {
+                ...parent,
+                commentParent: 1,
+                userID: uid,
+                ...commentTypes[index]
+            }
+            commentSet.push(comment)
+            if (commentSet.length >= MAX_SQLITE_ROWS) {
+                comments.push(commentSet)
+                commentSet = []
+            }
         }
-        promises.push(
-            insertDB(db, 'comment', comment, prep)
-                .then((id) => initLikes(db, { objectType: commentType, objectID: id, userID: uid }))
-          )
     }
 
-    return Promise.all(promises)
+    return Promise.all(comments.map(set => bulkInsertDB(db, 'comment', set)))
+      .then(() => bulkSelect(db, 'comment', ['id', 'userID']))
+      .then((ids) => initLikes(db, ids.map(({ id, userID }) => ({ objectType: commentType, objectID: id, userID }))))
 }
 
-function initLikes(db, parent) {
-    const numLikes = getRandomIntInclusive(-2, 10)
-    if (numLikes <= 0) return
-    // choose numLikes consecutive users for these likes...
-    const startIndex = getRandomIntInclusive(1, NUM_DUMMY_USERS)
+function initLikes(db, parents) {
 
+    let likeSet = []
     let likes = []
-    for (let i = startIndex; i < startIndex + numLikes; ++i) {
-        const like = {
-            userID: (i % NUM_DUMMY_USERS) + 1,
-            // more likely to be positive!
-            value: Math.random() > 0.7 ? -1 : 1,
-            objectType: parent.objectType,
-            objectID: parent.objectID
+
+    for (parent of parents) {
+        const numLikes = getRandomIntInclusive(-2, 10)
+        if (numLikes <= 0) continue
+        // choose numLikes consecutive users for these likes...
+        const startIndex = getRandomIntInclusive(1, NUM_DUMMY_USERS)
+
+        for (let i = startIndex; i < startIndex + numLikes; ++i) {
+            const like = {
+                userID: (i % NUM_DUMMY_USERS) + 1,
+                // more likely to be positive!
+                value: Math.random() > 0.7 ? -1 : 1,
+                objectType: parent.objectType,
+                objectID: parent.objectID
+            }
+            // update user reputation for the liked object's user, to be used in initUserTable
+            if (parent.userID in userRepMap) {
+                userRepMap[parent.userID] += like.value;
+            } else {
+                userRepMap[parent.userID] = like.value;
+            }
+            likeSet.push(like)
+            if (likeSet.length >= MAX_SQLITE_ROWS) {
+                likes.push(likeSet)
+                likeSet = []
+            }
         }
-        // update user reputation for the liked object's user, to be used in initUserTable
-        if (parent.userID in userRepMap) {
-            userRepMap[parent.userID] += like.value;
-        } else {
-            userRepMap[parent.userID] = like.value;
-        }
-        likes.push(like)
     }
 
-    const columns = Object.keys(likes[0])
-    const placeholders = columns.map(_ => '?').join()
-    const query = `INSERT INTO likes (${columns}) VALUES (${placeholders})`
-    const prep = db.prepare(query)
-
-    return Promise.all(likes.map(c => insertDB(db, 'likes', c, prep)))
+    return Promise.all(likes.map(set => bulkInsertDB(db, 'likes', set)))
 }
 
 function initUserTable(db) {
@@ -602,6 +626,39 @@ async function createDB(db) {
             console.log(`Initialised course ratings in ${((timeList[4] - timeList[3])).toFixed(3)} seconds`)
         })
         .catch((error) => console.warn(error))
+}
+
+function bulkSelect(db, table, fieldNames) {
+    return new Promise((resolve, reject) => {
+        db.all(
+            `SELECT ${fieldNames.join()} FROM ${table}`,
+            [],
+            (err, rows) => { err ? reject(err) : resolve(rows) }
+        )
+    })
+}
+
+
+// Insert given JSON object into database table.
+// data = [{ column : value }, { column : value }, ...]
+// all objects must have same column names
+// WARNING: This syntax only works with sqlite 3.7.11+
+// For security reasons, column inputs can NEVER be user defined.
+function bulkInsertDB (db, table, data) {
+    return new Promise((resolve, reject) => {
+
+        const values = data.map(row => Object.values(row))
+        const columns = Object.keys(data[0])
+        const placeholders = columns.map(_ => '?').join()
+        const query = `INSERT INTO ${table} (${columns}) VALUES ${
+          values.map(rowValues => `(${placeholders})`).join()}`
+        const flatValues = values.reduce((acc, curr) => acc.concat(curr), [])
+        db = db.run(
+                query,
+                flatValues,
+                function (err) { err ? reject(err) : resolve(this.lastID) }
+            )
+    })
 }
 
 // Insert given JSON object into database table.
