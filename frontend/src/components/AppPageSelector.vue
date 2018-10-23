@@ -1,9 +1,9 @@
 <template>
   <div class="PageSelector" v-if="lastPage">
     <div class='button-container'>
-      <AppButton @click.native="goPrevPage()" :alt="false">&laquo;</AppButton>
-      <div>{{currPage}}</div>
-      <AppButton @click.native="goNextPage()" :alt="false">&raquo;</AppButton>
+      <AppButton title="Previous page" class="material-icons" @click.native="goPrevPage()" :alt="false">chevron_left</AppButton>
+      <h5>{{currPage}}</h5>
+      <AppButton title="Next page" class="material-icons" @click.native="goNextPage()" :alt="false">chevron_right</AppButton>
     </div>
   </div>
 </template>
@@ -44,11 +44,23 @@ export default {
 
 <style scoped>
 .button-container {
-  padding: 10px 0;
-  text-align:center;
+  display: flex;
+  width: 150px;
+  margin: 10px auto;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h5 {
+  font: var(--header-4);
 }
 
 .button-container > button {
-  margin: 5px;
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 30px;
+  padding: 10px;
 }
+
 </style>
