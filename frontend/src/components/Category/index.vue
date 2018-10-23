@@ -16,7 +16,7 @@ export default {
   },
   computed: {
     recommendClass() {
-      const value = Number(this.recommend)/10
+      const value = Number(this.recommend)/100
 
       if (value >= 0.6) return 'positive'
       else if (value <= 0.4) return 'negative'
