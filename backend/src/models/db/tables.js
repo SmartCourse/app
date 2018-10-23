@@ -442,7 +442,7 @@ function initComments(db, parent) {
           )
     }
 
-    return promises
+    return Promise.all(promises)
 }
 
 function initLikes(db, parent) {
@@ -461,7 +461,7 @@ function initLikes(db, parent) {
             objectID: parent.objectID
         }
         // update user reputation for the liked object's user, to be used in initUserTable
-        if (parent.userID in userRepMap && userRepMap[parent.userID] > 0) {
+        if (parent.userID in userRepMap) {
             userRepMap[parent.userID] += like.value;
         } else {
             userRepMap[parent.userID] = like.value;
@@ -555,7 +555,7 @@ function updateCourseRatings(db, code) {
                     WHERE code=$code;`,
             { $code: code },
             function (err) { err ? reject(err) : resolve() })
-          })
+        })
 }
 
 /**
@@ -581,9 +581,12 @@ async function createDB(db) {
             return Promise.all([initUniTable(db), initSubjectTable(db), initCourseTable(db),
                 initQuestionsTable(db), initReviewTable(db), initFacultiesTable(db), initDegreesTable(db)])
         })
-        .then(() => initUserTable(db))
         .then(() => {
-            console.log('Initialised tables')
+            console.log('Initialised most tables')
+            return initUserTable(db)
+        })
+        .then(() => {
+            console.log('Initialised user table')
             return Promise.all(
                 courseData.slice(0,COURSE_UPDATE_LIMIT).map(({code}) => updateCourseRatings(db, code))
             )

@@ -1,5 +1,6 @@
 const app = require('../../src')
 const supertest = require('supertest')(app)
+const { expect } = require('chai')
 
 describe('User route testing', function() {
     /* should be a route (ie to get self data) */
@@ -35,7 +36,8 @@ describe('User route testing', function() {
             .expect('Content-Type', /json/)
             .expect(200)
             .then(({ body }) => {
-                console.log(body)
+                expect(body.length > 0).to.equal(true)
+                //console.log(body)
             })
     )
 
