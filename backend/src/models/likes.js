@@ -55,9 +55,9 @@ class Likes {
                 [id])
         ])
             .then(([originalLike, creator]) => {
-                const oldLike = originalLike && originalLike.value || 0
+                const oldLike = (originalLike && originalLike.value) || 0
                 const creatorID = creator.userID
-                const repChange = creatorID != userID ? (value - oldLike) : 0
+                const repChange = creatorID !== userID ? (value - oldLike) : 0
                 return Promise.all([
                     this.db.run(updateLikes, [...insertValues]),
                     this.db.run(updateReputation, [creatorID, repChange, creatorID])
