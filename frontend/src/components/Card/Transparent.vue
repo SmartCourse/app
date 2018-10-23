@@ -8,7 +8,7 @@
 import Card from '@/components/Card'
 
 export default {
-    components: { Card }
+  components: { Card }
 }
 </script>
 
@@ -18,4 +18,3 @@ export default {
     box-shadow: none;
 }
 </style>
-

@@ -8,14 +8,13 @@
 
 <script>
 export default {
-    props: {
-        routeName: String,
-        code: String,
-        id: String
-    }
+  props: {
+    routeName: String,
+    code: String,
+    id: String
+  }
 }
 </script>
-
 
 <style scoped>
 
@@ -37,5 +36,3 @@ h3 {
   }
 }
 </style>
-
-

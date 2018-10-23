@@ -16,12 +16,12 @@ export default {
   },
   computed: {
     recommendClass() {
-      const value = Number(this.recommend)/10
+      const value = Number(this.recommend) / 10
 
       if (value >= 0.6) return 'positive'
       else if (value <= 0.4) return 'negative'
       else return 'neutral'
-    },
+    }
   }
 }
 </script>

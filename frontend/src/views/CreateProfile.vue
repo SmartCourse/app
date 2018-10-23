@@ -26,7 +26,7 @@ export default {
     return {
       displayName: '',
       degree: '',
-      gradYear: '',
+      gradYear: ''
     }
   },
   components: { AppAuthForm, AuthInput, AuthSelect },
@@ -51,7 +51,7 @@ export default {
       const { displayName, degree, gradYear } = this
       if (!(displayName && degree && gradYear)) {
         this.$store.commit('auth/ERROR', 'Please fill in all fields to finish your account creation.')
-        return;
+        return
       }
 
       this.$store.dispatch('auth/createProfile', { displayName, degree, gradYear })
