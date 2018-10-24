@@ -64,11 +64,11 @@ export default {
       const s = this.courses.map(a => a)
       // sort
       if (this.sortBy === 'Name') {
-        s.sort(({ name: x }, { name: y }) => x > y)
+        s.sort(({ name: x }, { name: y }) => x.localeCompare(y))
       } else if (this.sortBy === 'Code') {
-        s.sort(({ code: x }, { code: y }) => x > y)
+        s.sort(({ code: x }, { code: y }) => x.localeCompare(y))
       } else {
-        s.sort(({ recommend: x }, { recommend: y }) => x < y)
+        s.sort(({ recommend: x }, { recommend: y }) => y - x)
       }
       return s
     },
