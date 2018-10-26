@@ -21,6 +21,8 @@ app.use(express.static(path.join(__dirname, '../public'), {
 
 // for auth tokens
 app.use(firebase)
+const { attachUser } = require('./utils/helpers')
+app.use(attachUser)
 
 // for setting cors headers
 const { cors, corsProd } = require('./utils/cors')

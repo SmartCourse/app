@@ -1,4 +1,3 @@
-const { ANONYMOUS } = require('../models/constants')
 const reviewModel = require('../models/review')()
 const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
@@ -7,8 +6,7 @@ const errorHandler = require('./error')
 const { responseHandler, userLikesMapper } = require('../utils/helpers')
 
 /* GET review for single id. */
-exports.getReview = function ({ user, params }, res) {
-    const userID = (user && user.id) || ANONYMOUS
+exports.getReview = function ({ userID, params }, res) {
     const getReview = Promise.all([
         reviewModel.getReview(params.id),
         likesModel.getLikes({ type: 'review', id: params.id }),
@@ -26,8 +24,7 @@ exports.getReview = function ({ user, params }, res) {
 }
 
 /* GET top level review replies . */
-exports.getReviewComments = function ({ user, params, query }, res) {
-    const userID = (user && user.id) || ANONYMOUS
+exports.getReviewComments = function ({ userID, params, query }, res) {
     const getReplies = new Promise((resolve, reject) => {
         // Get the replies
         commentModel.getComments({ reviewID: params.id }, query.p)
@@ -46,13 +43,13 @@ exports.getReviewComments = function ({ user, params, query }, res) {
             .then(resolve)
             .catch(err => reject(err))
     })
-    console.log('WE GUCCI 2')
+
     responseHandler(getReplies, res)
         .catch(errorHandler(res))
 }
 
 /* POST new comment. */
-exports.postComment = function ({ user, params, query, body }, res) {
+exports.postComment = function ({ user, params, body }, res) {
     body.userID = user.id
     const promise = new Promise((resolve, reject) =>
         // post the comment, then get it

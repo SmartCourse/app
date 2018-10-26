@@ -25,8 +25,9 @@ class Likes {
             .then(({ userLiked = 0 } = {}) => ({ userLiked }))
     }
 
-    /*
-     * Put likes
+    /**
+     * TODO refactor
+     * Update the likes for a given comment, review, question
      */
     putLikes({ type, id, userID, value }) {
         // Stuff to update likes
@@ -55,9 +56,9 @@ class Likes {
                 [id])
         ])
             .then(([originalLike, creator]) => {
-                const oldLike = originalLike && originalLike.value || 0
+                const oldLike = (originalLike && originalLike.value) || 0
                 const creatorID = creator.userID
-                const repChange = creatorID != userID ? (value - oldLike) : 0
+                const repChange = (creatorID !== userID) ? (value - oldLike) : 0
                 return Promise.all([
                     this.db.run(updateLikes, [...insertValues]),
                     this.db.run(updateReputation, [creatorID, repChange, creatorID])

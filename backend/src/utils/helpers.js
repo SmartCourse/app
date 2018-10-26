@@ -1,3 +1,5 @@
+const { ANONYMOUS } = require('../models/constants')
+const User = require('../models/user')()
 
 /**
  * Basic response wrapper for controllers
@@ -11,13 +13,37 @@ exports.responseHandler = function(fn, response) {
 
 exports.toLowerCase = str => str.toLowerCase()
 
+/**
+ * Some requests will have the auth token, but no user created.
+ * Eg. Pre profile creation
+ */
 exports.isFirebaseAuthorized = function(req, res, next) {
     if (!req.authorized) {
         return res.status(401).json({ code: 401, message: 'Unauthorized' })
     }
     next()
 }
-exports.isAuthorized = function(req, res, next) {
+
+exports.attachUser = function(req, _, next) {
+    const { uid } = req.query
+
+    if (uid) {
+        console.log('USER', User.db)
+        return User.getUserByUID(uid)
+            .then(user => {
+                req.userID = (user && user.id) || ANONYMOUS
+            })
+            .catch(err => {
+                console.warn(err)
+            })
+            .then(next)
+    } else {
+        req.userID = ANONYMOUS
+        next()
+    }
+}
+
+exports.isLoggedIn = function(req, res, next) {
     if (!req.user) {
         return res.status(403).json({ code: 403, message: 'No user profile' })
     }

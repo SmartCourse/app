@@ -34,12 +34,11 @@ class User {
 
     /**
      * Get all users details by UID. Used by authentication system
-     * @param   {uid} uid uid string
+     * @param   {string} uid uid string
      * @returns {object} user object
      */
     getUserByUID(uid) {
-        return this.db
-            .query('SELECT * FROM user WHERE uid=?', [uid])
+        return this.db.query('SELECT * FROM user WHERE uid=?', [uid])
     }
 
     /**

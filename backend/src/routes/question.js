@@ -1,7 +1,7 @@
 const express = require('express')
 const question = express.Router({ mergeParams: true })
 const questionController = require('../controllers/question')
-const { isAuthorized } = require('../utils/helpers')
+const { isLoggedIn } = require('../utils/helpers')
 
 /* Get the question data for a specific question id */
 question.get('/:id', questionController.getQuestion)
@@ -16,7 +16,7 @@ question.get('/:id/likes', questionController.getQuestionLikes)
 question.get('/:id/answer/:answerID/likes', questionController.getAnswerLikes)
 
 /* full auth check */
-question.use(isAuthorized)
+question.use(isLoggedIn)
 
 /* Post an answer for a given question */
 question.post('/:id/answers', questionController.postAnswer)

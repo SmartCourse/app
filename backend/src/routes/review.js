@@ -1,7 +1,7 @@
 const express = require('express')
 const review = express.Router()
 const reviewController = require('../controllers/review')
-const { isAuthorized } = require('../utils/helpers')
+const { isLoggedIn } = require('../utils/helpers')
 
 /* Get the review data for a specific review id */
 review.get('/:id', reviewController.getReview)
@@ -16,7 +16,7 @@ review.get('/:id/likes', reviewController.getReviewLikes)
 review.get('/:id/reply/:replyID/likes', reviewController.getReplyLikes)
 
 /* full auth check */
-review.use(isAuthorized)
+review.use(isLoggedIn)
 
 /* Post a comment for a given review */
 review.post('/:id/comments', reviewController.postComment)

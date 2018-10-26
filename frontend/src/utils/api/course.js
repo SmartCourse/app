@@ -4,14 +4,14 @@ import { get } from './index'
  * Get all questions relevant to a course
  */
 export function getQuestions(course, pageNumber) {
-  return get(`/course/${course}/questions?p=${pageNumber}`)
+  return get(`/course/${course}/questions`, { queryParams: { p: pageNumber } })
 }
 
 /**
  * Get all reviews relevant to a course
  */
 export function getReviews(course, pageNumber) {
-  return get(`/course/${course}/reviews?p=${pageNumber}`)
+  return get(`/course/${course}/reviews`, { queryParams: { p: pageNumber } })
 }
 
 /**

@@ -18,10 +18,37 @@ async function responseCheck(res) {
   }
 }
 
-function request (path, { headers, method, data }) {
-  // eventually add cors and auth headers
-  const url = `${API_URL}${path}`
+/**
+ * @param  {Object} params The params to be added to the query
+ * @return {string}
+ */
+function querify(params) {
+  return Object.entries(params)
+    .filter(([_, value]) => value)
+    .map(([key, value]) => (
+      `${key}=${value}`
+    )).join('&')
+}
+
+function request (path, { headers, method, data, queryParams }) {
   const auth = store.getters['auth/userAuthObject']
+
+  const url = `${API_URL}${path}${queryParams ? '?' + querify({ ...queryParams, uid: auth && auth.uid }) : ''}`
+
+  // GETs can pass through here without doing auth stuff
+  if (method === 'GET') {
+    // two types of get. Some attach user auth token some we just add on the user uid
+    if (!headers) {
+      return fetch(url)
+    } else {
+      return fetch(url, {
+        headers,
+        mode: 'cors'
+      })
+    }
+  }
+
+  // eventually add cors and auth headers
   const body = data ? JSON.stringify(data) : null
   headers = {
     'Content-Type': 'application/json',
@@ -29,8 +56,7 @@ function request (path, { headers, method, data }) {
   }
 
   // creds always required for POST, PUT, DELETE
-  // NB. for mvp allow people to slip through here
-  // even if not logged on
+  // if they haven't added the token, let's get it for them
   if (!headers.Authorization && auth) {
     return getAuthHeaders(auth)
       .then(options => fetch(url, {
