@@ -30,18 +30,19 @@ function querify(params) {
     )).join('&')
 }
 
-function request (path, { headers, method, data, queryParams }) {
+function request (path, { headers, method, data, queryParams = {} }) {
   const auth = store.getters['auth/userAuthObject']
 
-  const url = `${API_URL}${path}${queryParams ? '?' + querify({ ...queryParams, uid: auth && auth.uid }) : ''}`
+  const url = `${API_URL}${path}`
 
   // GETs can pass through here without doing auth stuff
   if (method === 'GET') {
+    const query = querify({ ...queryParams, uid: auth && auth.uid })
     // two types of get. Some attach user auth token some we just add on the user uid
     if (!headers) {
-      return fetch(url)
+      return fetch(`${url}${query ? '?' + query : ''}`)
     } else {
-      return fetch(url, {
+      return fetch(`${url}${query ? '?' + query : ''}`, {
         headers,
         mode: 'cors'
       })
