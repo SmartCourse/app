@@ -83,7 +83,7 @@ exports.getQuestionLikes = function ({ params }, res) {
 exports.putQuestionLikes = function ({ user, params, body }, res) {
     body.userID = user.id
     likesModel.putLikes({ type: 'question', ...params, ...body })
-        .then(() => exports.getQuestion({ user, params }, res))
+        .then(() => exports.getQuestion({ userID: user.id, params }, res))
 }
 
 /* GET the answer likes value */
@@ -96,5 +96,5 @@ exports.getAnswerLikes = function ({ params }, res) {
 exports.putAnswerLikes = function ({ user, params, body, query }, res) {
     body.userID = user.id
     likesModel.putLikes({ type: 'answer', id: params.answerID, ...body })
-        .then(() => exports.getQuestionAnswers({ user, params, query }, res))
+        .then(() => exports.getQuestionAnswers({ userID: user.id, params, query }, res))
 }

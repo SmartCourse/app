@@ -75,7 +75,7 @@ exports.getReviewLikes = function ({ params }, res) {
 exports.putReviewLikes = function ({ user, params, body }, res) {
     body.userID = user.id
     likesModel.putLikes({ type: 'review', ...params, ...body })
-        .then(() => exports.getReview({ user, params }, res))
+        .then(() => exports.getReview({ userID: user.id, params }, res))
 }
 
 /* GET the reply likes value */
@@ -88,5 +88,5 @@ exports.getReplyLikes = function ({ params }, res) {
 exports.putReplyLikes = function ({ user, params, body, query }, res) {
     body.userID = user.id
     likesModel.putLikes({ type: 'reply', id: params.replyID, ...body })
-        .then(() => exports.getReviewComments({ user, params, query }, res))
+        .then(() => exports.getReviewComments({ userID: user.id, params, query }, res))
 }

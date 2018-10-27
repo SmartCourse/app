@@ -2,16 +2,18 @@ const auth = require('./config')
 const userModel = require('../models/user')()
 const { ANONYMOUS } = require('../models/constants')
 
+/**
+ * If the user has lodged a get request and is
+ * logged in they may pass their uid directly to get
+ * more refined information from the server.
+ */
 function attachUser(req, next) {
     const { uid } = req.query
 
     if (uid) {
-        console.log(uid, 'uid request')
         return userModel.getUserByUID(uid)
             .then(user => {
-                console.log(user, 'user')
                 req.userID = (user && user.id) || ANONYMOUS
-                console.log(req.userID)
             })
             .catch(err => {
                 console.warn(err)
