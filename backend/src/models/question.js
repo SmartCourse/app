@@ -62,7 +62,7 @@ class Question {
 
     /**
      * Post a question.
-     * @param {string} code  The code of the course
+     * @param {string}  code  The code of the course
      * @param {object}  data      controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
