@@ -9,6 +9,17 @@ const questionColumns = ['userID', 'code', 'title', 'body'].join(',')
 const ADMIN = 1
 const universityID = 1
 
+const users = [
+    {
+        id: ADMIN,
+        uid: 1233444,
+        displayName: 'Moderator',
+        email: 'admin@smartcourse.me',
+        degree: 'PhD',
+        gradYear: 2018
+    }
+]
+
 const SAMPLE_QUESTIONS = [
     {
         title: 'Is this course textbook necessary?',
@@ -36,6 +47,15 @@ function sqlQuestion(code) {
     return function (question) {
         return `INSERT INTO question (${questionColumns}) VALUES (${ADMIN}, "${code}", "${question.title}", "${question.body}");`
     }
+}
+
+function sqlUser(user) {
+    const columns = Object.keys(user).join(',')
+    const values  = Object.values(user)
+        .map(item => typeof item === 'number' ? item : `"${item}"`)
+        .join(',')
+
+    return `INSERT INTO user (${columns}) VALUES (${values});`
 }
 
 function sqlFaculty(faculty) {
@@ -77,6 +97,10 @@ function sqlCourse(course) {
 // mega query begins here
 const data = `\
 BEGIN TRANSACTION;\n\
+${
+    // user
+    users.map(sqlUser).join('\n')
+}\n
 ${
     // uni
     'INSERT INTO university (name) VALUES ("UNSW");'
