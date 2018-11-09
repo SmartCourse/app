@@ -1,6 +1,6 @@
 const { writeFileSync } = require('fs')
-const courses = require('./courses')
-const subjects = require('./subjects')
+const courses = require('./js/courses')
+const subjects = require('./js/subjects')
 const degreeData = require('../../../data/degrees')
 const faculties = require('../../../data/faculties')
 
@@ -67,7 +67,9 @@ function sqlCourse(course) {
     const columns = Object.keys(courseWithUni)
         .join(',')
     const placeholders = Object.values(courseWithUni)
-        .map(item => typeof item === 'number' ? item : `"${item.replace(/'/, '\'\'')}"`).join(',')
+        .map(item => typeof item === 'number' ? item : `"${item
+            .replace(/"/g, /'/)
+        }"`).join(',')
 
     return `INSERT INTO course (${columns}) VALUES (${placeholders});`
 }
@@ -97,8 +99,8 @@ ${
 }\n
 ${
     // courses
-    // courses.map(sqlCourse).join('\n')
-    '\n'
+    courses.map(sqlCourse).join('\n')
+    // '\n'
 }\n
 ${
     // questions
@@ -109,4 +111,19 @@ ${
 
 // generates the sql to generate every question. 5*nCourses inserts in sql ~15000 inserts
 // currently takes 0.1
-writeFileSync('init.sql', data)
+const path = require('path')
+
+const OLD_DIR = process.cwd();
+
+process.chdir(__dirname)
+
+writeFileSync(path.join(__dirname, './sql/init.sql'), data)
+
+// run init process
+const { execSync } = require('child_process')
+
+execSync(`bash ${path.join(__dirname, './init.sh')}`)
+
+process.chdir(OLD_DIR)
+
+console.log('done')

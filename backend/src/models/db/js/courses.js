@@ -1,5 +1,5 @@
-const data = require('../../../data/course_data_2019.json')
-const { toLowerCase, decodeUTF8Text } = require('../../utils/helpers')
+const data = require('../../../../data/course_data_2019.json')
+const { toLowerCase, decodeUTF8Text } = require('../../../utils/helpers')
 
 module.exports = data.map(subj => {
     const subjectCode = subj.code
@@ -29,8 +29,8 @@ module.exports = data.map(subj => {
             handbookURL: course.handbook_url,
             outlineURL: course.outline_url,
             // \n newline isn't parsed by sqlite, so replace it with html
-            description: description.replace('\n', '<p></p>'),
-            requirements: requirements.replace('\n', '<p></p>'),
+            description: description.replace(/\n/g, '<p></p>'),
+            requirements: requirements.replace(/\n/g, '<p></p>'),
             tags
         })
     })

@@ -1,8 +1,8 @@
 const courseData = require('./courses')
 const subjectData = require('./subjects')
-const degreeData = require('../../../data/degrees')
-const facultyData = require('../../../data/faculties')
-const { DONT_RECOMMEND, RECOMMEND, MIN_ENJOY, MAX_ENJOY, MIN_OPTION, MAX_OPTION } = require('../constants')
+const degreeData = require('../../../../data/degrees')
+const facultyData = require('../../../../data/faculties')
+const { DONT_RECOMMEND, RECOMMEND, MIN_ENJOY, MAX_ENJOY, MIN_OPTION, MAX_OPTION } = require('../../constants')
 
 // only compute recommendations for this many courses
 // 500 does up to most of BABS
