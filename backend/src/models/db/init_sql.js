@@ -12,7 +12,7 @@ const universityID = 1
 const users = [
     {
         id: ADMIN,
-        uid: 1233444,
+        uid: '1233444',
         displayName: 'Moderator',
         email: 'admin@smartcourse.me',
         degree: 'PhD',
@@ -137,7 +137,7 @@ ${
 // currently takes 0.1
 const path = require('path')
 
-const OLD_DIR = process.cwd();
+const OLD_DIR = process.cwd()
 
 process.chdir(__dirname)
 
