@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS course  (
         workload INTEGER DEFAULT '50',
         tags TEXT,
         FOREIGN KEY (universityID) REFERENCES university(id),
-        FOREIGN KEY (subjectCode) REFERENCES subject(code)
+        FOREIGN KEY (subjectCode) REFERENCES subjects(code)
 );
 
 CREATE TABLE IF NOT EXISTS question (
