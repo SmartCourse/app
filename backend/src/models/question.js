@@ -23,22 +23,27 @@ class Question {
     getQuestions(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll(
-                `SELECT
+            .queryAll('select * from question where code = ? LIMIT ?, ?',
+                [code, offset, pageSize])
+            /* TODO why is this query broken?
+               `SELECT
                 question.*,
-                COUNT(questionID) AS numAnswers
+                COUNT(comment.questionID) AS numAnswers
                FROM question
-               LEFT JOIN comment ON comment.questionID = question.id
-               WHERE code=?
-               GROUP BY questionID
+               JOIN comment ON comment.questionID = question.id
+               WHERE question.code=?
+               GROUP BY comment.questionID
                ORDER BY timestamp DESC
                LIMIT ?, ?`,
-                [code, offset, pageSize])
+               //
+            */
     }
 
     getQuestionsByUserID(uid, limit = 10) {
         return this.db
-            .queryAll(`SELECT
+            .queryAll('select * from question WHERE userID=? LIMIT ?', [uid, limit])
+            /* TODO why is this query suddenly broken?
+            `SELECT
             question.*,
             COUNT(questionID) AS numAnswers
            FROM question
@@ -47,6 +52,7 @@ class Question {
            GROUP BY questionID
            ORDER BY timestamp DESC
            LIMIT ?`, [uid, limit])
+           */
     }
 
     /**

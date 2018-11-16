@@ -55,19 +55,6 @@ CREATE TABLE IF NOT EXISTS question (
         FOREIGN KEY (userID) REFERENCES user(id)
 );
 
-CREATE TABLE IF NOT EXISTS comment (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        questionID INTEGER,
-        reviewID INTEGER,
-        commentParent INTEGER,
-        userID INTEGER NOT NULL,
-        body TEXT NOT NULL,
-        timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (questionID) REFERENCES question(id),
-        FOREIGN KEY (reviewID) REFERENCES review(id),
-        FOREIGN KEY (userID) REFERENCES user(id)
-);
-
 CREATE TABLE IF NOT EXISTS review (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         code TEXT NOT NULL,
@@ -81,6 +68,19 @@ CREATE TABLE IF NOT EXISTS review (
         workload INTEGER DEFAULT '0',
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (code) REFERENCES course(code),
+        FOREIGN KEY (userID) REFERENCES user(id)
+);
+
+CREATE TABLE IF NOT EXISTS comment (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        questionID INTEGER,
+        reviewID INTEGER,
+        commentParent INTEGER,
+        userID INTEGER NOT NULL,
+        body TEXT NOT NULL,
+        timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (questionID) REFERENCES question(id),
+        FOREIGN KEY (reviewID) REFERENCES review(id),
         FOREIGN KEY (userID) REFERENCES user(id)
 );
 
