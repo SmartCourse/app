@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS question (
         userID INTEGER NOT NULL,
         title TEXT NOT NULL,
         body TEXT NOT NULL,
+        pinned INTEGER DEFAULT 0,
         timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (code) REFERENCES course(code),
         FOREIGN KEY (userID) REFERENCES user(id)

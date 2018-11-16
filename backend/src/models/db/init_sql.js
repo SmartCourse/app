@@ -133,7 +133,8 @@ ${
 }\
 \nCOMMIT;`
 
-// generates the sql to generate every question. 5*nCourses inserts in sql ~15000 inserts
+// generates the sql to generate every question. 
+// 5*nCourses inserts in sql ~15000 inserts
 // currently takes 0.1
 const path = require('path')
 
@@ -143,11 +144,12 @@ process.chdir(__dirname)
 
 writeFileSync(path.join(__dirname, './sql/init.sql'), data)
 
-// run init process
+// run init child process
 const { execSync } = require('child_process')
 
 execSync(`bash ${path.join(__dirname, './init.sh')}`)
 
+// return to base dir
 process.chdir(OLD_DIR)
 
 console.log('done')
