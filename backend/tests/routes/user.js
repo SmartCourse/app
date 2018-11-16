@@ -47,7 +47,7 @@ describe('User route testing', function() {
             .expect('Content-Type', /json/)
             .expect(200))
 
-    describe('POST /api/user', () => {
+    describe('POST /api/user ERRORs', () => {
         it('exists', () =>
             supertest
                 .post('/api/user')

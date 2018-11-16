@@ -14,9 +14,9 @@ describe('Subject route testing', () => {
             return request
         })
 
-        it('returns a list', () =>
+        it('returns a 138 subjects', () =>
             request.then(({ body }) =>
-                expect(body.length).to.be.equal(138))
+                expect(body).to.have.lengthOf(138))
         )
 
         it('has the correct code', () =>
@@ -40,9 +40,9 @@ describe('Subject route testing', () => {
             return request
         })
 
-        it('returns a list of accounting courses', () =>
+        it('returns a list of 23 accounting courses', () =>
             request.then(({ body }) =>
-                expect(body.length).to.be.equal(23))
+                expect(body).to.have.lengthOf(23))
         )
 
         it('has the correct code', () =>
