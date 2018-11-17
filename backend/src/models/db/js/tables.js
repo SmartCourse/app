@@ -1,13 +1,15 @@
 const courseData = require('./courses')
+const degreeData = require('../../../../data/degrees')
 
-const { DONT_RECOMMEND, RECOMMEND, MIN_ENJOY, MAX_ENJOY, MIN_OPTION, MAX_OPTION } = require('../../constants')
-// TODO change later...
-/*
-const degreeData = require('../../../data/degrees').map(({ name, ...rest }) => ({
-        name: name.startsWith('Bachelor of') ? 'B.' + name.split('Bachelor of')[1] : name,
-        ...rest
-    }))
-*/
+const {
+    DONT_RECOMMEND,
+    RECOMMEND,
+    MIN_ENJOY,
+    MAX_ENJOY,
+    MIN_OPTION,
+    MAX_OPTION
+} = require('../../constants')
+
 const { getRandomInt, getRandomIntInclusive } = require('../../../utils/helpers')
 
 // only populate questions, reviews, comments, likes for this many courses
@@ -62,7 +64,7 @@ function initQuestionsTable(db) {
     let c = 0
     // For each of the courses
     for (const course of courseData) {
-        if (c == COURSE_UPDATE_LIMIT) break
+        if (c === COURSE_UPDATE_LIMIT) break
         // Get its course code
         const { code } = course
         // Determine how many questions to add
@@ -75,9 +77,9 @@ function initQuestionsTable(db) {
             const uid = getRandomIntInclusive(1, NUM_DUMMY_USERS)
             // Create the question
             const question = {
-              code,
-              userID: uid,
-              ...questionTypes[index]
+                code,
+                userID: uid,
+                ...questionTypes[index]
             }
 
             // Add the question to the list of sets
@@ -91,10 +93,10 @@ function initQuestionsTable(db) {
     }
 
     return Promise.all(questions.map(set => bulkInsertDB(db, 'question', set)))
-      .then(() => bulkSelect(db, 'question', ['id', 'userID']))
-      .then((ids) => Promise.all([
-          initComments(db, ids.map(({ id, userID }) => ({ questionID: id, userID }))),
-          initLikes(db, ids.map(({ id, userID }) => ({ objectType: 'question', objectID: id, userID })))
+        .then(() => bulkSelect(db, 'question', ['id', 'userID']))
+        .then((ids) => Promise.all([
+            initComments(db, ids.map(({ id, userID }) => ({ questionID: id, userID }))),
+            initLikes(db, ids.map(({ id, userID }) => ({ objectType: 'question', objectID: id, userID })))
         ]))
 }
 
@@ -136,7 +138,7 @@ function initReviewTable(db) {
     let c = 0
     // For each of the courses
     for (const i in courseData) {
-        if (c == COURSE_UPDATE_LIMIT) break
+        if (c === COURSE_UPDATE_LIMIT) break
         // Get it's course code
         const code = courseData[i].code
         // Determine how many questions to add
@@ -152,13 +154,13 @@ function initReviewTable(db) {
             const review = {
                 code: code,
                 userID: uid,
-                recommend: getRandomIntInclusive(0,1),
+                recommend: getRandomIntInclusive(0, 1),
                 enjoy: getRandomIntInclusive(MIN_ENJOY, MAX_ENJOY),
                 ...reviewTypes[index],
                 difficulty: getRandomIntInclusive(MIN_OPTION, MAX_OPTION),
                 teaching: getRandomIntInclusive(MIN_OPTION, MAX_OPTION),
                 workload: getRandomIntInclusive(MIN_OPTION, MAX_OPTION)
-              }
+            }
 
             // add review to set
             reviewSet.push(review)
@@ -171,10 +173,10 @@ function initReviewTable(db) {
     }
 
     return Promise.all(reviews.map(set => bulkInsertDB(db, 'review', set)))
-      .then(() => bulkSelect(db, 'review', ['id', 'userID']))
-      .then((ids) => Promise.all([
-          initComments(db, ids.map(({ id, userID }) => ({ reviewID: id, userID }))),
-          initLikes(db, ids.map(({ id, userID }) => ({ objectType: 'review', objectID: id, userID })))
+        .then(() => bulkSelect(db, 'review', ['id', 'userID']))
+        .then((ids) => Promise.all([
+            initComments(db, ids.map(({ id, userID }) => ({ reviewID: id, userID }))),
+            initLikes(db, ids.map(({ id, userID }) => ({ objectType: 'review', objectID: id, userID })))
         ]))
 }
 
@@ -211,7 +213,6 @@ function initComments(db, parents) {
     let comments = []
 
     for (let parent of parents) {
-
         const numComments = getRandomIntInclusive(minRange, maxRange)
         if (numComments <= 0) continue
 
@@ -300,21 +301,21 @@ function initUserTable(db) {
 
     let users = []
 
-    for (let i = 1; i <= NUM_DUMMY_USERS; i++) {
+    for (let i = 2; i <= NUM_DUMMY_USERS; i++) {
         const uid = 'userID' + i
         const displayName =
-          userNames[i % userNames.length] +
-          // only append a number if we've run out of names
-          (i < userNames.length
-              ? ''
-          // then choose between a simulated birth year and a 'cool' suffix
-              : (i % 2
-                  ? (90 + Math.trunc(i / userNames.length))
-              // only add a number on the suffix if we're past possible combinations without numbers..
-              // multiply i by 3 to make it look like a birthdate or something
-                  : (suffixes[i % suffixes.length] + (i < (userNames.length + suffixes.length * 2) ? '' : i * 2))
-              )
-          )
+            userNames[i % userNames.length] +
+            // only append a number if we've run out of names
+            (i < userNames.length
+                ? ''
+                // then choose between a simulated birth year and a 'cool' suffix
+                : (i % 2
+                    ? (90 + Math.trunc(i / userNames.length))
+                    // only add a number on the suffix if we're past possible combinations without numbers..
+                    // multiply i by 3 to make it look like a birthdate or something
+                    : (suffixes[i % suffixes.length] + (i < (userNames.length + suffixes.length * 2) ? '' : i * 2))
+                )
+            )
         const email = displayName + '@test.com.au'
         const degree = degreeData[getRandomInt(0, degreeData.length)].name
 
@@ -361,21 +362,21 @@ function updateCourseRatings(db, code) {
 async function createDB(db) {
     const timeList = [Date.now() / 1000]
 
-    timeList.push(Date.now()/1000)
+    timeList.push(Date.now() / 1000)
     console.log(`Created tables in ${((timeList[1] - timeList[0])).toFixed(3)} seconds`)
     Promise.all([initQuestionsTable(db), initReviewTable(db)])
         .then(() => {
-            timeList.push(Date.now()/1000)
+            timeList.push(Date.now() / 1000)
             console.log(`Initialised most tables in ${((timeList[2] - timeList[1])).toFixed(3)} seconds`)
             return initUserTable(db)
         })
         .then(() => {
-            timeList.push(Date.now()/1000)
+            timeList.push(Date.now() / 1000)
             console.log(`Initialised user table in ${((timeList[3] - timeList[2])).toFixed(3)} seconds`)
-            return Promise.all(courseData.slice(0,COURSE_UPDATE_LIMIT).map(({code}) => updateCourseRatings(db, code)))
+            return Promise.all(courseData.slice(0, COURSE_UPDATE_LIMIT).map(({ code }) => updateCourseRatings(db, code)))
         })
         .then(() => {
-            timeList.push(Date.now()/1000)
+            timeList.push(Date.now() / 1000)
             console.log(`Initialised course ratings in ${((timeList[4] - timeList[3])).toFixed(3)} seconds`)
         })
         .catch((error) => console.warn(error))
@@ -396,7 +397,7 @@ function bulkSelect(db, table, fieldNames) {
 // all objects must have same column names
 // WARNING: This syntax only works with sqlite 3.7.11+
 // For security reasons, column inputs can NEVER be user defined.
-function bulkInsertDB (db, table, data) {
+function bulkInsertDB(db, table, data) {
     return new Promise((resolve, reject) => {
 
         const values = data.map(row => Object.values(row))
@@ -415,7 +416,7 @@ function bulkInsertDB (db, table, data) {
 // Insert given JSON object into database table.
 // data = { column : value }
 // For security reasons, column inputs can NEVER be user defined.
-function insertDB (db, table, data, prep) {
+function insertDB(db, table, data, prep) {
     return new Promise((resolve, reject) => {
         const values = Object.values(data)
         if (!prep) {
@@ -438,7 +439,7 @@ function insertDB (db, table, data, prep) {
 // Inserts unique JSON object into database table.
 // data = { column : value }
 // For security reasons, column inputs can NEVER be user defined.
-function insertUniqueDB (db, table, data) {
+function insertUniqueDB(db, table, data) {
     return new Promise((resolve, reject) => {
         const insertValues = Object.values(data)
         const insertColumns = Object.keys(data)
@@ -458,7 +459,7 @@ function insertUniqueDB (db, table, data) {
 // data = { column : value }
 // For security reasons, column inputs can NEVER be user defined.
 // TODO - Maybe need a better way todo more complex conditions
-function updateDB (db, table, data, conditions) {
+function updateDB(db, table, data, conditions) {
     return new Promise((resolve, reject) => {
         const updateValues = Object.values(data)
         const updateColumns = Object.keys(data)

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "npx nodemon ./src/bin/www",
+    "start": "NODE_ENV=development npx nodemon ./src/bin/www",
     "lint": "npx eslint src/**/*.js tests/**/*.js --fix",
     "test:src": "npx nyc mocha tests/**/*.js",
     "test": "export NODE_ENV=test npm run lint && npm run test:src",
