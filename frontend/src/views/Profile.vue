@@ -6,7 +6,7 @@
           <Card class="profile">
             <transition name="fade-slide">
               <div v-if="!loading">
-                <UserSummary 
+                <UserSummary
                   :reputation="user.reputation"
                   :displayName="user.displayName"
                   :id="user.id"/>

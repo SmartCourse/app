@@ -2,8 +2,8 @@
     <div class="select-style material-icons">
         <select  :value="value" @input="$emit('input', $event.target.value)">
             <option value="" disabled>{{ placeholder }}</option>
-            <option 
-                v-for="item in items" 
+            <option
+                v-for="item in items"
                 :key="item"
                 :value="item"
             >
@@ -15,7 +15,7 @@
 
 <script>
 export default {
-    props: ['value', 'items', 'placeholder']
+  props: ['value', 'items', 'placeholder']
 }
 </script>
 
@@ -51,4 +51,3 @@ export default {
 }
 
 </style>
-

@@ -133,7 +133,7 @@ ${
 }\
 \nCOMMIT;`
 
-// generates the sql to generate every question. 
+// generates the sql to generate every question.
 // 5*nCourses inserts in sql ~15000 inserts
 // currently takes 0.1
 const path = require('path')

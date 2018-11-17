@@ -1,15 +1,13 @@
 <template>
   <div class="options">
-      <AppButton
-          @click.native="clickEventHandler(option)"
-          :alt="value === option"
+      <p
+          @click="clickEventHandler(option)"
           :key="option"
-          class="option"
+          :class="['option', {'selected': value === option}]"
           v-for="option in options"
-          style="font-weight: normal"
       >
           {{ option }}
-      </AppButton>
+      </p>
   </div>
 </template>
 
@@ -29,12 +27,21 @@ export default {
 
 <style scoped>
 .options {
-    display: grid;
-    grid-auto-columns: 1fr;
-    grid-gap: auto;
+  text-align: center;
+  margin: 0 10px;
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-gap: 0 20px;
 }
 
 .option {
+  border-bottom: 1px solid transparent;
   grid-row: 1;
+  cursor: pointer;
+}
+
+.selected {
+  color: black;
+  border-bottom: 1px solid black;
 }
 </style>

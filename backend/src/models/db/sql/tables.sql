@@ -1,3 +1,16 @@
+CREATE TABLE IF NOT EXISTS faculties (
+        name TEXT PRIMARY KEY NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS degrees (
+        name TEXT PRIMARY KEY NOT NULL,
+        longName TEXT NOT NULL,
+        type TEXT NOT NULL,
+        faculty TEXT NOT NULL,
+        tags TEXT,
+        FOREIGN KEY (faculty) REFERENCES faculties(name)
+);
+
 CREATE TABLE IF NOT EXISTS user (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         uid TEXT UNIQUE NOT NULL,
@@ -8,7 +21,8 @@ CREATE TABLE IF NOT EXISTS user (
         degree TEXT,
         gradYear TIMESTAMP,
         description TEXT,
-        picture TEXT
+        picture TEXT,
+        FOREIGN KEY (degree) REFERENCES degrees(name)
 );
 
 CREATE TABLE IF NOT EXISTS university  (
@@ -91,17 +105,4 @@ CREATE TABLE IF NOT EXISTS likes (
         userID INTEGER NOT NULL,
         value INTEGER DEFAULT '0',
         FOREIGN KEY (userID) REFERENCES user(id)
-);
-
-CREATE TABLE IF NOT EXISTS faculties (
-        name TEXT PRIMARY KEY NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS degrees (
-        name TEXT PRIMARY KEY NOT NULL,
-        longName TEXT NOT NULL,
-        type TEXT NOT NULL,
-        faculty TEXT NOT NULL,
-        tags TEXT,
-        FOREIGN KEY (faculty) REFERENCES faculties(name)
 );

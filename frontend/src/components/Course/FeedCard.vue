@@ -51,7 +51,7 @@ export default {
     },
     positiveOrNegativeText() {
       return this.recommend ? 'Recommended' : 'Not Recommended'
-    },
+    }
   }
 }
 </script>

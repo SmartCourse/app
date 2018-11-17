@@ -2,8 +2,8 @@
   <div class="main-content subject-course">
     <AppBreadCrumb/>
     <FilterSearch v-model="search"/>
-    <div class="options">
-      <p>Sort By:</p> <Radio v-model="sortBy" :options="['Rating', 'Code', 'Name']"/>
+    <div class="sort-by">
+      <p class="sort-label">Sort by<i class="material-icons">sort</i></p> <Radio v-model="sortBy" :options="['Rating', 'Code', 'Name']"/>
     </div>
     <TilesContainer v-if="filtered.length">
       <Tile :key="item.code" v-for="item in filtered">
@@ -64,11 +64,11 @@ export default {
       const s = this.courses.map(a => a)
       // sort
       if (this.sortBy === 'Name') {
-        s.sort(({ name: x }, { name: y }) => x > y)
+        s.sort(({ name: x }, { name: y }) => x.localeCompare(y))
       } else if (this.sortBy === 'Code') {
-        s.sort(({ code: x }, { code: y }) => x > y)
+        s.sort(({ code: x }, { code: y }) => x.localeCompare(y))
       } else {
-        s.sort(({ recommend: x }, { recommend: y }) => x < y)
+        s.sort(({ recommend: x }, { recommend: y }) => y - x)
       }
       return s
     },
@@ -103,15 +103,33 @@ export default {
 }
 </script>
 
-<style scoped src='../css/subject.less' lang='less'/>
-<style scoped>
+<style scoped lang='less'>
+
+@import '../css/subject.less';
+
 h6 {
   width:120px;
   text-align:right;
 }
-.options {
+
+.sort-by {
   display:flex;
   align-items: center;
   margin:0 10px 5px 15px;
 }
+
+.sort-label {
+  line-height: 24px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.material-icons {
+  vertical-align: middle;
+  padding: 0 5px;
+  line-height: inherit;
+  font-size: inherit;
+  margin: 0 auto;
+}
+
 </style>

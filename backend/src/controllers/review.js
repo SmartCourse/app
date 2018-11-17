@@ -46,7 +46,6 @@ exports.getReviewComments = function ({ user, params, query }, res) {
             .then(resolve)
             .catch(err => reject(err))
     })
-    console.log('WE GUCCI 2')
     responseHandler(getReplies, res)
         .catch(errorHandler(res))
 }

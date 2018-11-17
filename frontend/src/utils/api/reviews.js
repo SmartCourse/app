@@ -38,11 +38,11 @@ export function newReviewMapper({ title, body, recommend, enjoy, difficulty, tea
   return {
     title,
     body,
-    recommend: {'Yes': 1, 'No': 0}[recommend],
+    recommend: { 'Yes': 1, 'No': 0 }[recommend],
     enjoy: Number(enjoy),
-    difficulty: {'': 0, 'Easy': 1, 'Average': 2, 'Hard': 3}[difficulty],
-    teaching: {'': 0, 'Poor': 1, 'Average': 2, 'Excellent': 3}[teaching],
-    workload: {'': 0, 'Light': 1, 'Average': 2, 'Heavy': 3}[workload]
+    difficulty: { '': 0, 'Easy': 1, 'Average': 2, 'Hard': 3 }[difficulty],
+    teaching: { '': 0, 'Poor': 1, 'Average': 2, 'Excellent': 3 }[teaching],
+    workload: { '': 0, 'Light': 1, 'Average': 2, 'Heavy': 3 }[workload]
   }
 }
 
