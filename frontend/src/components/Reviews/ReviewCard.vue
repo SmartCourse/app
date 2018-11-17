@@ -6,7 +6,7 @@
         :user="user"
         :published="published"
     >
-      <Category :recommend="recommend"/>
+      <Category :recommend="recommend">{{ recommend ? "Recommended" : "Not Recommended" }}</Category>
     </PostCard>
 </template>
 

@@ -17,8 +17,8 @@ export default {
   computed: {
     recommendClass() {
       let value
-      if (typeof(this.recommend) === 'number') {
-        value = Number(this.recommend)/100
+      if (typeof (this.recommend) === 'number') {
+        value = Number(this.recommend) / 100
       } else {
         value = Number(this.recommend)
       }
@@ -26,7 +26,7 @@ export default {
       if (value >= 0.6) return 'positive'
       else if (value <= 0.4) return 'negative'
       else return 'neutral'
-    },
+    }
   }
 }
 </script>

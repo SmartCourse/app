@@ -7,10 +7,10 @@
 
 <script>
 export default {
-    props: {
-        title: String,
-        body: [String, Number]
-    }
+  props: {
+    title: String,
+    body: [String, Number]
+  }
 }
 </script>
 
@@ -23,5 +23,3 @@ h4, p {
     margin: 10px 0;
 }
 </style>
-
-
