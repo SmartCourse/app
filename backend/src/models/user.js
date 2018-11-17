@@ -1,3 +1,5 @@
+const { TABLE_NAMES: { USERS } } = require('./constants')
+
 /* All inputs should be validated in this class that are User related */
 class User {
     constructor(db) {
@@ -7,11 +9,11 @@ class User {
 
     /**
      * Return specialised information for auth'd user
-     * @param {string} id The id of the auth'd user
+     * @param   {string} id The id of the auth'd user
+     * @returns {object}    profile information
      */
-
     getProfile(id) {
-        return this.db.query('SELECT id, email, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
+        return this.db.query(`SELECT id, email, displayName, degree, gradYear, description, picture, reputation, joined FROM ${USERS} WHERE id=?`, [id])
             .then((profile) => {
                 if (profile.reputation < 0) profile.reputation = 0
                 return profile
@@ -25,7 +27,7 @@ class User {
      * @returns {object}
      */
     getPublicProfile(id) {
-        return this.db.query('SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM user WHERE id=?', [id])
+        return this.db.query(`SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM ${USERS} WHERE id=?`, [id])
             .then((profile) => {
                 if (profile.reputation < 0) profile.reputation = 0
                 return profile
@@ -39,7 +41,7 @@ class User {
      */
     getUserByUID(uid) {
         return this.db
-            .query('SELECT * FROM user WHERE uid=?', [uid])
+            .query(`SELECT * FROM ${USERS} WHERE uid=?`, [uid])
     }
 
     /**
@@ -55,7 +57,7 @@ class User {
             return Promise.reject(Error('You must provide a display name!'))
         }
         return this.db
-            .insert('user', data)
+            .insert(USERS, data)
             .then(id => this.getProfile(id))
             .catch(error => {
                 // TODO kinda hacky
@@ -68,7 +70,7 @@ class User {
 
     updateUser(id, data) {
         return this.db
-            .update('user', data, { id })
+            .update(USERS, data, { id })
             .then(() => this.getProfile(id))
     }
 }

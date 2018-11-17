@@ -1,3 +1,5 @@
+const { TABLE_NAMES: { COMMENTS } } = require('./constants')
+
 /* All inputs should be validated in this class that are comment related */
 class Comment {
     constructor(db) {
@@ -14,7 +16,7 @@ class Comment {
     postComment(queryObject, { body, userID }) {
         const [key, value] = Object.entries(queryObject)[0]
         return this.db
-            .insert('comment', { [key]: value, body, userID })
+            .insert(COMMENTS, { [key]: value, body, userID })
             .then((id) => this.getComment(id))
     }
 
@@ -39,7 +41,7 @@ class Comment {
                 u.joined,
                 c.*
                 FROM
-                comment as c
+                ${COMMENTS} as c
                 JOIN
                 user as u
                     on (
@@ -65,7 +67,7 @@ class Comment {
                 u.joined,
                 c.*
                 FROM
-                comment as c
+                ${COMMENTS} as c
                 JOIN
                 user as u
                     on (

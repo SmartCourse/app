@@ -1,3 +1,5 @@
+const { TABLE_NAMES: { DEGREES, SUBJECTS, FACULTIES } } = require('./constants')
+
 /* All inputs should be validated in this class that are subject related */
 class Uni {
     constructor(db) {
@@ -11,17 +13,17 @@ class Uni {
      */
     getSubjects() {
         return this.db
-            .queryAll('SELECT * FROM subjects')
+            .queryAll(`SELECT * FROM ${SUBJECTS}`)
     }
 
     getDegrees() {
         return this.db
-            .queryAll('SELECT * FROM degrees')
+            .queryAll(`SELECT * FROM ${DEGREES}`)
     }
 
     getFaculties() {
         return this.db
-            .queryAll('SELECT * FROM faculties')
+            .queryAll(`SELECT * FROM ${FACULTIES}`)
     }
 }
 

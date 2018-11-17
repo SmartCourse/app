@@ -11,3 +11,17 @@ exports.MAX_OPTION = 3
 
 // Paging Constants
 exports.PAGE_SIZE = 10
+
+// Table Names
+exports.TABLE_NAMES = {
+    USERS: 'user',
+    LIKES: 'likes',
+    COURSES: 'course',
+    SUBJECTS: 'subjects',
+    DEGREES: 'degrees',
+    FACULTIES: 'faculties',
+    UNIVERSITY: 'university',
+    COMMENTS: 'comment',
+    REVIEWS: 'review',
+    QUESTIONS: 'question'
+}

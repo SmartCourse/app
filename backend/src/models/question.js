@@ -1,3 +1,5 @@
+const { TABLE_NAMES: { QUESTIONS } } = require('./constants')
+
 /* All inputs should be validated in this class that are question related */
 class Question {
     constructor(db) {
@@ -11,7 +13,7 @@ class Question {
      * @returns {object}             Single question
      */
     getQuestion(questionID) {
-        return this.db.query('SELECT * FROM question WHERE id=?', [questionID])
+        return this.db.query(`SELECT * FROM ${QUESTIONS} WHERE id=?`, [questionID])
     }
 
     /**
@@ -23,7 +25,7 @@ class Question {
     getQuestions(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll('select * from question where code = ? LIMIT ?, ?',
+            .queryAll(`select * from ${QUESTIONS} where code = ? LIMIT ?, ?`,
                 [code, offset, pageSize])
             /* TODO why is this query broken?
                `SELECT
@@ -41,7 +43,7 @@ class Question {
 
     getQuestionsByUserID(uid, limit = 10) {
         return this.db
-            .queryAll('select * from question WHERE userID=? LIMIT ?', [uid, limit])
+            .queryAll(`select * from ${QUESTIONS} WHERE userID=? LIMIT ?`, [uid, limit])
             /* TODO why is this query suddenly broken?
             `SELECT
             question.*,
@@ -62,7 +64,7 @@ class Question {
      */
     getQuestionCount(code) {
         return this.db
-            .queryAll('SELECT COUNT() FROM question WHERE code=?',
+            .queryAll(`SELECT COUNT() FROM ${QUESTIONS} WHERE code=?`,
                 [code])
     }
 
@@ -74,7 +76,7 @@ class Question {
      */
     postQuestion(code, { userID, title, body }) {
         return this.db
-            .insert('question', { code, userID, title, body })
+            .insert(QUESTIONS, { code, userID, title, body })
             .then((questionID) => this.getQuestion(questionID))
     }
 }

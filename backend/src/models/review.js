@@ -1,4 +1,12 @@
-const { DONT_RECOMMEND, RECOMMEND, MIN_ENJOY, MAX_ENJOY, MIN_OPTION, MAX_OPTION } = require('./constants')
+const {
+    DONT_RECOMMEND,
+    RECOMMEND,
+    MIN_ENJOY,
+    MAX_ENJOY,
+    MIN_OPTION,
+    MAX_OPTION,
+    TABLE_NAMES: { REVIEWS }
+} = require('./constants')
 
 /* All inputs should be validated in this class that are review related */
 class Review {
@@ -14,7 +22,7 @@ class Review {
      */
     getReview(id) {
         return this.db
-            .query('SELECT * FROM review WHERE id=?', [id])
+            .query(`SELECT * FROM ${REVIEWS} WHERE id=?`, [id])
     }
 
     /**
@@ -25,7 +33,7 @@ class Review {
     getReviews(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll('SELECT * FROM review WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
+            .queryAll(`SELECT * FROM ${REVIEWS} WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?`,
                 [code, offset, pageSize])
     }
 
@@ -36,7 +44,7 @@ class Review {
      */
     getReviewCount(code) {
         return this.db
-            .queryAll('SELECT COUNT() FROM review WHERE code=?',
+            .queryAll(`SELECT COUNT() FROM ${REVIEWS} WHERE code=?`,
                 [code])
     }
 
@@ -55,7 +63,7 @@ class Review {
 
         // insert review, get review, update course ratings
         return this.db
-            .insert('review', { code, userID, title, body, recommend, enjoy, difficulty, teaching, workload })
+            .insert(REVIEWS, { code, userID, title, body, recommend, enjoy, difficulty, teaching, workload })
             .then((reviewID) => this.getReview(reviewID))
     }
 }

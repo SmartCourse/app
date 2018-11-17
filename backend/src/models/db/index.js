@@ -24,8 +24,8 @@ class DB {
                 } else {
                     console.log(`Opened database: ${databaseName}`)
                     // Initialise the test db
-                    if (process.env.NODE_ENV !== 'production') {
-                        // createDB(this._db)
+                    if (process.env.NODE_ENV === 'development') {
+                        createDB(this._db)
                     }
                 }
             }

@@ -1,3 +1,5 @@
+const { TABLE_NAMES: { LIKES, USERS } } = require('./constants')
+
 /* All inputs should be validated in this class that are likes related */
 class Likes {
     constructor(db) {
@@ -10,7 +12,7 @@ class Likes {
      */
     getLikes({ type, id }) {
         return this.db
-            .query('SELECT SUM(value) as sum FROM likes WHERE objectType=? AND objectID=?',
+            .query(`SELECT SUM(value) as sum FROM ${LIKES} WHERE objectType=? AND objectID=?`,
                 [type, id])
             .then(({ sum }) => ({ likes: sum || 0 }))
     }
@@ -20,7 +22,7 @@ class Likes {
      */
     getUserLiked({ type, id, userID }) {
         return this.db
-            .query('SELECT value AS userLiked FROM likes WHERE objectType=? AND objectID=? AND userID=?',
+            .query(`SELECT value AS userLiked FROM ${LIKES} WHERE objectType=? AND objectID=? AND userID=?`,
                 [type, id, userID])
             .then(({ userLiked = 0 } = {}) => ({ userLiked }))
     }
@@ -39,17 +41,17 @@ class Likes {
         const insertValues = Object.values(data)
         const insertColumns = Object.keys(data)
         const insertPlaceholders = insertColumns.map(_ => '?').join()
-        const updateLikes = `REPLACE INTO likes (${insertColumns}) VALUES (${insertPlaceholders})`
+        const updateLikes = `REPLACE INTO ${LIKES} (${insertColumns}) VALUES (${insertPlaceholders})`
 
         // Stuff to update reputation
         const creatorTable = (type === 'question' || type === 'review') ? type : 'comment'
-        const updateReputation = `UPDATE user
-        SET reputation = (SELECT reputation FROM user WHERE id = ?) + ?
+        const updateReputation = `UPDATE ${USERS}
+        SET reputation = (SELECT reputation FROM ${USERS} WHERE id = ?) + ?
         WHERE id = ?`
 
         // Classic
         return Promise.all([
-            this.db.query('SELECT * FROM likes WHERE objectType=? AND objectID=? AND userID=?',
+            this.db.query(`SELECT * FROM ${LIKES} WHERE objectType=? AND objectID=? AND userID=?`,
                 [type, id, userID]),
             this.db.query(`SELECT userID FROM ${creatorTable} WHERE id = ?`,
                 [id])

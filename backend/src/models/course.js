@@ -1,3 +1,5 @@
+const { TABLE_NAMES: { COURSES, REVIEWS } } = require('./constants')
+
 /* All inputs should be validated in this class that are course related */
 class Course {
     constructor(db) {
@@ -11,12 +13,12 @@ class Course {
      */
     getCourses() {
         return this.db
-            .queryAll('SELECT * FROM course')
+            .queryAll(`SELECT * FROM ${COURSES}`)
     }
 
     getCoursesBySubject(subjCode) {
         return this.db
-            .queryAll('SELECT * FROM course WHERE subjectCode = ?', [subjCode])
+            .queryAll(`SELECT * FROM ${COURSES} WHERE subjectCode = ?`, [subjCode])
     }
 
     /**
@@ -25,7 +27,7 @@ class Course {
      */
     getCourse(code) {
         return this.updateCourseRatings(code)
-            .then(() => this.db.query('SELECT * FROM course WHERE code=?', [code]))
+            .then(() => this.db.query(`SELECT * FROM ${COURSES} WHERE code=?`, [code]))
     }
 
     updateCourseRatings(code) {
@@ -35,13 +37,13 @@ class Course {
         // ^ we take this mean and divide by 2 or 4 (range is 0-2 or 0-4) to get a normalised value
         // ^ multiply by 100 so we have an integer percentage (we do this at an early step however, to avoid floating point biz)
         return this.db
-            .run(`UPDATE course
+            .run(`UPDATE ${COURSES}
                     SET
-                      recommend = (SELECT CASE WHEN COUNT(*)==0 THEN -1 ELSE SUM(recommend)*100/COUNT(*) END FROM review WHERE code==$code),
-                      enjoy = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(enjoy-1)*100/(4*COUNT(*)) END FROM review WHERE code==$code),
-                      difficulty = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(difficulty-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND difficulty > 0),
-                      teaching = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(teaching-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND teaching > 0),
-                      workload = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(workload-1)*100/(2*COUNT(*)) END FROM review WHERE code==$code AND workload > 0)
+                      recommend = (SELECT CASE WHEN COUNT(*)==0 THEN -1 ELSE SUM(recommend)*100/COUNT(*) END FROM ${REVIEWS} WHERE code==$code),
+                      enjoy = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(enjoy-1)*100/(4*COUNT(*)) END FROM ${REVIEWS} WHERE code==$code),
+                      difficulty = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(difficulty-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} WHERE code==$code AND difficulty > 0),
+                      teaching = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(teaching-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} WHERE code==$code AND teaching > 0),
+                      workload = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(workload-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} WHERE code==$code AND workload > 0)
                     WHERE code=$code;`
             , { $code: code })
     }

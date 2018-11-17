@@ -1,7 +1,6 @@
 module.exports = [
   {
-    name:
-      'Bachelor of Actuarial Studies/Advanced Mathematics (Honours)',
+    name: 'Bachelor of Actuarial Studies/Advanced Mathematics (Honours)',
     faculty: 'Business School',
     tags:
       'applied mathematics advanced statistics finance insurance financial modelling business economics finance strategy',
@@ -38,8 +37,7 @@ module.exports = [
   {
     name: 'Bachelor of Actuarial Studies/Science',
     faculty: 'Business School',
-    tags:
-      'statistics mathematics insurance industry scientific methodology',
+    tags: 'statistics mathematics insurance industry scientific methodology',
     type: 'undergraduate'
   },
   {
@@ -64,16 +62,14 @@ module.exports = [
     type: 'undergraduate'
   },
   {
-    name:
-      'Bachelor of Advanced Mathematics (Honours)/Computer Science',
+    name: 'Bachelor of Advanced Mathematics (Honours)/Computer Science',
     faculty: 'Science',
     tags:
       'advanced statistics applied pure mathematics e-commerce programming accounting business finance financial economics human resource strategy marketing lawmanagement accounting finance financial human resource management information systems international business real-estate studies taxation',
     type: 'undergraduate'
   },
   {
-    name:
-      'Bachelor of Advanced Mathematics (Honours)/Engineering (Honours)',
+    name: 'Bachelor of Advanced Mathematics (Honours)/Engineering (Honours)',
     faculty: 'Science',
     tags:
       'advanced statistics applied mathematics pure mathematics quantitative risk renewable energy',
@@ -82,8 +78,7 @@ module.exports = [
   {
     name: 'Bachelor of Advanced Mathematics (Honours)/Law',
     faculty: 'Law',
-    tags:
-      'statistics applied mathematics pure mathematics quantitative risk',
+    tags: 'statistics applied mathematics pure mathematics quantitative risk',
     type: 'undergraduate'
   },
   {
@@ -108,8 +103,7 @@ module.exports = [
     type: 'undergraduate'
   },
   {
-    name:
-      'Bachelor of Advanced Science (Honours)/Engineering (Honours)',
+    name: 'Bachelor of Advanced Science (Honours)/Engineering (Honours)',
     faculty: 'Science',
     tags: 'anatomy biotechnology climate dynamics ecology pathology',
     type: 'undergraduate'
@@ -117,20 +111,17 @@ module.exports = [
   {
     name: 'Bachelor of Advanced Science (Honours)/Fine Arts',
     faculty: 'Science',
-    tags:
-      'visual arts object design materials science physics psychology',
+    tags: 'visual arts object design materials science physics psychology',
     type: 'undergraduate'
   },
   {
     name: 'Bachelor of Advanced Science (Honours)/Law',
     faculty: 'Law',
-    tags:
-      'biotechnology climate science neuroscience physics statistics',
+    tags: 'biotechnology climate science neuroscience physics statistics',
     type: 'undergraduate'
   },
   {
-    name:
-      'Bachelor of Advanced Science (Honours)/Social Research and Policy',
+    name: 'Bachelor of Advanced Science (Honours)/Social Research and Policy',
     faculty: 'Science',
     tags:
       'policy analysis research methods oceanography marine and coastal science molecular and cell biology',
@@ -298,8 +289,7 @@ module.exports = [
     type: 'undergraduate'
   },
   {
-    name:
-      'Bachelor of Engineering (Honours) (Chemical Product Engineering)',
+    name: 'Bachelor of Engineering (Honours) (Chemical Product Engineering)',
     faculty: 'Engineering',
     tags: 'chemical product engineering',
     type: 'undergraduate'
@@ -313,8 +303,7 @@ module.exports = [
   {
     name: 'Bachelor of Engineering (Honours) (Environmental)',
     faculty: 'Engineering',
-    tags:
-      'environmental engineering water geotechnical transport water waste',
+    tags: 'environmental engineering water geotechnical transport water waste',
     type: 'undergraduate'
   },
   {
@@ -336,8 +325,7 @@ module.exports = [
     type: 'undergraduate'
   },
   {
-    name:
-      'Bachelor of Engineering (Honours) (Photovoltaics and Solar Energy)',
+    name: 'Bachelor of Engineering (Honours) (Photovoltaics and Solar Energy)',
     faculty: 'Engineering',
     tags: 'Photovoltaics Solar energy renewable green',
     type: 'undergraduate'
@@ -397,8 +385,7 @@ module.exports = [
   {
     name: 'Bachelor of Media (Public Relations & Advertising)',
     faculty: 'Arts & Social Sciences',
-    tags:
-      'public relations advertising media relations communications',
+    tags: 'public relations advertising media relations communications',
     type: 'undergraduate'
   },
   {
@@ -612,8 +599,7 @@ module.exports = [
   {
     name: 'Bachelor of Design/Education (Secondary)',
     faculty: 'Arts & Social Sciences',
-    tags:
-      'visual arts graphics multimedia design teacher design theory',
+    tags: 'visual arts graphics multimedia design teacher design theory',
     type: 'undergraduate'
   },
   {
@@ -729,16 +715,13 @@ module.exports = [
   {
     name: 'Bachelor of Engineering (Honours)/Law',
     faculty: 'Law',
-    tags:
-      'technology science construction infrastructure social justice',
+    tags: 'technology science construction infrastructure social justice',
     type: 'undergraduate'
   },
   {
-    name:
-      'Bachelor of Engineering (Honours)/Master of Biomedical Engineering',
+    name: 'Bachelor of Engineering (Honours)/Master of Biomedical Engineering',
     faculty: 'Engineering',
-    tags:
-      'biomedical electrical mechatronic medical technology bionics',
+    tags: 'biomedical electrical mechatronic medical technology bionics',
     type: 'undergraduate'
   },
   {
@@ -764,8 +747,7 @@ module.exports = [
   {
     name: 'Bachelor of Engineering (Honours)',
     faculty: 'Engineering',
-    tags:
-      'aerospace bioinformatics manufacturing software engineer surveying',
+    tags: 'aerospace bioinformatics manufacturing software engineer surveying',
     type: 'undergraduate'
   },
   {
@@ -778,15 +760,13 @@ module.exports = [
   {
     name: 'Bachelor of Environmental Management',
     faculty: 'Science',
-    tags:
-      'chemistry earth science ecology geography marine coastal science',
+    tags: 'chemistry earth science ecology geography marine coastal science',
     type: 'undergraduate'
   },
   {
     name: 'Bachelor of Exercise Physiology',
     faculty: 'Medicine',
-    tags:
-      'exercise health physical activity rehabilitation chronic disease',
+    tags: 'exercise health physical activity rehabilitation chronic disease',
     type: 'undergraduate'
   },
   {
@@ -853,21 +833,17 @@ module.exports = [
   {
     name: 'Bachelor of International Studies/Law',
     faculty: 'Law',
-    tags:
-      'foreign affairs government diplomacy risk analysis languages',
+    tags: 'foreign affairs government diplomacy risk analysis languages',
     type: 'undergraduate'
   },
   {
-    name:
-      'Bachelor of International Studies/Media (Comm & Journalism)',
+    name: 'Bachelor of International Studies/Media (Comm & Journalism)',
     faculty: 'Arts & Social Sciences',
-    tags:
-      'journalism degree international media communications degree',
+    tags: 'journalism degree international media communications degree',
     type: 'undergraduate'
   },
   {
-    name:
-      'Bachelor of International Studies/Media (PR and Advertising)',
+    name: 'Bachelor of International Studies/Media (PR and Advertising)',
     faculty: 'Arts & Social Sciences',
     tags:
       'public relations degree international pr international advertising advertising degree',
@@ -910,8 +886,7 @@ module.exports = [
     type: 'undergraduate'
   },
   {
-    name:
-      'Bachelor of Materials Science and Engineering (Honours)/Commerce',
+    name: 'Bachelor of Materials Science and Engineering (Honours)/Commerce',
     faculty: 'Science',
     tags:
       'chemical engineering metallurgy materials engineering Functional materials accounting business finance financial economics human resource strategy marketing law management accounting finance financial human resource management information systems international business real-estate studies taxation',
@@ -1048,8 +1023,7 @@ module.exports = [
   {
     name: 'Bachelor of Music/Engineering (Honours)',
     faculty: 'Arts & Social Sciences',
-    tags:
-      'music studies telecommunications solar environment aerospace',
+    tags: 'music studies telecommunications solar environment aerospace',
     type: 'undergraduate'
   },
   {
@@ -1082,8 +1056,7 @@ module.exports = [
   {
     name: 'Bachelor of Music/Science',
     faculty: 'Arts & Social Sciences',
-    tags:
-      'music studies earth science microbiology physics mathematics',
+    tags: 'music studies earth science microbiology physics mathematics',
     type: 'undergraduate'
   },
   {
@@ -1116,8 +1089,7 @@ module.exports = [
   {
     name: 'Bachelor of Psychology (Honours)/Law',
     faculty: 'Law',
-    tags:
-      'psychologist psychiatrist social worker counsellor social justice',
+    tags: 'psychologist psychiatrist social worker counsellor social justice',
     type: 'undergraduate'
   },
   {
@@ -1136,8 +1108,7 @@ module.exports = [
   {
     name: 'Bachelor of Science/Arts',
     faculty: 'Science',
-    tags:
-      'language studies media physics chemistry international relations',
+    tags: 'language studies media physics chemistry international relations',
     type: 'undergraduate'
   },
   {
@@ -1214,8 +1185,7 @@ module.exports = [
     type: 'undergraduate'
   },
   {
-    name:
-      'Bachelor of Social Work (Honours)/Criminology & Criminal Justice',
+    name: 'Bachelor of Social Work (Honours)/Criminology & Criminal Justice',
     faculty: 'Arts & Social Sciences',
     tags: 'criminal law policy crime mental health counselling',
     type: 'undergraduate'
@@ -1223,13 +1193,11 @@ module.exports = [
   {
     name: 'Bachelor of Social Work (Honours)/Law',
     faculty: 'Law',
-    tags:
-      'human rights family law consumer protection social justice policy',
+    tags: 'human rights family law consumer protection social justice policy',
     type: 'undergraduate'
   },
   {
-    name:
-      'Bachelor of Social Work (Honours)/Social Research and Policy',
+    name: 'Bachelor of Social Work (Honours)/Social Research and Policy',
     faculty: 'Arts & Social Sciences',
     tags:
       'social theory sociology policy studies international relations research methods',
@@ -1238,15 +1206,13 @@ module.exports = [
   {
     name: 'Bachelor of Social Work (Honours)',
     faculty: 'Arts & Social Sciences',
-    tags:
-      'social theory counselling mental health social studies welfare',
+    tags: 'social theory counselling mental health social studies welfare',
     type: 'undergraduate'
   },
   {
     name: 'Bachelor of Vision Science/Clinical Optometry',
     faculty: 'Science',
-    tags:
-      'optometry anatomy ocular therapy sports vision paediatric optometry',
+    tags: 'optometry anatomy ocular therapy sports vision paediatric optometry',
     type: 'undergraduate'
   },
   {
@@ -1255,4 +1221,10 @@ module.exports = [
     tags: 'optometry anatomy ocular therapy psychophysics optics',
     type: 'undergraduate'
   }
-]
+].map(({ name, ...rest }) => ({
+  name: name.startsWith('Bachelor of')
+    ? 'B.' + name.split('Bachelor of')[1]
+    : name,
+  longName: name,
+  ...rest
+}))

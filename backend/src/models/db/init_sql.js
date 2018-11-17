@@ -3,8 +3,9 @@ const courses = require('./js/courses')
 const subjects = require('./js/subjects')
 const degreeData = require('../../../data/degrees')
 const faculties = require('../../../data/faculties')
+const { TABLE_NAMES } = require('../constants')
 
-const questionColumns = ['userID', 'code', 'title', 'body'].join(',')
+const questionColumns = ['userID', 'code', 'title', 'body', 'pinned'].join(',')
 
 const ADMIN = 1
 const universityID = 1
@@ -43,57 +44,6 @@ const SAMPLE_QUESTIONS = [
     }
 ]
 
-function sqlQuestion(code) {
-    return function (question) {
-        return `INSERT INTO question (${questionColumns}) VALUES (${ADMIN}, "${code}", "${question.title}", "${question.body}");`
-    }
-}
-
-function sqlUser(user) {
-    const columns = Object.keys(user).join(',')
-    const values  = Object.values(user)
-        .map(item => typeof item === 'number' ? item : `"${item}"`)
-        .join(',')
-
-    return `INSERT INTO user (${columns}) VALUES (${values});`
-}
-
-function sqlFaculty(faculty) {
-    return `INSERT INTO faculties (name) VALUES ("${faculty}");`
-}
-
-function sqlDegree(degree) {
-    const columns = Object.keys(degree)
-        .join(',')
-    const placeholders = Object.values(degree)
-        .map(item => typeof item === 'number' ? item : `"${item}"`).join(',')
-
-    return `INSERT INTO degrees (${columns}) VALUES (${placeholders});`
-}
-
-function sqlSubject(subject) {
-    const subjectWithUni = { ...subject, universityID }
-    // Prepare query
-    const columns = Object.keys(subjectWithUni)
-    const placeholders = Object.values(subjectWithUni)
-        .map(item => typeof item === 'number' ? item : `"${item}"`).join(',')
-
-    return `INSERT INTO subjects (${columns}) VALUES (${placeholders});`
-}
-
-function sqlCourse(course) {
-    const courseWithUni = { ...course, universityID }
-    // Prepare query
-    const columns = Object.keys(courseWithUni)
-        .join(',')
-    const placeholders = Object.values(courseWithUni)
-        .map(item => typeof item === 'number' ? item : `"${item
-            .replace(/"/g, /'/)
-        }"`).join(',')
-
-    return `INSERT INTO course (${columns}) VALUES (${placeholders});`
-}
-
 // mega query begins here
 const data = `\
 BEGIN TRANSACTION;\n\
@@ -103,7 +53,7 @@ ${
 }\n
 ${
     // uni
-    'INSERT INTO university (name) VALUES ("UNSW");'
+    `INSERT INTO ${TABLE_NAMES.UNIVERSITY} (name) VALUES ("UNSW");`
 }\n
 ${
     // faculties
@@ -111,11 +61,7 @@ ${
 }\n
 ${
     // degrees
-    degreeData.map(({ name, ...rest }) => ({
-        name: name.startsWith('Bachelor of') ? 'B.' + name.split('Bachelor of')[1] : name,
-        longName: name,
-        ...rest
-    })).map(sqlDegree).join('\n')
+    degreeData.map(sqlDegree).join('\n')
 }\n
 ${
     // subjects
@@ -153,3 +99,55 @@ execSync(`bash ${path.join(__dirname, './init.sh')}`)
 process.chdir(OLD_DIR)
 
 console.log('done')
+
+// these will be hoisted
+function sqlQuestion(code) {
+    return function (question) {
+        return `INSERT INTO ${TABLE_NAMES.QUESTIONS} (${questionColumns}) VALUES (${ADMIN}, "${code}", "${question.title}", "${question.body}", 1);`
+    }
+}
+
+function sqlUser(user) {
+    const columns = Object.keys(user).join(',')
+    const values  = Object.values(user)
+        .map(item => typeof item === 'number' ? item : `"${item}"`)
+        .join(',')
+
+    return `INSERT INTO ${TABLE_NAMES.USERS} (${columns}) VALUES (${values});`
+}
+
+function sqlFaculty(faculty) {
+    return `INSERT INTO ${TABLE_NAMES.FACULTIES} (name) VALUES ("${faculty}");`
+}
+
+function sqlDegree(degree) {
+    const columns = Object.keys(degree)
+        .join(',')
+    const placeholders = Object.values(degree)
+        .map(item => typeof item === 'number' ? item : `"${item}"`).join(',')
+
+    return `INSERT INTO ${TABLE_NAMES.DEGREES} (${columns}) VALUES (${placeholders});`
+}
+
+function sqlSubject(subject) {
+    const subjectWithUni = { ...subject, universityID }
+    // Prepare query
+    const columns = Object.keys(subjectWithUni)
+    const placeholders = Object.values(subjectWithUni)
+        .map(item => typeof item === 'number' ? item : `"${item}"`).join(',')
+
+    return `INSERT INTO ${TABLE_NAMES.SUBJECTS} (${columns}) VALUES (${placeholders});`
+}
+
+function sqlCourse(course) {
+    const courseWithUni = { ...course, universityID }
+    // Prepare query
+    const columns = Object.keys(courseWithUni)
+        .join(',')
+    const placeholders = Object.values(courseWithUni)
+        .map(item => typeof item === 'number' ? item : `"${item
+            .replace(/"/g, /'/)
+        }"`).join(',')
+
+    return `INSERT INTO ${TABLE_NAMES.COURSES} (${columns}) VALUES (${placeholders});`
+}
