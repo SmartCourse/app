@@ -8,6 +8,8 @@ const degreeData = require('../../../data/degrees')
 const faculties = require('../../../data/faculties')
 const {
     TEST_DB,
+    NUM_DUMMY_USERS,
+    UNIVERSITY_ID,
     SAMPLE_QUESTIONS,
     SAMPLE_REVIEWS,
     SAMPLE_COMMENTS,
@@ -24,8 +26,6 @@ const {
 } = require('../constants')
 const { getRandomIntInclusive } = require('../../utils/helpers')
 
-const NUM_DUMMY_USERS = 50
-const universityID = 1
 const userRepMap = {}
 
 // mega query begins here
@@ -67,6 +67,9 @@ ${
 }\
 \nCOMMIT;`
 
+// Time testing
+const timeList = [Date.now() / 1000]
+
 // Change to a known directory
 const OLD_DIR = process.cwd()
 process.chdir(__dirname)
@@ -86,10 +89,9 @@ Promise.all([bulkSelect(db, 'question', ['id', 'userID']), bulkSelect(db, 'revie
         data += sqlLikes(rIDs.map(({ id, userID }) => ({ objectType: 'review', objectID: id, userID })))
         data += sqlLikes(rIDs.map(({ id, userID }) => ({ objectType: 'reply', objectID: id, userID })))
         runSQL(data, 'likes')
-    })
-    .then(() => {
-        // return to base dir
-        console.log('done')
+
+        timeList.push(Date.now() / 1000)
+        console.log(`Done creating test database! (${((timeList[1] - timeList[0])).toFixed(3)})`)
         process.chdir(OLD_DIR)
     })
 
@@ -136,7 +138,7 @@ function sqlDegree(degree) {
 }
 
 function sqlSubject(subject) {
-    const subjectWithUni = { ...subject, universityID }
+    const subjectWithUni = { ...subject, universityID: UNIVERSITY_ID }
     // Prepare query
     const columns = Object.keys(subjectWithUni)
     const placeholders = Object.values(subjectWithUni)
@@ -146,7 +148,7 @@ function sqlSubject(subject) {
 }
 
 function sqlCourse(course) {
-    const courseWithUni = { ...course, universityID }
+    const courseWithUni = { ...course, universityID: UNIVERSITY_ID }
     // Prepare query
     const columns = Object.keys(courseWithUni)
         .join(',')
@@ -252,7 +254,7 @@ function sqlLikes(parents) {
     return bulkInsertDB('likes', likes)
 }
 
-/* NODE SQLITE3 HELPERS */
+/* SQL HELPERS */
 /* THESE ARE ONLY USED FOR TESTING AND ARE VULNERABLE TO SQL INJECTION */
 function bulkSelect(db, table, fieldNames) {
     return new Promise((resolve, reject) => {

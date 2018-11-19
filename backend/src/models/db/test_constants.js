@@ -1,5 +1,9 @@
 exports.TEST_DB = './test.db'
 
+exports.NUM_DUMMY_USERS = 50
+
+exports.UNIVERSITY_ID = 1
+
 exports.SAMPLE_QUESTIONS = [
     {
         title: 'Is this course textbook necessary?',
