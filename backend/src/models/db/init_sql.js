@@ -1,4 +1,4 @@
-const { writeFileSync } = require('fs')
+const { existsSync, mkdirSync, writeFileSync } = require('fs')
 const { execSync } = require('child_process')
 const sqlite3 = require('sqlite3')
 const path = require('path')
@@ -274,6 +274,10 @@ function bulkInsertDB(table, data) {
 }
 
 function runSQL(data, stage) {
+    const dirname = path.dirname(`./sql/test/${stage}.sql`)
+    if (!existsSync(dirname)) {
+        mkdirSync(dirname)
+    }
     writeFileSync(path.join(__dirname, `./sql/test/${stage}.sql`), data)
     execSync(`bash ${path.join(__dirname, './init.sh')} ${stage}`)
 }
