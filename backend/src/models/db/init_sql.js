@@ -1,55 +1,39 @@
 const { writeFileSync } = require('fs')
+const { execSync } = require('child_process')
+const sqlite3 = require('sqlite3')
+const path = require('path')
 const courses = require('./js/courses')
 const subjects = require('./js/subjects')
 const degreeData = require('../../../data/degrees')
 const faculties = require('../../../data/faculties')
-const { TABLE_NAMES } = require('../constants')
+const {
+    TEST_DB,
+    SAMPLE_QUESTIONS,
+    SAMPLE_REVIEWS,
+    SAMPLE_COMMENTS,
+    SAMPLE_USERS
+} = require('./test_constants')
+const {
+    TABLE_NAMES,
+    DONT_RECOMMEND,
+    RECOMMEND,
+    MIN_ENJOY,
+    MAX_ENJOY,
+    MIN_OPTION,
+    MAX_OPTION
+} = require('../constants')
+const { getRandomIntInclusive } = require('../../utils/helpers')
 
-const questionColumns = ['userID', 'code', 'title', 'body', 'pinned'].join(',')
-
-const ADMIN = 1
+const NUM_DUMMY_USERS = 50
 const universityID = 1
-
-const users = [
-    {
-        id: ADMIN,
-        uid: '1233444',
-        displayName: 'Moderator',
-        email: 'admin@smartcourse.me',
-        degree: 'PhD',
-        gradYear: 2018
-    }
-]
-
-const SAMPLE_QUESTIONS = [
-    {
-        title: 'Is this course textbook necessary?',
-        body: 'I\'m wondering if it\'s worth buying/obtaining the course textbook. If not, are there good alternative resources that people might recommend?'
-    },
-    {
-        title: 'What year would you recommend taking this course?',
-        body: 'Is this course worth taking earlier or later in my degree? What are the advantages or disadvantages?'
-    },
-    {
-        title: 'Why did you take this course?',
-        body: 'I\'m wondering why people took this course as I don\'t know a lot about it.'
-    },
-    {
-        title: 'What are similar courses to this course?',
-        body: 'I\'m interested in this course\'s content area and I\'m looking for similar courses. What would people recommend, and why?'
-    },
-    {
-        title: 'How essential is it to attend lectures?',
-        body: 'Are the lectures for the course recorded? Are the worthwhile attending. What am I giving up if I can\'t attend them?'
-    }
-]
+const userRepMap = {}
 
 // mega query begins here
-const data = `\
+const initialSQL = `\
 BEGIN TRANSACTION;\n\
 ${
-    // user
-    users.map(sqlUser).join('\n')
+    // users
+    sqlUsers()
 }\n
 ${
     // uni
@@ -76,44 +60,73 @@ ${
     // questions
     courses.map(({ code }) =>
         SAMPLE_QUESTIONS.map(sqlQuestion(code)).join('\n') + '\n').join('')
+}\n
+${
+    // reviews
+    courses.map(sqlReviews).join('')
 }\
 \nCOMMIT;`
 
-// generates the sql to generate every question.
-// 5*nCourses inserts in sql ~15000 inserts
-// currently takes 0.1
-const path = require('path')
-
+// Change to a known directory
 const OLD_DIR = process.cwd()
-
 process.chdir(__dirname)
 
-writeFileSync(path.join(__dirname, './sql/init.sql'), data)
+// Create the test database and initialise data with no dependencies
+runSQL(initialSQL, 'init')
 
-// run init child process
-const { execSync } = require('child_process')
-
-execSync(`bash ${path.join(__dirname, './init.sh')}`)
-
-// return to base dir
-process.chdir(OLD_DIR)
-
-console.log('done')
+// Initialise data with dependencies
+const db = new sqlite3.Database(TEST_DB, sqlite3.OPEN_READWRITE)
+bulkSelect(db, 'question', ['id', 'userID'])
+    .then((ids) => {
+        let data = sqlComments(ids.map(({ id, userID }) => ({ questionID: id, userID })))
+        runSQL(data, 'answers')
+        data = sqlLikes(ids.map(({ id, userID }) => ({ objectType: 'question', objectID: id, userID })))
+        data += sqlLikes(ids.map(({ id, userID }) => ({ objectType: 'answer', objectID: id, userID })))
+        runSQL(data, 'q_and_a_likes')
+        console.log('Initialised question answers and likes')
+        return bulkSelect(db, 'review', ['id', 'userID'])
+    })
+    .then((ids) => {
+        let data = sqlComments(ids.map(({ id, userID }) => ({ reviewID: id, userID })))
+        runSQL(data, 'replies')
+        data = sqlLikes(ids.map(({ id, userID }) => ({ objectType: 'review', objectID: id, userID })))
+        data += sqlLikes(ids.map(({ id, userID }) => ({ objectType: 'reply', objectID: id, userID })))
+        runSQL(data, 'r_and_r_likes')
+        console.log('Initialised review replies and likes')
+    })
+    .then(() => {
+        // return to base dir
+        console.log('done')
+        process.chdir(OLD_DIR)
+    })
 
 // these will be hoisted
 function sqlQuestion(code) {
+    const questionColumns = ['userID', 'code', 'title', 'body', 'pinned'].join(',')
     return function (question) {
-        return `INSERT INTO ${TABLE_NAMES.QUESTIONS} (${questionColumns}) VALUES (${ADMIN}, "${code}", "${question.title}", "${question.body}", 1);`
+        return `INSERT INTO ${TABLE_NAMES.QUESTIONS} (${questionColumns})
+        VALUES (${getRandomIntInclusive(1, NUM_DUMMY_USERS)}, "${code}", "${question.title}", "${question.body}", 1);`
     }
 }
 
-function sqlUser(user) {
-    const columns = Object.keys(user).join(',')
-    const values  = Object.values(user)
-        .map(item => typeof item === 'number' ? item : `"${item}"`)
-        .join(',')
-
-    return `INSERT INTO ${TABLE_NAMES.USERS} (${columns}) VALUES (${values});`
+function sqlReviews({ code }) {
+    const reviewColumns = ['userID', 'code', 'title', 'body', 'recommend', 'enjoy',
+        'difficulty', 'teaching', 'workload'].join(',')
+    const minRange = 2
+    const maxRange = 20
+    const numReviewTypes = SAMPLE_REVIEWS.length
+    const numReviews = getRandomIntInclusive(minRange, maxRange)
+    let reviewsQuery = ''
+    for (let i = 0; i < numReviews; i++) {
+        const review = SAMPLE_REVIEWS[getRandomIntInclusive(0, numReviewTypes - 1)]
+        // Insert review
+        reviewsQuery += `INSERT INTO ${TABLE_NAMES.REVIEWS} (${reviewColumns}) 
+        VALUES (${getRandomIntInclusive(1, NUM_DUMMY_USERS)}, "${code}", "${review.title}", "${review.body}", 
+        ${getRandomIntInclusive(DONT_RECOMMEND, RECOMMEND)}, ${getRandomIntInclusive(MIN_ENJOY, MAX_ENJOY)},
+        ${getRandomIntInclusive(MIN_OPTION, MAX_OPTION)}, ${getRandomIntInclusive(MIN_OPTION, MAX_OPTION)},
+        ${getRandomIntInclusive(MIN_OPTION, MAX_OPTION)});\n`
+    }
+    return reviewsQuery
 }
 
 function sqlFaculty(faculty) {
@@ -150,4 +163,122 @@ function sqlCourse(course) {
         }"`).join(',')
 
     return `INSERT INTO ${TABLE_NAMES.COURSES} (${columns}) VALUES (${placeholders});`
+}
+
+function sqlComments(parents) {
+    const commentTypes = SAMPLE_COMMENTS
+    const minRange = 1
+    const maxRange = 3
+    const numCommentTypes = commentTypes.length
+    let comments = []
+
+    for (let parent of parents) {
+        const numComments = getRandomIntInclusive(minRange, maxRange)
+        if (numComments <= 0) continue
+
+        for (let i = 0; i < numComments; i++) {
+            const index = getRandomIntInclusive(0, numCommentTypes - 1)
+            const uid = getRandomIntInclusive(1, NUM_DUMMY_USERS)
+            const comment = {
+                ...parent,
+                commentParent: 1,
+                userID: uid,
+                ...commentTypes[index]
+            }
+            comments.push(comment)
+        }
+    }
+
+    return bulkInsertDB('comment', comments)
+}
+
+function sqlUsers() {
+    const userNames = SAMPLE_USERS
+    const suffixes = ['XxX', '!', 's', '!!', '_', '__', 'x']
+
+    let users = []
+
+    for (let i = 1; i < NUM_DUMMY_USERS; i++) {
+        const uid = 'userID' + i
+        const displayName =
+            userNames[i % userNames.length] +
+            // only append a number if we've run out of names
+            (i < userNames.length
+                ? ''
+                // then choose between a simulated birth year and a 'cool' suffix
+                : (i % 2
+                    ? (90 + Math.trunc(i / userNames.length))
+                    // only add a number on the suffix if we're past possible combinations without numbers..
+                    // multiply i by 3 to make it look like a birthdate or something
+                    : (suffixes[i % suffixes.length] + (i < (userNames.length + suffixes.length * 2) ? '' : i * 2))
+                )
+            )
+        const email = displayName + '@test.com.au'
+        const degree = degreeData[getRandomIntInclusive(0, degreeData.length - 1)].name
+
+        users.push({
+            id: i,
+            uid: uid,
+            displayName: displayName,
+            email: email,
+            degree: degree,
+            reputation: userRepMap[i]
+        })
+    }
+
+    return bulkInsertDB('user', users)
+}
+
+function sqlLikes(parents) {
+    let likes = []
+
+    for (let parent of parents) {
+        const numLikes = getRandomIntInclusive(-2, 10)
+        if (numLikes <= 0) continue
+        // choose numLikes consecutive users for these likes...
+        const startIndex = getRandomIntInclusive(1, NUM_DUMMY_USERS)
+
+        for (let i = startIndex; i < startIndex + numLikes; ++i) {
+            const like = {
+                userID: (i % NUM_DUMMY_USERS) + 1,
+                // more likely to be positive!
+                value: Math.random() > 0.7 ? -1 : 1,
+                objectType: parent.objectType,
+                objectID: parent.objectID
+            }
+            // update user reputation for the liked object's user, to be used in initUserTable
+            if (parent.userID in userRepMap) {
+                userRepMap[parent.userID] += like.value;
+            } else {
+                userRepMap[parent.userID] = like.value;
+            }
+            likes.push(like)
+        }
+    }
+
+    return bulkInsertDB('likes', likes)
+}
+
+/* NODE SQLITE3 HELPERS */
+/* THESE ARE ONLY USED FOR TESTING AND ARE VULNERABLE TO SQL INJECTION */
+function bulkSelect(db, table, fieldNames) {
+    return new Promise((resolve, reject) => {
+        db.all(
+            `SELECT ${fieldNames.join()} FROM ${table}`,
+            [],
+            (err, rows) => { err ? reject(err) : resolve(rows) }
+        )
+    })
+}
+
+function bulkInsertDB(table, data) {
+    const values = data.map(row => Object.values(row))
+    const columns = Object.keys(data[0])
+    return `INSERT INTO ${table} (${columns})
+    VALUES ${values.map(rowValues => `("${rowValues.join('","')}")`).join()};`
+}
+
+function runSQL(data, stage) {
+    writeFileSync(path.join(__dirname, `./sql/test/${stage}.sql`), data)
+    execSync(`bash ${path.join(__dirname, './init.sh')} ${stage}`)
 }
