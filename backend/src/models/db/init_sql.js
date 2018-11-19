@@ -32,10 +32,6 @@ const userRepMap = {}
 const initialSQL = `\
 BEGIN TRANSACTION;\n\
 ${
-    // users
-    sqlUsers()
-}\n
-${
     // uni
     `INSERT INTO ${TABLE_NAMES.UNIVERSITY} (name) VALUES ("UNSW");`
 }\n
@@ -89,7 +85,8 @@ Promise.all([bulkSelect(db, 'question', ['id', 'userID']), bulkSelect(db, 'revie
         data += sqlLikes(rIDs.map(({ id, userID }) => ({ objectType: 'review', objectID: id, userID })))
         data += sqlLikes(rIDs.map(({ id, userID }) => ({ objectType: 'reply', objectID: id, userID })))
         runSQL(data, 'likes')
-
+        data = sqlUsers()
+        runSQL(data, 'users')
         timeList.push(Date.now() / 1000)
         console.log(`Done creating test database! (${((timeList[1] - timeList[0])).toFixed(3)})`)
         process.chdir(OLD_DIR)
@@ -243,9 +240,9 @@ function sqlLikes(parents) {
             }
             // update user reputation for the liked object's user, to be used in initUserTable
             if (parent.userID in userRepMap) {
-                userRepMap[parent.userID] += like.value;
+                userRepMap[parent.userID] += like.value
             } else {
-                userRepMap[parent.userID] = like.value;
+                userRepMap[parent.userID] = like.value
             }
             likes.push(like)
         }
