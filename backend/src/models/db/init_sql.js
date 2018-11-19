@@ -76,23 +76,16 @@ runSQL(initialSQL, 'init')
 
 // Initialise data with dependencies
 const db = new sqlite3.Database(TEST_DB, sqlite3.OPEN_READWRITE)
-bulkSelect(db, 'question', ['id', 'userID'])
-    .then((ids) => {
-        let data = sqlComments(ids.map(({ id, userID }) => ({ questionID: id, userID })))
-        runSQL(data, 'answers')
-        data = sqlLikes(ids.map(({ id, userID }) => ({ objectType: 'question', objectID: id, userID })))
-        data += sqlLikes(ids.map(({ id, userID }) => ({ objectType: 'answer', objectID: id, userID })))
-        runSQL(data, 'q_and_a_likes')
-        console.log('Initialised question answers and likes')
-        return bulkSelect(db, 'review', ['id', 'userID'])
-    })
-    .then((ids) => {
-        let data = sqlComments(ids.map(({ id, userID }) => ({ reviewID: id, userID })))
-        runSQL(data, 'replies')
-        data = sqlLikes(ids.map(({ id, userID }) => ({ objectType: 'review', objectID: id, userID })))
-        data += sqlLikes(ids.map(({ id, userID }) => ({ objectType: 'reply', objectID: id, userID })))
-        runSQL(data, 'r_and_r_likes')
-        console.log('Initialised review replies and likes')
+Promise.all([bulkSelect(db, 'question', ['id', 'userID']), bulkSelect(db, 'review', ['id', 'userID'])])
+    .then(([qIDs, rIDs]) => {
+        let data = sqlComments(qIDs.map(({ id, userID }) => ({ questionID: id, userID })))
+        data += sqlComments(rIDs.map(({ id, userID }) => ({ reviewID: id, userID })))
+        runSQL(data, 'comments')
+        data = sqlLikes(qIDs.map(({ id, userID }) => ({ objectType: 'question', objectID: id, userID })))
+        data += sqlLikes(qIDs.map(({ id, userID }) => ({ objectType: 'answer', objectID: id, userID })))
+        data += sqlLikes(rIDs.map(({ id, userID }) => ({ objectType: 'review', objectID: id, userID })))
+        data += sqlLikes(rIDs.map(({ id, userID }) => ({ objectType: 'reply', objectID: id, userID })))
+        runSQL(data, 'likes')
     })
     .then(() => {
         // return to base dir
