@@ -1,6 +1,6 @@
 const path = require('path')
 const sqlite3 = require('sqlite3')
-const { createDB, insertDB, insertUniqueDB, updateDB } = require('./js/tables')
+const { insertDB, insertUniqueDB, updateDB } = require('./js/tables')
 
 // init db
 require('./init_sql')
@@ -23,10 +23,6 @@ class DB {
                     console.error(err)
                 } else {
                     console.log(`Opened database: ${databaseName}`)
-                    // Initialise the test db
-                    if (process.env.NODE_ENV === 'development') {
-                        createDB(this._db)
-                    }
                 }
             }
         )
