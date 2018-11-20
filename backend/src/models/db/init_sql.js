@@ -256,7 +256,7 @@ function sqlLikes(parents) {
 function bulkSelect(db, table, fieldNames) {
     return new Promise((resolve, reject) => {
         db.all(
-            `SELECT ${fieldNames.join()} FROM ${table}`,
+            `SELECT ${fieldNames.join()} FROM ${table} LIMIT 111`,
             [],
             (err, rows) => { err ? reject(err) : resolve(rows) }
         )
