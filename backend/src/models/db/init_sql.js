@@ -256,7 +256,7 @@ function sqlLikes(parents) {
 function bulkSelect(db, table, fieldNames) {
     return new Promise((resolve, reject) => {
         db.all(
-            `SELECT ${fieldNames.join()} FROM ${table} LIMIT 111`,
+            `SELECT ${fieldNames.join()} FROM ${table} LIMIT 500`,
             [],
             (err, rows) => { err ? reject(err) : resolve(rows) }
         )
@@ -266,8 +266,14 @@ function bulkSelect(db, table, fieldNames) {
 function bulkInsertDB(table, data) {
     const values = data.map(row => Object.values(row))
     const columns = Object.keys(data[0])
-    return `INSERT INTO ${table} (${columns})
-    VALUES ${values.map(rowValues => `("${rowValues.join('","')}")`).join()};\n`
+    const SQL_MAX_INSERT = 500
+    let sql = ''
+    for (var i = 0; i < values.length; i += SQL_MAX_INSERT) {
+        sql += `INSERT INTO ${table} (${columns})
+        VALUES ${values.slice(i, i + SQL_MAX_INSERT)
+        .map(rowValues => `("${rowValues.join('","')}")`).join()};\n`
+    }
+    return sql
 }
 
 function runSQL(data, stage) {
