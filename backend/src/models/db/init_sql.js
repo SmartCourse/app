@@ -267,7 +267,7 @@ function bulkInsertDB(table, data) {
     const values = data.map(row => Object.values(row))
     const columns = Object.keys(data[0])
     return `INSERT INTO ${table} (${columns})
-    VALUES ${values.map(rowValues => `("${rowValues.join('","')}")`).join()};`
+    VALUES ${values.map(rowValues => `("${rowValues.join('","')}")`).join()};\n`
 }
 
 function runSQL(data, stage) {
