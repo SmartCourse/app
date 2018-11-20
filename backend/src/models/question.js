@@ -1,3 +1,5 @@
+const { TABLE_NAMES: { QUESTIONS } } = require('./constants')
+
 /* All inputs should be validated in this class that are question related */
 class Question {
     constructor(db) {
@@ -11,7 +13,7 @@ class Question {
      * @returns {object}             Single question
      */
     getQuestion(questionID) {
-        return this.db.query('SELECT * FROM question WHERE id=?', [questionID])
+        return this.db.query(`SELECT * FROM ${QUESTIONS} WHERE id=?`, [questionID])
     }
 
     /**
@@ -23,22 +25,27 @@ class Question {
     getQuestions(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll(
-                `SELECT
+            .queryAll(`select * from ${QUESTIONS} where code = ? LIMIT ?, ?`,
+                [code, offset, pageSize])
+            /* TODO why is this query broken?
+               `SELECT
                 question.*,
-                COUNT(questionID) AS numAnswers
+                COUNT(comment.questionID) AS numAnswers
                FROM question
-               LEFT JOIN comment ON comment.questionID = question.id
-               WHERE code=?
-               GROUP BY questionID
+               JOIN comment ON comment.questionID = question.id
+               WHERE question.code=?
+               GROUP BY comment.questionID
                ORDER BY timestamp DESC
                LIMIT ?, ?`,
-                [code, offset, pageSize])
+               //
+            */
     }
 
     getQuestionsByUserID(uid, limit = 10) {
         return this.db
-            .queryAll(`SELECT
+            .queryAll(`select * from ${QUESTIONS} WHERE userID=? LIMIT ?`, [uid, limit])
+            /* TODO why is this query suddenly broken?
+            `SELECT
             question.*,
             COUNT(questionID) AS numAnswers
            FROM question
@@ -47,6 +54,7 @@ class Question {
            GROUP BY questionID
            ORDER BY timestamp DESC
            LIMIT ?`, [uid, limit])
+           */
     }
 
     /**
@@ -56,19 +64,19 @@ class Question {
      */
     getQuestionCount(code) {
         return this.db
-            .queryAll('SELECT COUNT() FROM question WHERE code=?',
+            .queryAll(`SELECT COUNT() FROM ${QUESTIONS} WHERE code=?`,
                 [code])
     }
 
     /**
      * Post a question.
-     * @param {string} code  The code of the course
+     * @param {string}  code  The code of the course
      * @param {object}  data      controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
     postQuestion(code, { userID, title, body }) {
         return this.db
-            .insert('question', { code, userID, title, body })
+            .insert(QUESTIONS, { code, userID, title, body })
             .then((questionID) => this.getQuestion(questionID))
     }
 }

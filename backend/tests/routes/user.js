@@ -36,8 +36,7 @@ describe('User route testing', function() {
             .expect('Content-Type', /json/)
             .expect(200)
             .then(({ body }) => {
-                expect(body.length > 0).to.equal(true)
-                //console.log(body)
+                expect(body).to.have.lengthOf(10)
             })
     )
 
@@ -48,7 +47,7 @@ describe('User route testing', function() {
             .expect('Content-Type', /json/)
             .expect(200))
 
-    describe('POST /api/user', () => {
+    describe('POST /api/user ERRORs', () => {
         it('exists', () =>
             supertest
                 .post('/api/user')

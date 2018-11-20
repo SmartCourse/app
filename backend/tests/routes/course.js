@@ -36,9 +36,9 @@ describe('Course route testing', () => {
             return request
         })
 
-        it('returns a list', () =>
+        it('returns exactly 3006 courses', () =>
             request.then(({ body }) =>
-                expect(body.length).to.be.greaterThan(0))
+                expect(body.length).to.equal(3006))
         )
 
         it('has the correct code', () =>
@@ -114,7 +114,7 @@ describe('Course route testing', () => {
 
         it('correct number of questions', () =>
             request.then(({ body }) =>
-                expect(body.data.length).is.a('number'))
+                expect(body.data.length).to.equal(6))
         )
 
         it('question has a title', () =>
@@ -129,7 +129,7 @@ describe('Course route testing', () => {
 
         it('question has a course id', () =>
             request.then(({ body }) =>
-                expect(body.data[0].code).is.a('string'))
+                expect(body.data[0].code).to.equal('ACCT1501'))
         )
     })
 
