@@ -19,12 +19,15 @@ exports.corsProd = function({ headers, method }, res, next) {
 }
 
 function setCorsHeaders(method, res, next, allowedDomain = '*') {
+    // set headers
+    res.header({
+        'Access-Control-Allow-Origin': allowedDomain,
+        'Access-Control-Allow-Headers': 'Origin, Authorization, X-Requested-With, Content-Type, Accept',
+        'Access-Control-Allow-Methods': 'GET, HEAD, PUT, DELETE, POST, OPTIONS'
+    })
+
+    // if options just return status
     if (CORS_PREFLIGHT_METHODS.includes(method)) {
-        res.header({
-            'Access-Control-Allow-Origin': allowedDomain,
-            'Access-Control-Allow-Headers': 'Origin, Authorization, X-Requested-With, Content-Type, Accept',
-            'Access-Control-Allow-Methods': 'GET, HEAD, PUT, DELETE, POST, OPTIONS'
-        })
         res.sendStatus(200)
     } else {
         next()

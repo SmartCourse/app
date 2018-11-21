@@ -1,7 +1,7 @@
 const { expect } = require('chai')
-const { corsDev } = require('../../src/utils/cors')
+const { corsDev, corsProd } = require('../../src/utils/cors')
 
-describe('cors', function() {
+describe('cors', function () {
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Origin, Authorization, X-Requested-With, Content-Type, Accept',
@@ -10,19 +10,40 @@ describe('cors', function() {
 
     it('calls corsDev correctly when preflight is required', () => {
         corsDev(
-            'OPTIONS',
+            { method: 'OPTIONS' },
             {
                 sendStatus: (arg) => { expect(arg).to.equal(200) },
-                headers: (arg) => { expect(arg).to.deepEqual(headers) }
+                header: (arg) => { expect(arg).to.deep.equal(headers) }
             },
-            () => {}
+            () => { }
         )
     })
 
-    it('calls corsDev correctly when no preflight required ', () => {
+    it('calls cors correctly when preflight is required', () => {
         corsDev(
-            'GET',
-            { sendStatus: (arg) => { expect(arg).to.equal(200) } },
+            { method: 'GET' },
+            {
+                header: (arg) => { expect(arg).to.deep.equal(headers) }
+            },
+            () => {
+                expect(true)
+            }
+        )
+    })
+
+    it('calls corProd correctly when preflight required ', () => {
+        corsProd(
+            { method: 'GET', headers: { referer: 'https://smartcourse.me' } },
+            {
+                header: (arg) => {
+                    expect(arg)
+                        .to.deep.equal({
+                            'Access-Control-Allow-Origin': 'https://smartcourse.me',
+                            'Access-Control-Allow-Headers': 'Origin, Authorization, X-Requested-With, Content-Type, Accept',
+                            'Access-Control-Allow-Methods': 'GET, HEAD, PUT, DELETE, POST, OPTIONS'
+                        })
+                }
+            },
             () => {
                 expect(true)
             }
