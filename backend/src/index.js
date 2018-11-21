@@ -23,11 +23,11 @@ app.use(express.static(path.join(__dirname, '../public'), {
 app.use(firebase)
 
 // for setting cors headers
-const { cors, corsProd } = require('./utils/cors')
+const { corsDev, corsProd } = require('./utils/cors')
 
 if (app.get('env') === 'development') {
     app.use(logger('dev'))
-    app.use(cors)
+    app.use(corsDev)
 } else {
     app.use(corsProd)
 }

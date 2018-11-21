@@ -35,7 +35,9 @@
   },
   "nyc": {
     "exclude": [
-      "tests/**/*.js"
+      "tests/**/*.js",
+      "data",
+      "public"
     ]
   },
   "engines": {
