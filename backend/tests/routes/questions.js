@@ -78,6 +78,53 @@ describe('Test answer routes', () => {
         )
     })
 
+    describe('GET /api/course/COMP4920/question/1/likes', () => {
+        let request
+
+        before(() => {
+            request = supertest
+                .get('/api/course/COMP4920/question/1/likes')
+                .set('Accept', 'application/json')
+                .expect('Content-Type', /json/)
+                .expect(200)
+            return request
+        })
+
+        it('likes is a number', () =>
+            request.then(({ body: { likes } }) => {
+                expect(likes).to.be.a('number')
+            })
+        )
+
+        it('likes is greater >= 0', () =>
+            request.then(({ body: { likes } }) => {
+                expect(likes).to.be.greaterThan(0)
+            })
+        )
+    })
+
+    describe('PUT /api/course/COMP4920/question/1/likes', () => {
+        let request
+
+        before(() => {
+            request = supertest
+                .put('/api/course/COMP4920/question/1/likes')
+                .send({ value: 0 })
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .expect('Content-Type', /json/)
+                .expect(200)
+            return request
+        })
+
+        // really just to make sure the above put is working
+        it('likes is a number', () =>
+            request.then(({ body: { likes } }) => {
+                expect(likes).to.be.a('number')
+            })
+        )
+    })
+
     describe('GET /api/course/COMP4920/question/1/answers', () => {
         let request
 
