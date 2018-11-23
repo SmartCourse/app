@@ -14,14 +14,14 @@ exports.PAGE_SIZE = 10
 
 // Table Names
 exports.TABLE_NAMES = {
-    USERS: 'user',
+    USERS: 'users',
     LIKES: 'likes',
-    COURSES: 'course',
+    COURSES: 'courses',
     SUBJECTS: 'subjects',
     DEGREES: 'degrees',
     FACULTIES: 'faculties',
     UNIVERSITY: 'university',
-    COMMENTS: 'comment',
-    REVIEWS: 'review',
-    QUESTIONS: 'question'
+    COMMENTS: 'comments',
+    REVIEWS: 'reviews',
+    QUESTIONS: 'questions'
 }

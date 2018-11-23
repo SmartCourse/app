@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { LIKES, USERS } } = require('./constants')
+const { TABLE_NAMES: { LIKES, USERS, QUESTIONS, REVIEWS, COMMENTS } } = require('./constants')
 
 /* All inputs should be validated in this class that are likes related */
 class Likes {
@@ -44,7 +44,7 @@ class Likes {
         const updateLikes = `REPLACE INTO ${LIKES} (${insertColumns}) VALUES (${insertPlaceholders})`
 
         // Stuff to update reputation
-        const creatorTable = (type === 'question' || type === 'review') ? type : 'comment'
+        const creatorTable = (type === QUESTIONS || type === REVIEWS) ? type : COMMENTS
         const updateReputation = `UPDATE ${USERS}
         SET reputation = (SELECT reputation FROM ${USERS} WHERE id = ?) + ?
         WHERE id = ?`

@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { COMMENTS } } = require('./constants')
+const { TABLE_NAMES: { COMMENTS, USERS } } = require('./constants')
 
 /* All inputs should be validated in this class that are comment related */
 class Comment {
@@ -43,7 +43,7 @@ class Comment {
                 FROM
                 ${COMMENTS} as c
                 JOIN
-                user as u
+                ${USERS} as u
                     on (
                         c.userID=u.id
                     )
@@ -69,7 +69,7 @@ class Comment {
                 FROM
                 ${COMMENTS} as c
                 JOIN
-                user as u
+                ${USERS} as u
                     on (
                         c.userID=u.id
                     )

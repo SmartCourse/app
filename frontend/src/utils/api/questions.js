@@ -14,8 +14,8 @@ export function answerMapper({ id, questionID, likes, user, userLiked, body, tim
     likes,
     userLiked,
     user,
-    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true }),
-    timestamp: new Date(timestamp + 'Z')
+    published: formatDistanceStrict(timestamp * 1000, new Date(), { addSuffix: true }),
+    timestamp: timestamp
   }
 }
 
@@ -29,8 +29,8 @@ export function questionMapper({ id, code, likes, userLiked, numAnswers, user, t
     likes,
     userLiked,
     user,
-    published: formatDistanceStrict(new Date(timestamp + 'Z'), new Date(), { addSuffix: true }),
-    timestamp: new Date(timestamp + 'Z')
+    published: formatDistanceStrict(timestamp * 1000, new Date(), { addSuffix: true }),
+    timestamp: timestamp
   }
 }
 
