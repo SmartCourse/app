@@ -106,3 +106,5 @@ CREATE TABLE IF NOT EXISTS likes (
         value INTEGER DEFAULT '0',
         FOREIGN KEY (userID) REFERENCES users(id)
 );
+
+CREATE UNIQUE INDEX id ON likes (objectType, objectID, userID);
