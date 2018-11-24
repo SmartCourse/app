@@ -1,5 +1,3 @@
-exports.TEST_DB = './test.db'
-
 exports.NUM_DUMMY_USERS = 50
 
 exports.UNIVERSITY_ID = 1

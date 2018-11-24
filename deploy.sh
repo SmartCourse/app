@@ -21,9 +21,7 @@ echo "Backing up database on server..."
 read -d '' TMP_CMDS << EOF || true
 {
     "command": "If Not Exist db (mkdir db) & \
-                If Not Exist db/smartcourse.db (node src/models/db/new.js) \
-                Else (echo 'Need this for some reason...') & \
-                cp -f db/smartcourse.db ../db/",
+                If Exist db/smartcourse.db (cp -f db/smartcourse.db ../db/)",
     "dir": "site/wwwroot"
 }
 EOF

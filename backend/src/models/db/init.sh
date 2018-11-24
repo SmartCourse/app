@@ -1,17 +1,20 @@
 #!/bin/bash -e
 # Script that controls db init
+# Expected to be run with cwd == src/models/db
 
-if [ "$#" -ne 1 ]; then
-    echo "Must specify initialisation stage"
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <database> <stage>"
 fi
 
-PWD=`pwd`;
+database=$1
+stage=$2
+PWD=`pwd`
+
 echo "executing in $PWD";
 
-if [ "$1" == "init" ]; then
-    rm -f "$PWD/test.db";
-    sqlite3 "$PWD/test.db" < "$PWD/sql/tables.sql";
-    sqlite3 "$PWD/test.db" < "$PWD/sql/test/init.sql";
-else
-    sqlite3 "$PWD/test.db" < "$PWD/sql/test/$1.sql";
+if [ "$stage" == "init" ]; then
+    rm -f "$database";
+    sqlite3 "$database" < "$PWD/sql/tables.sql";
 fi
+
+sqlite3 "$database" < "$PWD/sql/test/$stage.sql";

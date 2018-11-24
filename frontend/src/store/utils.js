@@ -27,7 +27,7 @@ export function sortByHotness(list) {
   const d = Date.now()
   ordered.sort(
     ({ likes: l1, timestamp: t1 }, { likes: l2, timestamp: t2 }) =>
-      (l2 + likesInc) / Math.log(d - t2.getTime() + 1000) - (l1 + likesInc) / Math.log(d - t1.getTime() + 1000)
+      (l2 + likesInc) / Math.log(d - t2 + 1000) - (l1 + likesInc) / Math.log(d - t1 + 1000)
   )
   // debugging
   // const ordered2 = ordered.map(({ likes, timestamp, ...rest }) => ({ hotness: (likes+likesInc)/Math.log(d - timestamp.getTime()), likes, timestamp, ...rest }))
