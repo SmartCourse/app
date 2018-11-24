@@ -93,10 +93,15 @@ describe('Course route testing', () => {
         })
 
         it('returns the question we POSTed', () =>
-            request.then(({ body }) => {
+            request.then(({ body }) =>
                 expect(body.title).to.equal('jeff')
+            )
+        )
+
+        it('returns the question we POSTed', () =>
+            request.then(({ body }) =>
                 expect(body.body).to.equal('testu')
-            })
+            )
         )
     })
 
@@ -114,7 +119,7 @@ describe('Course route testing', () => {
 
         it('correct number of questions', () =>
             request.then(({ body }) =>
-                expect(body.data.length).to.equal(6))
+                expect(body.data.length).to.equal(5))
         )
 
         it('question has a title', () =>
@@ -156,11 +161,16 @@ describe('Course route testing', () => {
             return request
         })
 
-        it('review has a body', () =>
-            request.then(({ body }) => {
+        it('review has correct title', () =>
+            request.then(({ body }) =>
                 expect(body.title).to.equal(form.title)
+            )
+        )
+
+        it('review has correct body', () =>
+            request.then(({ body }) =>
                 expect(body.body).to.equal(form.body)
-            })
+            )
         )
     })
 
@@ -175,6 +185,11 @@ describe('Course route testing', () => {
                 .expect(200)
             return request
         })
+
+        it('Returns a list of reviews with meta fields', () =>
+            request.then(({ body }) =>
+                expect(body.meta).is.a('object'))
+        )
 
         it('Returns a list of reviews', () =>
             request.then(({ body }) =>
