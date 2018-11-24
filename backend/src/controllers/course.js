@@ -6,6 +6,7 @@ const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
 const errorHandler = require('./error')
 const { responseHandler } = require('../utils/helpers')
+const { TABLE_NAMES } = require('../models/constants')
 
 /* Get all course data */
 exports.getCourses = function (_, res) {
@@ -30,7 +31,7 @@ exports.getCourseQuestions = function ({ params, query }, res) {
         questionModel.getQuestionCount(params.code)
     ]).then(function([questions, questionCount]) {
         return Promise.all([
-            Promise.all(questions.map(question => likesModel.getLikes({ type: 'question', id: question.id }))),
+            Promise.all(questions.map(question => likesModel.getLikes({ type: TABLE_NAMES.QUESTIONS, id: question.id }))),
             Promise.all(questions.map(question => userModel.getPublicProfile(question.userID)))
         ]).then(([likes, users]) => {
             for (var i = 0; i < questions.length; i++) {
@@ -65,7 +66,7 @@ exports.getCourseReviews = function ({ params, query }, res) {
         reviewModel.getReviewCount(params.code)
     ]).then(function([reviews, reviewCount]) {
         return Promise.all([
-            Promise.all(reviews.map(review => likesModel.getLikes({ type: 'review', id: review.id }))),
+            Promise.all(reviews.map(review => likesModel.getLikes({ type: TABLE_NAMES.REVIEWS, id: review.id }))),
             Promise.all(reviews.map(review => userModel.getPublicProfile(review.userID)))
         ]).then(([likes, users]) => {
             for (var i = 0; i < reviews.length; i++) {

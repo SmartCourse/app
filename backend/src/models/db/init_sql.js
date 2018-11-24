@@ -75,18 +75,21 @@ runSQL(initialSQL, 'init')
 
 // Initialise data with dependencies
 const db = new sqlite3.Database(TEST_DB, sqlite3.OPEN_READWRITE)
-Promise.all([bulkSelect(db, 'question', ['id', 'userID']), bulkSelect(db, 'review', ['id', 'userID'])])
+Promise.all([
+    bulkSelect(db, TABLE_NAMES.QUESTIONS, ['id', 'userID']),
+    bulkSelect(db, TABLE_NAMES.REVIEWS, ['id', 'userID'])]
+)
     .then(([qIDs, rIDs]) => {
         let data = sqlComments(qIDs.map(({ id, userID }) => ({ questionID: id, userID })))
         data += sqlComments(rIDs.map(({ id, userID }) => ({ reviewID: id, userID })))
-        runSQL(data, 'comments')
+        runSQL(data, TABLE_NAMES.COMMENTS)
         data = sqlLikes(qIDs.map(({ id, userID }) => ({ objectType: 'question', objectID: id, userID })))
         data += sqlLikes(qIDs.map(({ id, userID }) => ({ objectType: 'answer', objectID: id, userID })))
         data += sqlLikes(rIDs.map(({ id, userID }) => ({ objectType: 'review', objectID: id, userID })))
         data += sqlLikes(rIDs.map(({ id, userID }) => ({ objectType: 'reply', objectID: id, userID })))
-        runSQL(data, 'likes')
+        runSQL(data, TABLE_NAMES.LIKES)
         data = sqlUsers()
-        runSQL(data, 'users')
+        runSQL(data, TABLE_NAMES.USERS)
         timeList.push(Date.now() / 1000)
         console.log(`Done creating test database! (${((timeList[1] - timeList[0])).toFixed(3)})`)
         process.chdir(OLD_DIR)
@@ -181,7 +184,7 @@ function sqlComments(parents) {
         }
     }
 
-    return bulkInsertDB('comment', comments)
+    return bulkInsertDB(TABLE_NAMES.COMMENTS, comments)
 }
 
 function sqlUsers() {
@@ -218,7 +221,7 @@ function sqlUsers() {
         })
     }
 
-    return bulkInsertDB('user', users)
+    return bulkInsertDB(TABLE_NAMES.USERS, users)
 }
 
 function sqlLikes(parents) {
@@ -248,7 +251,7 @@ function sqlLikes(parents) {
         }
     }
 
-    return bulkInsertDB('likes', likes)
+    return bulkInsertDB(TABLE_NAMES.LIKES, likes)
 }
 
 /* SQL HELPERS */

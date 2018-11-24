@@ -11,12 +11,12 @@ CREATE TABLE IF NOT EXISTS degrees (
         FOREIGN KEY (faculty) REFERENCES faculties(name)
 );
 
-CREATE TABLE IF NOT EXISTS user (
+CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         uid TEXT UNIQUE NOT NULL,
         displayName TEXT UNIQUE NOT NULL,
         email TEXT UNIQUE NOT NULL,
-        joined TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        joined INTEGER NOT NULL DEFAULT (strftime('%s','now')),
         reputation INTEGER DEFAULT '0',
         degree TEXT,
         gradYear TIMESTAMP,
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS user (
         FOREIGN KEY (degree) REFERENCES degrees(name)
 );
 
-CREATE TABLE IF NOT EXISTS university  (
+CREATE TABLE IF NOT EXISTS university (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL
 );
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS subjects (
         FOREIGN KEY (universityID) REFERENCES university(id)
 );
 
-CREATE TABLE IF NOT EXISTS course  (
+CREATE TABLE IF NOT EXISTS courses (
         code TEXT PRIMARY KEY NOT NULL,
         universityID INTEGER NOT NULL,
         name TEXT NOT NULL,
@@ -58,19 +58,19 @@ CREATE TABLE IF NOT EXISTS course  (
         FOREIGN KEY (subjectCode) REFERENCES subjects(code)
 );
 
-CREATE TABLE IF NOT EXISTS question (
+CREATE TABLE IF NOT EXISTS questions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         code TEXT NOT NULL,
         userID INTEGER NOT NULL,
         title TEXT NOT NULL,
         body TEXT NOT NULL,
         pinned INTEGER DEFAULT 0,
-        timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (code) REFERENCES course(code),
-        FOREIGN KEY (userID) REFERENCES user(id)
+        timestamp INTEGER NOT NULL DEFAULT (strftime('%s','now')),
+        FOREIGN KEY (code) REFERENCES courses(code),
+        FOREIGN KEY (userID) REFERENCES users(id)
 );
 
-CREATE TABLE IF NOT EXISTS review (
+CREATE TABLE IF NOT EXISTS reviews (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         code TEXT NOT NULL,
         userID INTEGER NOT NULL,
@@ -81,22 +81,22 @@ CREATE TABLE IF NOT EXISTS review (
         difficulty INTEGER DEFAULT '0',
         teaching INTEGER DEFAULT '0',
         workload INTEGER DEFAULT '0',
-        timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (code) REFERENCES course(code),
-        FOREIGN KEY (userID) REFERENCES user(id)
+        timestamp INTEGER NOT NULL DEFAULT (strftime('%s','now')),
+        FOREIGN KEY (code) REFERENCES courses(code),
+        FOREIGN KEY (userID) REFERENCES users(id)
 );
 
-CREATE TABLE IF NOT EXISTS comment (
+CREATE TABLE IF NOT EXISTS comments (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         questionID INTEGER,
         reviewID INTEGER,
         commentParent INTEGER,
         userID INTEGER NOT NULL,
         body TEXT NOT NULL,
-        timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (questionID) REFERENCES question(id),
-        FOREIGN KEY (reviewID) REFERENCES review(id),
-        FOREIGN KEY (userID) REFERENCES user(id)
+        timestamp INTEGER NOT NULL DEFAULT (strftime('%s','now')),
+        FOREIGN KEY (questionID) REFERENCES questions(id),
+        FOREIGN KEY (reviewID) REFERENCES reviews(id),
+        FOREIGN KEY (userID) REFERENCES users(id)
 );
 
 CREATE TABLE IF NOT EXISTS likes (
@@ -104,5 +104,7 @@ CREATE TABLE IF NOT EXISTS likes (
         objectID INTEGER NOT NULL,
         userID INTEGER NOT NULL,
         value INTEGER DEFAULT '0',
-        FOREIGN KEY (userID) REFERENCES user(id)
+        FOREIGN KEY (userID) REFERENCES users(id)
 );
+
+CREATE UNIQUE INDEX id ON likes (objectType, objectID, userID);

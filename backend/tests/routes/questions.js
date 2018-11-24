@@ -98,7 +98,7 @@ describe('Test answer routes', () => {
 
         it('likes is greater >= 0', () =>
             request.then(({ body: { likes } }) => {
-                expect(likes).to.be.greaterThan(0)
+                expect(likes).to.be.at.least(0)
             })
         )
     })

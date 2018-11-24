@@ -5,14 +5,15 @@ const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
 const errorHandler = require('./error')
 const { responseHandler, userLikesMapper } = require('../utils/helpers')
+const { TABLE_NAMES } = require('../models/constants')
 
 /* GET question data. */
 exports.getQuestion = function ({ user, params }, res) {
     const userID = (user && user.id) || ANONYMOUS
     const getQuestion = Promise.all([
         questionModel.getQuestion(params.id),
-        likesModel.getLikes({ type: 'question', id: params.id }),
-        likesModel.getUserLiked({ type: 'question', id: params.id, userID })
+        likesModel.getLikes({ type: TABLE_NAMES.QUESTIONS, id: params.id }),
+        likesModel.getUserLiked({ type: TABLE_NAMES.QUESTIONS, id: params.id, userID })
     ]).then(([question, likes, userLiked]) => {
         return userModel.getPublicProfile(question.userID)
             .then((userInfo) => {
@@ -43,11 +44,11 @@ exports.getQuestionAnswers = function ({ user, params, query }, res) {
                 answers,
                 Promise.all(
                     answers.map(answer => likesModel.getLikes(
-                        { type: 'answer', id: answer.id }))
+                        { type: TABLE_NAMES.COMMENTS, id: answer.id }))
                 ),
                 Promise.all(
                     answers.map(answer => likesModel.getUserLiked(
-                        { type: 'answer', id: answer.id, userID }))
+                        { type: TABLE_NAMES.COMMENTS, id: answer.id, userID }))
                 )
             ]))
             .then(([answers, likes, userLikes]) => answers.map(userLikesMapper(likes, userLikes)))
@@ -78,26 +79,26 @@ exports.postAnswer = function ({ user, params, query, body }, res) {
 
 /* GET the question likes value */
 exports.getQuestionLikes = function ({ params }, res) {
-    responseHandler(likesModel.getLikes({ type: 'question', id: params.id }), res)
+    responseHandler(likesModel.getLikes({ type: TABLE_NAMES.QUESTIONS, id: params.id }), res)
         .catch(errorHandler(res))
 }
 
 /* PUT updated question likes value */
 exports.putQuestionLikes = function ({ user, params, body }, res) {
     body.userID = user.id
-    likesModel.putLikes({ type: 'question', ...params, ...body })
+    likesModel.putLikes({ type: TABLE_NAMES.QUESTIONS, ...params, ...body })
         .then(() => exports.getQuestion({ user, params }, res))
 }
 
 /* GET the answer likes value */
 exports.getAnswerLikes = function ({ params }, res) {
-    responseHandler(likesModel.getLikes({ type: 'answer', id: params.id }), res)
+    responseHandler(likesModel.getLikes({ type: TABLE_NAMES.COMMENTS, id: params.id }), res)
         .catch(errorHandler(res))
 }
 
 /* PUT updated answer likes value */
 exports.putAnswerLikes = function ({ user, params, body, query }, res) {
     body.userID = user.id
-    likesModel.putLikes({ type: 'answer', id: params.answerID, ...body })
+    likesModel.putLikes({ type: TABLE_NAMES.COMMENTS, id: params.answerID, ...body })
         .then(() => exports.getQuestionAnswers({ user, params, query }, res))
 }
