@@ -87,17 +87,42 @@ describe('Course route testing', () => {
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken}`)
                 .send({ body: 'testu', title: 'jeff' })
-                .expect('Content-Type', /json/)
-                .expect(200)
+
             return request
         })
 
-        it('returns the question we POSTed', () =>
-            request.then(({ body }) => {
-                expect(body.title).to.equal('jeff')
-                expect(body.body).to.equal('testu')
-            })
+        it('returns correct status', () =>
+            request.expect(201)
         )
+
+        it('returns correct Location', () =>
+            request.expect('Location', '/api/course/ACCT1501/question/15031')
+        )
+
+        describe('new record exists', () => {
+            let followUp
+
+            before(() => {
+                followUp = supertest
+                    .get('/api/course/ACCT1501/question/15031')
+                    .set('Accept', 'application/json')
+                    .expect(200)
+
+                return followUp
+            })
+
+            it('has the correct title', () =>
+                followUp.then(({ body }) => {
+                    expect(body.title).to.equal('jeff')
+                })
+            )
+
+            it('has the correct body', () =>
+                followUp.then(({ body }) => {
+                    expect(body.body).to.equal('testu')
+                })
+            )
+        })
     })
 
     describe('GET /api/course/ACCT1501/questions', () => {
@@ -151,17 +176,48 @@ describe('Course route testing', () => {
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken}`)
                 .send(form)
-                .expect('Content-Type', /json/)
-                .expect(200)
+
             return request
         })
 
-        it('review has a body', () =>
-            request.then(({ body }) => {
-                expect(body.title).to.equal(form.title)
-                expect(body.body).to.equal(form.body)
+        it('returns correct status', () => {
+            request.expect(201)
+        })
+
+        it('returns correct Location', () => {
+            request.expect('Location', '/api/course/COMP4920/review/18037')
+        })
+
+        describe('Review created correctly', () => {
+            let followUp
+
+            before(() => {
+                followUp = supertest
+                    .get('/api/course/COMP4920/review/18037')
+                    .set('Accept', 'application/json')
+                    .expect(200)
+
+                return followUp
             })
-        )
+
+            it('has the correct title', () =>
+                followUp.then(({ body }) => {
+                    expect(body.title).to.equal(form.title)
+                })
+            )
+
+            it('has the correct body', () =>
+                followUp.then(({ body }) => {
+                    expect(body.body).to.equal(form.body)
+                })
+            )
+
+            it('has the correct recommend', () =>
+                followUp.then(({ body }) => {
+                    expect(body.recommend).to.equal(form.recommend)
+                })
+            )
+        })
     })
 
     describe('GET /api/course/COMP4920/reviews', () => {

@@ -92,13 +92,25 @@ exports.getCourseReviews = function ({ params, query }, res) {
 
 exports.postQuestion = function ({ user, params, body }, res) {
     body.userID = user.id
-    responseHandler(questionModel.postQuestion(params.code, body), res)
+    questionModel.postQuestion(params.code, body)
+        .then(qid => {
+            res.set({
+                'Location': `/api/course/${params.code}/question/${qid}`
+            })
+            res.sendStatus(201)
+        })
         .catch(errorHandler(res))
 }
 
 /* POST new review */
 exports.postReview = function ({ user, params, body }, res) {
     body.userID = user.id
-    responseHandler(reviewModel.postReview(params.code, body), res)
+    reviewModel.postReview(params.code, body)
+        .then(rid => {
+            res.set({
+                'Location': `/api/course/${params.code}/review/${rid}`
+            })
+            res.sendStatus(201)
+        })
         .catch(errorHandler(res))
 }

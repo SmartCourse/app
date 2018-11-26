@@ -40,12 +40,23 @@ const mutations = {
     state.reviewObj.review = reviewMapper(review)
   },
   FOCUS_REPLIES (state, replies) {
+    // DISCUSS wonder if sorting should be done here or not.
     state.reviewObj.replies = sortByHotness(replies.map(replyMapper))
   },
   FOCUS_LIKES (state, { likes }) {
     const oldLikes = state.reviewObj.review.likes
     state.reviewObj.review.likes = likes
     state.reviewObj.review.userLiked += likes - oldLikes
+  },
+  /**
+   * Given the post returns the location of the new resource,
+   * extract it and store it for future use.
+   *
+   * @param {string} resourceUrl The full url of the resource on the server
+   */
+  SET_REVIEW(state, resourceUrl) {
+    const [id] = resourceUrl.match(/\d+$/)
+    state.reviewObj.review.id = id
   },
   API_ERROR (state, { code, message }) {
     state.error.code = code

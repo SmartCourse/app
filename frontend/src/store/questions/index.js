@@ -59,6 +59,16 @@ const mutations = {
 
     state.questionObj.answers = [ans, ...ordered]
   },
+  /**
+   * Given the post returns the location of the new resource,
+   * extract it and store it for future use.
+   *
+   * @param {string} resourceUrl The full url of the resource on the server
+   */
+  SET_QUESTION(state, resourceUrl) {
+    const [id] = resourceUrl.match(/\d+$/)
+    state.questionObj.question.id = id
+  },
   FOCUS_LIKES (state, { likes }) {
     const oldLikes = state.questionObj.question.likes
     state.questionObj.question.likes = likes

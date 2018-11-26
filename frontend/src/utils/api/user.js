@@ -16,6 +16,6 @@ export function userMapper({
 }) {
   return {
     ...rest,
-    joined: format(joined, 'dd/MM/yyyy')
+    joined: format(joined * 1000, 'dd/MM/yyyy')
   }
 }

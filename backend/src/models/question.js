@@ -77,7 +77,6 @@ class Question {
     postQuestion(code, { userID, title, body }) {
         return this.db
             .insert(QUESTIONS, { code, userID, title, body })
-            .then((questionID) => this.getQuestion(questionID))
     }
 }
 

@@ -9,10 +9,12 @@ const API_URL = process && process.env && process.env.NODE_ENV === 'development'
 
 async function responseCheck(res) {
   if (res.ok) {
-    return res.json()
+    // if a POST request don't return json, instead return where new resorce is found
+    return res.status === 201 ? res.headers.get('Location') : res.json()
   } else if (res.status >= 500) {
     throw new APIError('Server Error')
   } else {
+    // if 400s response json is probably sent to explain problem
     const err = await res.json()
     throw new APIError(err.message, err.code)
   }
