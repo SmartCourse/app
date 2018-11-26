@@ -1,12 +1,30 @@
 
 /**
- * Basic response wrapper for controllers
+ * Basic JSON response wrapper for controllers
  * @param   {function} fn       A controller function (must return a promise)
  * @param   {object}   response Express response object
  * @returns {Promise}
  */
 exports.responseHandler = function(fn, response) {
     return fn.then(data => response.json(data))
+}
+
+/**
+ * given a POST successful post request
+ * create a 201 response, and set headers
+ * for Location and X-ID to the location of
+ * the new resource and the id of the resource
+ * @param {string}           location The root url of the new resource
+ * @param {Express.Response} response The express response object
+ */
+exports.postResponseHandler = function(location, response) {
+    return id => {
+        response.set({
+            'X-ID': id,
+            'Location': `${location}/${id}`
+        })
+        response.sendStatus(201)
+    }
 }
 
 exports.toLowerCase = str => str.toLowerCase()
@@ -17,6 +35,7 @@ exports.isFirebaseAuthorized = function(req, res, next) {
     }
     next()
 }
+
 exports.isAuthorized = function(req, res, next) {
     if (!req.user) {
         return res.status(403).json({ code: 403, message: 'No user profile' })
@@ -47,7 +66,7 @@ exports.userLikesMapper = (likes, userLikes) => (
     user: {
         id: userID,
         displayName,
-        ...(reputation >= 0 ? { reputation } : { 'reputation': 0 }),
+        ...(reputation >= 0 ? { reputation } : { reputation: 0 }),
         degree,
         gradYear,
         picture,

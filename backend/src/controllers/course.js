@@ -5,7 +5,7 @@ const reviewModel = require('../models/review')()
 const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
 const errorHandler = require('./error')
-const { responseHandler } = require('../utils/helpers')
+const { responseHandler, postResponseHandler } = require('../utils/helpers')
 const { TABLE_NAMES } = require('../models/constants')
 
 /* Get all course data */
@@ -90,27 +90,20 @@ exports.getCourseReviews = function ({ params, query }, res) {
         .catch(errorHandler(res))
 }
 
+/* POST new question and if successful return 201 status */
 exports.postQuestion = function ({ user, params, body }, res) {
     body.userID = user.id
+    const location = `/api/course/${params.code}/question`
     questionModel.postQuestion(params.code, body)
-        .then(qid => {
-            res.set({
-                'Location': `/api/course/${params.code}/question/${qid}`
-            })
-            res.sendStatus(201)
-        })
+        .then(postResponseHandler(location, res))
         .catch(errorHandler(res))
 }
 
-/* POST new review */
+/* POST new review and if successful return 201 status */
 exports.postReview = function ({ user, params, body }, res) {
     body.userID = user.id
+    const location = `/api/course/${params.code}/review`
     reviewModel.postReview(params.code, body)
-        .then(rid => {
-            res.set({
-                'Location': `/api/course/${params.code}/review/${rid}`
-            })
-            res.sendStatus(201)
-        })
+        .then(postResponseHandler(location, res))
         .catch(errorHandler(res))
 }

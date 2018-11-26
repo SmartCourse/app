@@ -63,7 +63,7 @@ export function putLikes(course, id, data) {
 }
 
 export function getAnswerLikes(course, id, commentID) {
-  return get(`/course/${course}/question/${id}/amswer/${commentID}/likes`)
+  return get(`/course/${course}/question/${id}/answer/${commentID}/likes`)
 }
 
 export function putAnswerLikes(course, id, commentID, data) {
@@ -76,5 +76,5 @@ export function putAnswerLikes(course, id, commentID, data) {
  * @param {object} data    the data associated with the new question
  */
 export function editQuestion(course, id, data) {
-  return put(`/course/${course}/question/${id}/`, { data })
+  return put(`/course/${course}/question/${id}`, { data })
 }

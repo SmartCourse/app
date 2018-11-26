@@ -4,7 +4,7 @@ const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
 const errorHandler = require('./error')
-const { responseHandler, userLikesMapper } = require('../utils/helpers')
+const { responseHandler, postResponseHandler, userLikesMapper } = require('../utils/helpers')
 const { TABLE_NAMES } = require('../models/constants')
 
 /* GET question data. */
@@ -63,17 +63,10 @@ exports.getQuestionAnswers = function ({ user, params, query }, res) {
 /* POST new answer. */
 exports.postAnswer = function ({ user, params, query, body }, res) {
     body.userID = user.id
-    const promise = new Promise((resolve, reject) =>
-        // post the comment, then get it
-        commentModel.postComment({ questionID: params.id }, body)
-            .then(answer => resolve(userLikesMapper(
-                // 0 likes for new answer!
-                [{ likes: 0 }], [{ userLiked: 0 }])(answer, 0, 0))
-            )
-            .catch(err => reject(err))
-    )
+    const location = `/api/course/${params.code}/question/${params.id}/answers`
 
-    responseHandler(promise, res)
+    commentModel.postComment({ questionID: params.id }, body)
+        .then(postResponseHandler(location, res))
         .catch(errorHandler(res))
 }
 
