@@ -56,13 +56,13 @@ describe('Test question routes', () => {
 })
 
 describe('Test answer routes', () => {
-    describe('POST /api/course/COMP4920/question/1/answers', () => {
+    describe('POST /api/course/COMP4920/question/1/answer', () => {
         let request
         let body = 'superruuu____testu'
 
         before(() => {
             request = supertest
-                .post('/api/course/COMP4920/question/1/answers')
+                .post('/api/course/COMP4920/question/1/answer')
                 .send({ body })
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken2}`)
@@ -178,7 +178,7 @@ describe('Test answer routes', () => {
 
         before(() => {
             request = supertest
-                .post('/api/course/COMP4920/question/1/answers')
+                .post('/api/course/COMP4920/question/1/answer')
                 .send({ badBody: 'superruuu____testu' })
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken2}`)

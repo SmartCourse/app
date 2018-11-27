@@ -9,8 +9,8 @@ const API_URL = process && process.env && process.env.NODE_ENV === 'development'
 
 async function responseCheck(res) {
   if (res.ok) {
-    // if a POST request don't return json, instead return where new resorce is found
-    return res.status === 201 ? res.headers.get('Location') : res.json()
+    // check if body, else rely on headers
+    return res.status === 200 ? res.json() : res.headers.get('X-ID')
   } else if (res.status >= 500) {
     throw new APIError('Server Error')
   } else {

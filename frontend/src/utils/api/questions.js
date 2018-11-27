@@ -51,7 +51,9 @@ export function getAnswers(course, id) {
  * @param {object} data    the data associated with the new answer
  */
 export function postAnswer(course, id, data) {
-  return post(`/course/${course}/question/${id}/answers`, { data })
+  debugger
+  return post(`/course/${course}/question/${id}/answer`, { data })
+    .then(cid => get(`/course/${course}/question/${id}/answer/${cid}`))
 }
 
 export function getLikes(course, id) {
