@@ -3,15 +3,15 @@ import { get } from './index'
 /**
  * Get all questions relevant to a course
  */
-export function getQuestions(course) {
-  return get(`/course/${course}/questions`)
+export function getQuestions(course, pageNumber) {
+  return get(`/course/${course}/questions?p=${pageNumber}`)
 }
 
 /**
  * Get all reviews relevant to a course
  */
-export function getReviews(course) {
-  return get(`/course/${course}/reviews`)
+export function getReviews(course, pageNumber) {
+  return get(`/course/${course}/reviews?p=${pageNumber}`)
 }
 
 /**
@@ -28,7 +28,11 @@ export function courseMapper({
   subjectCode,
   handbookURL,
   outlineURL,
-  rating,
+  recommend,
+  enjoy,
+  difficulty,
+  teaching,
+  workload,
   description,
   requirements,
   tags
@@ -40,7 +44,11 @@ export function courseMapper({
     subjectCode,
     handbookURL,
     outlineURL,
-    rating,
+    recommend,
+    enjoy,
+    difficulty,
+    teaching,
+    workload,
     description,
     requirements,
     tags

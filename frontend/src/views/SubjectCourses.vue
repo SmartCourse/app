@@ -1,52 +1,135 @@
 <template>
   <div class="main-content subject-course">
     <AppBreadCrumb/>
-    <div class="subject-content">
-      <div class="card-container" v-if="courses.length">
-        <div class="course-card" :key="item.code" v-for="item in courses">
-          <router-link v-if="item.code" class="card-header" tag="div" :to="{ name: 'info', params: { code:item.code }}">
+    <FilterSearch v-model="search"/>
+    <div class="sort-by">
+      <p class="sort-label">Sort by<i class="material-icons">sort</i></p> <Radio v-model="sortBy" :options="['Rating', 'Code', 'Name']"/>
+    </div>
+    <TilesContainer v-if="filtered.length">
+      <Tile :key="item.code" v-for="item in filtered">
+        <router-link v-if="item.code" tag="div" class="tile-header" :to="{ name: 'info', params: { code:item.code }}">
+          <div class="tile-header-top">
             <h4>
-              {{ item.code }}: {{ item.name }}
+              {{ item.code }}
             </h4>
-          </router-link>
-          <a class="handbook-link" target=_blank :href="item.handbookURL">Handbook Link</a>
-        </div>
-      </div>
-      <div class="sorry" v-else>
-          Sorry, it looks like there are no courses for this subject area
-      </div>
+            <Category v-if="item.recommend > -1" :recommend="item.recommend">
+              <h6>{{ recommendText(item.recommend) }}</h6>
+            </Category>
+            <h6 v-else>No reviews</h6>
+          </div>
+          <h5>
+            {{ item.name }}
+          </h5>
+        </router-link>
+        <a class="handbook-link" target=_blank :href="item.handbookURL">Handbook Link</a>
+      </Tile>
+    </TilesContainer>
+    <h2 class="sorry" v-else-if="!loading && !courses.length">
+        Sorry, it looks like there are no courses for this subject area
+    </h2>
+    <h2 class="sorry" v-else-if="!loading && !filtered.length">
+        Sorry, it looks like there are no courses that match that keyword
+    </h2>
+    <div style="text-align:center;" v-else>
+      <LoadingSpinner/>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import Tile from '@/components/Tile'
+import TilesContainer from '@/components/Tile/Container'
+import FilterSearch from '@/components/Search/Filter'
+import Category from '@/components/Category'
+import Radio from '@/components/AppRadioOptions'
 
 export default {
   name: 'subjectCourses',
+  data() {
+    return {
+      search: '',
+      sortBy: 'Rating'
+    }
+  },
   computed: {
-    ...mapGetters('subject', {
-      courses: 'courses'
+    courses() {
+      if (this.loading) return []
+      // filter courses to ones which match this subject code
+      return this.allCourses.filter(course => course.code.slice(0, 4) === this.code)
+    },
+    sorted() {
+      if (this.loading) return []
+      // copy
+      const s = this.courses.map(a => a)
+      // sort
+      if (this.sortBy === 'Name') {
+        s.sort(({ name: x }, { name: y }) => x.localeCompare(y))
+      } else if (this.sortBy === 'Code') {
+        s.sort(({ code: x }, { code: y }) => x.localeCompare(y))
+      } else {
+        s.sort(({ recommend: x }, { recommend: y }) => y - x)
+      }
+      return s
+    },
+    filtered() {
+      if (this.loading) return []
+      const lower = this.search.toLowerCase()
+      return this.sorted
+        .filter(item => item.code.toLowerCase().match(lower) || item.name.toLowerCase().match(lower))
+    },
+    ...mapGetters({
+      loading: 'loading',
+      allCourses: 'courses'
     })
+  },
+  methods: {
+    recommendText(recommend) {
+      if (recommend >= 60) return 'Mostly positive'
+      else if (recommend <= 40) return 'Mostly negative'
+      else return 'Mixed reviews'
+    }
+  },
+  components: {
+    Tile,
+    TilesContainer,
+    FilterSearch,
+    Radio,
+    Category
   },
   props: {
     code: String
-  },
-  created () {
-    this.$store.dispatch('subject/getCourses', this.code)
-  },
-  beforeRouteUpdate ({ params: { code } }, from, next) {
-    // called when the route that renders this component has changed,
-    // but this component is reused in the new route.
-    // For example, for a route with dynamic params `/foo/:code`, when we
-    // navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
-    // will be reused, and this hook will be called when that happens.
-    // has access to `this` component instance.
-    if (this.code && this.code !== code) { this.$store.dispatch('subject/getCourses', code) }
-    next()
   }
 }
 </script>
 
-<style scoped src='../css/subject.less' lang='less'>
+<style scoped lang='less'>
+
+@import '../css/subject.less';
+
+h6 {
+  width:120px;
+  text-align:right;
+}
+
+.sort-by {
+  display:flex;
+  align-items: center;
+  margin:0 10px 5px 15px;
+}
+
+.sort-label {
+  line-height: 24px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.material-icons {
+  vertical-align: middle;
+  padding: 0 5px;
+  line-height: inherit;
+  font-size: inherit;
+  margin: 0 auto;
+}
+
 </style>

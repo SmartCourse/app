@@ -3,13 +3,9 @@ const userModel = require('../models/user')()
 const { responseHandler } = require('../utils/helpers')
 
 /* Get data for a specific user */
-exports.getUser = function(_, res) {
-    return res.json({
-        userID: 1,
-        firstName: 'Walker',
-        lastName: 'Francis',
-        email: 'alnuno-das-hinds@gmail.com'
-    })
+exports.getUser = function({ params }, res) {
+    return responseHandler(userModel.getPublicProfile(params.id), res)
+        .catch(errorHandler(res))
 }
 
 /**
@@ -17,15 +13,16 @@ exports.getUser = function(_, res) {
  * provide frontend with any user specific data
  */
 exports.getSelf = function(req, res) {
-    const errorResponse = errorHandler(res)
-    if (!req.user) {
-        return errorResponse({ message: 'Invalid Credentials' })
-    }
-    // fine for now, should include profile data
-    return res.json(req.user)
+    return responseHandler(userModel.getProfile(req.user.id), res)
+        .catch(errorHandler(res))
 }
 
-exports.createUser = function({ authorized }, res) {
-    return responseHandler(userModel.createUser(authorized), res)
+exports.createUser = function({ authorized: { email, uid }, body: { displayName, degree, gradYear } }, res) {
+    return responseHandler(userModel.createUser({ email, uid, displayName, degree, gradYear }), res)
+        .catch(errorHandler(res))
+}
+
+exports.updateUser = function({ user: { id }, body: { degree, gradYear, description, picture } }, res) {
+    return responseHandler(userModel.updateUser(id, { degree, gradYear, description, picture }), res)
         .catch(errorHandler(res))
 }

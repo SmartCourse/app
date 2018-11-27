@@ -1,5 +1,4 @@
 import { subjectMapper } from '@/utils/api/subject'
-import { courseMapper } from '@/utils/api/course'
 
 import { doRequestFactory } from '@/store/utils'
 
@@ -8,7 +7,6 @@ import { REQUEST, COMMITS, ACTIONS } from './constants'
 const state = {
   loading: false,
   subjects: {},
-  courses: [],
   error: {
     code: 0,
     message: ''
@@ -16,14 +14,13 @@ const state = {
 }
 
 const getters = {
-  courses: ({courses}) => courses,
   // convert subjects object to array [{code, name, handbookURL}, ...]
-  subjectList: ({subjects}) => Object.entries(subjects)
-    .map(([code, {name, handbookURL}]) => ({code, name, handbookURL}))
+  subjectList: ({ subjects }) => Object.entries(subjects)
+    .map(([code, { name, handbookURL }]) => ({ code, name, handbookURL }))
     .sort((a, b) => a.code.localeCompare(b.code)),
-  subjectMap: ({subjects}) => subjects,
-  loading: ({loading}) => loading,
-  error: ({error}) => error
+  subjectMap: ({ subjects }) => subjects,
+  loading: ({ loading }) => loading,
+  error: ({ error }) => error
 }
 
 const mutations = {
@@ -31,18 +28,15 @@ const mutations = {
     state.subjects = subjects
       .map(subjectMapper)
     // convert array to object {code: {name, handbookURL}, code: { ... }, ...}
-      .reduce((acc, {code, name, handbookURL}) => {
-        acc[code] = {name, handbookURL}
+      .reduce((acc, { code, name, handbookURL }) => {
+        acc[code] = { name, handbookURL }
         return acc
       }, {})
-  },
-  REFRESH_COURSES (state, courses) {
-    state.courses = courses.map(courseMapper)
   },
   TOGGLE_LOADING (state, bool) {
     state.loading = bool
   },
-  API_ERROR (state, {code, message}) {
+  API_ERROR (state, { code, message }) {
     state.error.code = code
     state.error.message = message
   }
@@ -50,11 +44,8 @@ const mutations = {
 
 const actions = {
   doRequest: doRequestFactory(REQUEST, COMMITS),
-  async getSubjects ({dispatch}) {
+  async getSubjects ({ dispatch }) {
     return dispatch('doRequest', { action: ACTIONS.GET_SUBJECTS, args: [] })
-  },
-  async getCourses ({dispatch}, subjCode) {
-    return dispatch('doRequest', { action: ACTIONS.GET_COURSES, args: [subjCode] })
   }
 }
 

@@ -1,3 +1,5 @@
+const { TABLE_NAMES: { QUESTIONS, COMMENTS } } = require('./constants')
+
 /* All inputs should be validated in this class that are question related */
 class Question {
     constructor(db) {
@@ -11,32 +13,61 @@ class Question {
      * @returns {object}             Single question
      */
     getQuestion(questionID) {
-        return this.db
-            .query('SELECT * FROM question WHERE id=?', [questionID])
+        return this.db.query(`SELECT * FROM ${QUESTIONS} WHERE id=?`, [questionID])
     }
 
     /**
+     * Get a specific page of questions for a course
      * @param   {string} code        The code of the course
      * @param   {number} pageNumber  The page number for which we want to get questions.
      * @returns {object}
      */
-    getQuestions(code, pageNumber) {
-        const pageSize = 10
+    getQuestions(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll('SELECT * FROM question WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
-                [code, offset, pageSize])
+            .queryAll(`select q.*, COUNT(c.questionID) AS numAnswers 
+                from ${QUESTIONS} q 
+                JOIN ${COMMENTS} c 
+                on c.questionID = q.id
+                where q.code = ? 
+                GROUP BY c.questionID
+                ORDER BY q.timestamp DESC
+                LIMIT ?, ?`,
+            [code, offset, pageSize])
+    }
+
+    getQuestionsByUserID(uid, limit = 10) {
+        return this.db
+            .queryAll(`SELECT q.*, COUNT(c.questionID) AS numAnswers
+                FROM ${QUESTIONS} q
+                JOIN ${COMMENTS} c ON c.questionID = q.id
+                WHERE q.userID=?
+                GROUP BY questionID
+                ORDER BY timestamp DESC
+                LIMIT ?`,
+            [uid, limit])
+    }
+
+    /**
+     * Gets the total number of questions for a course
+     * @param   {string} code        The code of the course duh
+     * @returns {object}
+     */
+    getQuestionCount(code) {
+        return this.db
+            .queryAll(`SELECT COUNT() FROM ${QUESTIONS} WHERE code=?`,
+                [code])
     }
 
     /**
      * Post a question.
-     * @param {string} code  The code of the course
+     * @param {string}  code  The code of the course
      * @param {object}  data      controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
     postQuestion(code, { userID, title, body }) {
         return this.db
-            .insert('question', { code, userID, title, body })
+            .insert(QUESTIONS, { code, userID, title, body })
             .then((questionID) => this.getQuestion(questionID))
     }
 }

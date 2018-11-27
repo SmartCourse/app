@@ -1,3 +1,5 @@
+const { TABLE_NAMES: { COMMENTS, USERS } } = require('./constants')
+
 /* All inputs should be validated in this class that are comment related */
 class Comment {
     constructor(db) {
@@ -11,12 +13,11 @@ class Comment {
      * @param   {number} pageNumber
      * @returns {Array}
      */
-    postComment(queryObject, { body, userID = 1 }) {
-        const [ key, value ] = Object.entries(queryObject)[0]
+    postComment(queryObject, { body, userID }) {
+        const [key, value] = Object.entries(queryObject)[0]
         return this.db
-            .insert('comment', { [key]: value, body, userID })
-            /* Still not sure on this, seems wasteful to send all new data */
-            .then((id) => ({ body, userID, id, timestamp: Date.now() }))
+            .insert(COMMENTS, { [key]: value, body, userID })
+            .then((id) => this.getComment(id))
     }
 
     /**
@@ -27,9 +28,56 @@ class Comment {
      * @returns {Array}
      */
     getComments(queryObject, pageNumber = 1) {
-        const [ key, value ] = Object.entries(queryObject)[0]
+        const [key, value] = Object.entries(queryObject)[0]
         return this.db
-            .queryAll(`SELECT * FROM comment WHERE ${key}=?`, [value])
+            .queryAll(`SELECT
+                u.id as userID,
+                u.displayName,
+                u.degree,
+                u.gradYear,
+                u.description,
+                u.picture,
+                u.reputation,
+                u.joined,
+                c.*
+                FROM
+                ${COMMENTS} as c
+                JOIN
+                ${USERS} as u
+                    on (
+                        c.userID=u.id
+                    )
+                WHERE
+                (
+                    c.${key}=?
+                ) ;
+        `, [value])
+    }
+
+    getComment(id) {
+        return this.db
+            .query(`SELECT
+                u.id as userID,
+                u.displayName,
+                u.degree,
+                u.gradYear,
+                u.description,
+                u.picture,
+                u.reputation,
+                u.joined,
+                c.*
+                FROM
+                ${COMMENTS} as c
+                JOIN
+                ${USERS} as u
+                    on (
+                        c.userID=u.id
+                    )
+                WHERE
+                (
+                    c.id=?
+                ) ;
+        `, [id])
     }
 
     /**
@@ -47,7 +95,7 @@ let Singleton = null
 /**
  * @param {object} db defaults to the db instance
  */
-module.exports = function(db) {
+module.exports = function (db) {
     if (!db) {
         /* app environment, dev or prod */
         return (Singleton = Singleton ? Singleton : new Comment(require('./db'))) // eslint-disable-line

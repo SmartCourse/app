@@ -1,30 +1,48 @@
 import { get, post, put } from './index'
-import format from 'date-fns/format'
+import formatDistanceStrict from 'date-fns/formatDistanceStrict'
 
 /* get review */
 export function getReview(course, id) {
   return get(`/course/${course}/review/${id}`)
 }
 
-export function replyMapper({ id, likes, userID, body, timestamp }) {
+export function replyMapper({ id, likes, userLiked, user, body, timestamp }) {
   return {
     id: String(id),
     body,
     likes,
-    author: userID,
-    published: format(timestamp, 'DD/MM/YY')
+    userLiked,
+    user,
+    published: formatDistanceStrict(timestamp * 1000, new Date(), { addSuffix: true }),
+    timestamp: timestamp
   }
 }
 
-export function reviewMapper({ id, code, likes, userID, title, body, timestamp }) {
+export function reviewMapper({ id, code, title, body, likes, userLiked, recommend, user, timestamp }) {
   return {
     id: String(id),
     code,
     title,
     body,
     likes,
-    author: userID,
-    published: format(timestamp, 'DD/MM/YY')
+    userLiked,
+    recommend: Boolean(recommend),
+    user,
+    published: formatDistanceStrict(timestamp * 1000, new Date(), { addSuffix: true }),
+    timestamp: timestamp
+  }
+}
+
+/* Maps a new review from a ReviewForm to something the backend understands */
+export function newReviewMapper({ title, body, recommend, enjoy, difficulty, teaching, workload }) {
+  return {
+    title,
+    body,
+    recommend: { 'Yes': 1, 'No': 0 }[recommend],
+    enjoy: Number(enjoy),
+    difficulty: { '': 0, 'Easy': 1, 'Average': 2, 'Hard': 3 }[difficulty],
+    teaching: { '': 0, 'Poor': 1, 'Average': 2, 'Excellent': 3 }[teaching],
+    workload: { '': 0, 'Light': 1, 'Average': 2, 'Heavy': 3 }[workload]
   }
 }
 
@@ -55,4 +73,20 @@ export function postReply(course, id, data) {
  */
 export function editReview(course, id, data) {
   return put(`/course/${course}/review/${id}`, { data })
+}
+
+export function getLikes(course, id) {
+  return get(`/course/${course}/review/${id}/likes`)
+}
+
+export function putLikes(course, id, data) {
+  return put(`/course/${course}/review/${id}/likes`, { data })
+}
+
+export function getReplyLikes(course, id, commentID) {
+  return get(`/course/${course}/review/${id}/reply/${commentID}/likes`)
+}
+
+export function putReplyLikes(course, id, commentID, data) {
+  return put(`/course/${course}/review/${id}/reply/${commentID}/likes`, { data })
 }

@@ -1,10 +1,14 @@
 const path = require('path')
 const sqlite3 = require('sqlite3')
-const { createDB, insertDB } = require('./tables')
+const { insertDB, insertUniqueDB, updateDB } = require('./js/tables')
+
+// init db
+require('./init_sql')
 
 const DB_NAME = process.env.NODE_ENV === 'production'
-    ? path.join(__dirname, '../../../db/smartcourse.db') : ':memory:'
-console.log(path.join(__dirname, '../../../db/smartcourse.db'))
+    ? path.join(__dirname, '../../../db/smartcourse.db') : path.join(__dirname, './test.db')
+
+console.log('init:', DB_NAME)
 /**
  * Very slight abstraction over the direct sql queries.
  * This object can be instantiated once and then all queries are assumed to be
@@ -15,14 +19,10 @@ class DB {
     constructor(databaseName) {
         this._db = new sqlite3.Database(databaseName, sqlite3.OPEN_READWRITE,
             (err) => {
-                if (err) { 
+                if (err) {
                     console.error(err)
                 } else {
                     console.log(`Opened database: ${databaseName}`)
-                    // Initialise the test db
-                    if (process.env.NODE_ENV !== 'production') {
-                        createDB(this._db)
-                    }
                 }
             }
         )
@@ -32,8 +32,26 @@ class DB {
         return insertDB(this._db, table, data)
     }
 
+    insertUnique(table, data) {
+        return insertUniqueDB(this._db, table, data)
+    }
+
+    update(table, data, conditions) {
+        return updateDB(this._db, table, data, conditions)
+    }
+
     deleteDB () {
         return Promise.resolve(false)
+    }
+
+    run (query, params = []) {
+        return new Promise((resolve, reject) => {
+            this._db.run(
+                query,
+                params,
+                (err) => { err ? reject(err) : resolve(true) }
+            )
+        })
     }
 
     query(query, params = []) {

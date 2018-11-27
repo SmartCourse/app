@@ -1,27 +1,34 @@
 <template>
     <div class="course-reviews">
+      <!-- Controls inserted here -->
+      <Options
+        buttonText="Write Review"
+        routeName="newReview"
+        :code="code"
+      >
+        <slot/>
+      </Options>
 
-        <div class='button-container'>
-            <router-link :to="{ name: 'newReview', params: {code} }">
-                <AppButton>Add Review</AppButton>
-            </router-link>
-        </div>
+      <Feed
+        feedType="Review"
+        :items="reviews"
+        v-if="!loading"
+      />
 
-      <section class="questions">
-        <ol>
-          <li :key="item.id" v-for="item in reviews">
-            <ReviewCard v-bind="item"/>
-          </li>
-        </ol>
-      </section>
+      <AppPageSelector v-if="meta.last != 1"
+        :currPage="meta.curr"
+        :lastPage="meta.last"
+        :update="refreshReviews"
+      />
 
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import ReviewCard from '@/components/reviews-replies/ReviewCard'
-import AppButton from '@/components/AppButton'
+import Feed from '@/components/Course/Feed'
+import AppPageSelector from '@/components/AppPageSelector'
+import Options from '@/components/Course/Controls'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -30,27 +37,32 @@ export default {
     code: String
   },
   components: {
-    AppButton,
-    ReviewCard
+    Feed,
+    AppPageSelector,
+    Options
   },
   computed: {
     ...mapGetters('course', {
-      reviews: 'reviews'
+      reviews: 'reviews',
+      meta: 'reviewsMeta',
+      loading: 'loadingFeed'
     })
   },
+  methods: {
+    refreshReviews(pageNumber) {
+      this.$store.dispatch('course/getReviews',
+        {
+          id: this.code,
+          pageNumber: pageNumber
+        })
+    }
+  },
   created () {
-    this.$store.dispatch('course/getReviews', this.code)
+    this.refreshReviews(1)
   },
   beforeRouteUpdate ({ params: { code } }, from, next) {
-    this.$store.dispatch('course/getReviews', code)
+    this.refreshReviews(1)
     next()
   }
 }
 </script>
-
-<style scoped>
-.button-container {
-    margin-bottom: 10px;
-    text-align: right;
-}
-</style>

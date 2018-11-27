@@ -5,7 +5,7 @@ import { getAuthHeaders } from './auth'
 const API_URL = process && process.env && process.env.NODE_ENV === 'development'
   ? 'http://localhost:3000/api' : (process.env.NODE_ENV === 'staging'
     ? 'https://smartcourse-staging.azurewebsites.net/api'
-    : 'https://smartcourse-prod.azurewebsites.net/api')
+    : 'https://smartcourse.me/api')
 
 async function responseCheck(res) {
   if (res.ok) {
@@ -21,14 +21,8 @@ async function responseCheck(res) {
 function request (path, { headers, method, data }) {
   // eventually add cors and auth headers
   const url = `${API_URL}${path}`
-
-  if (method === 'GET') {
-    return fetch(url, { headers })
-  }
-
-  const auth = store.getters.authObject
+  const auth = store.getters['auth/userAuthObject']
   const body = data ? JSON.stringify(data) : null
-
   headers = {
     'Content-Type': 'application/json',
     ...headers

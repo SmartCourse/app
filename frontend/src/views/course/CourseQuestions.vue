@@ -1,56 +1,68 @@
 <template>
     <div class="course-questions">
+      <!-- Controls inserted here -->
+      <Options
+        buttonText="Ask a Question"
+        routeName="newQuestion"
+        :code="code"
+      >
+        <slot/>
+      </Options>
 
-        <div class='button-container'>
-            <router-link :to="{ name: 'newQuestion', params: {code} }">
-                <AppButton>Ask Question</AppButton>
-            </router-link>
-        </div>
+      <Feed
+        feedType="Question"
+        :items="questions"
+        v-if="!loading"
+      />
 
-      <section class="questions">
-        <ol>
-          <li :key="item.id" v-for="item in questions">
-            <QuestionCard v-bind="item"/>
-          </li>
-        </ol>
-      </section>
+      <AppPageSelector v-if="meta.last != 1"
+        :currPage="meta.curr"
+        :lastPage="meta.last"
+        :update="refreshQuestions"
+      />
 
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import QuestionCard from '@/components/questions-answers/QuestionCard'
-import AppButton from '@/components/AppButton'
+import Feed from '@/components/Course/Feed'
+import AppPageSelector from '@/components/AppPageSelector'
+import Options from '@/components/Course/Controls'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'courseQuestions',
   components: {
-    AppButton,
-    QuestionCard
+    Options,
+    Feed,
+    AppPageSelector
   },
   props: {
     code: String
   },
   computed: {
     ...mapGetters('course', {
-      questions: 'questions'
+      questions: 'questions',
+      meta: 'questionsMeta',
+      loading: 'loadingFeed'
     })
   },
+  methods: {
+    refreshQuestions(pageNumber) {
+      this.$store.dispatch('course/getQuestions',
+        {
+          id: this.code,
+          pageNumber: pageNumber
+        })
+    }
+  },
   created () {
-    this.$store.dispatch('course/getQuestions', this.code)
+    this.refreshQuestions(1)
   },
   beforeRouteUpdate ({ params: { code } }, from, next) {
-    this.$store.dispatch('course/getQuestions', code)
+    this.refreshQuestions(1)
     next()
   }
 }
 </script>
-
-<style scoped>
-.button-container {
-    margin-bottom: 10px;
-    text-align: right;
-}
-</style>

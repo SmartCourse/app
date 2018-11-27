@@ -2,10 +2,9 @@
   <div id="app">
     <AppNavBar/>
     <main>
-      <!--<router-view :key="$route.path"/> -->
       <router-view/>
     </main>
-    <AppFooter/>
+    <AppFooter v-if="!authpage"/>
   </div>
 </template>
 
@@ -15,9 +14,18 @@ import AppFooter from '@/components/AppFooter'
 
 export default {
   components: { AppNavBar, AppFooter },
+  computed: {
+    authpage() {
+      const { name } = this.$route
+      return name === 'Login' || name === 'Sign Up' || name === 'Forgot Password'
+    }
+  },
   created() {
+    this.$store.dispatch('getCourses')
     this.$store.dispatch('auth/checkAuth')
     this.$store.dispatch('subject/getSubjects')
+    this.$store.dispatch('getFaculties')
+    this.$store.dispatch('getDegrees')
   }
 }
 
@@ -45,17 +53,22 @@ html, body {
   --white: #fefefe;
   --soft-white: #aaa;
   --black: #111;
-  --soft-black: rgba(#111, 0.65);
+  --soft-black: rgba(#111, 0.5);
+  --black-p: rgba(0,0,0,.72);
+  // recommended / not
+  --color-positive: rgba(1, 160, 1, 0.7);
+  --color-negative: rgba(200, 0, 0, 0.6);
   // borders
   --color-gray: #d5d5d5;
   --color-light-gray: #eaeaea;
-  --color-very-light-gray: #f5f5f5;
+  --color-very-light-gray: #f9f9f9;
   --border-dark: 1px solid var(--color-gray);
   --border: 1px solid var(--color-light-gray);
   --border-thick: 2px solid rgba(160, 178, 178, 0.5);
   --box-shadow-active: 0px 0px 0px 1px #ddd;
   --theme: #00a99d;
-  --theme-light: rgba(102, 203, 196);
+  --theme-light: rgb(102, 203, 196);
+  --color-blue: #2196f3;
   // font format
   --header-1: 600 3rem /1.2 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
   --header-1-mobile: 600 2rem /1.1 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -79,14 +92,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 p {
-  color: rgba(0,0,0,.72);
-}
-
-.form-success {
-  color: green;
-}
-.form-failure {
-  color: red;
+  // default unless specified
+  font: var(--body-copy-1);
+  color: var(--black-p);
 }
 
 #app {
@@ -95,13 +103,14 @@ p {
 
 .main-content {
   /* arbitrary */
-  min-height: 90vh;
-  max-width: 768px;
+  min-height: calc(100vh - 85px);;
+  max-width: 800px;
   margin: auto;
+  margin-bottom: 20px;
 }
 
 .auth-page {
-  height: 90vh;
+  height: calc(100vh - 85px);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -122,6 +131,39 @@ ol, ul {
 
 li {
   list-style-type: none;
+}
+
+input, textarea {
+  outline: none;
+  border: none;
+}
+
+textarea {
+  border: var(--border);
+  border-radius: 2px;
+  font: inherit;
+  resize: none;
+  padding: 10px;
+  outline: none;
+  margin: 10px 0px;
+  width: calc(100% - 20px);
+  height: 100px;
+  transition: 0.2s border ease-in-out;
+}
+
+textarea:focus, textarea:active {
+  border: 1px solid #acc;
+}
+
+.fade-slide-enter-active {
+  transition: opacity 0.5s ease-in-out;
+}
+.fade-slide-enter {
+  opacity: 0;
+}
+
+.tooltip {
+  display: block !important;
 }
 
 </style>

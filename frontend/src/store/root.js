@@ -1,47 +1,79 @@
 import { get } from '../utils/api'
+import { courseMapper } from '@/utils/api/course'
 
 /* root application state */
 const state = {
+  error: '',
   loading: false,
   // cached courses
-  courses: [],
-  // fire authObject
-  userAuthObject: {},
-  // our own user data
-  profile: {}
+  courseMap: {},
+  faculties: [],
+  degrees: []
 }
 
 const getters = {
-  isLoggedIn: ({ userAuthObject }) => !!userAuthObject,
-  authObject: ({ userAuthObject }) => userAuthObject
+  loading: ({ loading }) => loading,
+  error: ({ error }) => error,
+  // convert object to list
+  courses: ({ courseMap }) => Object.values(courseMap),
+  faculties: ({ faculties }) => faculties,
+  degrees: ({ degrees }) => degrees
 }
 
 const actions = {
-  populateSearch({commit, state}) {
+  getCourses({ commit, getters }) {
     // avoid repeats of this
-    if (state.courses.length) {
+    if (getters.courses.length) {
       return
     }
+    commit('TOGGLE_LOADING', true)
     return get('/course')
-      .then(data => commit('POPULATE_SEARCH', data))
+      .then(data => commit('REFRESH_COURSES', data))
+      .catch(err => console.warn(err))
+      .finally(() => commit('TOGGLE_LOADING', false))
+  },
+  getFaculties({ commit, getters }) {
+    // avoid repeats of this
+    if (getters.faculties.length) {
+      return
+    }
+    return get('/uni/faculties')
+      .then(data => commit('REFRESH_FACULTIES', data))
       .catch(err => console.warn(err))
   },
-  togglePageLoad() {}
+  getDegrees({ commit, getters }) {
+    // avoid repeats of this
+    if (getters.degrees.length) {
+      return
+    }
+    return get('/uni/degrees')
+      .then(data => commit('REFRESH_DEGREES', data))
+      .catch(err => console.warn(err))
+  }
 }
 
 const mutations = {
-  SET_LOADING(state, bool) {
+  TOGGLE_LOADING(state, bool) {
     state.loading = bool
   },
-  POPULATE_SEARCH(state, data) {
-    state.courses = data
+  REFRESH_COURSES(state, courses) {
+    // convert list of courses to object
+    state.courseMap = courses
+      .map(courseMapper)
+      .reduce((acc, course) => {
+        acc[course.code] = course
+        return acc
+      }, {})
   },
-  /**
-   * @param {*} state The root state
-   * @param {*} user  The logged in user object or null
-   */
-  SET_USER(state, user) {
-    state.userAuthObject = user
+  REFRESH_FACULTIES(state, faculties) {
+    state.faculties = faculties
+  },
+  REFRESH_DEGREES(state, degrees) {
+    state.degrees = degrees
+  },
+  UPDATE_COURSE(state, course) {
+    // assumes courseMapper already applied...
+    state.courseMap[course.code] = course
   }
 }
 

@@ -1,3 +1,13 @@
+const {
+    DONT_RECOMMEND,
+    RECOMMEND,
+    MIN_ENJOY,
+    MAX_ENJOY,
+    MIN_OPTION,
+    MAX_OPTION,
+    TABLE_NAMES: { REVIEWS }
+} = require('./constants')
+
 /* All inputs should be validated in this class that are review related */
 class Review {
     constructor(db) {
@@ -12,7 +22,7 @@ class Review {
      */
     getReview(id) {
         return this.db
-            .query('SELECT * FROM review WHERE id=?', [id])
+            .query(`SELECT * FROM ${REVIEWS} WHERE id=?`, [id])
     }
 
     /**
@@ -20,12 +30,22 @@ class Review {
      * @param   {number}  pageNumber    The page number for which we want to get questions.
      * @returns {Array}
      */
-    getReviews(code, pageNumber) {
-        const pageSize = 10
+    getReviews(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll('SELECT * FROM review WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
+            .queryAll(`SELECT * FROM ${REVIEWS} WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?`,
                 [code, offset, pageSize])
+    }
+
+    /**
+     * Gets the total number of reviews for a course
+     * @param   {string} code        The code of the course
+     * @returns {object}
+     */
+    getReviewCount(code) {
+        return this.db
+            .queryAll(`SELECT COUNT() FROM ${REVIEWS} WHERE code=?`,
+                [code])
     }
 
     /**
@@ -33,9 +53,17 @@ class Review {
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
-    postReview(code, { title, body, userID = 1 }) {
+    postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID }) {
+        if (recommend !== DONT_RECOMMEND && recommend !== RECOMMEND) throw Error('Invalid recommend value')
+        if (enjoy < MIN_ENJOY || enjoy > MAX_ENJOY) throw Error('Invalid enjoy value')
+
+        ;[difficulty, teaching, workload].forEach(item => {
+            if (item < MIN_OPTION || item > MAX_OPTION) throw Error('Invalid difficulty, teaching or workload value')
+        })
+
+        // insert review, get review, update course ratings
         return this.db
-            .insert('review', { code, body, title, userID })
+            .insert(REVIEWS, { code, userID, title, body, recommend, enjoy, difficulty, teaching, workload })
             .then((reviewID) => this.getReview(reviewID))
     }
 }

@@ -11,12 +11,50 @@ exports.responseHandler = function(fn, response) {
 
 exports.toLowerCase = str => str.toLowerCase()
 
-exports.isAuthorized = function(req, res, next) {
+exports.isFirebaseAuthorized = function(req, res, next) {
     if (!req.authorized) {
         return res.status(401).json({ code: 401, message: 'Unauthorized' })
     }
     next()
 }
+exports.isAuthorized = function(req, res, next) {
+    if (!req.user) {
+        return res.status(403).json({ code: 403, message: 'No user profile' })
+    }
+    next()
+}
+
+exports.cacheResponse = function(req, res, next) {
+    res.set({ 'Cache-Control': 'public, max-age=31557600' })
+    next()
+}
+
+exports.userLikesMapper = (likes, userLikes) => (
+    {
+        userID,
+        displayName,
+        reputation,
+        degree,
+        gradYear,
+        picture,
+        joined,
+        ...rest
+    },
+    index
+) => ({
+    likes: likes[index].likes,
+    userLiked: userLikes[index].userLiked,
+    user: {
+        id: userID,
+        displayName,
+        ...(reputation >= 0 ? { reputation } : { 'reputation': 0 }),
+        degree,
+        gradYear,
+        picture,
+        joined
+    },
+    ...rest
+})
 
 /**
  * Convert a string to utf8
@@ -40,4 +78,20 @@ exports.decodeUTF8Text = function(s) {
         // replacing non ascii characters with spaces seems to work. We could just return s too
         return s.replace(/[^\x00-\x7F]/g, ' ') // eslint-disable-line
     }
+}
+
+/**
+ * From MDN web docs:
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+ */
+exports.getRandomIntInclusive = function(min, max) {
+    min = Math.ceil(min)
+    max = Math.floor(max)
+    return Math.floor(Math.random() * (max - min + 1)) + min // The maximum is inclusive and the minimum is inclusive
+}
+
+exports.getRandomInt = function(min, max) {
+    min = Math.ceil(min)
+    max = Math.floor(max)
+    return Math.floor(Math.random() * (max - min)) + min // The maximum is exclusive and the minimum is inclusive
 }

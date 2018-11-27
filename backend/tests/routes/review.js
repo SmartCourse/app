@@ -3,6 +3,7 @@ const supertest = require('supertest')(app)
 const { expect } = require('chai')
 
 describe('Review route testing', function () {
+    // technically non-deterministic as relies on POST from course.js
     describe('GET /api/course/COMP4920/review/1', () => {
         let request
 
@@ -22,7 +23,7 @@ describe('Review route testing', function () {
 
         it('review has a course code', () =>
             request.then(({ body }) =>
-                expect(body.code).to.equal('COMP4920'))
+                expect(body.code).to.match(/\w{4}\d{4}/))
         )
     })
 

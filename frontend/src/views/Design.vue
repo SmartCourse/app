@@ -45,6 +45,15 @@
             <div>
                 <AppButton>Submit</AppButton>
                 <AppButton :alt="false">Cancel</AppButton>
+                <QuestionCard
+                    :vote="{ upvote: () => {}, downvote: () => {}, likes: 10 }"
+                    :title="'This is a standard length title'"
+                    :body="'This is a longer body, that includes a lot more words than the title, but isn\'t too long!'"
+                    :published="'10 days'"
+                    :user="{ userID: 1, name: 'Alex Hinds', degree: 'B. Arts', reputation: 10 }"
+                />
+                <AppRatingCircle :value="20"/>
+                <app-rating-bar :value="20"/>
             </div>
         </section>
     </div>
@@ -52,9 +61,12 @@
 
 <script>
 import AppButton from '@/components/AppButton'
+import QuestionCard from '@/components/Card/Large'
+import AppRatingCircle from '@/components/AppRating/Circle'
+import AppRatingBar from '@/components/AppRating/Bar'
 
 export default {
-  components: { AppButton }
+  components: { AppButton, QuestionCard, AppRatingCircle, AppRatingBar }
 }
 </script>
 
@@ -62,7 +74,7 @@ export default {
     section {
         padding: 20px;
         margin: 40px auto;
-        width: 600px;
+        max-width: 700px;
     }
 
     section:first-of-type {
