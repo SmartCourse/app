@@ -48,6 +48,10 @@ exports.cacheResponse = function(req, res, next) {
     next()
 }
 
+/**
+ * @param {Array} likes     The likes for each object
+ * @param {Array} userLikes The user likes for each object
+ */
 exports.userLikesMapper = (likes, userLikes) => (
     {
         userID,
@@ -63,6 +67,30 @@ exports.userLikesMapper = (likes, userLikes) => (
 ) => ({
     likes: likes[index].likes,
     userLiked: userLikes[index].userLiked,
+    user: {
+        id: userID,
+        displayName,
+        ...(reputation >= 0 ? { reputation } : { reputation: 0 }),
+        degree,
+        gradYear,
+        picture,
+        joined
+    },
+    ...rest
+})
+
+exports.userLikeMapper = (likes, userLiked, {
+    userID,
+    displayName,
+    reputation,
+    degree,
+    gradYear,
+    picture,
+    joined,
+    ...rest
+}) => ({
+    likes,
+    userLiked,
     user: {
         id: userID,
         displayName,
