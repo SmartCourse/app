@@ -35,7 +35,12 @@ function request (path, { headers, method, data }) {
   // even if not logged on
   if (!headers.Authorization && auth) {
     return getAuthHeaders(auth)
-      .then(options => fetch(url, {
+      // simple request or non-simple?
+      .then(options => method === 'GET' ? fetch(url, {
+        headers: {
+          ...options.headers
+        }
+      }) : fetch(url, {
         headers: {
           ...options.headers,
           ...headers
