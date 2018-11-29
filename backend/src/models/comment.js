@@ -94,10 +94,11 @@ let Singleton = null
 /**
  * @param {object} db defaults to the db instance
  */
-module.exports = function (db) {
+module.exports = async function (db) {
     if (!db) {
         /* app environment, dev or prod */
-        return (Singleton = Singleton ? Singleton : new Comment(require('./db'))) // eslint-disable-line
+        const db = await require('./db')()
+        return (Singleton = Singleton ? Singleton : new Comment(db)) // eslint-disable-line
     }
     /* to allow injection */
     return new Comment(db)

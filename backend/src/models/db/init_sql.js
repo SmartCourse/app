@@ -1,5 +1,3 @@
-const Connection = require('tedious').Connection
-const Request = require('tedious').Request
 const courses = require('./js/courses')
 const subjects = require('./js/subjects')
 const degreeData = require('../../../data/degrees')
@@ -22,20 +20,6 @@ const {
     MAX_OPTION
 } = require('../constants')
 
-// SQL Server Config
-const testing = process.env.NODE_ENV === 'production' ? 0 : 1
-const DB_NAME = testing ? 'smartcourse-staging' : 'smartcourse'
-const config = {
-    userName: process.env.AZURE_SQL_USER,
-    password: process.env.AZURE_SQL_PASSWORD,
-    server: process.env.AZURE_SQL_SERVER,
-    options:
-        {
-            database: DB_NAME,
-            encrypt: true
-        }
-}
-
 // Globals
 // Seed must be (0, 2147483647)
 // PRNG taken from: https://gist.github.com/blixt/f17b47c62508be59987b
@@ -48,78 +32,11 @@ const reviewsToLike = []
 const commentsToLike = []
 const userRepMap = {}
 
-// Constants
-const initialSQL = `\
-BEGIN TRANSACTION;\n\
-${
-    // uni
-    `INSERT INTO ${TABLE_NAMES.UNIVERSITY} (name) VALUES ("UNSW");`
-}\n
-${
-    // faculties
-    faculties.map(sqlFaculty).join('\n')
-}\n
-${
-    // degrees
-    degreeData.map(sqlDegree).join('\n')
-}\n
-${
-    // subjects
-    subjects.map(sqlSubject).join('\n')
-}\n
-${
-    // courses
-    courses.map(sqlCourse).join('\n')
-    // '\n'
-}\n
-${
-    // questions (only for testing)
-    // TODO - Add default questions?
-    testing ? courses.map(({ code }) =>
-        SAMPLE_QUESTIONS.map(sqlQuestion(code)).join('\n') + '\n').join('')
-        : ''
-}\n
-${
-    // reviews (only for testing)
-    testing ? courses.map(({ code }) =>
-        SAMPLE_REVIEWS.map(sqlReview(code)).join('\n') + '\n').join('')
-        : ''
-}\n
-${
-    // comments (only for testing)
-    testing ? sqlComments() : ''
-}\n
-${
-    // likes (only for testing)
-    testing ? sqlLikes() : ''
-}\n
-${
-    // users (only for testing)
-    testing ? sqlUsers() : ''
-}\n
-COMMIT;`
-
-// Now try and initialise the database
-const connection = new Connection(config)
-connection.on('connect', (err) => err ? console.log(err) : initDatabase())
-
-function initDatabase() {
-    // Time testing
-    const timeList = [Date.now() / 1000]
-
-    // Create the database and initialise data with no dependencies,
-    // if this is being run as a test database or the prod database doesn't exist.
-    sqlExec(TABLE_INIT)
-    if (testing) {
-        // sqlExec(initialSQL)
-    }
-
-    timeList.push(Date.now() / 1000)
-    console.log(`Done creating test database! (${((timeList[1] - timeList[0])).toFixed(3)})`)
+exports.sqlUniversity = function(uni) {
+    return `INSERT INTO ${TABLE_NAMES.UNIVERSITY} (name) VALUES (${uni});`
 }
 
-// these will be hoisted
-function sqlQuestion(code) {
+exports.sqlQuestion = function(code) {
     const questionColumns = ['userID', 'code', 'title', 'body', 'pinned'].join(',')
     const userID = nextValue(1, NUM_DUMMY_USERS)
     questions.push({ questionID: questions.length + 1 })
@@ -130,7 +47,7 @@ function sqlQuestion(code) {
     }
 }
 
-function sqlReview(code) {
+exports.sqlReview = function(code) {
     const reviewColumns = ['userID', 'code', 'title', 'body', 'recommend', 'enjoy',
         'difficulty', 'teaching', 'workload'].join(',')
     const userID = nextValue(1, NUM_DUMMY_USERS)
@@ -145,11 +62,11 @@ function sqlReview(code) {
     }
 }
 
-function sqlFaculty(faculty) {
+exports.sqlFaculty = function(faculty) {
     return `INSERT INTO ${TABLE_NAMES.FACULTIES} (name) VALUES ("${faculty}");`
 }
 
-function sqlDegree(degree) {
+exports.sqlDegree = function(degree) {
     const columns = Object.keys(degree)
         .join(',')
     const placeholders = Object.values(degree)
@@ -158,9 +75,8 @@ function sqlDegree(degree) {
     return `INSERT INTO ${TABLE_NAMES.DEGREES} (${columns}) VALUES (${placeholders});`
 }
 
-function sqlSubject(subject) {
+exports.sqlSubject = function(subject) {
     const subjectWithUni = { ...subject, universityID: UNIVERSITY_ID }
-    // Prepare query
     const columns = Object.keys(subjectWithUni)
     const placeholders = Object.values(subjectWithUni)
         .map(item => typeof item === 'number' ? item : `"${item}"`).join(',')
@@ -168,9 +84,8 @@ function sqlSubject(subject) {
     return `INSERT INTO ${TABLE_NAMES.SUBJECTS} (${columns}) VALUES (${placeholders});`
 }
 
-function sqlCourse(course) {
+exports.sqlCourse = function(course) {
     const courseWithUni = { ...course, universityID: UNIVERSITY_ID }
-    // Prepare query
     const columns = Object.keys(courseWithUni)
         .join(',')
     const placeholders = Object.values(courseWithUni)
@@ -203,7 +118,7 @@ function genComments(parent) {
     return comments
 }
 
-function sqlComments() {
+exports.sqlComments = function() {
     let comments = []
     let data = ''
 
@@ -223,7 +138,7 @@ function sqlComments() {
     return data
 }
 
-function sqlUsers() {
+exports.sqlUsers = function() {
     const userNames = SAMPLE_USERS
     const suffixes = ['XxX', '!', 's', '!!', '_', '__', 'x']
 
@@ -286,7 +201,7 @@ function genLikes(parent) {
     return likes
 }
 
-function sqlLikes() {
+exports.sqlLikes = function() {
     let likes = []
     let data = ''
     for (let parent of questionsToLike) {
@@ -307,6 +222,161 @@ function sqlLikes() {
     data += bulkInsertDB(TABLE_NAMES.LIKES, likes)
 
     return data
+}
+
+exports.sqlTables = function() {
+    return `
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='faculties' AND xtype='U')
+        CREATE TABLE faculties (
+            id INTEGER PRIMARY KEY IDENTITY(1,1),
+            name VARCHAR(255) NOT NULL
+        );
+
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='degrees' AND xtype='U')
+        CREATE TABLE degrees (
+            id INTEGER PRIMARY KEY IDENTITY(1,1),
+            name VARCHAR(255) NOT NULL,
+            longName VARCHAR(255) NOT NULL,
+            type VARCHAR(255) NOT NULL,
+            tags VARCHAR(255),
+            facultyID INTEGER NOT NULL,
+            CONSTRAINT fk_faculty_degree
+                FOREIGN KEY (facultyID)
+                REFERENCES faculties (id)
+        );
+
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='users' AND xtype='U')
+        CREATE TABLE users (
+            id INTEGER PRIMARY KEY IDENTITY(1,1),
+            uid VARCHAR(255) UNIQUE NOT NULL,
+            displayName VARCHAR(255) UNIQUE NOT NULL,
+            email VARCHAR(255) UNIQUE NOT NULL,
+            joined DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
+            reputation INTEGER DEFAULT '0',
+            degreeID INTEGER NOT NULL,
+            gradYear TIMESTAMP,
+            description VARCHAR(8000),
+            picture VARCHAR(8000),
+            CONSTRAINT fk_degree_user
+                FOREIGN KEY (degreeID)
+                REFERENCES degrees (id)
+        );
+
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='university' AND xtype='U')
+        CREATE TABLE university (
+            id INTEGER PRIMARY KEY IDENTITY(1,1),
+            name VARCHAR(255) NOT NULL
+        );
+
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='subjects' AND xtype='U')
+        CREATE TABLE subjects (
+            id INTEGER PRIMARY KEY IDENTITY(1,1),
+            code VARCHAR(255) NOT NULL,
+            universityID INTEGER NOT NULL,
+            name VARCHAR(255) NOT NULL,
+            handbookURL VARCHAR(255) NOT NULL,
+            CONSTRAINT fk_university_subject
+                FOREIGN KEY (universityID)
+                REFERENCES university (id)
+        );
+
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='courses' AND xtype='U')
+        CREATE TABLE courses (
+            id INTEGER PRIMARY KEY IDENTITY(1,1),
+            code VARCHAR(255) NOT NULL,
+            universityID INTEGER NOT NULL,
+            name VARCHAR(255) NOT NULL,
+            studyLevel VARCHAR(255) NOT NULL,
+            subjectID INTEGER NOT NULL,
+            handbookURL VARCHAR(255) NOT NULL,
+            outlineURL VARCHAR(255),
+            description VARCHAR(8000),
+            requirements VARCHAR(8000),
+            recommend INTEGER DEFAULT '-1',
+            enjoy INTEGER DEFAULT '50',
+            difficulty INTEGER DEFAULT '50',
+            teaching INTEGER DEFAULT '50',
+            workload INTEGER DEFAULT '50',
+            tags VARCHAR(8000),
+            CONSTRAINT fk_university_course
+                FOREIGN KEY (universityID)
+                REFERENCES university (id),
+            CONSTRAINT fk_subject_course
+                FOREIGN KEY (subjectID)
+                REFERENCES subjects (id)
+        );
+
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='questions' AND xtype='U')
+        CREATE TABLE questions (
+            id INTEGER PRIMARY KEY IDENTITY(1,1),
+            courseID INTEGER NOT NULL,
+            userID INTEGER NOT NULL,
+            title VARCHAR(255) NOT NULL,
+            body VARCHAR(8000) NOT NULL,
+            pinned INTEGER DEFAULT 0,
+            timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
+            CONSTRAINT fk_course_question
+                FOREIGN KEY (courseID)
+                REFERENCES courses (id),
+            CONSTRAINT fk_user_question
+                FOREIGN KEY (userID)
+                REFERENCES users (id)
+        );
+
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='reviews' AND xtype='U')
+        CREATE TABLE reviews (
+            id INTEGER PRIMARY KEY IDENTITY(1,1),
+            courseID INTEGER NOT NULL,
+            userID INTEGER NOT NULL,
+            title VARCHAR(255) NOT NULL,
+            body VARCHAR(8000) NOT NULL,
+            recommend INTEGER NOT NULL,
+            enjoy INTEGER NOT NULL,
+            difficulty INTEGER DEFAULT '0',
+            teaching INTEGER DEFAULT '0',
+            workload INTEGER DEFAULT '0',
+            timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
+            CONSTRAINT fk_course_review
+                FOREIGN KEY (courseID)
+                REFERENCES courses (id),
+            CONSTRAINT fk_user_review
+                FOREIGN KEY (userID)
+                REFERENCES users (id)
+        );
+
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='comments' AND xtype='U')
+        CREATE TABLE comments (
+            id INTEGER PRIMARY KEY IDENTITY(1,1),
+            questionID INTEGER,
+            reviewID INTEGER,
+            commentParent INTEGER,
+            userID INTEGER NOT NULL,
+            body VARCHAR(8000) NOT NULL,
+            timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
+            CONSTRAINT fk_question_comment
+                FOREIGN KEY (questionID)
+                REFERENCES questions (id),
+            CONSTRAINT fk_review_comment
+                FOREIGN KEY (reviewID)
+                REFERENCES reviews (id),
+            CONSTRAINT fk_user_comment
+                FOREIGN KEY (userID)
+                REFERENCES users (id)
+        );
+
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='likes' AND xtype='U')
+    BEGIN
+        CREATE TABLE likes (
+            objectType VARCHAR(255) NOT NULL,
+            objectID INTEGER NOT NULL,
+            userID INTEGER NOT NULL,
+            value INTEGER DEFAULT '0',
+            CONSTRAINT fk_user_like
+                FOREIGN KEY (userID)
+                REFERENCES users (id)
+        );
+        CREATE UNIQUE INDEX id ON likes (objectType, objectID, userID);
+    END`
 }
 
 /*
@@ -334,166 +404,3 @@ function bulkInsertDB(table, data) {
     }
     return sql
 }
-
-/*
- * Writes SQL into a file which is directly piped to sqlite3 via a bash script.
- */
-function sqlExec(sql) {
-    const request = new Request(sql, (err) =>
-        err ? console.log(err) : console.log('Successfully executed SQL'))
-    connection.execSql(request);
-}
-
-const TABLE_INIT = `
-IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='faculties' AND xtype='U')
-    CREATE TABLE faculties (
-        id INTEGER PRIMARY KEY IDENTITY(1,1),
-        name VARCHAR(255) NOT NULL
-    );
-
-IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='degrees' AND xtype='U')
-    CREATE TABLE degrees (
-        id INTEGER PRIMARY KEY IDENTITY(1,1),
-        name VARCHAR(255) NOT NULL,
-        longName VARCHAR(255) NOT NULL,
-        type VARCHAR(255) NOT NULL,
-        tags VARCHAR(255),
-        facultyID INTEGER NOT NULL,
-        CONSTRAINT fk_faculty_degree
-            FOREIGN KEY (facultyID)
-            REFERENCES faculties (id)
-    );
-
-IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='users' AND xtype='U')
-    CREATE TABLE users (
-        id INTEGER PRIMARY KEY IDENTITY(1,1),
-        uid VARCHAR(255) UNIQUE NOT NULL,
-        displayName VARCHAR(255) UNIQUE NOT NULL,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        joined DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
-        reputation INTEGER DEFAULT '0',
-        degreeID INTEGER NOT NULL,
-        gradYear TIMESTAMP,
-        description VARCHAR(8000),
-        picture VARCHAR(8000),
-        CONSTRAINT fk_degree_user
-            FOREIGN KEY (degreeID)
-            REFERENCES degrees (id)
-    );
-
-IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='university' AND xtype='U')
-    CREATE TABLE university (
-        id INTEGER PRIMARY KEY IDENTITY(1,1),
-        name VARCHAR(255) NOT NULL
-    );
-
-IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='subjects' AND xtype='U')
-    CREATE TABLE subjects (
-        id INTEGER PRIMARY KEY IDENTITY(1,1),
-        code VARCHAR(255) NOT NULL,
-        universityID INTEGER NOT NULL,
-        name VARCHAR(255) NOT NULL,
-        handbookURL VARCHAR(255) NOT NULL,
-        CONSTRAINT fk_university_subject
-            FOREIGN KEY (universityID)
-            REFERENCES university (id)
-    );
-
-IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='courses' AND xtype='U')
-    CREATE TABLE courses (
-        id INTEGER PRIMARY KEY IDENTITY(1,1),
-        code VARCHAR(255) NOT NULL,
-        universityID INTEGER NOT NULL,
-        name VARCHAR(255) NOT NULL,
-        studyLevel VARCHAR(255) NOT NULL,
-        subjectID INTEGER NOT NULL,
-        handbookURL VARCHAR(255) NOT NULL,
-        outlineURL VARCHAR(255),
-        description VARCHAR(8000),
-        requirements VARCHAR(8000),
-        recommend INTEGER DEFAULT '-1',
-        enjoy INTEGER DEFAULT '50',
-        difficulty INTEGER DEFAULT '50',
-        teaching INTEGER DEFAULT '50',
-        workload INTEGER DEFAULT '50',
-        tags VARCHAR(8000),
-        CONSTRAINT fk_university_course
-            FOREIGN KEY (universityID)
-            REFERENCES university (id),
-        CONSTRAINT fk_subject_course
-            FOREIGN KEY (subjectID)
-            REFERENCES subjects (id)
-    );
-
-IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='questions' AND xtype='U')
-    CREATE TABLE questions (
-        id INTEGER PRIMARY KEY IDENTITY(1,1),
-        courseID INTEGER NOT NULL,
-        userID INTEGER NOT NULL,
-        title VARCHAR(255) NOT NULL,
-        body VARCHAR(8000) NOT NULL,
-        pinned INTEGER DEFAULT 0,
-        timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
-        CONSTRAINT fk_course_question
-            FOREIGN KEY (courseID)
-            REFERENCES courses (id),
-        CONSTRAINT fk_user_question
-            FOREIGN KEY (userID)
-            REFERENCES users (id)
-    );
-
-IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='reviews' AND xtype='U')
-    CREATE TABLE reviews (
-        id INTEGER PRIMARY KEY IDENTITY(1,1),
-        courseID INTEGER NOT NULL,
-        userID INTEGER NOT NULL,
-        title VARCHAR(255) NOT NULL,
-        body VARCHAR(8000) NOT NULL,
-        recommend INTEGER NOT NULL,
-        enjoy INTEGER NOT NULL,
-        difficulty INTEGER DEFAULT '0',
-        teaching INTEGER DEFAULT '0',
-        workload INTEGER DEFAULT '0',
-        timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
-        CONSTRAINT fk_course_review
-            FOREIGN KEY (courseID)
-            REFERENCES courses (id),
-        CONSTRAINT fk_user_review
-            FOREIGN KEY (userID)
-            REFERENCES users (id)
-    );
-
-IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='comments' AND xtype='U')
-    CREATE TABLE comments (
-        id INTEGER PRIMARY KEY IDENTITY(1,1),
-        questionID INTEGER,
-        reviewID INTEGER,
-        commentParent INTEGER,
-        userID INTEGER NOT NULL,
-        body VARCHAR(8000) NOT NULL,
-        timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
-        CONSTRAINT fk_question_comment
-            FOREIGN KEY (questionID)
-            REFERENCES questions (id),
-        CONSTRAINT fk_review_comment
-            FOREIGN KEY (reviewID)
-            REFERENCES reviews (id),
-        CONSTRAINT fk_user_comment
-            FOREIGN KEY (userID)
-            REFERENCES users (id)
-    );
-
-IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='likes' AND xtype='U')
-BEGIN
-    CREATE TABLE likes (
-        objectType VARCHAR(255) NOT NULL,
-        objectID INTEGER NOT NULL,
-        userID INTEGER NOT NULL,
-        value INTEGER DEFAULT '0',
-        CONSTRAINT fk_user_like
-            FOREIGN KEY (userID)
-            REFERENCES users (id)
-    );
-    CREATE UNIQUE INDEX id ON likes (objectType, objectID, userID);
-END
-`
