@@ -11,17 +11,17 @@ before(() => {
             'headers': {},
             'referrer': 'http://localhost:8080/login',
             'referrerPolicy': 'no-referrer-when-downgrade',
-            'body': '{"email":"backendtest@test.com","password":"backendtest","returnSecureToken":true}',
+            'body': '{"email":"backendtest2@test.com","password":"abc123","returnSecureToken":true}',
             'method': 'POST',
             'mode': 'cors'
         })
         .then((res) => res.json())
         .then((data) => {
-            global.idToken = data.idToken
+            global.idToken2 = data.idToken
             return supertest.post('/api/user')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken}`)
-                .send({ displayName: 'BackendTester', degree: 'B. Testing', gradYear: 2018 })
+                .set('Authorization', `Bearer ${global.idToken2}`)
+                .send({ displayName: 'BackendTester2', degree: 'B. Testing', gradYear: 2018 })
         })
 })
 
@@ -56,26 +56,51 @@ describe('Test question routes', () => {
 })
 
 describe('Test answer routes', () => {
-    describe('POST /api/course/COMP4920/question/1/answers', () => {
+    describe('POST /api/course/COMP4920/question/1/answer', () => {
         let request
+        let body = 'superruuu____testu'
 
         before(() => {
             request = supertest
-                .post('/api/course/COMP4920/question/1/answers')
-                .send({ body: 'superruuu____testu' })
+                .post('/api/course/COMP4920/question/1/answer')
+                .send({ body })
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken}`)
-                .expect('Content-Type', /json/)
-                .expect(200)
+                .set('Authorization', `Bearer ${global.idToken2}`)
+
             return request
         })
 
-        it('returns the answer we POSTed', () =>
-            request.then(({ body }) => {
-                // expect(body[0].body).to.equal('superruuu____testu'))
-                expect(body.body).is.a('string')
-            })
+        it('returns the correct status', () =>
+            request.expect(201)
         )
+
+        describe('new resource exists where it should', () => {
+            let idToMatch
+            let answer
+
+            before(() => {
+                return request
+                    .then(({ headers }) => {
+                        idToMatch = Number(headers['x-id'])
+                        return supertest
+                            .get('/api/course/COMP4920/question/1/answers')
+                            .set('Accept', 'application/json')
+                            .expect('Content-Type', /json/)
+                            .expect(200)
+                    })
+                    .then(({ body: response }) => {
+                        answer = response.find(answer => answer.id === idToMatch)
+                    })
+            })
+
+            it('has the correct author', () => {
+                expect(answer.user.displayName).to.equal('BackendTester2')
+            })
+
+            it('has the correct body', () => {
+                expect(answer.body).to.equal(body)
+            })
+        })
     })
 
     describe('GET /api/course/COMP4920/question/1/likes', () => {
@@ -111,7 +136,7 @@ describe('Test answer routes', () => {
                 .put('/api/course/COMP4920/question/1/likes')
                 .send({ value: 0 })
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken}`)
+                .set('Authorization', `Bearer ${global.idToken2}`)
                 .expect('Content-Type', /json/)
                 .expect(200)
             return request
@@ -153,10 +178,10 @@ describe('Test answer routes', () => {
 
         before(() => {
             request = supertest
-                .post('/api/course/COMP4920/question/1/answers')
+                .post('/api/course/COMP4920/question/1/answer')
                 .send({ badBody: 'superruuu____testu' })
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken}`)
+                .set('Authorization', `Bearer ${global.idToken2}`)
                 .expect('Content-Type', /json/)
                 .expect(400)
             return request

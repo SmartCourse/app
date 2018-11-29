@@ -63,7 +63,8 @@ export function getReplies(course, id) {
  * @param {object} body the data associated with the new reply
  */
 export function postReply(course, id, data) {
-  return post(`/course/${course}/review/${id}/comments`, { data })
+  return post(`/course/${course}/review/${id}/comment`, { data })
+    .then(cid => get(`/course/${course}/review/${id}/comment/${cid}`))
 }
 
 /**
@@ -84,9 +85,9 @@ export function putLikes(course, id, data) {
 }
 
 export function getReplyLikes(course, id, commentID) {
-  return get(`/course/${course}/review/${id}/reply/${commentID}/likes`)
+  return get(`/course/${course}/review/${id}/comment/${commentID}/likes`)
 }
 
 export function putReplyLikes(course, id, commentID, data) {
-  return put(`/course/${course}/review/${id}/reply/${commentID}/likes`, { data })
+  return put(`/course/${course}/review/${id}/comment/${commentID}/likes`, { data })
 }

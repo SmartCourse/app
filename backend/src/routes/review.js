@@ -1,6 +1,7 @@
 const express = require('express')
 const review = express.Router()
 const reviewController = require('../controllers/review')
+const commentController = require('../controllers/comment')
 const { isAuthorized } = require('../utils/helpers')
 
 /* Get the review data for a specific review id */
@@ -13,18 +14,21 @@ review.get('/:id/comments', reviewController.getReviewComments)
 review.get('/:id/likes', reviewController.getReviewLikes)
 
 /* Get the review's reply like value */
-review.get('/:id/reply/:replyID/likes', reviewController.getReplyLikes)
+review.get('/:id/comment/:replyID/likes', reviewController.getReplyLikes)
+
+/* Get an answer for a given question */
+review.get('/:id/comment/:cid', commentController.getComment)
 
 /* full auth check */
 review.use(isAuthorized)
 
 /* Post a comment for a given review */
-review.post('/:id/comments', reviewController.postComment)
+review.post('/:id/comment', reviewController.postComment)
 
 /* Put an updated like value */
 review.put('/:id/likes', reviewController.putReviewLikes)
 
 /* Put an updated review's reply like value */
-review.put('/:id/reply/:replyID/likes', reviewController.putReplyLikes)
+review.put('/:id/comment/:replyID/likes', reviewController.putReplyLikes)
 
 module.exports = review

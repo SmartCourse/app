@@ -1,6 +1,7 @@
 const express = require('express')
 const question = express.Router({ mergeParams: true })
 const questionController = require('../controllers/question')
+const commentController = require('../controllers/comment')
 const { isAuthorized } = require('../utils/helpers')
 
 /* Get the question data for a specific question id */
@@ -15,11 +16,14 @@ question.get('/:id/likes', questionController.getQuestionLikes)
 /* Get the question's answer like value */
 question.get('/:id/answer/:answerID/likes', questionController.getAnswerLikes)
 
+/* Get an answer for a given question */
+question.get('/:id/answer/:cid', commentController.getComment)
+
 /* full auth check */
 question.use(isAuthorized)
 
 /* Post an answer for a given question */
-question.post('/:id/answers', questionController.postAnswer)
+question.post('/:id/answer', questionController.postAnswer)
 
 /* Put an updated question like value */
 question.put('/:id/likes', questionController.putQuestionLikes)

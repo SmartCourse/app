@@ -4,7 +4,7 @@ const { expect } = require('chai')
 
 describe('User route testing', function() {
     /* should be a route (ie to get self data) */
-    describe('/api/user', () => {
+    describe('GET /api/user', () => {
         it('user index', () =>
             supertest
                 .get('/api/user')

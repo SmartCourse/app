@@ -17,7 +17,6 @@ class Comment {
         const [key, value] = Object.entries(queryObject)[0]
         return this.db
             .insert(COMMENTS, { [key]: value, body, userID })
-            .then((id) => this.getComment(id))
     }
 
     /**

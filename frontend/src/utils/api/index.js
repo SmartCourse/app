@@ -9,10 +9,12 @@ const API_URL = process && process.env && process.env.NODE_ENV === 'development'
 
 async function responseCheck(res) {
   if (res.ok) {
-    return res.json()
+    // check if body, else rely on headers
+    return res.status === 200 ? res.json() : res.headers.get('X-ID')
   } else if (res.status >= 500) {
     throw new APIError('Server Error')
   } else {
+    // if 400s response json is probably sent to explain problem
     const err = await res.json()
     throw new APIError(err.message, err.code)
   }
@@ -33,7 +35,12 @@ function request (path, { headers, method, data }) {
   // even if not logged on
   if (!headers.Authorization && auth) {
     return getAuthHeaders(auth)
-      .then(options => fetch(url, {
+      // simple request or non-simple?
+      .then(options => method === 'GET' ? fetch(url, {
+        headers: {
+          ...options.headers
+        }
+      }) : fetch(url, {
         headers: {
           ...options.headers,
           ...headers

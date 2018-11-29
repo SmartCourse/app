@@ -4,7 +4,7 @@ const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
 const errorHandler = require('./error')
-const { responseHandler, userLikesMapper } = require('../utils/helpers')
+const { responseHandler, postResponseHandler, userLikesMapper } = require('../utils/helpers')
 const { TABLE_NAMES } = require('../models/constants')
 
 /* GET review for single id. */
@@ -54,17 +54,10 @@ exports.getReviewComments = function ({ user, params, query }, res) {
 /* POST new comment. */
 exports.postComment = function ({ user, params, query, body }, res) {
     body.userID = user.id
-    const promise = new Promise((resolve, reject) =>
-        // post the comment, then get it
-        commentModel.postComment({ reviewID: params.id }, body)
-            .then(comment => resolve(userLikesMapper(
-                // 0 likes for new comment!
-                [{ likes: 0 }], [{ userLiked: 0 }])(comment, 0, 0))
-            )
-            .catch(err => reject(err))
-    )
+    const location = `/api/course/${params.code}/review/${params.id}/replies`
 
-    responseHandler(promise, res)
+    commentModel.postComment({ reviewID: params.id }, body)
+        .then(postResponseHandler(location, res))
         .catch(errorHandler(res))
 }
 
