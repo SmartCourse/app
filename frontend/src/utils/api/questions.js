@@ -51,7 +51,6 @@ export function getAnswers(course, id) {
  * @param {object} data    the data associated with the new answer
  */
 export function postAnswer(course, id, data) {
-  debugger
   return post(`/course/${course}/question/${id}/answer`, { data })
     .then(cid => get(`/course/${course}/question/${id}/answer/${cid}`))
 }
