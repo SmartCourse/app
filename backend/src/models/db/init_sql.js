@@ -1,3 +1,5 @@
+const Connection = require('tedious').Connection
+const Request = require('tedious').Request
 const courses = require('./js/courses')
 const subjects = require('./js/subjects')
 const degreeData = require('../../../data/degrees')
@@ -20,6 +22,20 @@ const {
     MAX_OPTION
 } = require('../constants')
 
+// SQL Server Config
+const testing = process.env.NODE_ENV === 'production' ? 0 : 1
+const DB_NAME = testing ? 'smartcourse-staging' : 'smartcourse'
+const config = {
+    userName: process.env.AZURE_SQL_USER,
+    password: process.env.AZURE_SQL_PASSWORD,
+    server: process.env.AZURE_SQL_SERVER,
+    options:
+        {
+            database: DB_NAME,
+            encrypt: true
+        }
+}
+
 // Globals
 // Seed must be (0, 2147483647)
 // PRNG taken from: https://gist.github.com/blixt/f17b47c62508be59987b
@@ -32,11 +48,92 @@ const reviewsToLike = []
 const commentsToLike = []
 const userRepMap = {}
 
-exports.sqlUniversity = function(uni) {
+exports.initDB = async function() {
+    // Database initialisation benchmarking
+    const timeList = [Date.now() / 1000]
+
+    // Do the initialisation
+    const db = new Connection(config)
+    return new Promise((resolve, reject) => {
+        db.on('connect', (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                // Create the database and initialise data with no dependencies.
+                let sql = 'BEGIN TRANSACTION;\n'
+                sql += sqlTables() + '\n'
+                /*
+                sql += sqlUniversity('UNSW') + '\n'
+                sql += faculties.map(sqlFaculty).join('\n') + '\n'
+                sql += degreeData.map(sqlDegree).join('\n') + '\n'
+                sql += subjects.map(sqlSubject).join('\n') + '\n'
+                sql += courses.map(sqlCourse).join('\n') + '\n'
+                */
+                // If this is a test database, add the testing data
+                if (testing) {
+                    /*
+                    sql += sqlQuestions()
+                    sql += sqlReviews()
+                    sql += sqlComments() + '\n'
+                    sql += sqlLikes() + '\n'
+                    sql += sqlUsers() + '\n'
+                    */
+                }
+                sql += 'COMMIT;'
+
+                // Execute the SQL
+                const request = new Request(sql, (err) =>
+                    err ? reject(err) : resolve(db))
+                db.execSql(request)
+            }
+        })
+    })
+        .then(() => {
+            // Log completion time
+            timeList.push(Date.now() / 1000)
+            console.log(`Done creating database! (${((timeList[1] - timeList[0])).toFixed(3)})`)
+        })
+}
+
+function sqlUniversity(uni) {
     return `INSERT INTO ${TABLE_NAMES.UNIVERSITY} (name) VALUES (${uni});`
 }
 
-exports.sqlQuestion = function(code) {
+function sqlFaculty(faculty) {
+    return `INSERT INTO ${TABLE_NAMES.FACULTIES} (name) VALUES ("${faculty}");`
+}
+
+function sqlDegree(degree) {
+    const columns = Object.keys(degree)
+        .join(',')
+    const placeholders = Object.values(degree)
+        .map(item => typeof item === 'number' ? item : `"${item}"`).join(',')
+
+    return `INSERT INTO ${TABLE_NAMES.DEGREES} (${columns}) VALUES (${placeholders});`
+}
+
+function sqlSubject(subject) {
+    const subjectWithUni = { ...subject, universityID: UNIVERSITY_ID }
+    const columns = Object.keys(subjectWithUni)
+    const placeholders = Object.values(subjectWithUni)
+        .map(item => typeof item === 'number' ? item : `"${item}"`).join(',')
+
+    return `INSERT INTO ${TABLE_NAMES.SUBJECTS} (${columns}) VALUES (${placeholders});`
+}
+
+function sqlCourse(course) {
+    const courseWithUni = { ...course, universityID: UNIVERSITY_ID }
+    const columns = Object.keys(courseWithUni)
+        .join(',')
+    const placeholders = Object.values(courseWithUni)
+        .map(item => typeof item === 'number' ? item : `"${item
+            .replace(/"/g, /'/)
+        }"`).join(',')
+
+    return `INSERT INTO ${TABLE_NAMES.COURSES} (${columns}) VALUES (${placeholders});`
+}
+
+function sqlQuestion(code) {
     const questionColumns = ['userID', 'code', 'title', 'body', 'pinned'].join(',')
     const userID = nextValue(1, NUM_DUMMY_USERS)
     questions.push({ questionID: questions.length + 1 })
@@ -47,7 +144,12 @@ exports.sqlQuestion = function(code) {
     }
 }
 
-exports.sqlReview = function(code) {
+function sqlQuestions() {
+    return courses.map(({ code }) =>
+        SAMPLE_QUESTIONS.map(sqlQuestion(code)).join('\n') + '\n').join('')
+}
+
+function sqlReview(code) {
     const reviewColumns = ['userID', 'code', 'title', 'body', 'recommend', 'enjoy',
         'difficulty', 'teaching', 'workload'].join(',')
     const userID = nextValue(1, NUM_DUMMY_USERS)
@@ -62,38 +164,9 @@ exports.sqlReview = function(code) {
     }
 }
 
-exports.sqlFaculty = function(faculty) {
-    return `INSERT INTO ${TABLE_NAMES.FACULTIES} (name) VALUES ("${faculty}");`
-}
-
-exports.sqlDegree = function(degree) {
-    const columns = Object.keys(degree)
-        .join(',')
-    const placeholders = Object.values(degree)
-        .map(item => typeof item === 'number' ? item : `"${item}"`).join(',')
-
-    return `INSERT INTO ${TABLE_NAMES.DEGREES} (${columns}) VALUES (${placeholders});`
-}
-
-exports.sqlSubject = function(subject) {
-    const subjectWithUni = { ...subject, universityID: UNIVERSITY_ID }
-    const columns = Object.keys(subjectWithUni)
-    const placeholders = Object.values(subjectWithUni)
-        .map(item => typeof item === 'number' ? item : `"${item}"`).join(',')
-
-    return `INSERT INTO ${TABLE_NAMES.SUBJECTS} (${columns}) VALUES (${placeholders});`
-}
-
-exports.sqlCourse = function(course) {
-    const courseWithUni = { ...course, universityID: UNIVERSITY_ID }
-    const columns = Object.keys(courseWithUni)
-        .join(',')
-    const placeholders = Object.values(courseWithUni)
-        .map(item => typeof item === 'number' ? item : `"${item
-            .replace(/"/g, /'/)
-        }"`).join(',')
-
-    return `INSERT INTO ${TABLE_NAMES.COURSES} (${columns}) VALUES (${placeholders});`
+function sqlReviews() {
+    return courses.map(({ code }) =>
+        SAMPLE_REVIEWS.map(sqlReview(code)).join('\n') + '\n').join('')
 }
 
 function genComments(parent) {
@@ -118,7 +191,7 @@ function genComments(parent) {
     return comments
 }
 
-exports.sqlComments = function() {
+function sqlComments() {
     let comments = []
     let data = ''
 
@@ -138,7 +211,7 @@ exports.sqlComments = function() {
     return data
 }
 
-exports.sqlUsers = function() {
+function sqlUsers() {
     const userNames = SAMPLE_USERS
     const suffixes = ['XxX', '!', 's', '!!', '_', '__', 'x']
 
@@ -201,7 +274,7 @@ function genLikes(parent) {
     return likes
 }
 
-exports.sqlLikes = function() {
+function sqlLikes() {
     let likes = []
     let data = ''
     for (let parent of questionsToLike) {
@@ -224,7 +297,7 @@ exports.sqlLikes = function() {
     return data
 }
 
-exports.sqlTables = function() {
+function sqlTables() {
     return `
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='faculties' AND xtype='U')
         CREATE TABLE faculties (
