@@ -6,7 +6,7 @@
       <p class="sort-label">Sort by<i class="material-icons">sort</i></p> <Radio v-model="sortBy" :options="['Rating', 'Code', 'Name']"/>
     </div>
     <TilesContainer v-if="filtered.length">
-      <Tile :key="item.code" v-for="item in filtered">
+      <Tile :key="item.code" v-for="item in filtered" class="course-tile">
         <router-link v-if="item.code" tag="div" class="tile-header" :to="{ name: 'info', params: { code:item.code }}">
           <div class="tile-header-top">
             <h4>
@@ -130,6 +130,12 @@ h6 {
   line-height: inherit;
   font-size: inherit;
   margin: 0 auto;
+}
+
+@media screen and (max-width: 640px) {
+  .course-tile {
+    flex: 1;
+  }
 }
 
 </style>

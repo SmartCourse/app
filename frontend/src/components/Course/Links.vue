@@ -20,7 +20,7 @@ export default {
 
 <style scoped>
 .links {
-    margin-top: 20px;
+    margin: 0;
     align-items: center;
     display: flex;
     border-bottom: var(--border);

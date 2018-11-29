@@ -15,28 +15,29 @@ export default {
 
 <style scoped>
 
-input {
+input[type="search"] {
     margin: auto;
     outline: none;
     font: inherit;
     transition: border 0.3s ease-in;
+    appearance: none;
 }
 
-input:active, input:focus {
+input[type="search"]:active, input[type="search"]:focus {
     border: 1px solid var(--theme-light);
 }
 
-input {
+input[type="search"] {
     border-radius: 0.2em;
     border: var(--border);
 }
 
-input {
+input[type="search"] {
     padding: 10px 20px;
 }
 
 @media screen and (max-width: 740px) {
-    input {
+    input[type="search"] {
         padding: 10px;
     }
 }

@@ -151,6 +151,10 @@ a {
   }
 
   .home > p {
+    font-size: var(--font-medium-mobile);
+  }
+
+  .home > p {
     max-width: 400px;
   }
 
