@@ -1,12 +1,11 @@
 const Connection = require('tedious').Connection
 const Request = require('tedious').Request
-const courses = require('./js/courses')
-const subjects = require('./js/subjects')
-const degreeData = require('../../../data/degrees')
 const faculties = require('../../../data/faculties')
+const degrees = require('../../../data/degrees')
+const subjects = require('./js/subjects')
+const courses = require('./js/courses')
 const {
     NUM_DUMMY_USERS,
-    UNIVERSITY_ID,
     SAMPLE_QUESTIONS,
     SAMPLE_REVIEWS,
     SAMPLE_COMMENTS,
@@ -62,13 +61,12 @@ exports.initDB = async function() {
                 // Create the database and initialise data with no dependencies.
                 let sql = 'BEGIN TRANSACTION;\n'
                 sql += sqlTables() + '\n'
-                /*
                 sql += sqlUniversity('UNSW') + '\n'
-                sql += faculties.map(sqlFaculty).join('\n') + '\n'
-                sql += degreeData.map(sqlDegree).join('\n') + '\n'
-                sql += subjects.map(sqlSubject).join('\n') + '\n'
-                sql += courses.map(sqlCourse).join('\n') + '\n'
-                */
+                sql += sqlFaculties() + '\n'
+                sql += sqlDegrees() + '\n'
+                sql += sqlSubjects() + '\n'
+               // sql += courses.map(sqlCourse).join('\n') + '\n'
+
                 // If this is a test database, add the testing data
                 if (testing) {
                     /*
@@ -80,6 +78,8 @@ exports.initDB = async function() {
                     */
                 }
                 sql += 'COMMIT;'
+
+                console.log(sql)
 
                 // Execute the SQL
                 const request = new Request(sql, (err) =>
@@ -96,39 +96,29 @@ exports.initDB = async function() {
 }
 
 function sqlUniversity(uni) {
-    return `INSERT INTO ${TABLE_NAMES.UNIVERSITY} (name) VALUES (${uni});`
+    return `INSERT INTO ${TABLE_NAMES.UNIVERSITY} (name) VALUES ('${uni}');`
 }
 
-function sqlFaculty(faculty) {
-    return `INSERT INTO ${TABLE_NAMES.FACULTIES} (name) VALUES ("${faculty}");`
+function sqlFaculties() {
+    return bulkInsertDB(TABLE_NAMES.FACULTIES, faculties)
 }
 
-function sqlDegree(degree) {
-    const columns = Object.keys(degree)
-        .join(',')
-    const placeholders = Object.values(degree)
-        .map(item => typeof item === 'number' ? item : `"${item}"`).join(',')
-
-    return `INSERT INTO ${TABLE_NAMES.DEGREES} (${columns}) VALUES (${placeholders});`
+function sqlDegrees() {
+    return bulkInsertDB(TABLE_NAMES.DEGREES, degrees)
 }
 
-function sqlSubject(subject) {
-    const subjectWithUni = { ...subject, universityID: UNIVERSITY_ID }
-    const columns = Object.keys(subjectWithUni)
-    const placeholders = Object.values(subjectWithUni)
-        .map(item => typeof item === 'number' ? item : `"${item}"`).join(',')
-
-    return `INSERT INTO ${TABLE_NAMES.SUBJECTS} (${columns}) VALUES (${placeholders});`
+function sqlSubjects() {
+    return bulkInsertDB(TABLE_NAMES.SUBJECTS, subjects)
 }
 
 function sqlCourse(course) {
-    const courseWithUni = { ...course, universityID: UNIVERSITY_ID }
+    const courseWithUni = { ...course, universityID: 1 }
     const columns = Object.keys(courseWithUni)
         .join(',')
     const placeholders = Object.values(courseWithUni)
-        .map(item => typeof item === 'number' ? item : `"${item
-            .replace(/"/g, /'/)
-        }"`).join(',')
+        .map(item => typeof item === 'number' ? item : `'${item
+            .replace(/'/g, /'/)
+        }'`).join(',')
 
     return `INSERT INTO ${TABLE_NAMES.COURSES} (${columns}) VALUES (${placeholders});`
 }
@@ -140,7 +130,7 @@ function sqlQuestion(code) {
     questionsToLike.push({ objectType: TABLE_NAMES.QUESTIONS, objectID: questions.length, userID })
     return function (question) {
         return `INSERT INTO ${TABLE_NAMES.QUESTIONS} (${questionColumns})
-        VALUES (${userID}, "${code}", "${question.title}", "${question.body}", 1);`
+        VALUES (${userID}, '${code}', '${question.title}', '${question.body}', 1);`
     }
 }
 
@@ -157,7 +147,7 @@ function sqlReview(code) {
     reviewsToLike.push({ objectType: TABLE_NAMES.REVIEWS, objectID: reviews.length, userID })
     return function(review) {
         return `INSERT INTO ${TABLE_NAMES.REVIEWS} (${reviewColumns})
-        VALUES (${userID}, "${code}", "${review.title}", "${review.body}", 
+        VALUES (${userID}, '${code}', '${review.title}', '${review.body}', 
         ${nextValue(DONT_RECOMMEND, RECOMMEND)}, ${nextValue(MIN_ENJOY, MAX_ENJOY)},
         ${nextValue(MIN_OPTION, MAX_OPTION)}, ${nextValue(MIN_OPTION, MAX_OPTION)},
         ${nextValue(MIN_OPTION, MAX_OPTION)});\n`
@@ -299,14 +289,26 @@ function sqlLikes() {
 
 function sqlTables() {
     return `
-    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='faculties' AND xtype='U')
-        CREATE TABLE faculties (
+
+    DROP TABLE likes;
+    DROP TABLE comments;
+    DROP TABLE reviews;
+    DROP TABLE questions;
+    DROP TABLE courses;
+    DROP TABLE subjects;
+    DROP TABLE university;
+    DROP TABLE users;
+    DROP TABLE degrees ;
+    DROP TABLE faculties;
+
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.FACULTIES}' AND xtype='U')
+        CREATE TABLE ${TABLE_NAMES.FACULTIES} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
-            name VARCHAR(255) NOT NULL
+            name VARCHAR(355)
         );
 
-    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='degrees' AND xtype='U')
-        CREATE TABLE degrees (
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.DEGREES}' AND xtype='U')
+        CREATE TABLE ${TABLE_NAMES.DEGREES} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
             name VARCHAR(255) NOT NULL,
             longName VARCHAR(255) NOT NULL,
@@ -315,11 +317,11 @@ function sqlTables() {
             facultyID INTEGER NOT NULL,
             CONSTRAINT fk_faculty_degree
                 FOREIGN KEY (facultyID)
-                REFERENCES faculties (id)
+                REFERENCES ${TABLE_NAMES.FACULTIES} (id)
         );
 
-    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='users' AND xtype='U')
-        CREATE TABLE users (
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.USERS}' AND xtype='U')
+        CREATE TABLE ${TABLE_NAMES.USERS} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
             uid VARCHAR(255) UNIQUE NOT NULL,
             displayName VARCHAR(255) UNIQUE NOT NULL,
@@ -332,17 +334,18 @@ function sqlTables() {
             picture VARCHAR(8000),
             CONSTRAINT fk_degree_user
                 FOREIGN KEY (degreeID)
-                REFERENCES degrees (id)
+                REFERENCES ${TABLE_NAMES.DEGREES} (id)
         );
 
-    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='university' AND xtype='U')
-        CREATE TABLE university (
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.UNIVERSITY}' AND xtype='U')
+        CREATE TABLE ${TABLE_NAMES.UNIVERSITY} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
-            name VARCHAR(255) NOT NULL
+            name VARCHAR(255) UNIQUE NOT NULL,
+            /*CONSTRAINT unique_faculties UNIQUE(name)*/
         );
 
-    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='subjects' AND xtype='U')
-        CREATE TABLE subjects (
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.SUBJECTS}' AND xtype='U')
+        CREATE TABLE ${TABLE_NAMES.SUBJECTS} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
             code VARCHAR(255) NOT NULL,
             universityID INTEGER NOT NULL,
@@ -350,11 +353,11 @@ function sqlTables() {
             handbookURL VARCHAR(255) NOT NULL,
             CONSTRAINT fk_university_subject
                 FOREIGN KEY (universityID)
-                REFERENCES university (id)
+                REFERENCES ${TABLE_NAMES.UNIVERSITY} (id)
         );
 
-    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='courses' AND xtype='U')
-        CREATE TABLE courses (
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.COURSES}' AND xtype='U')
+        CREATE TABLE ${TABLE_NAMES.COURSES} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
             code VARCHAR(255) NOT NULL,
             universityID INTEGER NOT NULL,
@@ -373,14 +376,14 @@ function sqlTables() {
             tags VARCHAR(8000),
             CONSTRAINT fk_university_course
                 FOREIGN KEY (universityID)
-                REFERENCES university (id),
+                REFERENCES ${TABLE_NAMES.UNIVERSITY} (id),
             CONSTRAINT fk_subject_course
                 FOREIGN KEY (subjectID)
-                REFERENCES subjects (id)
+                REFERENCES ${TABLE_NAMES.SUBJECTS} (id)
         );
 
-    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='questions' AND xtype='U')
-        CREATE TABLE questions (
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.QUESTIONS}' AND xtype='U')
+        CREATE TABLE ${TABLE_NAMES.QUESTIONS} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
             courseID INTEGER NOT NULL,
             userID INTEGER NOT NULL,
@@ -390,14 +393,14 @@ function sqlTables() {
             timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
             CONSTRAINT fk_course_question
                 FOREIGN KEY (courseID)
-                REFERENCES courses (id),
+                REFERENCES ${TABLE_NAMES.COURSES} (id),
             CONSTRAINT fk_user_question
                 FOREIGN KEY (userID)
-                REFERENCES users (id)
+                REFERENCES ${TABLE_NAMES.USERS} (id)
         );
 
-    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='reviews' AND xtype='U')
-        CREATE TABLE reviews (
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.REVIEWS}' AND xtype='U')
+        CREATE TABLE ${TABLE_NAMES.REVIEWS} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
             courseID INTEGER NOT NULL,
             userID INTEGER NOT NULL,
@@ -411,14 +414,14 @@ function sqlTables() {
             timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
             CONSTRAINT fk_course_review
                 FOREIGN KEY (courseID)
-                REFERENCES courses (id),
+                REFERENCES ${TABLE_NAMES.COURSES} (id),
             CONSTRAINT fk_user_review
                 FOREIGN KEY (userID)
-                REFERENCES users (id)
+                REFERENCES ${TABLE_NAMES.USERS} (id)
         );
 
-    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='comments' AND xtype='U')
-        CREATE TABLE comments (
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.COMMENTS}' AND xtype='U')
+        CREATE TABLE ${TABLE_NAMES.COMMENTS} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
             questionID INTEGER,
             reviewID INTEGER,
@@ -428,27 +431,27 @@ function sqlTables() {
             timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
             CONSTRAINT fk_question_comment
                 FOREIGN KEY (questionID)
-                REFERENCES questions (id),
+                REFERENCES ${TABLE_NAMES.QUESTIONS} (id),
             CONSTRAINT fk_review_comment
                 FOREIGN KEY (reviewID)
-                REFERENCES reviews (id),
+                REFERENCES ${TABLE_NAMES.REVIEWS} (id),
             CONSTRAINT fk_user_comment
                 FOREIGN KEY (userID)
-                REFERENCES users (id)
+                REFERENCES ${TABLE_NAMES.USERS} (id)
         );
 
-    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='likes' AND xtype='U')
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.LIKES}' AND xtype='U')
     BEGIN
-        CREATE TABLE likes (
+        CREATE TABLE ${TABLE_NAMES.LIKES} (
             objectType VARCHAR(255) NOT NULL,
             objectID INTEGER NOT NULL,
             userID INTEGER NOT NULL,
             value INTEGER DEFAULT '0',
             CONSTRAINT fk_user_like
                 FOREIGN KEY (userID)
-                REFERENCES users (id)
+                REFERENCES ${TABLE_NAMES.USERS} (id)
         );
-        CREATE UNIQUE INDEX id ON likes (objectType, objectID, userID);
+        CREATE UNIQUE INDEX id ON ${TABLE_NAMES.LIKES} (objectType, objectID, userID);
     END`
 }
 
@@ -468,12 +471,17 @@ function nextValue(min, max) {
 function bulkInsertDB(table, data) {
     const values = data.map(row => Object.values(row))
     const columns = Object.keys(data[0])
-    const SQL_MAX_INSERT = 500
+    const SQL_MAX_INSERT = 1000
     let sql = ''
     for (var i = 0; i < values.length; i += SQL_MAX_INSERT) {
-        sql += `INSERT INTO ${table} (${columns})
-        VALUES ${values.slice(i, i + SQL_MAX_INSERT)
-        .map(rowValues => `("${rowValues.join('","')}")`).join()};\n`
+        const rowValues = values.slice(i, i + SQL_MAX_INSERT)
+        const vString = rowValues.map(values => {
+            return values.map(value => {
+                return !isNaN(value) || (value && value.startsWith('('))
+                    ? value : `'${value}'`
+            }).join(',')
+        }).join('),(')
+        sql += `INSERT INTO ${table} (${columns}) VALUES (${vString});\n`
     }
     return sql
 }

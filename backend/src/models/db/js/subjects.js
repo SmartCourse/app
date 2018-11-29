@@ -4,5 +4,6 @@ const { decodeUTF8Text } = require('../../../utils/helpers')
 module.exports = subjects.map(({ name, code, url }) => ({
     code,
     name: decodeUTF8Text(name),
-    handbookURL: url
+    handbookURL: url,
+    universityID: 1
 }))
