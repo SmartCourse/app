@@ -38,7 +38,8 @@
     "exclude": [
       "tests/**/*.js",
       "data",
-      "public"
+      "public",
+      "src/models/db/js"
     ]
   },
   "engines": {

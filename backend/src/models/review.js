@@ -64,7 +64,6 @@ class Review {
         // insert review, get review, update course ratings
         return this.db
             .insert(REVIEWS, { code, userID, title, body, recommend, enjoy, difficulty, teaching, workload })
-            .then((reviewID) => this.getReview(reviewID))
     }
 }
 
