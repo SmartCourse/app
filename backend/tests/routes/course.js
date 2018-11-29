@@ -139,7 +139,7 @@ describe('Course route testing', () => {
 
         it('correct number of questions', () =>
             request.then(({ body }) =>
-                expect(body.data.length).to.equal(6))
+                expect(body.data.length).to.equal(5))
         )
 
         it('question has a title', () =>
@@ -231,6 +231,11 @@ describe('Course route testing', () => {
                 .expect(200)
             return request
         })
+
+        it('Returns a list of reviews with meta fields', () =>
+            request.then(({ body }) =>
+                expect(body.meta).is.a('object'))
+        )
 
         it('Returns a list of reviews', () =>
             request.then(({ body }) =>

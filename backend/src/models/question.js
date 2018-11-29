@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { QUESTIONS } } = require('./constants')
+const { TABLE_NAMES: { QUESTIONS, COMMENTS } } = require('./constants')
 
 /* All inputs should be validated in this class that are question related */
 class Question {
@@ -25,36 +25,27 @@ class Question {
     getQuestions(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll(`select * from ${QUESTIONS} where code = ? LIMIT ?, ?`,
-                [code, offset, pageSize])
-            /* TODO why is this query broken?
-               `SELECT
-                question.*,
-                COUNT(comment.questionID) AS numAnswers
-               FROM question
-               JOIN comment ON comment.questionID = question.id
-               WHERE question.code=?
-               GROUP BY comment.questionID
-               ORDER BY timestamp DESC
-               LIMIT ?, ?`,
-               //
-            */
+            .queryAll(`select q.*, COUNT(c.questionID) AS numAnswers 
+                from ${QUESTIONS} q 
+                JOIN ${COMMENTS} c 
+                on c.questionID = q.id
+                where q.code = ? 
+                GROUP BY c.questionID
+                ORDER BY q.timestamp DESC
+                LIMIT ?, ?`,
+            [code, offset, pageSize])
     }
 
     getQuestionsByUserID(uid, limit = 10) {
         return this.db
-            .queryAll(`select * from ${QUESTIONS} WHERE userID=? LIMIT ?`, [uid, limit])
-            /* TODO why is this query suddenly broken?
-            `SELECT
-            question.*,
-            COUNT(questionID) AS numAnswers
-           FROM question
-           LEFT JOIN comment ON comment.questionID = question.id
-           WHERE question.userID=?
-           GROUP BY questionID
-           ORDER BY timestamp DESC
-           LIMIT ?`, [uid, limit])
-           */
+            .queryAll(`SELECT q.*, COUNT(c.questionID) AS numAnswers
+                FROM ${QUESTIONS} q
+                JOIN ${COMMENTS} c ON c.questionID = q.id
+                WHERE q.userID=?
+                GROUP BY questionID
+                ORDER BY timestamp DESC
+                LIMIT ?`,
+            [uid, limit])
     }
 
     /**

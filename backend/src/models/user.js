@@ -29,7 +29,13 @@ class User {
     getPublicProfile(id) {
         return this.db.query(`SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM ${USERS} WHERE id=?`, [id])
             .then((profile) => {
+                // this is defensive and should never really occur
+                // but will avoid unnecessary crashes
+                if (!profile) {
+                    return console.warn('invalid userId', id)
+                }
                 if (profile.reputation < 0) profile.reputation = 0
+
                 return profile
             })
     }

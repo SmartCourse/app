@@ -217,7 +217,7 @@ function sqlUsers() {
 
     let users = []
 
-    for (let i = 1; i < NUM_DUMMY_USERS; i++) {
+    for (let i = 1; i <= NUM_DUMMY_USERS; i++) {
         const uid = 'userID' + i
         const displayName =
             userNames[i % userNames.length] +
