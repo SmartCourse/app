@@ -1,5 +1,5 @@
 const express = require('express')
-const review = express.Router()
+const review = express.Router({ mergeParams: true })
 const reviewController = require('../controllers/review')
 const commentController = require('../controllers/comment')
 const { isAuthorized } = require('../utils/helpers')
