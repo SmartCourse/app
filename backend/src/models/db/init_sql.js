@@ -64,9 +64,10 @@ exports.initDB = async function() {
                 sql += sqlUniversity('UNSW') + '\n'
                 sql += sqlFaculties() + '\n'
                 sql += sqlDegrees() + '\n'
+                /*
                 sql += sqlSubjects() + '\n'
-               // sql += courses.map(sqlCourse).join('\n') + '\n'
-
+                sql += sqlCourses() + '\n'
+                */
                 // If this is a test database, add the testing data
                 if (testing) {
                     /*
@@ -111,16 +112,8 @@ function sqlSubjects() {
     return bulkInsertDB(TABLE_NAMES.SUBJECTS, subjects)
 }
 
-function sqlCourse(course) {
-    const courseWithUni = { ...course, universityID: 1 }
-    const columns = Object.keys(courseWithUni)
-        .join(',')
-    const placeholders = Object.values(courseWithUni)
-        .map(item => typeof item === 'number' ? item : `'${item
-            .replace(/'/g, /'/)
-        }'`).join(',')
-
-    return `INSERT INTO ${TABLE_NAMES.COURSES} (${columns}) VALUES (${placeholders});`
+function sqlCourses() {
+    return bulkInsertDB(TABLE_NAMES.COURSES, courses)
 }
 
 function sqlQuestion(code) {
@@ -341,7 +334,6 @@ function sqlTables() {
         CREATE TABLE ${TABLE_NAMES.UNIVERSITY} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
             name VARCHAR(255) UNIQUE NOT NULL,
-            /*CONSTRAINT unique_faculties UNIQUE(name)*/
         );
 
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.SUBJECTS}' AND xtype='U')
@@ -476,12 +468,12 @@ function bulkInsertDB(table, data) {
     for (var i = 0; i < values.length; i += SQL_MAX_INSERT) {
         const rowValues = values.slice(i, i + SQL_MAX_INSERT)
         const vString = rowValues.map(values => {
-            return values.map(value => {
-                return !isNaN(value) || (value && value.startsWith('('))
-                    ? value : `'${value}'`
-            }).join(',')
-        }).join('),(')
-        sql += `INSERT INTO ${table} (${columns}) VALUES (${vString});\n`
+            return values.map(value =>
+                value && (!isNaN(value) || value.startsWith('('))
+                    ? value : `'${value}'` || '\'\''
+            ).join(',')
+        }).join('),\n(')
+        sql += `INSERT INTO ${table} (${columns}) VALUES (${vString});\n\n`
     }
     return sql
 }

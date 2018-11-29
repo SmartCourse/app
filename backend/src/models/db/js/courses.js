@@ -1,5 +1,6 @@
 const data = require('../../../../data/course_data_2019.json')
 const { toLowerCase, decodeUTF8Text } = require('../../../utils/helpers')
+const { TABLE_NAMES } = require('../../constants')
 
 module.exports = data.map(subj => {
     const subjectCode = subj.code
@@ -25,13 +26,14 @@ module.exports = data.map(subj => {
             code: course.code,
             name,
             studyLevel,
-            subjectCode,
+            subjectID: `(SELECT id FROM ${TABLE_NAMES.SUBJECTS} WHERE code='${subjectCode}')`,
             handbookURL: course.handbook_url,
             outlineURL: course.outline_url,
             // \n newline isn't parsed by sqlite, so replace it with html
             description: description.replace(/\n/g, '<p></p>'),
             requirements: requirements.replace(/\n/g, '<p></p>'),
-            tags
+            tags,
+            universityID: 1
         })
     })
 }).reduce((curr, acc) => [...curr, ...acc], [])
