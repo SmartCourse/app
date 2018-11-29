@@ -24,16 +24,7 @@ const config = {
  * @param {string} databaseName The name of the db if it needs to be passed in.
  */
 class DB {
-    constructor() {
-        this._initialised = false
-    }
-
     init() {
-        // Check the databse hasn't already been initialised
-        if (this._initialised) {
-            return
-        }
-
         // Database initialisation benchmarking
         const timeList = [Date.now() / 1000]
         this._db = new Connection(config)
@@ -125,8 +116,4 @@ class DB {
     }
 }
 
-let Singleton = null
-
-module.exports = async function() {
-    return (Singleton = Singleton ? Singleton.init() : new DB().init())
-}
+module.exports = new DB()
