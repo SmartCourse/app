@@ -36,9 +36,6 @@ const config = {
 }
 
 // Globals
-// Seed must be (0, 2147483647)
-// PRNG taken from: https://gist.github.com/blixt/f17b47c62508be59987b
-let seed = 1
 let commentID = 1
 const questions = []
 const reviews = []
@@ -46,6 +43,9 @@ const questionsToLike = []
 const reviewsToLike = []
 const commentsToLike = []
 const userRepMap = {}
+// Seed must be (0, 2147483647)
+// PRNG taken from: https://gist.github.com/blixt/f17b47c62508be59987b
+let seed = 1
 
 exports.initDB = async function() {
     // Database initialisation benchmarking
@@ -59,27 +59,28 @@ exports.initDB = async function() {
                 console.log(err)
             }
             // Create the database and initialise data with no dependencies.
-            const request = new Request(sqlTables(), (err) => {
+            const request = new Request(sqlTables(), async (err) => {
                 if (err) {
                     reject(err)
                 }
                 // Initialise with UNSW data
-                sqlUniversity(db)
-                    .then(() => sqlFaculties(db))
-                    .then(() => sqlDegrees(db))
-                    .then(() => sqlSubjects(db))
-                    .then(() => sqlCourses(db))
-                    .then(() => {
-                        // Initialise test databases
-                        if (!testing) return
-                        return sqlQuestions(db)
-                            .then(() => sqlReviews(db))
-                            .then(() => sqlComments(db))
-                            .then(() => sqlLikes(db))
-                            .then(() => sqlUsers(db))
-                    })
-                    .then(() => resolve(db))
-                    .catch((err) => console.log(err))
+                if (!await unswDataInitialised(db)) {
+                    await sqlUniversity(db)
+                    await sqlFaculties(db)
+                    await sqlDegrees(db)
+                    await sqlSubjects(db)
+                    await sqlCourses(db)
+                }
+
+                // Initialise test databases
+                if (testing && !await testDataInitialised(db)) {
+                    await sqlQuestions(db)
+                    await sqlReviews(db)
+                    await sqlComments(db)
+                    await sqlLikes(db)
+                    await sqlUsers(db)
+                }
+                resolve(db)
             })
             db.execSql(request)
         })
@@ -90,24 +91,45 @@ exports.initDB = async function() {
             console.log(`Done creating database! (${((timeList[1] - timeList[0])).toFixed(3)})`)
         })
 }
+// Assume that if UNSW has been inserted into uni table,
+// all UNSW data has been inserted into tables.
+async function unswDataInitialised(db) {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM ${TABLE_NAMES.UNIVERSITY}`
+        const request = new Request(query, (err, rowCount) =>
+            err ? resolve(0) : resolve(rowCount))
+        db.execSql(request)
+    })
+}
 
-function sqlUniversity(db) {
+// Assume that if there is a question in the questions table,
+// testing data already exists.
+async function testDataInitialised(db) {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM ${TABLE_NAMES.QUESTIONS}`
+        const request = new Request(query, (err, rowCount) =>
+            err ? resolve(0) : resolve(rowCount))
+        db.execSql(request)
+    })
+}
+
+async function sqlUniversity(db) {
     return bulkInsertDB(db, TABLE_NAMES.UNIVERSITY, [{ name: 'UNSW' }])
 }
 
-function sqlFaculties(db) {
+async function sqlFaculties(db) {
     return bulkInsertDB(db, TABLE_NAMES.FACULTIES, faculties)
 }
 
-function sqlDegrees(db) {
+async function sqlDegrees(db) {
     return bulkInsertDB(db, TABLE_NAMES.DEGREES, degrees)
 }
 
-function sqlSubjects(db) {
+async function sqlSubjects(db) {
     return bulkInsertDB(db, TABLE_NAMES.SUBJECTS, subjects)
 }
 
-function sqlCourses(db) {
+async function sqlCourses(db) {
     return bulkInsertDB(db, TABLE_NAMES.COURSES, courses)
 }
 
@@ -126,7 +148,7 @@ function sqlQuestion(code) {
     }
 }
 
-function sqlQuestions(db) {
+async function sqlQuestions(db) {
     let questions = courses.map(({ code }) =>
         SAMPLE_QUESTIONS.map(sqlQuestion(code)))
     questions = [].concat.apply([], questions);
@@ -152,7 +174,7 @@ function sqlReview(code) {
     }
 }
 
-function sqlReviews(db) {
+async function sqlReviews(db) {
     let reviews = courses.map(({ code }) =>
         SAMPLE_REVIEWS.map(sqlReview(code)))
     reviews = [].concat.apply([], reviews);
@@ -181,7 +203,7 @@ function genComments(parent) {
     return comments
 }
 
-function sqlComments(db) {
+async function sqlComments(db) {
     // Question comments
     let comments = []
     for (let parent of questions) {
@@ -198,7 +220,7 @@ function sqlComments(db) {
         })
 }
 
-function sqlUsers(db) {
+async function sqlUsers(db) {
     const userNames = SAMPLE_USERS
     const suffixes = ['XxX', '!', 's', '!!', '_', '__', 'x']
 
@@ -260,7 +282,7 @@ function genLikes(parent) {
     return likes
 }
 
-function sqlLikes(db) {
+async function sqlLikes(db) {
     // Like questions
     let likes = []
     for (let parent of questionsToLike) {
@@ -288,17 +310,6 @@ function sqlLikes(db) {
 function sqlTables() {
     return `
     BEGIN TRANSACTION;
-
-    DROP TABLE likes;
-    DROP TABLE comments;
-    DROP TABLE reviews;
-    DROP TABLE questions;
-    DROP TABLE courses;
-    DROP TABLE subjects;
-    DROP TABLE university;
-    DROP TABLE users;
-    DROP TABLE degrees ;
-    DROP TABLE faculties;
 
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.FACULTIES}' AND xtype='U')
         CREATE TABLE ${TABLE_NAMES.FACULTIES} (
@@ -468,7 +479,7 @@ function nextValue(min, max) {
  * Generates an SQL statement to insert multiple rows into a given table.
  * Note: This is vulnerable to SQL injection and should only be used testing.
  */
-function bulkInsertDB(db, table, data) {
+async function bulkInsertDB(db, table, data) {
     return new Promise((resolve, reject) => {
         // Setup the bulk insertion
         const bulkLoad = db.newBulkLoad(table, {}, (error, rowCount) =>
