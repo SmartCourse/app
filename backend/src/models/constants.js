@@ -143,5 +143,155 @@ exports.TABLE_COLUMNS = {
             type: TYPES.VarChar,
             options: { nullable: true }
         }
+    },
+    [exports.TABLE_NAMES.QUESTIONS]: {
+        courseID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        userID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        title: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        body: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        pinned: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        timestamp: {
+            type: TYPES.Date,
+            options: { nullable: false }
+        }
+    },
+    [exports.TABLE_NAMES.REVIEWS]: {
+        courseID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        userID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        title: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        body: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        recommend: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        enjoy: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        difficulty: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        teaching: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        workload: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        timestamp: {
+            type: TYPES.Date,
+            options: { nullable: false }
+        }
+    },
+    [exports.TABLE_NAMES.COMMENTS]: {
+        questionID: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        reviewID: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        commentParent: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        userID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        body: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        timestamp: {
+            type: TYPES.Date,
+            options: { nullable: false }
+        }
+    },
+    [exports.TABLE_NAMES.LIKES]: {
+        objectType: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        objectID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        userID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        value: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        }
+    },
+    [exports.TABLE_NAMES.USERS]: {
+        uid: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        displayName: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        email: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        joined: {
+            type: TYPES.Date,
+            options: { nullable: false }
+        },
+        reputation: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        degreeID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        gradYear: {
+            type: TYPES.Time,
+            options: { nullable: true }
+        },
+        description: {
+            type: TYPES.VarChar,
+            options: { nullable: true }
+        },
+        picture: {
+            type: TYPES.VarChar,
+            options: { nullable: true }
+        }
     }
 }

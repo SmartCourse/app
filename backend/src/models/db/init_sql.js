@@ -1,4 +1,4 @@
-const { Connection, Request, TYPES } = require('tedious')
+const { Connection, Request } = require('tedious')
 const faculties = require('../../../data/faculties')
 const degrees = require('../../../data/degrees')
 const subjects = require('./js/subjects')
@@ -72,13 +72,11 @@ exports.initDB = async function() {
                     .then(() => {
                         // Initialise test databases
                         if (!testing) return
-                        /*
-                        sqlQuestions()
-                            .then(() => sqlReviews())
-                            .then(() => sqlComments())
-                            .then(() => sqlLikes())
-                            .then(() => sqlUsers())
-                        */
+                        return sqlQuestions(db)
+                            .then(() => sqlReviews(db))
+                            .then(() => sqlComments(db))
+                            .then(() => sqlLikes(db))
+                            .then(() => sqlUsers(db))
                     })
                     .then(() => resolve(db))
                     .catch((err) => console.log(err))
@@ -114,39 +112,51 @@ function sqlCourses(db) {
 }
 
 function sqlQuestion(code) {
-    const questionColumns = ['userID', 'code', 'title', 'body', 'pinned'].join(',')
     const userID = nextValue(1, NUM_DUMMY_USERS)
     questions.push({ questionID: questions.length + 1 })
     questionsToLike.push({ objectType: TABLE_NAMES.QUESTIONS, objectID: questions.length, userID })
-    return function (question) {
-        return `INSERT INTO ${TABLE_NAMES.QUESTIONS} (${questionColumns})
-        VALUES (${userID}, '${code}', '${question.title}', '${question.body}', 1);`
+    return function(question) {
+        return {
+            userID,
+            courseID: `(SELECT id FROM ${TABLE_NAMES.COURSES} WHERE code='${code}')`,
+            title: question.title,
+            body: question.body,
+            pinned: 1
+        }
     }
 }
 
-function sqlQuestions() {
-    return courses.map(({ code }) =>
-        SAMPLE_QUESTIONS.map(sqlQuestion(code)).join('\n') + '\n').join('')
+function sqlQuestions(db) {
+    let questions = courses.map(({ code }) =>
+        SAMPLE_QUESTIONS.map(sqlQuestion(code)))
+    questions = [].concat.apply([], questions);
+    return bulkInsertDB(db, TABLE_NAMES.QUESTIONS, questions)
 }
 
 function sqlReview(code) {
-    const reviewColumns = ['userID', 'code', 'title', 'body', 'recommend', 'enjoy',
-        'difficulty', 'teaching', 'workload'].join(',')
     const userID = nextValue(1, NUM_DUMMY_USERS)
     reviews.push({ reviewID: reviews.length + 1 })
     reviewsToLike.push({ objectType: TABLE_NAMES.REVIEWS, objectID: reviews.length, userID })
     return function(review) {
-        return `INSERT INTO ${TABLE_NAMES.REVIEWS} (${reviewColumns})
-        VALUES (${userID}, '${code}', '${review.title}', '${review.body}', 
-        ${nextValue(DONT_RECOMMEND, RECOMMEND)}, ${nextValue(MIN_ENJOY, MAX_ENJOY)},
-        ${nextValue(MIN_OPTION, MAX_OPTION)}, ${nextValue(MIN_OPTION, MAX_OPTION)},
-        ${nextValue(MIN_OPTION, MAX_OPTION)});\n`
+        return {
+            userID,
+            courseID: `(SELECT id FROM ${TABLE_NAMES.COURSES} WHERE code='${code}')`,
+            title: review.title,
+            body: review.body,
+            recommend: nextValue(DONT_RECOMMEND, RECOMMEND),
+            enjoy: nextValue(MIN_ENJOY, MAX_ENJOY),
+            difficulty: nextValue(MIN_OPTION, MAX_OPTION),
+            teaching: nextValue(MIN_OPTION, MAX_OPTION),
+            workload: nextValue(MIN_OPTION, MAX_OPTION)
+        }
     }
 }
 
-function sqlReviews() {
-    return courses.map(({ code }) =>
-        SAMPLE_REVIEWS.map(sqlReview(code)).join('\n') + '\n').join('')
+function sqlReviews(db) {
+    let reviews = courses.map(({ code }) =>
+        SAMPLE_REVIEWS.map(sqlReview(code)))
+    reviews = [].concat.apply([], reviews);
+    return bulkInsertDB(db, TABLE_NAMES.REVIEWS, reviews)
 }
 
 function genComments(parent) {
@@ -171,27 +181,24 @@ function genComments(parent) {
     return comments
 }
 
-function sqlComments() {
-    let comments = []
-    let data = ''
-
+function sqlComments(db) {
     // Question comments
+    let comments = []
     for (let parent of questions) {
         comments = comments.concat(genComments(parent))
     }
-    data += bulkInsertDB(TABLE_NAMES.COMMENTS, comments)
-    comments = []
-
-    // Review comments
-    for (let parent of reviews) {
-        comments = comments.concat(genComments(parent))
-    }
-    data += bulkInsertDB(TABLE_NAMES.COMMENTS, comments)
-
-    return data
+    return bulkInsertDB(db, TABLE_NAMES.COMMENTS, comments)
+        // Review comments
+        .then(() => {
+            comments = []
+            for (let parent of reviews) {
+                comments = comments.concat(genComments(parent))
+            }
+            return bulkInsertDB(db, TABLE_NAMES.COMMENTS, comments)
+        })
 }
 
-function sqlUsers() {
+function sqlUsers(db) {
     const userNames = SAMPLE_USERS
     const suffixes = ['XxX', '!', 's', '!!', '_', '__', 'x']
 
@@ -213,19 +220,18 @@ function sqlUsers() {
                 )
             )
         const email = displayName + '@test.com.au'
-        const degree = degreeData[nextValue(0, degreeData.length - 1)].name
+        const degree = degrees[nextValue(0, degrees.length - 1)].name
 
         users.push({
-            id: i,
             uid: uid,
             displayName: displayName,
             email: email,
-            degree: degree,
+            degreeID: `(SELECT id FROM ${TABLE_NAMES.DEGREES} WHERE name='${degree}')`,
             reputation: userRepMap[i] || 0
         })
     }
 
-    return bulkInsertDB(TABLE_NAMES.USERS, users)
+    return bulkInsertDB(db, TABLE_NAMES.USERS, users)
 }
 
 function genLikes(parent) {
@@ -254,27 +260,29 @@ function genLikes(parent) {
     return likes
 }
 
-function sqlLikes() {
+function sqlLikes(db) {
+    // Like questions
     let likes = []
-    let data = ''
     for (let parent of questionsToLike) {
         likes = likes.concat(genLikes(parent))
     }
-    data += bulkInsertDB(TABLE_NAMES.LIKES, likes)
-    likes = []
-
-    for (let parent of reviewsToLike) {
-        likes = likes.concat(genLikes(parent))
-    }
-    data += bulkInsertDB(TABLE_NAMES.LIKES, likes)
-    likes = []
-
-    for (let parent of commentsToLike) {
-        likes = likes.concat(genLikes(parent))
-    }
-    data += bulkInsertDB(TABLE_NAMES.LIKES, likes)
-
-    return data
+    return bulkInsertDB(db, TABLE_NAMES.LIKES, likes)
+        // Like reviews
+        .then(() => {
+            likes = []
+            for (let parent of reviewsToLike) {
+                likes = likes.concat(genLikes(parent))
+            }
+            return bulkInsertDB(db, TABLE_NAMES.LIKES, likes)
+        })
+        // Like comments
+        .then(() => {
+            likes = []
+            for (let parent of commentsToLike) {
+                likes = likes.concat(genLikes(parent))
+            }
+            return bulkInsertDB(db, TABLE_NAMES.LIKES, likes)
+        })
 }
 
 function sqlTables() {
@@ -468,17 +476,15 @@ function bulkInsertDB(db, table, data) {
 
         // Setup the columns
         const columns = Object.keys(data[0])
-        columns.forEach((column) =>
+        columns.forEach((column) => {
             bulkLoad.addColumn(column, TABLE_COLUMNS[table][column].type,
-                TABLE_COLUMNS[table][column].options))
-
-        console.log(table)
-        console.log(columns)
+                TABLE_COLUMNS[table][column].options)
+        })
 
         // Setup the rows
         data.forEach((row) => bulkLoad.addRow(row))
 
         // Do the insertion
-        db.execBulkLoad(bulkLoad);
+        db.execBulkLoad(bulkLoad)
     })
 }
