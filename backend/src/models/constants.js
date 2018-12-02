@@ -1,3 +1,5 @@
+const { TYPES } = require('tedious')
+
 // User Constants
 exports.ANONYMOUS = 0
 
@@ -24,4 +26,122 @@ exports.TABLE_NAMES = {
     COMMENTS: 'comments',
     REVIEWS: 'reviews',
     QUESTIONS: 'questions'
+}
+
+// Table Columns
+exports.TABLE_COLUMNS = {
+    [exports.TABLE_NAMES.UNIVERSITY]: {
+        name: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        }
+    },
+    [exports.TABLE_NAMES.FACULTIES]: {
+        name: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        }
+    },
+    [exports.TABLE_NAMES.DEGREES]: {
+        name: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        longName: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        type: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        tags: {
+            type: TYPES.VarChar,
+            options: { nullable: true }
+        },
+        facultyID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        }
+    },
+    [exports.TABLE_NAMES.SUBJECTS]: {
+        code: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        name: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        handbookURL: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        universityID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        }
+    },
+    [exports.TABLE_NAMES.COURSES]: {
+        code: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        universityID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        name: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        studyLevel: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        subjectID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        handbookURL: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        outlineURL: {
+            type: TYPES.VarChar,
+            options: { nullable: true }
+        },
+        description: {
+            type: TYPES.VarChar,
+            options: { nullable: true }
+        },
+        requirements: {
+            type: TYPES.VarChar,
+            options: { nullable: true }
+        },
+        recommend: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        enjoy: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        difficulty: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        teaching: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        workload: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        tags: {
+            type: TYPES.VarChar,
+            options: { nullable: true }
+        }
+    }
 }

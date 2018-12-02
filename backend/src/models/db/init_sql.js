@@ -1,5 +1,4 @@
-const Connection = require('tedious').Connection
-const Request = require('tedious').Request
+const { Connection, Request, TYPES } = require('tedious')
 const faculties = require('../../../data/faculties')
 const degrees = require('../../../data/degrees')
 const subjects = require('./js/subjects')
@@ -13,6 +12,7 @@ const {
 } = require('./test_constants')
 const {
     TABLE_NAMES,
+    TABLE_COLUMNS,
     DONT_RECOMMEND,
     RECOMMEND,
     MIN_ENJOY,
@@ -57,36 +57,33 @@ exports.initDB = async function() {
         db.on('connect', (err) => {
             if (err) {
                 console.log(err)
-            } else {
-                // Create the database and initialise data with no dependencies.
-                let sql = 'BEGIN TRANSACTION;\n'
-                sql += sqlTables() + '\n'
-                sql += sqlUniversity('UNSW') + '\n'
-                sql += sqlFaculties() + '\n'
-                sql += sqlDegrees() + '\n'
-                /*
-                sql += sqlSubjects() + '\n'
-                sql += sqlCourses() + '\n'
-                */
-                // If this is a test database, add the testing data
-                if (testing) {
-                    /*
-                    sql += sqlQuestions()
-                    sql += sqlReviews()
-                    sql += sqlComments() + '\n'
-                    sql += sqlLikes() + '\n'
-                    sql += sqlUsers() + '\n'
-                    */
-                }
-                sql += 'COMMIT;'
-
-                console.log(sql)
-
-                // Execute the SQL
-                const request = new Request(sql, (err) =>
-                    err ? reject(err) : resolve(db))
-                db.execSql(request)
             }
+            // Create the database and initialise data with no dependencies.
+            const request = new Request(sqlTables(), (err) => {
+                if (err) {
+                    reject(err)
+                }
+                // Initialise with UNSW data
+                sqlUniversity(db)
+                    .then(() => sqlFaculties(db))
+                    .then(() => sqlDegrees(db))
+                    .then(() => sqlSubjects(db))
+                    .then(() => sqlCourses(db))
+                    .then(() => {
+                        // Initialise test databases
+                        if (!testing) return
+                        /*
+                        sqlQuestions()
+                            .then(() => sqlReviews())
+                            .then(() => sqlComments())
+                            .then(() => sqlLikes())
+                            .then(() => sqlUsers())
+                        */
+                    })
+                    .then(() => resolve(db))
+                    .catch((err) => console.log(err))
+            })
+            db.execSql(request)
         })
     })
         .then(() => {
@@ -96,24 +93,24 @@ exports.initDB = async function() {
         })
 }
 
-function sqlUniversity(uni) {
-    return `INSERT INTO ${TABLE_NAMES.UNIVERSITY} (name) VALUES ('${uni}');`
+function sqlUniversity(db) {
+    return bulkInsertDB(db, TABLE_NAMES.UNIVERSITY, [{ name: 'UNSW' }])
 }
 
-function sqlFaculties() {
-    return bulkInsertDB(TABLE_NAMES.FACULTIES, faculties)
+function sqlFaculties(db) {
+    return bulkInsertDB(db, TABLE_NAMES.FACULTIES, faculties)
 }
 
-function sqlDegrees() {
-    return bulkInsertDB(TABLE_NAMES.DEGREES, degrees)
+function sqlDegrees(db) {
+    return bulkInsertDB(db, TABLE_NAMES.DEGREES, degrees)
 }
 
-function sqlSubjects() {
-    return bulkInsertDB(TABLE_NAMES.SUBJECTS, subjects)
+function sqlSubjects(db) {
+    return bulkInsertDB(db, TABLE_NAMES.SUBJECTS, subjects)
 }
 
-function sqlCourses() {
-    return bulkInsertDB(TABLE_NAMES.COURSES, courses)
+function sqlCourses(db) {
+    return bulkInsertDB(db, TABLE_NAMES.COURSES, courses)
 }
 
 function sqlQuestion(code) {
@@ -282,6 +279,7 @@ function sqlLikes() {
 
 function sqlTables() {
     return `
+    BEGIN TRANSACTION;
 
     DROP TABLE likes;
     DROP TABLE comments;
@@ -297,16 +295,16 @@ function sqlTables() {
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.FACULTIES}' AND xtype='U')
         CREATE TABLE ${TABLE_NAMES.FACULTIES} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
-            name VARCHAR(355)
+            name VARCHAR(8000) NOT NULL
         );
 
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.DEGREES}' AND xtype='U')
         CREATE TABLE ${TABLE_NAMES.DEGREES} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
-            name VARCHAR(255) NOT NULL,
-            longName VARCHAR(255) NOT NULL,
-            type VARCHAR(255) NOT NULL,
-            tags VARCHAR(255),
+            name VARCHAR(8000) NOT NULL,
+            longName VARCHAR(8000) NOT NULL,
+            type VARCHAR(8000) NOT NULL,
+            tags VARCHAR(8000),
             facultyID INTEGER NOT NULL,
             CONSTRAINT fk_faculty_degree
                 FOREIGN KEY (facultyID)
@@ -316,9 +314,9 @@ function sqlTables() {
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.USERS}' AND xtype='U')
         CREATE TABLE ${TABLE_NAMES.USERS} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
-            uid VARCHAR(255) UNIQUE NOT NULL,
-            displayName VARCHAR(255) UNIQUE NOT NULL,
-            email VARCHAR(255) UNIQUE NOT NULL,
+            uid VARCHAR(8000) UNIQUE NOT NULL,
+            displayName VARCHAR(8000) UNIQUE NOT NULL,
+            email VARCHAR(8000) UNIQUE NOT NULL,
             joined DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
             reputation INTEGER DEFAULT '0',
             degreeID INTEGER NOT NULL,
@@ -333,16 +331,16 @@ function sqlTables() {
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.UNIVERSITY}' AND xtype='U')
         CREATE TABLE ${TABLE_NAMES.UNIVERSITY} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
-            name VARCHAR(255) UNIQUE NOT NULL,
+            name VARCHAR(8000) UNIQUE NOT NULL,
         );
 
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.SUBJECTS}' AND xtype='U')
         CREATE TABLE ${TABLE_NAMES.SUBJECTS} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
-            code VARCHAR(255) NOT NULL,
+            code VARCHAR(8000) NOT NULL,
             universityID INTEGER NOT NULL,
-            name VARCHAR(255) NOT NULL,
-            handbookURL VARCHAR(255) NOT NULL,
+            name VARCHAR(8000) NOT NULL,
+            handbookURL VARCHAR(8000) NOT NULL,
             CONSTRAINT fk_university_subject
                 FOREIGN KEY (universityID)
                 REFERENCES ${TABLE_NAMES.UNIVERSITY} (id)
@@ -351,13 +349,13 @@ function sqlTables() {
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.COURSES}' AND xtype='U')
         CREATE TABLE ${TABLE_NAMES.COURSES} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
-            code VARCHAR(255) NOT NULL,
+            code VARCHAR(8000) NOT NULL,
             universityID INTEGER NOT NULL,
-            name VARCHAR(255) NOT NULL,
-            studyLevel VARCHAR(255) NOT NULL,
+            name VARCHAR(8000) NOT NULL,
+            studyLevel VARCHAR(8000) NOT NULL,
             subjectID INTEGER NOT NULL,
-            handbookURL VARCHAR(255) NOT NULL,
-            outlineURL VARCHAR(255),
+            handbookURL VARCHAR(8000) NOT NULL,
+            outlineURL VARCHAR(8000),
             description VARCHAR(8000),
             requirements VARCHAR(8000),
             recommend INTEGER DEFAULT '-1',
@@ -379,7 +377,7 @@ function sqlTables() {
             id INTEGER PRIMARY KEY IDENTITY(1,1),
             courseID INTEGER NOT NULL,
             userID INTEGER NOT NULL,
-            title VARCHAR(255) NOT NULL,
+            title VARCHAR(8000) NOT NULL,
             body VARCHAR(8000) NOT NULL,
             pinned INTEGER DEFAULT 0,
             timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
@@ -396,7 +394,7 @@ function sqlTables() {
             id INTEGER PRIMARY KEY IDENTITY(1,1),
             courseID INTEGER NOT NULL,
             userID INTEGER NOT NULL,
-            title VARCHAR(255) NOT NULL,
+            title VARCHAR(8000) NOT NULL,
             body VARCHAR(8000) NOT NULL,
             recommend INTEGER NOT NULL,
             enjoy INTEGER NOT NULL,
@@ -435,7 +433,7 @@ function sqlTables() {
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.LIKES}' AND xtype='U')
     BEGIN
         CREATE TABLE ${TABLE_NAMES.LIKES} (
-            objectType VARCHAR(255) NOT NULL,
+            objectType VARCHAR(8000) NOT NULL,
             objectID INTEGER NOT NULL,
             userID INTEGER NOT NULL,
             value INTEGER DEFAULT '0',
@@ -444,7 +442,9 @@ function sqlTables() {
                 REFERENCES ${TABLE_NAMES.USERS} (id)
         );
         CREATE UNIQUE INDEX id ON ${TABLE_NAMES.LIKES} (objectType, objectID, userID);
-    END`
+    END
+
+    COMMIT;`
 }
 
 /*
@@ -460,20 +460,25 @@ function nextValue(min, max) {
  * Generates an SQL statement to insert multiple rows into a given table.
  * Note: This is vulnerable to SQL injection and should only be used testing.
  */
-function bulkInsertDB(table, data) {
-    const values = data.map(row => Object.values(row))
-    const columns = Object.keys(data[0])
-    const SQL_MAX_INSERT = 1000
-    let sql = ''
-    for (var i = 0; i < values.length; i += SQL_MAX_INSERT) {
-        const rowValues = values.slice(i, i + SQL_MAX_INSERT)
-        const vString = rowValues.map(values => {
-            return values.map(value =>
-                value && (!isNaN(value) || value.startsWith('('))
-                    ? value : `'${value}'` || '\'\''
-            ).join(',')
-        }).join('),\n(')
-        sql += `INSERT INTO ${table} (${columns}) VALUES (${vString});\n\n`
-    }
-    return sql
+function bulkInsertDB(db, table, data) {
+    return new Promise((resolve, reject) => {
+        // Setup the bulk insertion
+        const bulkLoad = db.newBulkLoad(table, {}, (error, rowCount) =>
+            error ? reject(error) : resolve(rowCount))
+
+        // Setup the columns
+        const columns = Object.keys(data[0])
+        columns.forEach((column) =>
+            bulkLoad.addColumn(column, TABLE_COLUMNS[table][column].type,
+                TABLE_COLUMNS[table][column].options))
+
+        console.log(table)
+        console.log(columns)
+
+        // Setup the rows
+        data.forEach((row) => bulkLoad.addRow(row))
+
+        // Do the insertion
+        db.execBulkLoad(bulkLoad);
+    })
 }
