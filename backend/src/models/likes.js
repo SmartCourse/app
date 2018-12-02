@@ -61,8 +61,8 @@ class Likes {
                 const creatorID = creator.userID
                 const repChange = creatorID !== userID ? (value - oldLike) : 0
                 return Promise.all([
-                    this.db.run(updateLikes, [...insertValues]),
-                    this.db.run(updateReputation, [creatorID, repChange, creatorID])
+                    this.db.query(updateLikes, [...insertValues]),
+                    this.db.query(updateReputation, [creatorID, repChange, creatorID])
                 ])
                     .then(() => this.getLikes({ type, id }))
             })

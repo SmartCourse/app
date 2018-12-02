@@ -25,7 +25,7 @@ class Question {
     getQuestions(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll(`select q.*, COUNT(c.questionID) AS numAnswers 
+            .query(`select q.*, COUNT(c.questionID) AS numAnswers 
                 from ${QUESTIONS} q 
                 JOIN ${COMMENTS} c 
                 on c.questionID = q.id
@@ -38,7 +38,7 @@ class Question {
 
     getQuestionsByUserID(uid, limit = 10) {
         return this.db
-            .queryAll(`SELECT q.*, COUNT(c.questionID) AS numAnswers
+            .query(`SELECT q.*, COUNT(c.questionID) AS numAnswers
                 FROM ${QUESTIONS} q
                 JOIN ${COMMENTS} c ON c.questionID = q.id
                 WHERE q.userID=?
@@ -55,7 +55,7 @@ class Question {
      */
     getQuestionCount(code) {
         return this.db
-            .queryAll(`SELECT COUNT() FROM ${QUESTIONS} WHERE code=?`,
+            .query(`SELECT COUNT() FROM ${QUESTIONS} WHERE code=?`,
                 [code])
     }
 

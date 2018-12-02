@@ -13,12 +13,12 @@ class Course {
      */
     getCourses() {
         return this.db
-            .queryAll(`SELECT * FROM ${COURSES}`)
+            .query(`SELECT * FROM ${COURSES}`)
     }
 
     getCoursesBySubject(subjCode) {
         return this.db
-            .queryAll(`SELECT * FROM ${COURSES} WHERE subjectCode = ?`, [subjCode])
+            .query(`SELECT * FROM ${COURSES} WHERE subjectCode = ?`, [subjCode])
     }
 
     /**

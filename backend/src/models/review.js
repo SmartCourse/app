@@ -33,7 +33,7 @@ class Review {
     getReviews(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll(`SELECT * FROM ${REVIEWS} WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?`,
+            .query(`SELECT * FROM ${REVIEWS} WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?`,
                 [code, offset, pageSize])
     }
 
@@ -44,7 +44,7 @@ class Review {
      */
     getReviewCount(code) {
         return this.db
-            .queryAll(`SELECT COUNT() FROM ${REVIEWS} WHERE code=?`,
+            .query(`SELECT COUNT() FROM ${REVIEWS} WHERE code=?`,
                 [code])
     }
 

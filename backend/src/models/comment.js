@@ -29,7 +29,7 @@ class Comment {
     getComments(queryObject, pageNumber = 1) {
         const [key, value] = Object.entries(queryObject)[0]
         return this.db
-            .queryAll(`SELECT
+            .query(`SELECT
                 u.id as userID,
                 u.displayName,
                 u.degree,

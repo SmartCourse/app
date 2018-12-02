@@ -11,6 +11,8 @@ const {
     SAMPLE_USERS
 } = require('./test_constants')
 const {
+    TESTING,
+    DB_CONFIG,
     TABLE_NAMES,
     TABLE_COLUMNS,
     DONT_RECOMMEND,
@@ -20,20 +22,6 @@ const {
     MIN_OPTION,
     MAX_OPTION
 } = require('../constants')
-
-// SQL Server Config
-const testing = process.env.NODE_ENV === 'production' ? 0 : 1
-const DB_NAME = testing ? 'smartcourse-staging' : 'smartcourse'
-const config = {
-    userName: process.env.AZURE_SQL_USER,
-    password: process.env.AZURE_SQL_PASSWORD,
-    server: process.env.AZURE_SQL_SERVER,
-    options:
-        {
-            database: DB_NAME,
-            encrypt: true
-        }
-}
 
 // Globals
 let commentID = 1
@@ -52,17 +40,15 @@ exports.initDB = async function() {
     const timeList = [Date.now() / 1000]
 
     // Do the initialisation
-    const db = new Connection(config)
     return new Promise((resolve, reject) => {
+        const db = new Connection(DB_CONFIG)
         db.on('connect', (err) => {
-            if (err) {
-                console.log(err)
-            }
+            if (err) reject(err)
+
             // Create the database and initialise data with no dependencies.
             const request = new Request(sqlTables(), async (err) => {
-                if (err) {
-                    reject(err)
-                }
+                if (err) reject(err)
+
                 // Initialise with UNSW data
                 if (!await unswDataInitialised(db)) {
                     await sqlUniversity(db)
@@ -73,24 +59,27 @@ exports.initDB = async function() {
                 }
 
                 // Initialise test databases
-                if (testing && !await testDataInitialised(db)) {
+                if (TESTING && !await testDataInitialised(db)) {
                     await sqlQuestions(db)
                     await sqlReviews(db)
                     await sqlComments(db)
                     await sqlLikes(db)
                     await sqlUsers(db)
                 }
-                resolve(db)
+
+                // Log completion time
+                timeList.push(Date.now() / 1000)
+                console.log(`Done creating database! (${((timeList[1] - timeList[0])).toFixed(3)})`)
+
+                // Close the connection and return
+                db.close()
+                resolve()
             })
             db.execSql(request)
         })
     })
-        .then(() => {
-            // Log completion time
-            timeList.push(Date.now() / 1000)
-            console.log(`Done creating database! (${((timeList[1] - timeList[0])).toFixed(3)})`)
-        })
 }
+
 // Assume that if UNSW has been inserted into uni table,
 // all UNSW data has been inserted into tables.
 async function unswDataInitialised(db) {

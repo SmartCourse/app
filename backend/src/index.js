@@ -50,6 +50,6 @@ app.use('*', function (_, res) {
  * Connect to SQL server
  */
 db.init()
-    .then(app.emit('ready'))
+    .then(() => app.emit('ready'))
 
 module.exports = app

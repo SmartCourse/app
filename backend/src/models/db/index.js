@@ -1,6 +1,10 @@
-const Request = require('tedious').Request
+const { Connection, Request } = require('tedious')
 const { insertDB, insertUniqueDB, updateDB } = require('./js/tables')
 const { initDB } = require('./init_sql')
+const {
+    DB_CONFIG,
+    TABLE_COLUMNS
+} = require('../constants')
 
 /**
  * Very slight abstraction over the direct sql queries.
@@ -9,12 +13,8 @@ const { initDB } = require('./init_sql')
  * @param {string} databaseName The name of the db if it needs to be passed in.
  */
 class DB {
-    constructor() {
-        this._db = null
-    }
-
     async init() {
-        this._db = await initDB()
+        await initDB()
     }
 
     insert(table, data) {
@@ -29,35 +29,32 @@ class DB {
         return updateDB(this._db, table, data, conditions)
     }
 
-    deleteDB() {
+    delete() {
         return Promise.resolve(false)
     }
 
-    run(sql) {
+    async query(query, params = {}, table) {
         return new Promise((resolve, reject) => {
-            const request = new Request(sql, (err) =>
-                err ? reject(err) : resolve())
-            this._db.execSql(request)
-        })
-    }
+            // Connect (can only have one query per connection)
+            const db = new Connection(DB_CONFIG)
+            db.on('connect', (err) => {
+                if (err) reject(err)
 
-    query(query, params = []) {
-        return new Promise((resolve, reject) => {
-            this._db.get(
-                query,
-                params,
-                (err, row) => { err ? reject(err) : resolve(row) }
-            )
-        })
-    }
+                // Make the request
+                const request = new Request(query, (err) => {
+                    if (err) reject(err)
+                })
+                Object.keys(params).forEach(param => {
+                    request.addParameter(param, TABLE_COLUMNS[table][param].type, params[param])
+                })
+                request.on('done', (rowCount, more, rows) => {
+                    db.close()
+                    resolve(rows)
+                })
 
-    queryAll(query, params = []) {
-        return new Promise((resolve, reject) => {
-            this._db.all(
-                query,
-                params,
-                (err, rows) => { err ? reject(err) : resolve(rows) }
-            )
+                // Do the request
+                db.execSql(request)
+            })
         })
     }
 }
