@@ -43,13 +43,19 @@ class DB {
                 // Make the request
                 const request = new Request(query, (err) => {
                     if (err) reject(err)
+                    db.close()
                 })
                 Object.keys(params).forEach(param => {
                     request.addParameter(param, TABLE_COLUMNS[table][param].type, params[param])
                 })
-                request.on('done', (rowCount, more, rows) => {
-                    db.close()
-                    resolve(rows)
+
+                // Returning the result
+                request.on('doneInProc', (rowCount, more, rows) => {
+                    const reducer = (row = {}, column) => {
+                        row[column.metadata.colName] = column.value
+                        return row
+                    }
+                    resolve(rows.map(row => row.reduce(reducer)))
                 })
 
                 // Do the request

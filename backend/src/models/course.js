@@ -12,6 +12,7 @@ class Course {
      * @returns a list of courses
      */
     getCourses() {
+        console.log('In getCourses()')
         return this.db
             .query(`SELECT * FROM ${COURSES}`)
     }

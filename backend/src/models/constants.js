@@ -2,7 +2,7 @@ const { TYPES } = require('tedious')
 
 // SQL Server Config
 exports.TESTING = process.env.NODE_ENV === 'production' ? 0 : 1
-exports.DB_NAME = exports.testing ? 'smartcourse-staging' : 'smartcourse'
+exports.DB_NAME = exports.TESTING ? 'smartcourse-staging' : 'smartcourse'
 exports.DB_CONFIG = {
     userName: process.env.AZURE_SQL_USER,
     password: process.env.AZURE_SQL_PASSWORD,
