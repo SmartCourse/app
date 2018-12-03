@@ -46,6 +46,10 @@ class DB {
                     db.close()
                 })
                 Object.keys(params).forEach(param => {
+                    console.log(params)
+                    console.log(table)
+                    console.log(param)
+                    console.log(query)
                     request.addParameter(param, TABLE_COLUMNS[table][param].type, params[param])
                 })
                 console.log(query)

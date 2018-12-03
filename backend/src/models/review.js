@@ -22,7 +22,7 @@ class Review {
      */
     getReview(id) {
         return this.db
-            .query(`SELECT * FROM ${REVIEWS} WHERE id=?`, { id }, REVIEWS)
+            .query(`SELECT * FROM ${REVIEWS} WHERE id=@id`, { id }, REVIEWS)
             .then((res) => res ? res[0] : {})
     }
 
