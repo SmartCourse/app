@@ -1,5 +1,4 @@
 const { Connection, Request } = require('tedious')
-const { insertDB, insertUniqueDB, updateDB } = require('./js/tables')
 const { initDB } = require('./init_sql')
 const {
     DB_CONFIG,
@@ -18,15 +17,15 @@ class DB {
     }
 
     insert(table, data) {
-        return insertDB(this._db, table, data)
+        // return insertDB(this._db, table, data)
     }
 
     insertUnique(table, data) {
-        return insertUniqueDB(this._db, table, data)
+        // return insertUniqueDB(this._db, table, data)
     }
 
     update(table, data, conditions) {
-        return updateDB(this._db, table, data, conditions)
+        // return updateDB(this._db, table, data, conditions)
     }
 
     delete() {

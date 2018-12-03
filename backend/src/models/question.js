@@ -47,6 +47,7 @@ class Question {
             .query(`SELECT * FROM ${QUESTIONS}
                 WHERE userID=@userID
                 ORDER BY timestamp DESC
+                OFFSET 0 ROWS
                 FETCH NEXT ${limit} ROWS ONLY`,
             { userID }, QUESTIONS)
     }

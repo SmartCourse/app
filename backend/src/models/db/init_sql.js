@@ -1,8 +1,8 @@
 const { Connection, Request } = require('tedious')
 const faculties = require('../../../data/faculties')
 const degrees = require('../../../data/degrees')
-const subjects = require('./js/subjects')
-const courses = require('./js/courses')
+const subjects = require('../../../data/subjects')
+const courses = require('../../../data/courses')
 const {
     NUM_DUMMY_USERS,
     SAMPLE_QUESTIONS,
