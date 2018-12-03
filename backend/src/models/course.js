@@ -12,14 +12,14 @@ class Course {
      * @returns a list of courses
      */
     getCourses() {
-        console.log('In getCourses()')
         return this.db
             .query(`SELECT * FROM ${COURSES}`)
     }
 
-    getCoursesBySubject(subjCode) {
+    getCoursesBySubject(subjectCode) {
         return this.db
-            .query(`SELECT * FROM ${COURSES} WHERE subjectCode = ?`, [subjCode])
+            .query(`SELECT * FROM ${COURSES} WHERE subjectCode=@subjectCode`,
+                { subjectCode }, COURSES)
     }
 
     /**
@@ -28,7 +28,9 @@ class Course {
      */
     getCourse(code) {
         return this.updateCourseRatings(code)
-            .then(() => this.db.query(`SELECT * FROM ${COURSES} WHERE code=?`, [code]))
+            .then(() => this.db.query(`SELECT * FROM ${COURSES} WHERE code=@code`,
+                { code }, COURSES))
+            .then((res) => res ? res[0] : {})
     }
 
     updateCourseRatings(code) {
@@ -37,7 +39,7 @@ class Course {
         // ^ we need to subtract 1 from each value when taking the mean to get it in 0-2 (or 0-4) range
         // ^ we take this mean and divide by 2 or 4 (range is 0-2 or 0-4) to get a normalised value
         // ^ multiply by 100 so we have an integer percentage (we do this at an early step however, to avoid floating point biz)
-        return this.db
+        return Promise.resolve(0) /* this.db
             .run(`UPDATE ${COURSES}
                     SET
                       recommend = (SELECT CASE WHEN COUNT(*)==0 THEN -1 ELSE SUM(recommend)*100/COUNT(*) END FROM ${REVIEWS} WHERE code==$code),
@@ -47,6 +49,7 @@ class Course {
                       workload = (SELECT CASE WHEN COUNT(*)==0 THEN 0 ELSE SUM(workload-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} WHERE code==$code AND workload > 0)
                     WHERE code=$code;`
             , { $code: code })
+        */
     }
 }
 

@@ -1,4 +1,5 @@
 const { TABLE_NAMES } = require('../src/models/constants')
+const faculties = require('./faculties')
 
 module.exports = [
   {
@@ -1227,7 +1228,7 @@ module.exports = [
   name: name.startsWith('Bachelor of')
     ? 'B.' + name.split('Bachelor of')[1]
     : name,
-  facultyID: `(SELECT id FROM ${TABLE_NAMES.FACULTIES} WHERE name='${faculty}')`,
+  facultyID: 1 + faculties.findIndex((f) => f.name === faculty),
   longName: name,
   ...rest
 }))

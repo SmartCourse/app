@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { USERS } } = require('./constants')
+const { TABLE_NAMES: { USERS, DEGREES } } = require('./constants')
 
 /* All inputs should be validated in this class that are User related */
 class User {
@@ -13,7 +13,13 @@ class User {
      * @returns {object}    profile information
      */
     getProfile(id) {
-        return this.db.query(`SELECT id, email, displayName, degree, gradYear, description, picture, reputation, joined FROM ${USERS} WHERE id=?`, [id])
+        return this.db
+            .query(`SELECT u.id, u.email, u.displayName, u.gradYear, u.description,
+                u.picture, u.reputation, u.joined, d.name AS degree
+                FROM ${USERS} u
+                JOIN ${DEGREES} d ON d.id = u.degreeID
+                WHERE u.id=@id`, { id }, USERS)
+            .then((res) => res ? res[0] : {})
             .then((profile) => {
                 if (profile.reputation < 0) profile.reputation = 0
                 return profile
@@ -27,7 +33,13 @@ class User {
      * @returns {object}
      */
     getPublicProfile(id) {
-        return this.db.query(`SELECT id, displayName, degree, gradYear, description, picture, reputation, joined FROM ${USERS} WHERE id=?`, [id])
+        return this.db
+            .query(`SELECT u.id, u.displayName, u.gradYear, u.description,
+                u.picture, u.reputation, u.joined, d.name AS degree
+                FROM ${USERS} u
+                JOIN ${DEGREES} d on d.id = u.degreeID
+                WHERE u.id=@id`, { id }, USERS)
+            .then((res) => res ? res[0] : {})
             .then((profile) => {
                 // this is defensive and should never really occur
                 // but will avoid unnecessary crashes
@@ -47,7 +59,11 @@ class User {
      */
     getUserByUID(uid) {
         return this.db
-            .query(`SELECT * FROM ${USERS} WHERE uid=?`, [uid])
+            .query(`SELECT u.*, d.name AS degree
+                FROM ${USERS} u
+                JOIN ${DEGREES} d on d.id = u.degreeID
+                WHERE u.uid=@uid`, { uid }, USERS)
+            .then((res) => res ? res[0] : {})
     }
 
     /**

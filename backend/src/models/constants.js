@@ -46,18 +46,30 @@ exports.TABLE_NAMES = {
 // Table Columns
 exports.TABLE_COLUMNS = {
     [exports.TABLE_NAMES.UNIVERSITY]: {
+        id: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
         name: {
             type: TYPES.VarChar,
             options: { nullable: false }
         }
     },
     [exports.TABLE_NAMES.FACULTIES]: {
+        id: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
         name: {
             type: TYPES.VarChar,
             options: { nullable: false }
         }
     },
     [exports.TABLE_NAMES.DEGREES]: {
+        id: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
         name: {
             type: TYPES.VarChar,
             options: { nullable: false }
@@ -80,6 +92,10 @@ exports.TABLE_COLUMNS = {
         }
     },
     [exports.TABLE_NAMES.SUBJECTS]: {
+        id: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
         code: {
             type: TYPES.VarChar,
             options: { nullable: false }
@@ -98,6 +114,10 @@ exports.TABLE_COLUMNS = {
         }
     },
     [exports.TABLE_NAMES.COURSES]: {
+        id: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
         code: {
             type: TYPES.VarChar,
             options: { nullable: false }
@@ -160,6 +180,10 @@ exports.TABLE_COLUMNS = {
         }
     },
     [exports.TABLE_NAMES.QUESTIONS]: {
+        id: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
         courseID: {
             type: TYPES.Int,
             options: { nullable: false }
@@ -186,6 +210,10 @@ exports.TABLE_COLUMNS = {
         }
     },
     [exports.TABLE_NAMES.REVIEWS]: {
+        id: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
         courseID: {
             type: TYPES.Int,
             options: { nullable: false }
@@ -228,6 +256,10 @@ exports.TABLE_COLUMNS = {
         }
     },
     [exports.TABLE_NAMES.COMMENTS]: {
+        id: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
         questionID: {
             type: TYPES.Int,
             options: { nullable: true }
@@ -272,6 +304,10 @@ exports.TABLE_COLUMNS = {
         }
     },
     [exports.TABLE_NAMES.USERS]: {
+        id: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
         uid: {
             type: TYPES.VarChar,
             options: { nullable: false }

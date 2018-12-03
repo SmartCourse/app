@@ -1,6 +1,6 @@
 const data = require('../../../../data/course_data_2019.json')
+const subjects = require('./subjects')
 const { toLowerCase, decodeUTF8Text } = require('../../../utils/helpers')
-const { TABLE_NAMES } = require('../../constants')
 
 module.exports = data.map(subj => {
     const subjectCode = subj.code
@@ -26,7 +26,7 @@ module.exports = data.map(subj => {
             code: course.code,
             name,
             studyLevel,
-            subjectID: `(SELECT id FROM ${TABLE_NAMES.SUBJECTS} WHERE code='${subjectCode}')`,
+            subjectID: 1 + subjects.findIndex((s) => s.code === subjectCode),
             handbookURL: course.handbook_url,
             outlineURL: course.outline_url,
             // \n newline isn't parsed by sqlite, so replace it with html

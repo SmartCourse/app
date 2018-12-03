@@ -48,14 +48,15 @@ class DB {
                 Object.keys(params).forEach(param => {
                     request.addParameter(param, TABLE_COLUMNS[table][param].type, params[param])
                 })
+                console.log(query)
 
                 // Returning the result
                 request.on('doneInProc', (rowCount, more, rows) => {
-                    const reducer = (row = {}, column) => {
+                    const reducer = (row, column) => {
                         row[column.metadata.colName] = column.value
                         return row
                     }
-                    resolve(rows.map(row => row.reduce(reducer)))
+                    resolve(rows.map(row => row.reduce(reducer, {})))
                 })
 
                 // Do the request

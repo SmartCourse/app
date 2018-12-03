@@ -5,7 +5,7 @@ const {
     MAX_ENJOY,
     MIN_OPTION,
     MAX_OPTION,
-    TABLE_NAMES: { REVIEWS }
+    TABLE_NAMES: { REVIEWS, COURSES }
 } = require('./constants')
 
 /* All inputs should be validated in this class that are review related */
@@ -22,7 +22,8 @@ class Review {
      */
     getReview(id) {
         return this.db
-            .query(`SELECT * FROM ${REVIEWS} WHERE id=?`, [id])
+            .query(`SELECT * FROM ${REVIEWS} WHERE id=?`, { id }, REVIEWS)
+            .then((res) => res ? res[0] : {})
     }
 
     /**
@@ -31,10 +32,17 @@ class Review {
      * @returns {Array}
      */
     getReviews(code, pageNumber, pageSize) {
+        if (isNaN(pageNumber) || isNaN(pageSize)) {
+            throw Error('Invalid paging values')
+        }
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .query(`SELECT * FROM ${REVIEWS} WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?`,
-                [code, offset, pageSize])
+            .query(`SELECT * FROM ${REVIEWS}
+            WHERE courseID=(SELECT id FROM ${COURSES} WHERE code=@code)
+            ORDER BY timestamp DESC
+            OFFSET ${offset} ROWS
+            FETCH NEXT ${pageSize} ROWS ONLY`,
+            { code }, COURSES)
     }
 
     /**
@@ -44,8 +52,10 @@ class Review {
      */
     getReviewCount(code) {
         return this.db
-            .query(`SELECT COUNT() FROM ${REVIEWS} WHERE code=?`,
-                [code])
+            .query(`SELECT COUNT(*) AS COUNT FROM ${REVIEWS}
+            WHERE courseID=(SELECT id FROM ${COURSES} WHERE code=@code)`,
+            { code }, COURSES)
+            .then((res) => res ? res[0] : { COUNT: 0 })
     }
 
     /**

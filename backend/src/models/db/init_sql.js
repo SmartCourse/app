@@ -129,7 +129,7 @@ function sqlQuestion(code) {
     return function(question) {
         return {
             userID,
-            courseID: `(SELECT id FROM ${TABLE_NAMES.COURSES} WHERE code='${code}')`,
+            courseID: 1 + courses.findIndex((c) => c.code === code),
             title: question.title,
             body: question.body,
             pinned: 1
@@ -151,7 +151,7 @@ function sqlReview(code) {
     return function(review) {
         return {
             userID,
-            courseID: `(SELECT id FROM ${TABLE_NAMES.COURSES} WHERE code='${code}')`,
+            courseID: 1 + courses.findIndex((c) => c.code === code),
             title: review.title,
             body: review.body,
             recommend: nextValue(DONT_RECOMMEND, RECOMMEND),
@@ -237,7 +237,7 @@ async function sqlUsers(db) {
             uid: uid,
             displayName: displayName,
             email: email,
-            degreeID: `(SELECT id FROM ${TABLE_NAMES.DEGREES} WHERE name='${degree}')`,
+            degreeID: 1 + degrees.findIndex((d) => d.name === degree),
             reputation: userRepMap[i] || 0
         })
     }
