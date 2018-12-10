@@ -48,7 +48,7 @@ export default {
 }
 
 .purple {
-  background-color: #673ab7;
+  background-color: var(--color-purple);
 }
 
 .red {
@@ -60,7 +60,7 @@ export default {
 }
 
 .blue {
-  background-color: #2196f3;
+  background-color: var(--color-blue);
 }
 
 .dark-blue {

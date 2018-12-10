@@ -8,10 +8,15 @@
       <p class="published">
         <time>{{ published }}</time>
       </p>
-      <Category :recommend="recommend" v-if="cardType === 'Review'">
-        <p><b>{{ positiveOrNegativeText }}</b></p>
-      </Category>
-      <p v-else>
+      <div class="categories">
+        <Recommend :recommend="recommend" v-if="cardType === 'Review'">
+          {{ positiveOrNegativeText }}
+        </Recommend>
+        <Semester>
+            {{ teachingPeriod }}
+        </Semester>
+      </div>
+      <p v-if="cardType === 'Question'">
         <span v-if="numAnswers === 0">Know the answer to this question?</span>
         <span v-else>{{ numAnswers }} Answer{{ numAnswers > 1 ? 's' : '' }}</span>
       </p>
@@ -24,7 +29,8 @@
 import Card from '@/components/Card'
 import SecondHeader from '@/components/Card/SecondaryHeader'
 import UserMini from '@/components/User/Mini'
-import Category from '@/components/Category'
+import Recommend from '@/components/Category/Recommend'
+import Semester from '@/components/Category/Semester'
 
 export default {
   props: {
@@ -36,12 +42,14 @@ export default {
     code: String,
     id: String,
     cardType: String,
-    recommend: Boolean
+    recommend: Boolean,
+    teachingPeriod: { type: String, default: '18s2' }
   },
   components: {
     Card,
     UserMini,
-    Category,
+    Semester,
+    Recommend,
     SecondHeader
   },
   computed: {
@@ -57,7 +65,6 @@ export default {
 </script>
 
 <style scoped>
-
 .feed-card {
   border-radius: 0;
   min-width: 310px;
@@ -75,6 +82,16 @@ export default {
 
 .published, .likes {
   text-align: right;
+}
+
+.categories {
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+}
+
+.categories > * {
+  margin-right: 5px;
 }
 
 p {
@@ -95,7 +112,5 @@ p {
   .likes {
     display: none;
   }
-
 }
-
 </style>

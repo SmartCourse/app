@@ -61,4 +61,13 @@ p {
     font: var(--body-copy-2);
     padding: 5px;
 }
+
+@media screen and (max-width: 600px) {
+    .space-between {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+}
 </style>

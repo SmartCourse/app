@@ -12,7 +12,7 @@
 
 <script>
 import PostCard from '@/components/Card/Large'
-import Category from '@/components/Category'
+import Category from '@/components/Category/Recommend'
 
 export default {
   components: { PostCard, Category },
