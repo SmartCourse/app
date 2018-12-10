@@ -5,7 +5,7 @@ const {
     MAX_ENJOY,
     MIN_OPTION,
     MAX_OPTION,
-    TABLE_NAMES: { REVIEWS }
+    TABLE_NAMES: { REVIEWS, COMMENTS }
 } = require('./constants')
 
 /* All inputs should be validated in this class that are review related */
@@ -33,8 +33,15 @@ class Review {
     getReviews(code, pageNumber, pageSize) {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll(`SELECT * FROM ${REVIEWS} WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?`,
-                [code, offset, pageSize])
+            .queryAll(`
+            SELECT r.*, COUNT(c.reviewID) as numResponses FROM ${REVIEWS} r
+                JOIN ${COMMENTS} c 
+                on c.reviewID = r.id
+                WHERE r.code = ? 
+                GROUP BY c.reviewID
+                ORDER BY r.timestamp DESC
+                LIMIT ?, ?`,
+            [code, offset, pageSize])
     }
 
     /**

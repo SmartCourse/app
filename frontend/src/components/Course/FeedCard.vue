@@ -2,9 +2,20 @@
   <Card class="feed-card">
     <UserMini v-if="user" :name="user.displayName" :id="user.id" :picture="user.picture" />
     <div class="info">
-      <SecondHeader :routeName="routeName" :code="code" :id="id">
-        {{ title }}
-      </SecondHeader>
+      <div class="key-info">
+        <SecondHeader :routeName="routeName" :code="code" :id="id">
+          {{ title }}
+        </SecondHeader>
+        <p>
+            <span v-if="numResponses === 0">
+              {{ cardType === 'Question'
+                ? 'Know the answer to this question?'
+                : 'Have a response to this review?'
+              }}
+            </span>
+            <span v-else>{{ numResponses }} Response{{ numResponses > 1 ? 's' : '' }}</span>
+        </p>
+      </div>
       <p class="published">
         <time>{{ published }}</time>
       </p>
@@ -13,13 +24,9 @@
           {{ positiveOrNegativeText }}
         </Recommend>
         <Semester>
-            {{ teachingPeriod }}
+          {{ teachingPeriod }}
         </Semester>
       </div>
-      <p v-if="cardType === 'Question'">
-        <span v-if="numAnswers === 0">Know the answer to this question?</span>
-        <span v-else>{{ numAnswers }} Answer{{ numAnswers > 1 ? 's' : '' }}</span>
-      </p>
       <p class="likes">{{ likes > 0 && likes || 0 }} user{{ likes != 1 ? 's' : ''}} found this helpful</p>
     </div>
   </Card>
@@ -38,7 +45,7 @@ export default {
     likes: Number,
     published: String,
     user: Object,
-    numAnswers: {type: Number, default: 0},
+    numResponses: { type: Number, default: 0 },
     code: String,
     id: String,
     cardType: String,
@@ -87,7 +94,6 @@ export default {
 .categories {
   display: flex;
   align-items: center;
-  padding: 0 5px;
 }
 
 .categories > * {
@@ -95,7 +101,7 @@ export default {
 }
 
 p {
-  margin: 0 5px;
+  margin: 0;
   font: var(--body-copy-2);
 }
 
@@ -107,7 +113,7 @@ p {
 @media screen and (max-width: 500px) {
   .info {
     grid-gap: 5px;
-    grid-template-columns: 1fr 120px;
+    grid-template-columns: 1fr 100px;
   }
   .likes {
     display: none;

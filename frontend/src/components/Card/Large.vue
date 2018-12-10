@@ -5,6 +5,7 @@
              <!-- Add badges here in future -->
             <slot/>
         </div>
+        <EditButton />
         <!-- User block -->
         <User v-bind="user" :published="published"/>
         <!-- Content block and user interaction -->
@@ -20,13 +21,15 @@ import Card from '.'
 import CardHeader from './Header'
 import User from '@/components/User/Summary'
 import Vote from '@/components/Vote'
+import EditButton from '@/components/Interactions/Edit'
 
 export default {
   components: {
     Card,
     CardHeader,
     User,
-    Vote
+    Vote,
+    EditButton
   },
   props: {
     /* post title */
