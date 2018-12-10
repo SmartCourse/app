@@ -5,7 +5,7 @@
   "scripts": {
     "start": "NODE_ENV=development npx nodemon ./src/bin/www",
     "lint": "npx eslint src/**/*.js tests/**/*.js --fix",
-    "test:src": "npx nyc mocha tests/**/*.js",
+    "test:src": "npx nyc mocha tests/**/*.js --timeout 10000",
     "test": "export NODE_ENV=test npm run lint && npm run test:src",
     "coverage": "npx nyc report --reporter=html --reporter=text-lcov | coveralls"
   },
