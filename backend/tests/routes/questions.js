@@ -23,7 +23,7 @@ before(() => dbInitialised
                 return supertest.post('/api/user')
                     .set('Accept', 'application/json')
                     .set('Authorization', `Bearer ${global.idToken2}`)
-                    .send({ displayName: 'BackendTester2', degree: 'B. Testing', gradYear: 2018 })
+                    .send({ displayName: 'BackendTester2', degree: 'B. Arts', gradYear: 2018 })
             })
     })
 )
@@ -53,7 +53,7 @@ describe('Test question routes', () => {
 
         it('question has a course code', () =>
             request.then(({ body }) =>
-                expect(body.code).is.a('string'))
+                expect(body.courseID).is.a('number'))
         )
     })
 })

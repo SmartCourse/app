@@ -3,19 +3,18 @@ const supertest = require('supertest')(app)
 const { expect } = require('chai')
 const dbInitialised = require('../../src/models/db/init_sql').initDB
 
-before(() => dbInitialised)
-
 describe('Subject route testing', () => {
     describe('GET /api/subject', () => {
         let request
-        before(() => {
-            request = supertest
-                .get('/api/subject')
-                .set('Accept', 'application/json')
-                .expect('Content-Type', /json/)
-                .expect(200)
-            return request
-        })
+        before(() => dbInitialised
+            .then(() => {
+                request = supertest
+                    .get('/api/subject')
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                return request
+            }))
 
         it('returns a 138 subjects', () =>
             request.then(({ body }) =>
@@ -35,13 +34,14 @@ describe('Subject route testing', () => {
 
     describe('GET /api/subject/ACCT', () => {
         let request
-        before(() => {
-            request = supertest
-                .get('/api/subject/ACCT')
-                .set('Accept', 'application/json')
-                .expect(200)
-            return request
-        })
+        before(() => dbInitialised
+            .then(() => {
+                request = supertest
+                    .get('/api/subject/ACCT')
+                    .set('Accept', 'application/json')
+                    .expect(200)
+                return request
+            }))
 
         it('returns a list of 23 accounting courses', () =>
             request.then(({ body }) =>

@@ -26,7 +26,7 @@ describe('Review route testing', function () {
 
         it('review has a course code', () =>
             request.then(({ body }) =>
-                expect(body.code).to.match(/\w{4}\d{4}/))
+                expect(body.courseID).to.be.a('number'))
         )
     })
 

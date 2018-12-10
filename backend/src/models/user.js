@@ -93,7 +93,7 @@ class User {
                 SELECT @displayName, @email, @uid, @gradYear, id
                 FROM degrees
                 WHERE name = @name;
-                SELECT @@identity AS id`,
+                `,
             {
                 [DEGREES]: { name: degree },
                 [USERS]: data

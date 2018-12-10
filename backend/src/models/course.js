@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { COURSES, REVIEWS } } = require('./constants')
+const { TABLE_NAMES: { COURSES, SUBJECTS, REVIEWS } } = require('./constants')
 
 /* All inputs should be validated in this class that are course related */
 class Course {
@@ -16,12 +16,14 @@ class Course {
             .run(`SELECT * FROM ${COURSES}`)
     }
 
-    getCoursesBySubject(subjectCode) {
+    getCoursesBySubject(code) {
         return this.db
-            .run(`SELECT * FROM ${COURSES} WHERE subjectCode=@subjectCode`,
-                {
-                    [COURSES]: { subjectCode }
-                })
+            .run(`SELECT c.* FROM ${COURSES} as c
+                JOIN ${SUBJECTS} s ON s.code=@code
+                WHERE subjectID=s.id`,
+            {
+                [SUBJECTS]: { code }
+            })
     }
 
     /**
