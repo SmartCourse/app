@@ -11,6 +11,7 @@ exports.DB_CONFIG = {
         {
             database: exports.DB_NAME,
             rowCollectionOnDone: true,
+            rowCollectionOnRequestCompletion: true,
             encrypt: true
         }
 }
@@ -333,7 +334,7 @@ exports.TABLE_COLUMNS = {
             options: { nullable: false }
         },
         gradYear: {
-            type: TYPES.Time,
+            type: TYPES.VarChar,
             options: { nullable: true }
         },
         description: {

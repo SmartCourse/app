@@ -14,9 +14,11 @@ class Question {
      */
     getQuestion(id) {
         return this.db
-            .query(`SELECT * FROM ${QUESTIONS} WHERE id=@id`,
-                { id }, QUESTIONS)
-            .then((res) => res ? res[0] : {})
+            .run(`SELECT * FROM ${QUESTIONS} WHERE id=@id`,
+                {
+                    [QUESTIONS]: { id }
+                })
+            .then((res) => res.length ? res[0] : {})
     }
 
     /**
@@ -31,12 +33,14 @@ class Question {
         }
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .query(`SELECT * FROM ${QUESTIONS}
+            .run(`SELECT * FROM ${QUESTIONS}
                 WHERE courseID = (SELECT id FROM ${COURSES} WHERE code=@code)
                 ORDER BY timestamp DESC
                 OFFSET ${offset} ROWS
                 FETCH NEXT ${pageSize} ROWS ONLY`,
-            { code }, COURSES)
+            {
+                [COURSES]: { code }
+            })
     }
 
     getQuestionsByUserID(userID, limit = 10) {
@@ -44,12 +48,14 @@ class Question {
             throw Error('Invalid limit value')
         }
         return this.db
-            .query(`SELECT * FROM ${QUESTIONS}
+            .run(`SELECT * FROM ${QUESTIONS}
                 WHERE userID=@userID
                 ORDER BY timestamp DESC
                 OFFSET 0 ROWS
                 FETCH NEXT ${limit} ROWS ONLY`,
-            { userID }, QUESTIONS)
+            {
+                [QUESTIONS]: { userID }
+            })
     }
 
     /**
@@ -59,10 +65,12 @@ class Question {
      */
     getQuestionCount(code) {
         return this.db
-            .query(`SELECT COUNT(*) AS COUNT FROM ${QUESTIONS}
+            .run(`SELECT COUNT(*) AS COUNT FROM ${QUESTIONS}
                 WHERE courseID=(SELECT id FROM ${COURSES} WHERE code=@code)`,
-            { code }, COURSES)
-            .then((res) => res ? res[0] : { COUNT: 0 })
+            {
+                [COURSES]: { code }
+            })
+            .then((res) => res.length ? res[0] : { COUNT: 0 })
     }
 
     /**
@@ -73,7 +81,16 @@ class Question {
      */
     postQuestion(code, { userID, title, body }) {
         return this.db
-            .insert(QUESTIONS, { code, userID, title, body })
+            .run(`INSERT INTO ${QUESTIONS} (courseID, userID, title, body)
+                SELECT id, @userID, @title, @body
+                FROM courses
+                WHERE code=@code;
+                SELECT @@identity AS id`,
+            {
+                [QUESTIONS]: { userID, title, body },
+                [COURSES]: { code }
+            })
+            .then(([{ id }]) => id)
     }
 }
 

@@ -22,8 +22,11 @@ class Review {
      */
     getReview(id) {
         return this.db
-            .query(`SELECT * FROM ${REVIEWS} WHERE id=@id`, { id }, REVIEWS)
-            .then((res) => res ? res[0] : {})
+            .run(`SELECT * FROM ${REVIEWS} WHERE id=@id`,
+                {
+                    [REVIEWS]: { id }
+                })
+            .then((res) => res.length ? res[0] : {})
     }
 
     /**
@@ -37,12 +40,14 @@ class Review {
         }
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .query(`SELECT * FROM ${REVIEWS}
+            .run(`SELECT * FROM ${REVIEWS}
             WHERE courseID=(SELECT id FROM ${COURSES} WHERE code=@code)
             ORDER BY timestamp DESC
             OFFSET ${offset} ROWS
             FETCH NEXT ${pageSize} ROWS ONLY`,
-            { code }, COURSES)
+            {
+                [COURSES]: { code }
+            })
     }
 
     /**
@@ -52,10 +57,12 @@ class Review {
      */
     getReviewCount(code) {
         return this.db
-            .query(`SELECT COUNT(*) AS COUNT FROM ${REVIEWS}
+            .run(`SELECT COUNT(*) AS COUNT FROM ${REVIEWS}
             WHERE courseID=(SELECT id FROM ${COURSES} WHERE code=@code)`,
-            { code }, COURSES)
-            .then((res) => res ? res[0] : { COUNT: 0 })
+            {
+                [COURSES]: { code }
+            })
+            .then((res) => res.length ? res[0] : { COUNT: 0 })
     }
 
     /**
@@ -73,7 +80,16 @@ class Review {
 
         // insert review, get review, update course ratings
         return this.db
-            .insert(REVIEWS, { code, userID, title, body, recommend, enjoy, difficulty, teaching, workload })
+            .run(`INSERT INTO ${REVIEWS} (courseID, userID, title, body, recommend, enjoy, difficulty, teaching, workload)
+                SELECT id, @userID, @title, @body, @recommend, @enjoy, @difficulty, @teaching, @workload
+                FROM courses
+                WHERE code=@code;
+                SELECT @@identity AS id`,
+            {
+                [REVIEWS]: { userID, title, body, recommend, enjoy, difficulty, teaching, workload },
+                [COURSES]: { code }
+            })
+            .then(([{ id }]) => id)
     }
 }
 

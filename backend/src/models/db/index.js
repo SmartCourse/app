@@ -16,23 +16,11 @@ class DB {
         await initDB()
     }
 
-    insert(table, data) {
-        // return insertDB(this._db, table, data)
-    }
-
-    insertUnique(table, data) {
-        // return insertUniqueDB(this._db, table, data)
-    }
-
-    update(table, data, conditions) {
-        // return updateDB(this._db, table, data, conditions)
-    }
-
     delete() {
         return Promise.resolve(false)
     }
 
-    async query(query, params = {}, table) {
+    async run(sql, params = {}) {
         return new Promise((resolve, reject) => {
             // Connect (can only have one query per connection)
             const db = new Connection(DB_CONFIG)
@@ -40,27 +28,26 @@ class DB {
                 if (err) reject(err)
 
                 // Make the request
-                const request = new Request(query, (err) => {
+                const request = new Request(sql, (err, rowCount, rows) => {
                     if (err) reject(err)
                     db.close()
-                })
-                Object.keys(params).forEach(param => {
-                    console.log(params)
-                    console.log(table)
-                    console.log(param)
-                    console.log(query)
-                    request.addParameter(param, TABLE_COLUMNS[table][param].type, params[param])
-                })
-                console.log(query)
 
-                // Returning the result
-                request.on('doneInProc', (rowCount, more, rows) => {
+                    // Returning the result
                     const reducer = (row, column) => {
                         row[column.metadata.colName] = column.value
                         return row
                     }
-                    resolve(rows.map(row => row.reduce(reducer, {})))
+
+                    rows ? resolve(rows.map(row => row.reduce(reducer, {})))
+                        : resolve([])
                 })
+
+                Object.keys(params).forEach(table =>
+                    Object.keys(params[table]).forEach(param =>
+                        request.addParameter(param, TABLE_COLUMNS[table][param].type, 
+                            params[table][param])
+                    )
+                )
 
                 // Do the request
                 db.execSql(request)

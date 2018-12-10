@@ -13,17 +13,17 @@ class Uni {
      */
     getSubjects() {
         return this.db
-            .query(`SELECT * FROM ${SUBJECTS}`)
+            .run(`SELECT * FROM ${SUBJECTS}`)
     }
 
     getDegrees() {
         return this.db
-            .query(`SELECT * FROM ${DEGREES}`)
+            .run(`SELECT * FROM ${DEGREES}`)
     }
 
     getFaculties() {
         return this.db
-            .query(`SELECT * FROM ${FACULTIES}`)
+            .run(`SELECT * FROM ${FACULTIES}`)
     }
 }
 

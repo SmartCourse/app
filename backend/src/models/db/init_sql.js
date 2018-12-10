@@ -328,7 +328,7 @@ function sqlTables() {
             joined DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
             reputation INTEGER DEFAULT '0',
             degreeID INTEGER NOT NULL,
-            gradYear TIMESTAMP,
+            gradYear VARCHAR(8000),
             description VARCHAR(8000),
             picture VARCHAR(8000),
             CONSTRAINT fk_degree_user

@@ -16,7 +16,13 @@ class Comment {
     postComment(queryObject, { body, userID }) {
         const [key, value] = Object.entries(queryObject)[0]
         return this.db
-            .insert(COMMENTS, { [key]: value, body, userID })
+            .run(`INSERT INTO ${COMMENTS} (${key}, body, userID)
+                VALUES (@${key}, @body, @userID);
+                SELECT @@identity AS id`,
+            {
+                [COMMENTS]: { [key]: value, body, userID }
+            })
+            .then(([{ id }]) => id)
     }
 
     /**
@@ -29,7 +35,7 @@ class Comment {
     getComments(queryObject, pageNumber = 1) {
         const [key, value] = Object.entries(queryObject)[0]
         return this.db
-            .query(`SELECT u.id AS userID, u.displayName, u.gradYear,
+            .run(`SELECT u.id AS userID, u.displayName, u.gradYear,
                 u.description, u.picture, u.reputation, u.joined,
                 c.*, d.name AS degree
                 FROM ${COMMENTS} AS c
@@ -39,12 +45,15 @@ class Comment {
                 JOIN ${DEGREES} AS d
                 ON u.degreeID = d.id
                 
-                WHERE c.${key}=@${key}`, { [key]: value }, COMMENTS)
+                WHERE c.${key}=@${key}`,
+            {
+                [COMMENTS]: { [key]: value }
+            })
     }
 
     getComment(id) {
         return this.db
-            .query(`SELECT u.id AS userID, u.displayName, u.gradYear,
+            .run(`SELECT u.id AS userID, u.displayName, u.gradYear,
                 u.description, u.picture, u.reputation, u.joined,
                 c.*, d.name AS degree
                 FROM ${COMMENTS} AS c
@@ -54,8 +63,11 @@ class Comment {
                 JOIN ${DEGREES} AS d
                 ON u.degreeID = d.id
                 
-                WHERE c.id=@id`, { id }, COMMENTS)
-            .then((res) => res ? res[0] : {})
+                WHERE c.id=@id`,
+            {
+                [COMMENTS]: { id }
+            })
+            .then((res) => res.length ? res[0] : {})
     }
 
     /**
