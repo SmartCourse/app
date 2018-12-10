@@ -17,8 +17,11 @@ describe('QuestionForm.vue', () => {
     this.wrapper.find(AppButton).trigger('click')
   })
 
-  it('prop data contains question data', function () {
-    expect(this.wrapper.vm.$data.title).to.include(this.question.title)
+  it('has the right body', function () {
     expect(this.wrapper.vm.$data.body).to.include(this.question.body)
+  })
+
+  it('has the right title', function () {
+    expect(this.wrapper.vm.$data.title).to.include(this.question.title)
   })
 })

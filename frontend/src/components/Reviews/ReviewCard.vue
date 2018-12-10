@@ -6,7 +6,9 @@
         :user="user"
         :published="published"
     >
-      <Category :recommend="recommend">{{ recommend ? "Recommended" : "Not Recommended" }}</Category>
+      <Category :recommend="recommend" class="right-margin">
+        {{ recommend ? "Recommended" : "Not Recommended" }}
+      </Category>
     </PostCard>
 </template>
 
@@ -44,3 +46,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.right-margin {
+  margin-right: 20px;
+}
+</style>
+
