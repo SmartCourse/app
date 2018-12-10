@@ -1,5 +1,8 @@
 const app = require('../../src')
 const supertest = require('supertest')(app)
+const dbInitialised = require('../../src/models/db/init_sql').initDB
+
+before(() => dbInitialised)
 
 describe('Uni route testing', function () {
     it('GET /degrees', () =>

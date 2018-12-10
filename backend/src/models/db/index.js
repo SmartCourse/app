@@ -13,7 +13,7 @@ const {
  */
 class DB {
     async init() {
-        await initDB()
+        return initDB
     }
 
     delete() {

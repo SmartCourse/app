@@ -11,6 +11,7 @@ const {
     SAMPLE_USERS
 } = require('./test_constants')
 const {
+    PRODUCTION,
     TESTING,
     DB_CONFIG,
     TABLE_NAMES,
@@ -35,50 +36,48 @@ const userRepMap = {}
 // PRNG taken from: https://gist.github.com/blixt/f17b47c62508be59987b
 let seed = 1
 
-exports.initDB = async function() {
+exports.initDB = new Promise((resolve, reject) => {
     // Database initialisation benchmarking
     const timeList = [Date.now() / 1000]
 
     // Do the initialisation
-    return new Promise((resolve, reject) => {
-        const db = new Connection(DB_CONFIG)
-        db.on('connect', (err) => {
+    const db = new Connection(DB_CONFIG)
+    db.on('connect', (err) => {
+        if (err) reject(err)
+
+        // Create the database and initialise data with no dependencies.
+        const request = new Request(sqlTables(), async (err) => {
             if (err) reject(err)
 
-            // Create the database and initialise data with no dependencies.
-            const request = new Request(sqlTables(), async (err) => {
-                if (err) reject(err)
+            // Initialise with UNSW data
+            if (!await unswDataInitialised(db)) {
+                await sqlUniversity(db)
+                await sqlFaculties(db)
+                await sqlDegrees(db)
+                await sqlSubjects(db)
+                await sqlCourses(db)
+            }
 
-                // Initialise with UNSW data
-                if (!await unswDataInitialised(db)) {
-                    await sqlUniversity(db)
-                    await sqlFaculties(db)
-                    await sqlDegrees(db)
-                    await sqlSubjects(db)
-                    await sqlCourses(db)
-                }
+            // Initialise test databases
+            if (!PRODUCTION && !await testDataInitialised(db)) {
+                await sqlQuestions(db)
+                await sqlReviews(db)
+                await sqlComments(db)
+                await sqlLikes(db)
+                await sqlUsers(db)
+            }
 
-                // Initialise test databases
-                if (TESTING && !await testDataInitialised(db)) {
-                    await sqlQuestions(db)
-                    await sqlReviews(db)
-                    await sqlComments(db)
-                    await sqlLikes(db)
-                    await sqlUsers(db)
-                }
+            // Log completion time
+            timeList.push(Date.now() / 1000)
+            console.log(`Done creating database! (${((timeList[1] - timeList[0])).toFixed(3)})`)
 
-                // Log completion time
-                timeList.push(Date.now() / 1000)
-                console.log(`Done creating database! (${((timeList[1] - timeList[0])).toFixed(3)})`)
-
-                // Close the connection and return
-                db.close()
-                resolve()
-            })
-            db.execSql(request)
+            // Close the connection and return
+            db.close()
+            resolve()
         })
+        db.execSql(request)
     })
-}
+})
 
 // Assume that if UNSW has been inserted into uni table,
 // all UNSW data has been inserted into tables.
@@ -299,6 +298,15 @@ async function sqlLikes(db) {
 function sqlTables() {
     return `
     BEGIN TRANSACTION;
+    
+${
+    // Testing assumes a fresh database
+    TESTING ? `DROP TABLE ${TABLE_NAMES.LIKES}
+        DROP TABLE ${TABLE_NAMES.COMMENTS}
+        DROP TABLE ${TABLE_NAMES.REVIEWS}
+        DROP TABLE ${TABLE_NAMES.QUESTIONS}
+        DROP TABLE ${TABLE_NAMES.USERS}` : ''
+}
 
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.FACULTIES}' AND xtype='U')
         CREATE TABLE ${TABLE_NAMES.FACULTIES} (

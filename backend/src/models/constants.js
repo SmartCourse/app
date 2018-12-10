@@ -1,8 +1,10 @@
 const { TYPES } = require('tedious')
 
 // SQL Server Config
-exports.TESTING = process.env.NODE_ENV === 'production' ? 0 : 1
-exports.DB_NAME = exports.TESTING ? 'smartcourse-staging' : 'smartcourse'
+exports.PRODUCTION = process.env.NODE_ENV === 'production'
+exports.TESTING = process.env.NODE_ENV === 'test'
+exports.DB_NAME = exports.PRODUCTION ? 'smartcourse'
+    : exports.TESTING ? 'smartcourse-testing' : 'smartcourse-staging'
 exports.DB_CONFIG = {
     userName: process.env.AZURE_SQL_USER,
     password: process.env.AZURE_SQL_PASSWORD,
@@ -32,16 +34,16 @@ exports.PAGE_SIZE = 10
 
 // Table Names
 exports.TABLE_NAMES = {
-    USERS: 'users',
     LIKES: 'likes',
-    COURSES: 'courses',
-    SUBJECTS: 'subjects',
-    DEGREES: 'degrees',
-    FACULTIES: 'faculties',
-    UNIVERSITY: 'university',
     COMMENTS: 'comments',
     REVIEWS: 'reviews',
-    QUESTIONS: 'questions'
+    QUESTIONS: 'questions',
+    COURSES: 'courses',
+    SUBJECTS: 'subjects',
+    UNIVERSITY: 'university',
+    USERS: 'users',
+    DEGREES: 'degrees',
+    FACULTIES: 'faculties'
 }
 
 // Table Columns

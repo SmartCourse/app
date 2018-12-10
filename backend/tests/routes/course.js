@@ -2,27 +2,30 @@ const fetch = require('node-fetch')
 const app = require('../../src')
 const supertest = require('supertest')(app)
 const { expect } = require('chai')
+const dbInitialised = require('../../src/models/db/init_sql').initDB
 
-before(() => {
-    return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
-        {
-            'credentials': 'omit',
-            'headers': {},
-            'referrer': 'http://localhost:8080/login',
-            'referrerPolicy': 'no-referrer-when-downgrade',
-            'body': '{"email":"backendtest@test.com","password":"backendtest","returnSecureToken":true}',
-            'method': 'POST',
-            'mode': 'cors'
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            global.idToken = data.idToken
-            return supertest.post('/api/user')
-                .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken}`)
-                .send({ displayName: 'BackendTester', degree: 'B. Testing', gradYear: 2018 })
-        })
-})
+before(() => dbInitialised
+    .then(() => {
+        return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
+            {
+                'credentials': 'omit',
+                'headers': {},
+                'referrer': 'http://localhost:8080/login',
+                'referrerPolicy': 'no-referrer-when-downgrade',
+                'body': '{"email":"backendtest@test.com","password":"backendtest","returnSecureToken":true}',
+                'method': 'POST',
+                'mode': 'cors'
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                global.idToken = data.idToken
+                return supertest.post('/api/user')
+                    .set('Accept', 'application/json')
+                    .set('Authorization', `Bearer ${global.idToken}`)
+                    .send({ displayName: 'BackendTester', degree: 'B. Testing', gradYear: 2018 })
+            })
+    })
+)
 
 describe('Course route testing', () => {
     describe('GET /api/course', () => {
@@ -80,6 +83,7 @@ describe('Course route testing', () => {
 
     describe('POST /api/course/ACCT1501/question', () => {
         let request
+        let xid
 
         before(() => {
             request = supertest
@@ -95,16 +99,19 @@ describe('Course route testing', () => {
             request.expect(201)
         )
 
-        it('returns correct Location', () =>
-            request.expect('Location', '/api/course/ACCT1501/question/15031')
-        )
+        it('returns correct Location', () => {
+            console.log(request.res.headers)
+            xid = request.res.headers['x-id']
+            expect(xid).to.be.a('number')
+            expect(request.res.headers.location).to.equal(`/api/course/ACCT1501/question/${xid}`)
+        })
 
         describe('new record exists', () => {
             let followUp
 
             before(() => {
                 followUp = supertest
-                    .get('/api/course/ACCT1501/question/15031')
+                    .get(`/api/course/ACCT1501/question/${xid}`)
                     .set('Accept', 'application/json')
                     .expect(200)
 

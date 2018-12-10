@@ -1,6 +1,9 @@
 const app = require('../../src')
 const supertest = require('supertest')(app)
 const { expect } = require('chai')
+const dbInitialised = require('../../src/models/db/init_sql').initDB
+
+before(() => dbInitialised)
 
 describe('Subject route testing', () => {
     describe('GET /api/subject', () => {
