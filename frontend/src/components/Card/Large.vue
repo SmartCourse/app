@@ -5,7 +5,7 @@
              <!-- Add badges here in future -->
             <slot/>
         </div>
-        <EditButton />
+        <InteractionMenu class="top-right" />
         <!-- User block -->
         <User v-bind="user" :published="published"/>
         <!-- Content block and user interaction -->
@@ -21,7 +21,7 @@ import Card from '.'
 import CardHeader from './Header'
 import User from '@/components/User/Summary'
 import Vote from '@/components/Vote'
-import EditButton from '@/components/Interactions/Edit'
+import InteractionMenu from '@/components/Interactions/Menu'
 
 export default {
   components: {
@@ -29,7 +29,7 @@ export default {
     CardHeader,
     User,
     Vote,
-    EditButton
+    InteractionMenu
   },
   props: {
     /* post title */
@@ -63,6 +63,11 @@ p {
     margin: 10px 0;
     font: var(--body-copy-2);
     padding: 5px;
+}
+
+.top-right {
+    top: 17px;
+    right: 0;
 }
 
 @media screen and (max-width: 600px) {

@@ -1,6 +1,6 @@
 <template>
     <button
-        class="material-icons edit-button"
+        class="material-icons menu-button"
         type="menu"
         title="Toggle Menu"
     >
@@ -9,10 +9,8 @@
 </template>
 
 <style scoped>
-.edit-button {
+.menu-button {
     position: absolute;
-    top: 17px;
-    right: 0;
     background: none;
     border: none;
     cursor: pointer;
