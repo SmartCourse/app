@@ -5,7 +5,7 @@ const {
     MAX_ENJOY,
     MIN_OPTION,
     MAX_OPTION,
-    TABLE_NAMES: { REVIEWS, COMMENTS }
+    TABLE_NAMES: { REVIEWS, COURSES, COMMENTS }
 } = require('./constants')
 
 /* All inputs should be validated in this class that are review related */
@@ -22,7 +22,11 @@ class Review {
      */
     getReview(id) {
         return this.db
-            .query(`SELECT * FROM ${REVIEWS} WHERE id=?`, [id])
+            .run(`SELECT * FROM ${REVIEWS} WHERE id=@id`,
+                {
+                    [REVIEWS]: { id }
+                })
+            .then(([row]) => row || {})
     }
 
     /**
@@ -31,17 +35,23 @@ class Review {
      * @returns {Array}
      */
     getReviews(code, pageNumber, pageSize) {
+        if (isNaN(pageNumber) || isNaN(pageSize)) {
+            throw Error('Invalid paging values')
+        }
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll(`
-            SELECT r.*, COUNT(c.reviewID) as numResponses FROM ${REVIEWS} r
-                JOIN ${COMMENTS} c 
-                on c.reviewID = r.id
-                WHERE r.code = ? 
-                GROUP BY c.reviewID
-                ORDER BY r.timestamp DESC
-                LIMIT ?, ?`,
-            [code, offset, pageSize])
+            .run(`SELECT r.*, cou.code, (SELECT COUNT(com.reviewID)
+                FROM ${COMMENTS} com
+                WHERE com.reviewID = r.id) as numResponses
+            FROM ${REVIEWS} r
+            JOIN ${COURSES} cou ON cou.code = @code 
+            WHERE r.courseID=cou.id
+            ORDER BY r.timestamp DESC
+            OFFSET ${offset} ROWS
+            FETCH NEXT ${pageSize} ROWS ONLY`,
+            {
+                [COURSES]: { code }
+            })
     }
 
     /**
@@ -51,8 +61,12 @@ class Review {
      */
     getReviewCount(code) {
         return this.db
-            .queryAll(`SELECT COUNT() FROM ${REVIEWS} WHERE code=?`,
-                [code])
+            .run(`SELECT COUNT(*) AS COUNT FROM ${REVIEWS} r
+            WHERE r.courseID=(SELECT c.id FROM ${COURSES} c WHERE c.code=@code)`,
+            {
+                [COURSES]: { code }
+            })
+            .then(([row]) => row || { COUNT: 0 })
     }
 
     /**
@@ -70,7 +84,16 @@ class Review {
 
         // insert review, get review, update course ratings
         return this.db
-            .insert(REVIEWS, { code, userID, title, body, recommend, enjoy, difficulty, teaching, workload })
+            .run(`INSERT INTO ${REVIEWS} (courseID, userID, title, body, recommend, enjoy, difficulty, teaching, workload)
+                SELECT id, @userID, @title, @body, @recommend, @enjoy, @difficulty, @teaching, @workload
+                FROM courses
+                WHERE code=@code;
+                SELECT @@identity AS id`,
+            {
+                [REVIEWS]: { userID, title, body, recommend, enjoy, difficulty, teaching, workload },
+                [COURSES]: { code }
+            })
+            .then(([{ id }]) => id)
     }
 }
 

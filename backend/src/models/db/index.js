@@ -1,14 +1,8 @@
-const path = require('path')
-const sqlite3 = require('sqlite3')
-const { insertDB, insertUniqueDB, updateDB } = require('./js/tables')
+const { Connection, Request } = require('tedious')
+const { initDB } = require('./init_sql')
+const { TABLE_COLUMNS } = require('../constants')
+const { DB_CONFIG } = require('./config')
 
-// init db
-require('./init_sql')
-
-const DB_NAME = process.env.NODE_ENV === 'production'
-    ? path.join(__dirname, '../../../db/smartcourse.db') : path.join(__dirname, './test.db')
-
-console.log('init:', DB_NAME)
 /**
  * Very slight abstraction over the direct sql queries.
  * This object can be instantiated once and then all queries are assumed to be
@@ -16,63 +10,48 @@ console.log('init:', DB_NAME)
  * @param {string} databaseName The name of the db if it needs to be passed in.
  */
 class DB {
-    constructor(databaseName) {
-        this._db = new sqlite3.Database(databaseName, sqlite3.OPEN_READWRITE,
-            (err) => {
-                if (err) {
-                    console.error(err)
-                } else {
-                    console.log(`Opened database: ${databaseName}`)
-                }
-            }
-        )
+    async init() {
+        return initDB
     }
 
-    insert(table, data) {
-        return insertDB(this._db, table, data)
-    }
-
-    insertUnique(table, data) {
-        return insertUniqueDB(this._db, table, data)
-    }
-
-    update(table, data, conditions) {
-        return updateDB(this._db, table, data, conditions)
-    }
-
-    deleteDB () {
+    delete() {
         return Promise.resolve(false)
     }
 
-    run (query, params = []) {
+    async run(sql, params = {}) {
         return new Promise((resolve, reject) => {
-            this._db.run(
-                query,
-                params,
-                (err) => { err ? reject(err) : resolve(true) }
-            )
-        })
-    }
+            // Connect (can only have one query per connection)
+            const db = new Connection(DB_CONFIG)
+            db.on('connect', (err) => {
+                if (err) reject(err)
 
-    query(query, params = []) {
-        return new Promise((resolve, reject) => {
-            this._db.get(
-                query,
-                params,
-                (err, row) => { err ? reject(err) : resolve(row) }
-            )
-        })
-    }
+                // Make the request
+                const request = new Request(sql, (err, rowCount, rows) => {
+                    if (err) reject(err)
+                    db.close()
 
-    queryAll(query, params = []) {
-        return new Promise((resolve, reject) => {
-            this._db.all(
-                query,
-                params,
-                (err, rows) => { err ? reject(err) : resolve(rows) }
-            )
+                    // Returning the result
+                    const reducer = (row, column) => {
+                        row[column.metadata.colName] = column.value
+                        return row
+                    }
+
+                    rows ? resolve(rows.map(row => row.reduce(reducer, {})))
+                        : resolve([])
+                })
+
+                Object.keys(params).forEach(table =>
+                    Object.keys(params[table]).forEach(param =>
+                        request.addParameter(param, TABLE_COLUMNS[table][param].type,
+                            params[table][param])
+                    )
+                )
+
+                // Do the request
+                db.execSql(request)
+            })
         })
     }
 }
 
-module.exports = new DB(DB_NAME)
+module.exports = new DB()

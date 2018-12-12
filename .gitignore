@@ -24,7 +24,6 @@ yarn-error.log*
 
 backend/public
 backend/db
-backend/src/models/db/sql/test/*
 test.db
 package-lock.json
 *.zip

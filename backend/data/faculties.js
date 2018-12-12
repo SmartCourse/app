@@ -8,3 +8,4 @@ module.exports = [
     'Medicine',
     'Science'
 ]
+    .map(name => { return { name } })

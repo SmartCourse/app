@@ -1,3 +1,6 @@
+const { TABLE_NAMES } = require('../src/models/constants')
+const faculties = require('./faculties')
+
 module.exports = [
   {
     name: 'Bachelor of Actuarial Studies/Advanced Mathematics (Honours)',
@@ -1215,10 +1218,11 @@ module.exports = [
     tags: 'optometry anatomy ocular therapy psychophysics optics',
     type: 'undergraduate'
   }
-].map(({ name, ...rest }) => ({
+].map(({ name, faculty, ...rest }) => ({
   name: name.startsWith('Bachelor of')
     ? 'B.' + name.split('Bachelor of')[1]
     : name,
+  facultyID: 1 + faculties.findIndex((f) => f.name === faculty),
   longName: name,
   ...rest
 }))

@@ -20,7 +20,7 @@ before(() => {
             return supertest.post('/api/user')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken}`)
-                .send({ displayName: 'BackendTester', degree: 'B. Testing', gradYear: 2018 })
+                .send({ displayName: 'BackendTester', degree: 'B. Arts', gradYear: 2018 })
         })
 })
 
@@ -95,9 +95,9 @@ describe('Course route testing', () => {
             request.expect(201)
         )
 
-        it('returns correct Location', () =>
-            request.expect('Location', '/api/course/ACCT1501/question/15031')
-        )
+        it('returns correct Location', () => {
+            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/question/15031')
+        })
 
         describe('new record exists', () => {
             let followUp
@@ -139,7 +139,7 @@ describe('Course route testing', () => {
 
         it('correct number of questions', () =>
             request.then(({ body }) =>
-                expect(body.data.length).to.equal(5))
+                expect(body.data.length).to.equal(6))
         )
 
         it('question has a title', () =>
@@ -154,7 +154,7 @@ describe('Course route testing', () => {
 
         it('question has a course id', () =>
             request.then(({ body }) =>
-                expect(body.data[0].code).to.equal('ACCT1501'))
+                expect(body.data[0].courseID).to.equal(1))
         )
     })
 
@@ -185,7 +185,7 @@ describe('Course route testing', () => {
         })
 
         it('returns correct Location', () => {
-            request.expect('Location', '/api/course/COMP4920/review/18037')
+            expect(request.res.headers.location).to.equal('/api/course/COMP4920/review/9019')
         })
 
         describe('Review created correctly', () => {
@@ -193,7 +193,7 @@ describe('Course route testing', () => {
 
             before(() => {
                 followUp = supertest
-                    .get('/api/course/COMP4920/review/18037')
+                    .get('/api/course/COMP4920/review/9019')
                     .set('Accept', 'application/json')
                     .expect(200)
 
@@ -250,7 +250,7 @@ describe('Course route testing', () => {
 
         it('review[0] has a course id', () =>
             request.then(({ body }) =>
-                expect(body.data[0].code).is.a('string'))
+                expect(body.data[0].courseID).is.a('number'))
         )
     })
 })

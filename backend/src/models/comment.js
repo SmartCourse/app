@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { COMMENTS, USERS } } = require('./constants')
+const { TABLE_NAMES: { COMMENTS, USERS, DEGREES } } = require('./constants')
 
 /* All inputs should be validated in this class that are comment related */
 class Comment {
@@ -16,7 +16,13 @@ class Comment {
     postComment(queryObject, { body, userID }) {
         const [key, value] = Object.entries(queryObject)[0]
         return this.db
-            .insert(COMMENTS, { [key]: value, body, userID })
+            .run(`INSERT INTO ${COMMENTS} (${key}, body, userID)
+                VALUES (@${key}, @body, @userID);
+                SELECT @@identity AS id`,
+            {
+                [COMMENTS]: { [key]: value, body, userID }
+            })
+            .then(([{ id }]) => id)
     }
 
     /**
@@ -29,54 +35,39 @@ class Comment {
     getComments(queryObject, pageNumber = 1) {
         const [key, value] = Object.entries(queryObject)[0]
         return this.db
-            .queryAll(`SELECT
-                u.id as userID,
-                u.displayName,
-                u.degree,
-                u.gradYear,
-                u.description,
-                u.picture,
-                u.reputation,
-                u.joined,
-                c.*
-                FROM
-                ${COMMENTS} as c
-                JOIN
-                ${USERS} as u
-                    on (
-                        c.userID=u.id
-                    )
-                WHERE
-                (
-                    c.${key}=?
-                ) ;
-        `, [value])
+            .run(`SELECT u.id AS userID, u.displayName, u.gradYear,
+                u.description, u.picture, u.reputation, u.joined,
+                c.*, d.name AS degree
+                FROM ${COMMENTS} AS c
+
+                JOIN ${USERS} AS u
+                ON c.userID=u.id
+                JOIN ${DEGREES} AS d
+                ON u.degreeID = d.id
+                
+                WHERE c.${key}=@${key}`,
+            {
+                [COMMENTS]: { [key]: value }
+            })
     }
 
     getComment(id) {
         return this.db
-            .query(`SELECT
-                u.id as userID,
-                u.displayName,
-                u.degree,
-                u.gradYear,
-                u.description,
-                u.picture,
-                u.reputation,
-                u.joined,
-                c.*
-                FROM
-                ${COMMENTS} as c
-                JOIN
-                ${USERS} as u
-                    on (
-                        c.userID=u.id
-                    )
-                WHERE
-                (
-                    c.id=?
-                ) ;
-        `, [id])
+            .run(`SELECT u.id AS userID, u.displayName, u.gradYear,
+                u.description, u.picture, u.reputation, u.joined,
+                c.*, d.name AS degree
+                FROM ${COMMENTS} AS c
+
+                JOIN ${USERS} AS u
+                ON c.userID=u.id
+                JOIN ${DEGREES} AS d
+                ON u.degreeID = d.id
+                
+                WHERE c.id=@id`,
+            {
+                [COMMENTS]: { id }
+            })
+            .then(([row]) => row || {})
     }
 
     /**

@@ -3,6 +3,7 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const firebase = require('./auth')
+const db = require('./models/db')
 const compression = require('compression')
 const app = express()
 
@@ -44,5 +45,12 @@ app.use('/api', apiRouter)
 app.use('*', function (_, res) {
     res.sendFile(path.join(__dirname, '../public', 'index.html'))
 })
+
+/*
+ * Connect to SQL server
+ */
+db.init()
+    .then(() => console.log('App ready!'))
+    .then(() => app.emit('ready'))
 
 module.exports = app

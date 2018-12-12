@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { QUESTIONS, COMMENTS } } = require('./constants')
+const { TABLE_NAMES: { QUESTIONS, COMMENTS, COURSES } } = require('./constants')
 
 /* All inputs should be validated in this class that are question related */
 class Question {
@@ -12,8 +12,13 @@ class Question {
      * @param   {id}      questionID Required id param.
      * @returns {object}             Single question
      */
-    getQuestion(questionID) {
-        return this.db.query(`SELECT * FROM ${QUESTIONS} WHERE id=?`, [questionID])
+    getQuestion(id) {
+        return this.db
+            .run(`SELECT * FROM ${QUESTIONS} WHERE id=@id`,
+                {
+                    [QUESTIONS]: { id }
+                })
+            .then(([row]) => row || {})
     }
 
     /**
@@ -23,29 +28,38 @@ class Question {
      * @returns {object}
      */
     getQuestions(code, pageNumber, pageSize) {
+        if (isNaN(pageNumber) || isNaN(pageSize)) {
+            throw Error('Invalid paging values')
+        }
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll(`select q.*, COUNT(c.questionID) AS numAnswers 
-                from ${QUESTIONS} q 
-                JOIN ${COMMENTS} c 
-                on c.questionID = q.id
-                where q.code = ? 
-                GROUP BY c.questionID
-                ORDER BY q.timestamp DESC
-                LIMIT ?, ?`,
-            [code, offset, pageSize])
+            .run(`SELECT q.*, cou.code, (SELECT COUNT(com.questionID)
+            FROM ${COMMENTS} com
+            WHERE com.questionID = q.id) as numAnswers
+            FROM ${QUESTIONS} q
+            JOIN ${COURSES} cou on cou.code = @code
+            WHERE courseID = cou.id
+            ORDER BY q.timestamp DESC
+            OFFSET ${offset} ROWS
+            FETCH NEXT ${pageSize} ROWS ONLY`,
+            {
+                [COURSES]: { code }
+            })
     }
 
-    getQuestionsByUserID(uid, limit = 10) {
+    getQuestionsByUserID(userID, limit = 10) {
+        if (isNaN(limit)) {
+            throw Error('Invalid limit value')
+        }
         return this.db
-            .queryAll(`SELECT q.*, COUNT(c.questionID) AS numAnswers
-                FROM ${QUESTIONS} q
-                JOIN ${COMMENTS} c ON c.questionID = q.id
-                WHERE q.userID=?
-                GROUP BY questionID
+            .run(`SELECT * FROM ${QUESTIONS}
+                WHERE userID=@userID
                 ORDER BY timestamp DESC
-                LIMIT ?`,
-            [uid, limit])
+                OFFSET 0 ROWS
+                FETCH NEXT ${limit} ROWS ONLY`,
+            {
+                [QUESTIONS]: { userID }
+            })
     }
 
     /**
@@ -55,8 +69,12 @@ class Question {
      */
     getQuestionCount(code) {
         return this.db
-            .queryAll(`SELECT COUNT() FROM ${QUESTIONS} WHERE code=?`,
-                [code])
+            .run(`SELECT COUNT(*) AS COUNT FROM ${QUESTIONS}
+                WHERE courseID=(SELECT id FROM ${COURSES} WHERE code=@code)`,
+            {
+                [COURSES]: { code }
+            })
+            .then(([row]) => row || { COUNT: 0 })
     }
 
     /**
@@ -67,7 +85,16 @@ class Question {
      */
     postQuestion(code, { userID, title, body }) {
         return this.db
-            .insert(QUESTIONS, { code, userID, title, body })
+            .run(`INSERT INTO ${QUESTIONS} (courseID, userID, title, body)
+                SELECT id, @userID, @title, @body
+                FROM courses
+                WHERE code=@code;
+                SELECT @@identity AS id`,
+            {
+                [QUESTIONS]: { userID, title, body },
+                [COURSES]: { code }
+            })
+            .then(([{ id }]) => id)
     }
 }
 

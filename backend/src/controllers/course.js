@@ -39,7 +39,7 @@ exports.getCourseQuestions = function ({ params, query }, res) {
                 questions[i].likes = likes[i].likes
                 questions[i].user = users[i]
             }
-            const lastPage = Math.trunc((questionCount[0]['COUNT()'] + pageSize - 1) / pageSize)
+            const lastPage = Math.trunc((questionCount['COUNT'] + pageSize - 1) / pageSize)
             return {
                 meta: {
                     curr: pageNumber,
@@ -74,7 +74,7 @@ exports.getCourseReviews = function ({ params, query }, res) {
                 reviews[i].likes = likes[i].likes
                 reviews[i].user = users[i]
             }
-            const lastPage = Math.trunc((reviewCount[0]['COUNT()'] + pageSize - 1) / pageSize)
+            const lastPage = Math.trunc((reviewCount['COUNT'] + pageSize - 1) / pageSize)
             return {
                 meta: {
                     curr: pageNumber,
