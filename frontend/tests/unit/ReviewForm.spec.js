@@ -15,9 +15,9 @@ describe('ReviewForm.vue', () => {
     })
     this.wrapper.find('input').setValue(this.review.title)
     this.wrapper.find('textarea').setValue(this.review.body)
-    this.wrapper.findAll(Options).at('0').trigger('click')
-    this.wrapper.findAll(Options).at('1').trigger('click')
-    this.wrapper.findAll(Options).at('2').trigger('click')
+    this.wrapper.findAll(Options).at(0).trigger('click')
+    this.wrapper.findAll(Options).at(1).trigger('click')
+    this.wrapper.findAll(Options).at(2).trigger('click')
     this.wrapper.find(AppButton).trigger('click')
   })
 

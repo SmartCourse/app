@@ -6,13 +6,15 @@
         :user="user"
         :published="published"
     >
-      <Category :recommend="recommend">{{ recommend ? "Recommended" : "Not Recommended" }}</Category>
+      <Category :recommend="recommend" class="right-margin">
+        {{ recommend ? "Recommended" : "Not Recommended" }}
+      </Category>
     </PostCard>
 </template>
 
 <script>
 import PostCard from '@/components/Card/Large'
-import Category from '@/components/Category'
+import Category from '@/components/Category/Recommend'
 
 export default {
   components: { PostCard, Category },
@@ -44,3 +46,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.right-margin {
+  margin-right: 20px;
+}
+</style>

@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { mount } from '@vue/test-utils'
+import { mount, RouterLinkStub } from '@vue/test-utils'
 import CommentCard from '@/components/Comments/CommentCard'
 import Vote from '@/components/Vote'
 
@@ -18,7 +18,9 @@ describe('CommentCard.vue', () => {
     }
     this.wrapper = mount(CommentCard, {
       propsData: { comment: this.card },
-      stubs: {}
+      stubs: {
+        'router-link': RouterLinkStub
+      }
     })
   })
 

@@ -6,13 +6,13 @@
       <p class="sort-label">Sort by<i class="material-icons">sort</i></p> <Radio v-model="sortBy" :options="['Rating', 'Code', 'Name']"/>
     </div>
     <TilesContainer v-if="filtered.length">
-      <Tile :key="item.code" v-for="item in filtered">
+      <Tile :key="item.code" v-for="item in filtered" class="course-tile">
         <router-link v-if="item.code" tag="div" class="tile-header" :to="{ name: 'info', params: { code:item.code }}">
           <div class="tile-header-top">
             <h4>
               {{ item.code }}
             </h4>
-            <Category v-if="item.recommend > -1" :recommend="item.recommend">
+            <Category v-if="item.recommend > -1" :recommend="item.recommend" class="tile-rating">
               <h6>{{ recommendText(item.recommend) }}</h6>
             </Category>
             <h6 v-else>No reviews</h6>
@@ -41,7 +41,7 @@ import { mapGetters } from 'vuex'
 import Tile from '@/components/Tile'
 import TilesContainer from '@/components/Tile/Container'
 import FilterSearch from '@/components/Search/Filter'
-import Category from '@/components/Category'
+import Category from '@/components/Category/Recommend'
 import Radio from '@/components/AppRadioOptions'
 
 export default {
@@ -104,13 +104,7 @@ export default {
 </script>
 
 <style scoped lang='less'>
-
 @import '../css/subject.less';
-
-h6 {
-  width:120px;
-  text-align:right;
-}
 
 .sort-by {
   display:flex;
@@ -118,7 +112,16 @@ h6 {
   margin:0 10px 5px 15px;
 }
 
+.tile-rating {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}
+
 .sort-label {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   line-height: 24px;
   text-transform: uppercase;
   margin: 0;
@@ -132,4 +135,9 @@ h6 {
   margin: 0 auto;
 }
 
+@media screen and (max-width: 640px) {
+  .course-tile {
+    flex: 1 1 350px;
+  }
+}
 </style>
