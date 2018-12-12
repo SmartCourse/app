@@ -1070,12 +1070,6 @@ module.exports = [
     type: 'undergraduate'
   },
   {
-    name: 'Placeholder (Do Not Delete)',
-    faculty: 'Science',
-    tags: 'Placeholder',
-    type: 'undergraduate'
-  },
-  {
     name: 'Bachelor of Psychological Science/Law',
     faculty: 'Law',
     tags:

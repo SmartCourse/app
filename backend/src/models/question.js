@@ -33,11 +33,15 @@ class Question {
         }
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .run(`SELECT * FROM ${QUESTIONS}
-                WHERE courseID = (SELECT id FROM ${COURSES} WHERE code=@code)
-                ORDER BY timestamp DESC
-                OFFSET ${offset} ROWS
-                FETCH NEXT ${pageSize} ROWS ONLY`,
+            .run(`SELECT q.*, (SELECT COUNT(com.questionID)
+            FROM ${COMMENTS} com
+            WHERE com.questionID = q.id) as numAnswers
+            FROM ${QUESTIONS} q
+            JOIN ${COURSES} cou on cou.code = @code
+            WHERE courseID = cou.id
+            ORDER BY q.timestamp DESC
+            OFFSET ${offset} ROWS
+            FETCH NEXT ${pageSize} ROWS ONLY`,
             {
                 [COURSES]: { code }
             })

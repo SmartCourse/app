@@ -85,7 +85,7 @@ export default {
     }
 
     .menu-items .link-item {
-        font: var(--header-4-mobile);
+        font: var(--body-copy-1);
     }
 
 }

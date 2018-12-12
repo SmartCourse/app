@@ -18,7 +18,7 @@ export function replyMapper({ id, likes, userLiked, user, body, timestamp }) {
   }
 }
 
-export function reviewMapper({ id, code, title, body, likes, userLiked, recommend, user, timestamp }) {
+export function reviewMapper({ id, code, title, body, likes, numResponses, userLiked, recommend, user, timestamp }) {
   return {
     id: String(id),
     code,
@@ -27,6 +27,7 @@ export function reviewMapper({ id, code, title, body, likes, userLiked, recommen
     likes,
     userLiked,
     recommend: Boolean(recommend),
+    numResponses,
     user,
     published: formatDistanceStrict(timestamp * 1000, new Date(), { addSuffix: true }),
     timestamp: timestamp

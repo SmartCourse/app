@@ -57,7 +57,7 @@ export default {
 .search {
     position: relative;
     font-size: var(--font-medium);
-    margin: 20px auto;
+    margin: 10px auto;
 }
 
 .search-bar, ul {
@@ -93,11 +93,16 @@ li:hover {
 }
 
 @media screen and (max-width: 740px) {
+    .search {
+        font: var(--header-4);
+    }
+
     ul, .search-bar {
         width: 330px;
     }
 
     .mini {
+        font-size: var(--body-copy-1);
 
         & ul, .search-bar {
             width: 180px;

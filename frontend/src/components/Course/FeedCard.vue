@@ -2,19 +2,31 @@
   <Card class="feed-card">
     <UserMini v-if="user" :name="user.displayName" :id="user.id" :picture="user.picture" />
     <div class="info">
-      <SecondHeader :routeName="routeName" :code="code" :id="id">
-        {{ title }}
-      </SecondHeader>
+      <div class="key-info">
+        <SecondHeader :routeName="routeName" :code="code" :id="id">
+          {{ title }}
+        </SecondHeader>
+        <p>
+            <span v-if="numResponses === 0">
+              {{ cardType === 'Question'
+                ? 'Know the answer to this question?'
+                : 'Have a response to this review?'
+              }}
+            </span>
+            <span v-else>{{ numResponses }} Response{{ numResponses > 1 ? 's' : '' }}</span>
+        </p>
+      </div>
       <p class="published">
         <time>{{ published }}</time>
       </p>
-      <Category :recommend="recommend" v-if="cardType === 'Review'">
-        <p><b>{{ positiveOrNegativeText }}</b></p>
-      </Category>
-      <p v-else>
-        <span v-if="numAnswers === 0">Know the answer to this question?</span>
-        <span v-else>{{ numAnswers }} Answer{{ numAnswers > 1 ? 's' : '' }}</span>
-      </p>
+      <div class="categories">
+        <Recommend :recommend="recommend" v-if="cardType === 'Review'">
+          {{ positiveOrNegativeText }}
+        </Recommend>
+        <Semester>
+          {{ teachingPeriod }}
+        </Semester>
+      </div>
       <p class="likes">{{ likes > 0 && likes || 0 }} user{{ likes != 1 ? 's' : ''}} found this helpful</p>
     </div>
   </Card>
@@ -24,7 +36,8 @@
 import Card from '@/components/Card'
 import SecondHeader from '@/components/Card/SecondaryHeader'
 import UserMini from '@/components/User/Mini'
-import Category from '@/components/Category'
+import Recommend from '@/components/Category/Recommend'
+import Semester from '@/components/Category/Semester'
 
 export default {
   props: {
@@ -32,16 +45,18 @@ export default {
     likes: Number,
     published: String,
     user: Object,
-    numAnswers: {type: Number, default: 0},
+    numResponses: { type: Number, default: 0 },
     code: String,
     id: String,
     cardType: String,
-    recommend: Boolean
+    recommend: Boolean,
+    teachingPeriod: { type: String, default: '18s2' }
   },
   components: {
     Card,
     UserMini,
-    Category,
+    Semester,
+    Recommend,
     SecondHeader
   },
   computed: {
@@ -57,7 +72,6 @@ export default {
 </script>
 
 <style scoped>
-
 .feed-card {
   border-radius: 0;
   min-width: 310px;
@@ -77,8 +91,17 @@ export default {
   text-align: right;
 }
 
+.categories {
+  display: flex;
+  align-items: center;
+}
+
+.categories > * {
+  margin-right: 5px;
+}
+
 p {
-  margin: 0 5px;
+  margin: 0;
   font: var(--body-copy-2);
 }
 
@@ -90,12 +113,10 @@ p {
 @media screen and (max-width: 500px) {
   .info {
     grid-gap: 5px;
-    grid-template-columns: 1fr 120px;
+    grid-template-columns: 1fr 100px;
   }
   .likes {
     display: none;
   }
-
 }
-
 </style>

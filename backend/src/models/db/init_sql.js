@@ -139,7 +139,7 @@ function sqlQuestion(code) {
 async function sqlQuestions(db) {
     let questions = courses.map(({ code }) =>
         SAMPLE_QUESTIONS.map(sqlQuestion(code)))
-    questions = [].concat.apply([], questions);
+    questions = [].concat.apply([], questions)
     return bulkInsertDB(db, TABLE_NAMES.QUESTIONS, questions)
 }
 
@@ -165,7 +165,7 @@ function sqlReview(code) {
 async function sqlReviews(db) {
     let reviews = courses.map(({ code }) =>
         SAMPLE_REVIEWS.map(sqlReview(code)))
-    reviews = [].concat.apply([], reviews);
+    reviews = [].concat.apply([], reviews)
     return bulkInsertDB(db, TABLE_NAMES.REVIEWS, reviews)
 }
 

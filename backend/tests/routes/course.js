@@ -220,15 +220,16 @@ describe('Course route testing', () => {
         })
     })
 
-    describe('GET /api/course/COMP4920/reviews', () => {
+    describe('GET /api/course/ACCT1511/reviews', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/course/COMP4920/reviews')
+                .get('/api/course/ACCT1511/reviews')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
+
             return request
         })
 
@@ -242,9 +243,9 @@ describe('Course route testing', () => {
                 expect(body.data).is.a('array'))
         )
 
-        it('review[0] has a body', () =>
+        it('review[0] has good code', () =>
             request.then(({ body }) =>
-                expect(body.data[0].body).is.a('string'))
+                expect(body.data[0].code).to.equal('ACCT1511'))
         )
 
         it('review[0] has a course id', () =>

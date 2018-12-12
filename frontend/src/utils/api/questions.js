@@ -19,13 +19,13 @@ export function answerMapper({ id, questionID, likes, user, userLiked, body, tim
   }
 }
 
-export function questionMapper({ id, code, likes, userLiked, numAnswers, user, title, body, timestamp }) {
+export function questionMapper({ id, code, likes, userLiked, numAnswers: numResponses, user, title, body, timestamp }) {
   return {
     id: String(id),
     code,
     title,
     body,
-    numAnswers,
+    numResponses,
     likes,
     userLiked,
     user,

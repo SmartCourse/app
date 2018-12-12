@@ -5,7 +5,7 @@ const {
     MAX_ENJOY,
     MIN_OPTION,
     MAX_OPTION,
-    TABLE_NAMES: { REVIEWS, COURSES }
+    TABLE_NAMES: { REVIEWS, COURSES, COMMENTS }
 } = require('./constants')
 
 /* All inputs should be validated in this class that are review related */
@@ -40,9 +40,13 @@ class Review {
         }
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .run(`SELECT * FROM ${REVIEWS}
-            WHERE courseID=(SELECT id FROM ${COURSES} WHERE code=@code)
-            ORDER BY timestamp DESC
+            .run(`SELECT r.*, (SELECT COUNT(com.reviewID)
+                FROM ${COMMENTS} com
+                WHERE com.reviewID = r.id) as numResponses
+            FROM ${REVIEWS} r
+            JOIN ${COURSES} cou ON cou.code = @code 
+            WHERE r.courseID=cou.id
+            ORDER BY r.timestamp DESC
             OFFSET ${offset} ROWS
             FETCH NEXT ${pageSize} ROWS ONLY`,
             {
