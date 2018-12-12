@@ -20,7 +20,7 @@ before(() => {
             return supertest.post('/api/user')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken3}`)
-                .send({ displayName: 'BackendTester3', degree: 'B. Testing', gradYear: 2018 })
+                .send({ displayName: 'BackendTester3', degree: 'B. Arts', gradYear: 2018 })
         })
 })
 
@@ -66,9 +66,9 @@ describe('Review route testing', function () {
                 expect(body).is.a('array'))
         )
 
-        it('comment list has length 2', () =>
+        it('comment list has length 3', () =>
             request.then(({ body }) =>
-                expect(body).has.lengthOf(2)
+                expect(body).has.lengthOf(3)
             )
         )
     })

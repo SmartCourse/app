@@ -33,7 +33,7 @@ class Question {
         }
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .run(`SELECT q.*, (SELECT COUNT(com.questionID)
+            .run(`SELECT q.*, cou.code, (SELECT COUNT(com.questionID)
             FROM ${COMMENTS} com
             WHERE com.questionID = q.id) as numAnswers
             FROM ${QUESTIONS} q

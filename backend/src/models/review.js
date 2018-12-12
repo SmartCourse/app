@@ -40,7 +40,7 @@ class Review {
         }
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .run(`SELECT r.*, (SELECT COUNT(com.reviewID)
+            .run(`SELECT r.*, cou.code, (SELECT COUNT(com.reviewID)
                 FROM ${COMMENTS} com
                 WHERE com.reviewID = r.id) as numResponses
             FROM ${REVIEWS} r
