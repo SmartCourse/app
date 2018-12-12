@@ -52,9 +52,9 @@ exports.getReviewComments = function ({ user, params, query }, res) {
 }
 
 /* POST new comment. */
-exports.postComment = function ({ user, params, query, body }, res) {
+exports.postComment = function ({ user, params, body }, res) {
     body.userID = user.id
-    const location = `/api/course/${params.code}/review/${params.id}/replies`
+    const location = `/api/course/${params.code}/review/${params.id}/comment`
 
     commentModel.postComment({ reviewID: params.id }, body)
         .then(postResponseHandler(location, res))
