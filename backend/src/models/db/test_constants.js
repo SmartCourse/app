@@ -12,6 +12,14 @@ exports.SAMPLE_QUESTIONS = [
     {
         title: 'How essential is it to attend lectures?',
         body: 'Are the lectures for the course recorded? Are the worthwhile attending. What am I giving up if I can\'t attend them?'
+    },
+    {
+        title: 'Why did you take this course?',
+        body: 'I\'m wondering why people took this course as I don\'t know a lot about it.'
+    },
+    {
+        title: 'What are similar courses to this course?',
+        body: 'I\'m interested in this course\'s content area and I\'m looking for similar courses. What would people recommend, and why?'
     }
 ]
 

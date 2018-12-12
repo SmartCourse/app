@@ -26,7 +26,7 @@ class Review {
                 {
                     [REVIEWS]: { id }
                 })
-            .then((res) => res.length ? res[0] : {})
+            .then(([row]) => row || {})
     }
 
     /**
@@ -57,12 +57,12 @@ class Review {
      */
     getReviewCount(code) {
         return this.db
-            .run(`SELECT COUNT(*) AS COUNT FROM ${REVIEWS}
-            WHERE courseID=(SELECT id FROM ${COURSES} WHERE code=@code)`,
+            .run(`SELECT COUNT(*) AS COUNT FROM ${REVIEWS} r
+            WHERE r.courseID=(SELECT c.id FROM ${COURSES} c WHERE c.code=@code)`,
             {
                 [COURSES]: { code }
             })
-            .then((res) => res.length ? res[0] : { COUNT: 0 })
+            .then(([row]) => row || { COUNT: 0 })
     }
 
     /**

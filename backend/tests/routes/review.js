@@ -1,9 +1,6 @@
 const app = require('../../src')
 const supertest = require('supertest')(app)
 const { expect } = require('chai')
-const dbInitialised = require('../../src/models/db/init_sql').initDB
-
-before(() => dbInitialised)
 
 describe('Review route testing', function () {
     // technically non-deterministic as relies on POST from course.js

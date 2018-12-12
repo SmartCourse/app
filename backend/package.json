@@ -5,7 +5,7 @@
   "scripts": {
     "start": "NODE_ENV=development npx nodemon ./src/bin/www",
     "lint": "npx eslint src/**/*.js tests/**/*.js --fix",
-    "test:src": "npx nyc mocha tests/**/*.js --timeout 100000",
+    "test:src": "npx nyc mocha tests/**/*.js --timeout 75000",
     "test": "export NODE_ENV=test npm run lint && npm run test:src",
     "coverage": "npx nyc report --reporter=html --reporter=text-lcov | coveralls"
   },
@@ -16,7 +16,6 @@
     "express": "~4.16.0",
     "firebase-admin": "^6.0.0",
     "morgan": "^1.9.1",
-    "sqlite3": "^4.0.2",
     "tedious": "^3.0.1"
   },
   "devDependencies": {

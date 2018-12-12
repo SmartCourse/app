@@ -22,7 +22,7 @@ class User {
             {
                 [USERS]: { id }
             })
-            .then((res) => res.length ? res[0] : {})
+            .then(([row]) => row || {})
             .then((profile) => {
                 if (profile.reputation < 0) profile.reputation = 0
                 return profile
@@ -45,7 +45,7 @@ class User {
             {
                 [USERS]: { id }
             })
-            .then((res) => res.length ? res[0] : {})
+            .then(([row]) => row || {})
             .then((profile) => {
                 // this is defensive and should never really occur
                 // but will avoid unnecessary crashes
@@ -72,7 +72,7 @@ class User {
             {
                 [USERS]: { uid }
             })
-            .then((res) => res.length ? res[0] : {})
+            .then(([row]) => row || {})
     }
 
     /**

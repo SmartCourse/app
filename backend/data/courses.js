@@ -1,8 +1,8 @@
-const data = require('./course_data_2019.json')
+const courses = require('./course_data_2019.json')
 const subjects = require('./subjects')
 const { toLowerCase, decodeUTF8Text } = require('../src/utils/helpers')
 
-module.exports = data.map(subj => {
+module.exports = courses.map(subj => {
     const subjectCode = subj.code
     const subjectName = decodeUTF8Text(subj.name)
 

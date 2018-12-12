@@ -1,10 +1,11 @@
 module.exports = [
-    { 'name': 'Art & Design' },
-    { 'name': 'Arts & Social Sciences' },
-    { 'name': 'Built Environment' },
-    { 'name': 'Business School' },
-    { 'name': 'Engineering' },
-    { 'name': 'Law' },
-    { 'name': 'Medicine' },
-    { 'name': 'Science' }
+    'Art & Design',
+    'Arts & Social Sciences',
+    'Built Environment',
+    'Business School',
+    'Engineering',
+    'Law',
+    'Medicine',
+    'Science'
 ]
+    .map(name => { return { name } })

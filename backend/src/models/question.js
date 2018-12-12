@@ -18,7 +18,7 @@ class Question {
                 {
                     [QUESTIONS]: { id }
                 })
-            .then((res) => res.length ? res[0] : {})
+            .then(([row]) => row || {})
     }
 
     /**
@@ -70,7 +70,7 @@ class Question {
             {
                 [COURSES]: { code }
             })
-            .then((res) => res.length ? res[0] : { COUNT: 0 })
+            .then(([row]) => row || { COUNT: 0 })
     }
 
     /**

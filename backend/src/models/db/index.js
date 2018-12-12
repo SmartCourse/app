@@ -1,9 +1,7 @@
 const { Connection, Request } = require('tedious')
 const { initDB } = require('./init_sql')
-const {
-    DB_CONFIG,
-    TABLE_COLUMNS
-} = require('../constants')
+const { TABLE_COLUMNS } = require('../constants')
+const { DB_CONFIG } = require('./config')
 
 /**
  * Very slight abstraction over the direct sql queries.
@@ -44,7 +42,7 @@ class DB {
 
                 Object.keys(params).forEach(table =>
                     Object.keys(params[table]).forEach(param =>
-                        request.addParameter(param, TABLE_COLUMNS[table][param].type, 
+                        request.addParameter(param, TABLE_COLUMNS[table][param].type,
                             params[table][param])
                     )
                 )

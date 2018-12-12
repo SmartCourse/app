@@ -1,8 +1,11 @@
 const app = require('../../src')
 const supertest = require('supertest')(app)
-const dbInitialised = require('../../src/models/db/init_sql').initDB
 
-before(() => dbInitialised)
+before(function (done) {
+    app.on('ready', function() {
+        done()
+    })
+})
 
 describe('API route testing', () => {
     it('index', () =>

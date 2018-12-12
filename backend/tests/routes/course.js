@@ -2,30 +2,27 @@ const fetch = require('node-fetch')
 const app = require('../../src')
 const supertest = require('supertest')(app)
 const { expect } = require('chai')
-const dbInitialised = require('../../src/models/db/init_sql').initDB
 
-before(() => dbInitialised
-    .then(() => {
-        return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
-            {
-                'credentials': 'omit',
-                'headers': {},
-                'referrer': 'http://localhost:8080/login',
-                'referrerPolicy': 'no-referrer-when-downgrade',
-                'body': '{"email":"backendtest@test.com","password":"backendtest","returnSecureToken":true}',
-                'method': 'POST',
-                'mode': 'cors'
-            })
-            .then((res) => res.json())
-            .then((data) => {
-                global.idToken = data.idToken
-                return supertest.post('/api/user')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', `Bearer ${global.idToken}`)
-                    .send({ displayName: 'BackendTester', degree: 'B. Arts', gradYear: 2018 })
-            })
-    })
-)
+before(() => {
+    return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
+        {
+            'credentials': 'omit',
+            'headers': {},
+            'referrer': 'http://localhost:8080/login',
+            'referrerPolicy': 'no-referrer-when-downgrade',
+            'body': '{"email":"backendtest@test.com","password":"backendtest","returnSecureToken":true}',
+            'method': 'POST',
+            'mode': 'cors'
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            global.idToken = data.idToken
+            return supertest.post('/api/user')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .send({ displayName: 'BackendTester', degree: 'B. Arts', gradYear: 2018 })
+        })
+})
 
 describe('Course route testing', () => {
     describe('GET /api/course', () => {
@@ -99,9 +96,7 @@ describe('Course route testing', () => {
         )
 
         it('returns correct Location', () => {
-            const xid = request.res.headers['x-id']
-            expect(xid).to.equal('9019')
-            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/question/9019')
+            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/question/15031')
         })
 
         describe('new record exists', () => {
@@ -109,7 +104,7 @@ describe('Course route testing', () => {
 
             before(() => {
                 followUp = supertest
-                    .get('/api/course/ACCT1501/question/9019')
+                    .get('/api/course/ACCT1501/question/15031')
                     .set('Accept', 'application/json')
                     .expect(200)
 
@@ -144,7 +139,7 @@ describe('Course route testing', () => {
 
         it('correct number of questions', () =>
             request.then(({ body }) =>
-                expect(body.data.length).to.equal(4))
+                expect(body.data.length).to.equal(6))
         )
 
         it('question has a title', () =>
@@ -190,8 +185,6 @@ describe('Course route testing', () => {
         })
 
         it('returns correct Location', () => {
-            const xid = request.res.headers['x-id']
-            expect(xid).to.equal('9019')
             expect(request.res.headers.location).to.equal('/api/course/COMP4920/review/9019')
         })
 

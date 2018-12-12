@@ -16,11 +16,16 @@ class Course {
             .run(`SELECT * FROM ${COURSES}`)
     }
 
+    /**
+     * Gets all the courses belonging to a specific subject.
+     * @param {string}
+     * @returns {Array}    List of courses.
+     */
     getCoursesBySubject(code) {
         return this.db
             .run(`SELECT c.* FROM ${COURSES} as c
                 JOIN ${SUBJECTS} s ON s.code=@code
-                WHERE subjectID=s.id`,
+                WHERE c.subjectID=s.id`,
             {
                 [SUBJECTS]: { code }
             })
@@ -37,7 +42,7 @@ class Course {
                     {
                         [COURSES]: { code }
                     }))
-            .then((res) => res.length ? res[0] : {})
+            .then(([row]) => row || {})
     }
 
     updateCourseRatings(code) {

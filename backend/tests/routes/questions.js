@@ -3,30 +3,27 @@ const app = require('../../src')
 const assert = require('assert')
 const supertest = require('supertest')(app)
 const { expect } = require('chai')
-const dbInitialised = require('../../src/models/db/init_sql').initDB
 
-before(() => dbInitialised
-    .then(() => {
-        return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
-            {
-                'credentials': 'omit',
-                'headers': {},
-                'referrer': 'http://localhost:8080/login',
-                'referrerPolicy': 'no-referrer-when-downgrade',
-                'body': '{"email":"backendtest2@test.com","password":"abc123","returnSecureToken":true}',
-                'method': 'POST',
-                'mode': 'cors'
-            })
-            .then((res) => res.json())
-            .then((data) => {
-                global.idToken2 = data.idToken
-                return supertest.post('/api/user')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', `Bearer ${global.idToken2}`)
-                    .send({ displayName: 'BackendTester2', degree: 'B. Arts', gradYear: 2018 })
-            })
-    })
-)
+before(() => {
+    return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
+        {
+            'credentials': 'omit',
+            'headers': {},
+            'referrer': 'http://localhost:8080/login',
+            'referrerPolicy': 'no-referrer-when-downgrade',
+            'body': '{"email":"backendtest2@test.com","password":"abc123","returnSecureToken":true}',
+            'method': 'POST',
+            'mode': 'cors'
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            global.idToken2 = data.idToken
+            return supertest.post('/api/user')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken2}`)
+                .send({ displayName: 'BackendTester2', degree: 'B. Arts', gradYear: 2018 })
+        })
+})
 
 describe('Test question routes', () => {
     describe('GET /api/course/COMP4920/question/1', () => {

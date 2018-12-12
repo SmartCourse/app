@@ -3,6 +3,7 @@ const faculties = require('../../../data/faculties')
 const degrees = require('../../../data/degrees')
 const subjects = require('../../../data/subjects')
 const courses = require('../../../data/courses')
+const { DB_CONFIG } = require('./config')
 const {
     NUM_DUMMY_USERS,
     SAMPLE_QUESTIONS,
@@ -13,7 +14,6 @@ const {
 const {
     PRODUCTION,
     TESTING,
-    DB_CONFIG,
     TABLE_NAMES,
     TABLE_COLUMNS,
     DONT_RECOMMEND,

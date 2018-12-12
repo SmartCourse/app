@@ -67,7 +67,7 @@ class Comment {
             {
                 [COMMENTS]: { id }
             })
-            .then((res) => res.length ? res[0] : {})
+            .then(([row]) => row || {})
     }
 
     /**
