@@ -25,6 +25,12 @@ question.use(isAuthorized)
 /* Post an answer for a given question */
 question.post('/:id/answer', questionController.postAnswer)
 
+/* Delete a question */
+//question.delete('/:id', questionController.deleteQuestion)
+
+/* Put an updated question */
+question.put('/:id', questionController.putQuestion)
+
 /* Put an updated question like value */
 question.put('/:id/likes', questionController.putQuestionLikes)
 

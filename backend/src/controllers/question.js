@@ -95,3 +95,10 @@ exports.putAnswerLikes = function ({ user, params, body, query }, res) {
     likesModel.putLikes({ type: TABLE_NAMES.COMMENTS, id: params.answerID, ...body })
         .then(() => exports.getQuestionAnswers({ user, params, query }, res))
 }
+
+/* PUT updated question body */
+exports.putQuestion = function ({ user, params: { code, id }, body }, res) {
+    body.userID = user.id
+    questionModel.putQuestion(code, id, body)
+        .then(() => exports.getQuestion({ user, params }, res))
+}

@@ -81,7 +81,7 @@ class Question {
      * Post a question.
      * @param {string}  code  The code of the course
      * @param {object}  data      controller passed in object which should
-     *                       contain the user data (probs eventually from an auth token)
+     *                       contain the user data
      */
     postQuestion(code, { userID, title, body }) {
         return this.db
@@ -95,6 +95,22 @@ class Question {
                 [COURSES]: { code }
             })
             .then(([{ id }]) => id)
+    }
+
+    /**
+     * Put a question.
+     * @param {string}  code  The code of the course
+     * @param {object}  data      controller passed in object which should
+     *                       contain the user data
+     */
+    putQuestion(code, id, { userID, body }) {
+        return this.db
+            .run(`UPDATE ${QUESTIONS}
+                    SET body=@body
+                    WHERE userID=@userID AND id=@id`,
+            {
+                [QUESTIONS]: { userID, body, id }
+            })
     }
 }
 
