@@ -71,7 +71,7 @@ class DB {
         })
 
         // Setup a pool of connections
-        for (let i = 0; i < MAX_CONNECTIONS; i++) {
+        for (let i = 1; i < MAX_CONNECTIONS; i++) {
             const connection = new Connection(DB_CONFIG)
             connection.on('connect', (err) => {
                 if (err) throw Error('Couldn\'t connect to DB')
@@ -87,9 +87,11 @@ class DB {
     }
 
     async run(sql, params = {}) {
-        return new Promise((resolve, reject) => {
-            if (this.connections.length === 0) {
-                throw Error('Not enough connections')
+        return new Promise(async(resolve, reject) => {
+            // TODO - something more elegant
+            while (this.connections.length === 0) {
+                console.log('Not enough connections')
+                setTimeout(() => null, 100)
             }
             const connection = this.connections.pop()
 
