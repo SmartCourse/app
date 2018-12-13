@@ -88,7 +88,7 @@ class DB {
 
     async run(sql, params = {}) {
         return new Promise(async(resolve, reject) => {
-            // TODO - something more elegant
+            // TODO - something more elegant?
             while (this.connections.length === 0) {
                 console.log('Not enough connections')
                 setTimeout(() => null, 100)
