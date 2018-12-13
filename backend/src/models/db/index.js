@@ -122,6 +122,10 @@ class DB {
             connection.execSql(request)
         })
     }
+
+    close() {
+        this.connections.forEach((connection) => connection.close())
+    }
 }
 
 module.exports = new DB()
