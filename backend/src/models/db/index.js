@@ -24,15 +24,19 @@ const {
  * @param {string} databaseName The name of the db if it needs to be passed in.
  */
 class DB {
-    async init() {
-        this.connections = []
+    constructor() {
+        // immediately start root connection process
+        this.connections = [new Connection(DB_CONFIG)]
+    }
 
+    async init() {
         const initCon = new Promise((resolve, reject) => {
             // Database initialisation benchmarking
             const timeList = [Date.now() / 1000]
 
             // Do the initialisation
-            const connection = new Connection(DB_CONFIG)
+            const [connection] = this.connections
+
             connection.on('connect', (err) => {
                 if (err) reject(err)
 
@@ -63,7 +67,6 @@ class DB {
                     console.log(`Done creating database! (${((timeList[1] - timeList[0])).toFixed(3)})`)
 
                     // Done
-                    this.connections.push(connection)
                     resolve()
                 })
                 connection.execSql(request)
@@ -87,11 +90,10 @@ class DB {
     }
 
     async run(sql, params = {}) {
-        return new Promise(async(resolve, reject) => {
+        return new Promise((resolve, reject) => {
             // TODO - something more elegant?
             while (this.connections.length === 0) {
                 console.log('Not enough connections')
-                setTimeout(() => null, 100)
             }
             const connection = this.connections.pop()
 
