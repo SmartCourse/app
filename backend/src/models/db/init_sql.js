@@ -1,9 +1,8 @@
-const { Connection, Request } = require('tedious')
+const { Request } = require('tedious')
 const faculties = require('../../../data/faculties')
 const degrees = require('../../../data/degrees')
 const subjects = require('../../../data/subjects')
 const courses = require('../../../data/courses')
-const { DB_CONFIG } = require('./config')
 const {
     NUM_DUMMY_USERS,
     SAMPLE_QUESTIONS,
@@ -12,7 +11,6 @@ const {
     SAMPLE_USERS
 } = require('./test_constants')
 const {
-    PRODUCTION,
     TESTING,
     TABLE_NAMES,
     TABLE_COLUMNS,
@@ -53,7 +51,7 @@ exports.testDataInitialised = async function(db) {
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM ${TABLE_NAMES.QUESTIONS}`
         const request = new Request(query, (err, rowCount) =>
-            err ? resolve(0) : resolve(rowCount))
+            err ? reject(err) : resolve(rowCount))
         db.execSql(request)
     })
 }

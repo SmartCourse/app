@@ -25,12 +25,21 @@ const {
  */
 class DB {
     constructor() {
-        // immediately start root connection process
+        // Immediately start root connection process
         this.connections = [new Connection(DB_CONFIG)]
+
+        // Setup a pool of other connections
+        for (let i = 1; i < MAX_CONNECTIONS; i++) {
+            const connection = new Connection(DB_CONFIG)
+            connection.on('connect', (err) => {
+                if (err) throw Error('Couldn\'t connect to DB')
+                this.connections.push(connection)
+            })
+        }
     }
 
     async init() {
-        const initCon = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             // Database initialisation benchmarking
             const timeList = [Date.now() / 1000]
 
@@ -72,17 +81,6 @@ class DB {
                 connection.execSql(request)
             })
         })
-
-        // Setup a pool of connections
-        for (let i = 1; i < MAX_CONNECTIONS; i++) {
-            const connection = new Connection(DB_CONFIG)
-            connection.on('connect', (err) => {
-                if (err) throw Error('Couldn\'t connect to DB')
-                this.connections.push(connection)
-            })
-        }
-
-        return initCon
     }
 
     delete() {
