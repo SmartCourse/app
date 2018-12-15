@@ -105,14 +105,14 @@ p {
 
 .main-content {
   /* arbitrary */
-  min-height: calc(100vh - 85px);;
+  min-height: calc(100vh - 64px);;
   max-width: 800px;
   margin: auto;
   margin-bottom: 20px;
 }
 
 .auth-page {
-  height: calc(100vh - 85px);
+  height: calc(100vh - 64px);
   width: 100%;
   display: flex;
   flex-direction: column;
