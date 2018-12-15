@@ -61,7 +61,6 @@ export default {
 
 p {
     margin: 10px 0;
-    font: var(--body-copy-2);
     padding: 5px;
 }
 

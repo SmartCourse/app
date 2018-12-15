@@ -22,9 +22,9 @@ class User {
             {
                 [USERS]: { id }
             })
-            .then(([row]) => row || {})
+            .then(([row]) => row || null)
             .then((profile) => {
-                if (profile.reputation < 0) profile.reputation = 0
+                if (profile && profile.reputation < 0) profile.reputation = 0
                 return profile
             })
     }
