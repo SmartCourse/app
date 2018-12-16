@@ -97,8 +97,8 @@ exports.putAnswerLikes = function ({ user, params, body, query }, res) {
 }
 
 /* PUT updated question body */
-exports.putQuestion = function ({ user, params: { code, id }, body }, res) {
+exports.putQuestion = function ({ user, params, body }, res) {
     body.userID = user.id
-    questionModel.putQuestion(code, id, body)
+    questionModel.putQuestion(params.code, params.id, body)
         .then(() => exports.getQuestion({ user, params }, res))
 }

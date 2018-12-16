@@ -53,6 +53,54 @@ describe('Test question routes', () => {
                 expect(body.courseID).is.a('number'))
         )
     })
+
+    describe('PUT /api/course/ACCT1501/question', () => {
+        let postRequest
+        let putRequest
+        let getRequest
+        let location
+
+        before(() => {
+            postRequest = supertest
+                .post('/api/course/ACCT1501/question')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .send({ body: 'original text', title: 'jeff' })
+                .expect(201)
+                .then((res) => {
+                    location = res.headers.location
+                    putRequest = supertest
+                        .put(location)
+                        .send({ body: 'edited text' })
+                        .set('Accept', 'application/json')
+                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .expect(200)
+                    return putRequest
+                })
+                .then((res) => {
+                    getRequest = supertest
+                        .get(location)
+                        .set('Accept', 'application/json')
+                        .expect('Content-Type', /json/)
+                        .expect(200)
+                    return getRequest
+                })
+            return postRequest
+        })
+
+        it('has the correct title', () =>
+            getRequest.then(({ body }) => {
+                expect(body.title).to.equal('jeff')
+            })
+        )
+
+        it('has the correct body', () =>
+            getRequest.then(({ body }) => {
+                expect(body.body).to.equal('edited text')
+            })
+        )
+
+    })
 })
 
 describe('Test answer routes', () => {
