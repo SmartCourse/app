@@ -13,7 +13,7 @@
                 <router-link tag="h3" v-if="!isFirebaseAuthorised" class="link-item" to="/login">Login</router-link>
                 <router-link tag="h3" v-if="!isFirebaseAuthorised" class="link-item" to="/signup">Sign Up</router-link>
                 <router-link tag="h3" v-if="isFirebaseAuthorised && !hasProfile" class="link-item" to="/create-profile">Create Profile</router-link>
-                <router-link tag="h3" v-if="isLoggedIn && hasProfile" class="link-item" to="/profile">Profile</router-link>
+                <router-link tag="h3" v-if="isLoggedIn" class="link-item" to="/profile">Profile</router-link>
                 <h3 v-if="isFirebaseAuthorised" @click="logout()" class="link-item">Logout</h3>
             </div>
         </div>
@@ -33,7 +33,6 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('auth/logout')
-      // .then(() => this.$router.push("/"))
     }
   }
 }
@@ -87,6 +86,5 @@ export default {
     .menu-items .link-item {
         font: var(--body-copy-1);
     }
-
 }
 </style>
