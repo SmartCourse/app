@@ -314,6 +314,14 @@ ${
             name VARCHAR(8000) NOT NULL
         );
 
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.SESSIONS}' AND xtype='U')
+        CREATE TABLE ${TABLE_NAMES.SESSIONS} (
+            id INTEGER PRIMARY KEY IDENTITY(1,1),
+            shortName VARCHAR(100) NOT NULL,
+            longName  VARCHAR(100) NOT NULL,
+            year      INTEGER NOT NULL
+        );
+
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.DEGREES}' AND xtype='U')
         CREATE TABLE ${TABLE_NAMES.DEGREES} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
