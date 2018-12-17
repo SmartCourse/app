@@ -26,7 +26,7 @@ question.use(isAuthorized)
 question.post('/:id/answer', questionController.postAnswer)
 
 /* Delete a question */
-//question.delete('/:id', questionController.deleteQuestion)
+question.delete('/:id', questionController.deleteQuestion)
 
 /* Put an updated question */
 question.put('/:id', questionController.putQuestion)

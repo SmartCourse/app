@@ -98,18 +98,31 @@ class Question {
     }
 
     /**
-     * Put a question.
-     * @param {string}  code  The code of the course
-     * @param {object}  data      controller passed in object which should
-     *                       contain the user data
+     * Put a question - i.e. update the body
+     * @param {number}  id    The id of the question
+     * @param {object}  body  object containing question data including
+                              user id and body of the question
      */
-    putQuestion(code, id, { userID, body }) {
+    putQuestion(id, { userID, body }) {
         return this.db
             .run(`UPDATE ${QUESTIONS}
                     SET body=@body
                     WHERE userID=@userID AND id=@id`,
             {
                 [QUESTIONS]: { userID, body, id }
+            })
+    }
+
+    /**
+     * Delete a question.
+     * @param {number}  id      The id of the question
+     * @param {object}  userID  The id of the user
+     */
+    deleteQuestion(id, userID) {
+        return this.db
+            .run(`DELETE ${QUESTIONS} WHERE userID=@userID AND id=@id`,
+            {
+                [QUESTIONS]: { userID, id }
             })
     }
 }
