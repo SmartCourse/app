@@ -33,7 +33,6 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('auth/logout')
-      // .then(() => this.$router.push("/"))
     }
   }
 }
@@ -87,6 +86,5 @@ export default {
     .menu-items .link-item {
         font: var(--body-copy-1);
     }
-
 }
 </style>
