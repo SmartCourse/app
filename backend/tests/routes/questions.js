@@ -104,8 +104,10 @@ describe('Test question routes', () => {
 
     describe('DELETE /api/course/ACCT1501/question', () => {
         let postRequest
+        let postCommentRequest
         let deleteRequest
         let getRequest
+        let getCommentRequest
         let location
 
         before(() => {
@@ -115,8 +117,17 @@ describe('Test question routes', () => {
                 .set('Authorization', `Bearer ${global.idToken}`)
                 .send({ body: 'original text', title: 'jeff' })
                 .expect(201)
-                .then((res) => {
+                .then(res => {
                     location = res.headers.location
+                    postCommentRequest = supertest
+                        .post(`${location}/answer`)
+                        .send({ body: 'this is a comment' })
+                        .set('Accept', 'application/json')
+                        .set('Authorization', `Bearer ${global.idToken2}`)
+                        .expect(201)
+                    return postCommentRequest
+                })
+                .then(res => {
                     deleteRequest = supertest
                         .delete(location)
                         .set('Accept', 'application/json')
@@ -124,7 +135,7 @@ describe('Test question routes', () => {
                         .expect(204)
                     return deleteRequest
                 })
-                .then((res) => {
+                .then(res => {
                     getRequest = supertest
                         .get(location)
                         .set('Accept', 'application/json')
@@ -132,6 +143,14 @@ describe('Test question routes', () => {
                         // TODO: at the moment there is no 404 implemented for missing resources
                         //.expect(404)
                     return getRequest
+                })
+                .then(res => {
+                    getCommentRequest = supertest
+                        .get(`${location}/answers`)
+                        .set('Accept', 'application/json')
+                        .expect('Content-Type', /json/)
+                        .expect(200)
+                    return getCommentRequest
                 })
             return postRequest
         })
@@ -141,6 +160,12 @@ describe('Test question routes', () => {
             getRequest.then(({ body }) => {
                 expect(body.body).to.equal(undefined)
             })
+        )
+
+        // TODO: this may have to change to querying the comment individually..
+        it('answers are gone', () =>
+            getCommentRequest.then(({ body }) =>
+                assert(body.length === 0))
         )
 
     })

@@ -114,14 +114,20 @@ class Question {
     }
 
     /**
-     * Delete a question.
+     * Delete a question and its answers.
      * @param {number}  id      The id of the question
      * @param {object}  userID  The id of the user
      */
     deleteQuestion(id, userID) {
         return this.db
-            .run(`DELETE ${QUESTIONS} WHERE userID=@userID AND id=@id`,
+            .run(`BEGIN TRANSACTION;
+                    DELETE ${COMMENTS}
+                      WHERE questionID=@questionID;
+                    DELETE ${QUESTIONS}
+                      WHERE userID=@userID AND id=@id;
+                  COMMIT;`,
             {
+                [COMMENTS]: { questionID: id },
                 [QUESTIONS]: { userID, id }
             })
     }
