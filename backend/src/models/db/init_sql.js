@@ -385,13 +385,17 @@ ${
             difficulty INTEGER DEFAULT '0',
             teaching INTEGER DEFAULT '0',
             workload INTEGER DEFAULT '0',
+            session INTEGER NOT NULL,
             timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
             CONSTRAINT fk_course_review
                 FOREIGN KEY (courseID)
                 REFERENCES ${TABLE_NAMES.COURSES} (id),
             CONSTRAINT fk_user_review
                 FOREIGN KEY (userID)
-                REFERENCES ${TABLE_NAMES.USERS} (id)
+                REFERENCES ${TABLE_NAMES.USERS} (id),
+            CONSTRAINT fk_session_review
+                FOREIGN KEY (session)
+                REFERENCES ${TABLE_NAMES.SESSIONS} (id)
         );
 
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.COMMENTS}' AND xtype='U')

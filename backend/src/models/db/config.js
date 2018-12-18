@@ -1,7 +1,10 @@
 const { PRODUCTION, TESTING } = require('../constants')
 
-exports.DB_NAME = PRODUCTION ? 'smartcourse'
-    : TESTING ? 'smartcourse-testing' : 'smartcourse-staging'
+exports.DB_NAME = PRODUCTION
+    ? 'smartcourse'
+    : TESTING
+        ? 'smartcourse-testing'
+        : 'smartcourse-staging'
 
 exports.MAX_CONNECTIONS = 100
 

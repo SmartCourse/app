@@ -5,7 +5,7 @@ const {
     MAX_ENJOY,
     MIN_OPTION,
     MAX_OPTION,
-    TABLE_NAMES: { REVIEWS, COURSES, COMMENTS }
+    TABLE_NAMES: { REVIEWS, COURSES, COMMENTS, SESSIONS }
 } = require('./constants')
 
 /* All inputs should be validated in this class that are review related */
@@ -40,15 +40,16 @@ class Review {
         }
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .run(`SELECT r.*, cou.code, (SELECT COUNT(com.reviewID)
+            .run(`SELECT r.*, ses.*, cou.code, (SELECT COUNT(com.reviewID)
                 FROM ${COMMENTS} com
                 WHERE com.reviewID = r.id) as numResponses
-            FROM ${REVIEWS} r
-            JOIN ${COURSES} cou ON cou.code = @code 
-            WHERE r.courseID=cou.id
-            ORDER BY r.timestamp DESC
-            OFFSET ${offset} ROWS
-            FETCH NEXT ${pageSize} ROWS ONLY`,
+                FROM ${REVIEWS} r
+                JOIN ${COURSES}  cou ON cou.code = @code 
+                JOIN ${SESSIONS} ses ON ses.id   = r.session
+                WHERE r.courseID=cou.id
+                ORDER BY r.timestamp DESC
+                OFFSET ${offset} ROWS
+                FETCH NEXT ${pageSize} ROWS ONLY`,
             {
                 [COURSES]: { code }
             })
@@ -74,7 +75,7 @@ class Review {
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
-    postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID }) {
+    postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID, session }) {
         if (recommend !== DONT_RECOMMEND && recommend !== RECOMMEND) throw Error('Invalid recommend value')
         if (enjoy < MIN_ENJOY || enjoy > MAX_ENJOY) throw Error('Invalid enjoy value')
 
@@ -84,13 +85,13 @@ class Review {
 
         // insert review, get review, update course ratings
         return this.db
-            .run(`INSERT INTO ${REVIEWS} (courseID, userID, title, body, recommend, enjoy, difficulty, teaching, workload)
-                SELECT id, @userID, @title, @body, @recommend, @enjoy, @difficulty, @teaching, @workload
+            .run(`INSERT INTO ${REVIEWS} (courseID, userID, title, body, recommend, enjoy, difficulty, teaching, workload, session)
+                SELECT id, @userID, @title, @body, @recommend, @enjoy, @difficulty, @teaching, @workload, @session
                 FROM courses
                 WHERE code=@code;
                 SELECT @@identity AS id`,
             {
-                [REVIEWS]: { userID, title, body, recommend, enjoy, difficulty, teaching, workload },
+                [REVIEWS]: { userID, title, body, recommend, enjoy, difficulty, teaching, workload, session },
                 [COURSES]: { code }
             })
             .then(([{ id }]) => id)

@@ -226,6 +226,10 @@ exports.TABLE_COLUMNS = {
             type: TYPES.Int,
             options: { nullable: false }
         },
+        session: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
         userID: {
             type: TYPES.Int,
             options: { nullable: false }
