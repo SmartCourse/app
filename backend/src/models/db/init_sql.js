@@ -3,6 +3,7 @@ const faculties = require('../../../data/faculties')
 const degrees = require('../../../data/degrees')
 const subjects = require('../../../data/subjects')
 const courses = require('../../../data/courses')
+const sessions = require('../../../data/sessions')
 const { DB_CONFIG } = require('./config')
 const {
     NUM_DUMMY_USERS,
@@ -56,6 +57,7 @@ exports.initDB = new Promise((resolve, reject) => {
                 await sqlDegrees(db)
                 await sqlSubjects(db)
                 await sqlCourses(db)
+                await sqlSessions(db)
             }
 
             // Initialise test databases
@@ -115,6 +117,10 @@ async function sqlDegrees(db) {
 
 async function sqlSubjects(db) {
     return bulkInsertDB(db, TABLE_NAMES.SUBJECTS, subjects)
+}
+
+async function sqlSessions(db) {
+    return bulkInsertDB(db, TABLE_NAMES.SESSIONS, sessions)
 }
 
 async function sqlCourses(db) {
