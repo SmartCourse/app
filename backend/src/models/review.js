@@ -114,7 +114,7 @@ class Review {
                       workload=@workload
                     WHERE userID=@userID AND id=@id`,
             {
-                [REVIEWS]: { userID, body, id }
+                [REVIEWS]: { userID, body, id, recommend, enjoy, difficulty, teaching, workload }
             })
     }
 
