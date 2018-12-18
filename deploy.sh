@@ -17,21 +17,6 @@ else
     exit -1
 fi
 
-echo "Backing up database on server..."
-read -d '' TMP_CMDS << EOF || true
-{
-    "command": "If Not Exist db (mkdir db) & \
-                If Exist db/smartcourse.db (cp -f db/smartcourse.db ../db/)",
-    "dir": "site/wwwroot"
-}
-EOF
-curl -u $AZURE_USER:$AZURE_PASS \
-    --header "Content-Type: application/json" \
-    --request POST \
-    --data "$TMP_CMDS" \
-    https://$name.scm.azurewebsites.net/api/command
-echo ""
-
 echo "Compiling..."
 cd frontend
 npm install
@@ -51,23 +36,10 @@ curl -u $AZURE_USER:$AZURE_PASS \
     --data-binary @smartcourse.zip https://$name.scm.azurewebsites.net/api/zipdeploy
 echo ""
 
-echo "Restoring database, backing up to blob storage and installing modules..."
+echo "Installing modules..."
 read -d '' TMP_CMDS << EOF || true
 {
-    "command": "mkdir db || cp ../db/smartcourse.db db/ && npm install",
-    "dir": "site/wwwroot"
-}
-EOF
-
-curl -u $AZURE_USER:$AZURE_PASS \
-    --header "Content-Type: application/json" \
-    --request POST \
-    --data "$TMP_CMDS" \
-    https://$name.scm.azurewebsites.net/api/command
-echo ""
-read -d '' TMP_CMDS << EOF || true
-{
-    "command": "bash backup.sh $type",
+    "command": "npm install",
     "dir": "site/wwwroot"
 }
 EOF

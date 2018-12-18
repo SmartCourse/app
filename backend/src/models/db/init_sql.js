@@ -1,9 +1,8 @@
-const { Connection, Request } = require('tedious')
+const { Request } = require('tedious')
 const faculties = require('../../../data/faculties')
 const degrees = require('../../../data/degrees')
 const subjects = require('../../../data/subjects')
 const courses = require('../../../data/courses')
-const { DB_CONFIG } = require('./config')
 const {
     NUM_DUMMY_USERS,
     SAMPLE_QUESTIONS,
@@ -12,7 +11,6 @@ const {
     SAMPLE_USERS
 } = require('./test_constants')
 const {
-    PRODUCTION,
     TESTING,
     TABLE_NAMES,
     TABLE_COLUMNS,
@@ -36,52 +34,9 @@ const userRepMap = {}
 // PRNG taken from: https://gist.github.com/blixt/f17b47c62508be59987b
 let seed = 1
 
-exports.initDB = new Promise((resolve, reject) => {
-    // Database initialisation benchmarking
-    const timeList = [Date.now() / 1000]
-
-    // Do the initialisation
-    const db = new Connection(DB_CONFIG)
-    db.on('connect', (err) => {
-        if (err) reject(err)
-
-        // Create the database and initialise data with no dependencies.
-        const request = new Request(sqlTables(), async (err) => {
-            if (err) reject(err)
-
-            // Initialise with UNSW data
-            if (!await unswDataInitialised(db)) {
-                await sqlUniversity(db)
-                await sqlFaculties(db)
-                await sqlDegrees(db)
-                await sqlSubjects(db)
-                await sqlCourses(db)
-            }
-
-            // Initialise test databases
-            if (!PRODUCTION && !await testDataInitialised(db)) {
-                await sqlQuestions(db)
-                await sqlReviews(db)
-                await sqlComments(db)
-                await sqlLikes(db)
-                await sqlUsers(db)
-            }
-
-            // Log completion time
-            timeList.push(Date.now() / 1000)
-            console.log(`Done creating database! (${((timeList[1] - timeList[0])).toFixed(3)})`)
-
-            // Close the connection and return
-            db.close()
-            resolve()
-        })
-        db.execSql(request)
-    })
-})
-
 // Assume that if UNSW has been inserted into uni table,
 // all UNSW data has been inserted into tables.
-async function unswDataInitialised(db) {
+exports.unswDataInitialised = async function(db) {
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM ${TABLE_NAMES.UNIVERSITY}`
         const request = new Request(query, (err, rowCount) =>
@@ -92,32 +47,32 @@ async function unswDataInitialised(db) {
 
 // Assume that if there is a question in the questions table,
 // testing data already exists.
-async function testDataInitialised(db) {
+exports.testDataInitialised = async function(db) {
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM ${TABLE_NAMES.QUESTIONS}`
         const request = new Request(query, (err, rowCount) =>
-            err ? resolve(0) : resolve(rowCount))
+            err ? reject(err) : resolve(rowCount))
         db.execSql(request)
     })
 }
 
-async function sqlUniversity(db) {
+exports.sqlUniversity = async function(db) {
     return bulkInsertDB(db, TABLE_NAMES.UNIVERSITY, [{ name: 'UNSW' }])
 }
 
-async function sqlFaculties(db) {
+exports.sqlFaculties = async function(db) {
     return bulkInsertDB(db, TABLE_NAMES.FACULTIES, faculties)
 }
 
-async function sqlDegrees(db) {
+exports.sqlDegrees = async function(db) {
     return bulkInsertDB(db, TABLE_NAMES.DEGREES, degrees)
 }
 
-async function sqlSubjects(db) {
+exports.sqlSubjects = async function(db) {
     return bulkInsertDB(db, TABLE_NAMES.SUBJECTS, subjects)
 }
 
-async function sqlCourses(db) {
+exports.sqlCourses = async function(db) {
     return bulkInsertDB(db, TABLE_NAMES.COURSES, courses)
 }
 
@@ -136,7 +91,7 @@ function sqlQuestion(code) {
     }
 }
 
-async function sqlQuestions(db) {
+exports.sqlQuestions = async function(db) {
     let questions = courses.map(({ code }) =>
         SAMPLE_QUESTIONS.map(sqlQuestion(code)))
     questions = [].concat.apply([], questions)
@@ -162,7 +117,7 @@ function sqlReview(code) {
     }
 }
 
-async function sqlReviews(db) {
+exports.sqlReviews = async function(db) {
     let reviews = courses.map(({ code }) =>
         SAMPLE_REVIEWS.map(sqlReview(code)))
     reviews = [].concat.apply([], reviews)
@@ -191,7 +146,7 @@ function genComments(parent) {
     return comments
 }
 
-async function sqlComments(db) {
+exports.sqlComments = async function(db) {
     // Question comments
     let comments = []
     for (let parent of questions) {
@@ -208,7 +163,7 @@ async function sqlComments(db) {
         })
 }
 
-async function sqlUsers(db) {
+exports.sqlUsers = async function(db) {
     const userNames = SAMPLE_USERS
     const suffixes = ['XxX', '!', 's', '!!', '_', '__', 'x']
 
@@ -270,7 +225,7 @@ function genLikes(parent) {
     return likes
 }
 
-async function sqlLikes(db) {
+exports.sqlLikes = async function(db) {
     // Like questions
     let likes = []
     for (let parent of questionsToLike) {
@@ -295,7 +250,7 @@ async function sqlLikes(db) {
         })
 }
 
-function sqlTables() {
+exports.sqlTables = function() {
     return `
     BEGIN TRANSACTION;
     
