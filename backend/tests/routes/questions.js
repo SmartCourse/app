@@ -101,6 +101,49 @@ describe('Test question routes', () => {
         )
 
     })
+
+    describe('DELETE /api/course/ACCT1501/question', () => {
+        let postRequest
+        let deleteRequest
+        let getRequest
+        let location
+
+        before(() => {
+            postRequest = supertest
+                .post('/api/course/ACCT1501/question')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .send({ body: 'original text', title: 'jeff' })
+                .expect(201)
+                .then((res) => {
+                    location = res.headers.location
+                    deleteRequest = supertest
+                        .delete(location)
+                        .set('Accept', 'application/json')
+                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .expect(204)
+                    return deleteRequest
+                })
+                .then((res) => {
+                    getRequest = supertest
+                        .get(location)
+                        .set('Accept', 'application/json')
+                        .expect('Content-Type', /json/)
+                        // TODO: at the moment there is no 404 implemented for missing resources
+                        //.expect(404)
+                    return getRequest
+                })
+            return postRequest
+        })
+
+        // TODO: not sure what should be in the body... undefined may not be right
+        it('has the correct body', () =>
+            getRequest.then(({ body }) => {
+                expect(body.body).to.equal(undefined)
+            })
+        )
+
+    })
 })
 
 describe('Test answer routes', () => {
