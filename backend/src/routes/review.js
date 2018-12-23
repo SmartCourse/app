@@ -32,10 +32,10 @@ review.put('/:id', reviewController.putReview)
 review.post('/:id/comment', reviewController.postComment)
 
 /* Delete a comment */
-review.delete('/:id/comment', commentController.deleteComment)
+review.delete('/:id/comment/:cid', commentController.deleteComment)
 
 /* Put an updated comment */
-review.put('/:id/comment', commentController.putComment)
+review.put('/:id/comment/:cid', commentController.putComment)
 
 /* Put an updated like value */
 review.put('/:id/likes', reviewController.putReviewLikes)

@@ -82,7 +82,7 @@ class Comment {
                     SET body=@body
                     WHERE userID=@userID AND id=@id`,
             {
-                [QUESTIONS]: { userID, body, id }
+                [COMMENTS]: { userID, body, id }
             })
     }
 

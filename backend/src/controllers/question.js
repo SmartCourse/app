@@ -63,7 +63,7 @@ exports.getQuestionAnswers = function ({ user, params, query }, res) {
 /* POST new answer. */
 exports.postAnswer = function ({ user, params, query, body }, res) {
     body.userID = user.id
-    const location = `/api/course/${params.code}/question/${params.id}/answers`
+    const location = `/api/course/${params.code}/question/${params.id}/answer`
 
     commentModel.postComment({ questionID: params.id }, body)
         .then(postResponseHandler(location, res))

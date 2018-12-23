@@ -24,13 +24,13 @@ exports.getComment = function({ params: { cid }, user }, res) {
 /* PUT updated comment body */
 exports.putComment = function ({ user, params, body }, res) {
     body.userID = user.id
-    commentModel.putComment(params.id, body)
+    commentModel.putComment(params.cid, body)
         .then(() => exports.getComment({ user, params }, res))
 }
 
 /* DELETE comment */
 exports.deleteComment = function ({ user, params}, res) {
-    commentModel.deleteComment(params.id, user.id)
+    commentModel.deleteComment(params.cid, user.id)
         .then(deleteResponseHandler(res))
         .catch(errorHandler(res))
 }

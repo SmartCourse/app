@@ -32,10 +32,10 @@ question.put('/:id', questionController.putQuestion)
 question.post('/:id/answer', questionController.postAnswer)
 
 /* Delete an answer */
-question.delete('/:id/answer', commentController.deleteComment)
+question.delete('/:id/answer/:cid', commentController.deleteComment)
 
 /* Put an updated answer */
-question.put('/:id/answer', commentController.putComment)
+question.put('/:id/answer/:cid', commentController.putComment)
 
 /* Put an updated question like value */
 question.put('/:id/likes', questionController.putQuestionLikes)
