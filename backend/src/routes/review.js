@@ -22,14 +22,20 @@ review.get('/:id/comment/:cid', commentController.getComment)
 /* full auth check */
 review.use(isAuthorized)
 
-/* Post a comment for a given review */
-review.post('/:id/comment', reviewController.postComment)
-
 /* Delete a review*/
 review.delete('/:id', reviewController.deleteReview)
 
 /* Put an updated review */
 review.put('/:id', reviewController.putReview)
+
+/* Post a comment for a given review */
+review.post('/:id/comment', reviewController.postComment)
+
+/* Delete a comment */
+review.delete('/:id/comment', commentController.deleteComment)
+
+/* Put an updated comment */
+review.put('/:id/comment', commentController.putComment)
 
 /* Put an updated like value */
 review.put('/:id/likes', reviewController.putReviewLikes)

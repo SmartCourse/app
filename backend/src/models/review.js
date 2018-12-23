@@ -124,12 +124,16 @@ class Review {
      * @param {object}  userID  The id of the user
      */
     deleteReview(id, userID) {
+        // The query does an auth check with userID before deleting
         return this.db
             .run(`BEGIN TRANSACTION;
-                    DELETE ${COMMENTS}
-                      WHERE reviewID=@reviewID;
-                    DELETE ${REVIEWS}
-                      WHERE userID=@userID AND id=@id;
+                    IF EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)
+                    BEGIN
+                      DELETE ${COMMENTS}
+                        WHERE reviewID=@reviewID;
+                      DELETE ${REVIEWS}
+                        WHERE id=@id;
+                    END;
                   COMMIT;`,
             {
                 [COMMENTS]: { reviewID: id },

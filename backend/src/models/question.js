@@ -119,16 +119,20 @@ class Question {
      * @param {object}  userID  The id of the user
      */
     deleteQuestion(id, userID) {
+        // The query does an auth check with userID before deleting
         return this.db
             .run(`BEGIN TRANSACTION;
-                    DELETE ${COMMENTS}
-                      WHERE questionID=@questionID;
-                    DELETE ${QUESTIONS}
-                      WHERE userID=@userID AND id=@id;
+                    IF EXISTS (SELECT * FROM ${QUESTIONS} WHERE userID=@userID AND id=@id)
+                    BEGIN
+                      DELETE ${COMMENTS}
+                        WHERE questionID=@questionID;
+                      DELETE ${QUESTIONS}
+                        WHERE userID=@userID AND id=@id;
+                    END;
                   COMMIT;`,
             {
-                [COMMENTS]: { questionID: id },
-                [QUESTIONS]: { userID, id }
+                [QUESTIONS]: { userID, id },
+                [COMMENTS]: { questionID: id }
             })
     }
 }
