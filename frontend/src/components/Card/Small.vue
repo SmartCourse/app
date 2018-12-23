@@ -27,7 +27,7 @@ export default {
     likes: Number,
     published: String,
     user: Object,
-    numAnswers: {type: Number, default: 0},
+    numAnswers: { type: Number, default: 0 },
     code: String,
     id: String,
     cardType: String,
