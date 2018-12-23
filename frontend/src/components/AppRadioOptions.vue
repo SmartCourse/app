@@ -35,13 +35,14 @@ export default {
 }
 
 .option {
-  border-bottom: 1px solid transparent;
+  border-bottom: 2.5px solid transparent;
   grid-row: 1;
   cursor: pointer;
+  transition: border 0.2s ease-in-out;
 }
 
 .selected {
   color: black;
-  border-bottom: 1px solid black;
+  border-bottom: 2.5px solid var(--theme);
 }
 </style>

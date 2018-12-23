@@ -1,4 +1,5 @@
 const app = require('../../src')
+const db = require('../../src/models/db')
 const supertest = require('supertest')(app)
 const { expect } = require('chai')
 
@@ -55,4 +56,8 @@ describe('User route testing', function() {
                 .expect('Content-Type', /json/)
                 .expect(401))
     })
+})
+
+after(function() {
+    db.close()
 })
