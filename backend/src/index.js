@@ -3,8 +3,10 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const firebase = require('./auth')
-const db = require('./models/db')
 const compression = require('compression')
+const db = require('./models/db')
+const PRE_RENDERED_TEMPLATES = require('../../frontend/pre-rendered')
+
 const app = express()
 
 // for json parsing
@@ -37,9 +39,16 @@ const apiRouter = require('./routes')
 
 app.use('/api', apiRouter)
 
-app.use('/signup', function (_, res) {
-    res.sendFile(path.join(__dirname, '../public/signup', 'index.html'))
-})
+/*
+ * These templates are prerendered to enchance SEO.
+ * If requests are returned for these rotues, return the template.
+ */
+PRE_RENDERED_TEMPLATES
+    .forEach(path => {
+        app.use(`${path}`, function (_, res) {
+            res.sendFile(path.join(__dirname, `../public${path}`, 'index.html'))
+        })
+    })
 
 /*
     anything that gets here and not handled
