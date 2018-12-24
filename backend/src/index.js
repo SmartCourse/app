@@ -17,7 +17,7 @@ app.use(compression())
 
 // for caching
 app.use(express.static(path.join(__dirname, '../public'), {
-    maxAge: '30d'
+    maxAge: app.get('env') === 'development' ? '0' : '30d'
 }))
 
 // for auth tokens

@@ -22,7 +22,7 @@ function setCorsHeaders(method, res, next, allowedDomain = '*') {
     // set headers
     res.header({
         'Access-Control-Allow-Origin': allowedDomain,
-        'Access-Control-Allow-Headers': 'Origin, Authorization, X-Requested-With, Content-Type, Accept',
+        'Access-Control-Allow-Headers': 'Origin, Authorization, X-Requested-With, Content-Type, Accept, Cache-Control',
         'Access-Control-Expose-Headers': 'Location, X-ID',
         'Access-Control-Allow-Methods': 'GET, HEAD, PUT, DELETE, POST, OPTIONS'
     })
