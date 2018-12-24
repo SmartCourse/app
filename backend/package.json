@@ -5,8 +5,9 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development npx nodemon ./src/bin/www",
     "lint": "npx eslint src/**/*.js tests/**/*.js --fix",
+    "test:lint": "npx eslint src/**/*.js tests/**/*.js",
     "test:src": "cross-env NODE_ENV=test npx nyc mocha tests/**/*.js --timeout 75000",
-    "test": "npm run lint && npm run test:src",
+    "test": "npm run test:lint && npm run test:src",
     "coverage": "npx nyc report --reporter=html --reporter=text-lcov | coveralls"
   },
   "dependencies": {

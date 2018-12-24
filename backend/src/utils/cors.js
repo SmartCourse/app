@@ -1,4 +1,5 @@
 const CORS_PREFLIGHT_METHODS = ['OPTIONS', 'HEAD']
+const CORS_ALLOWED_HEADERS = ['Origin', 'Authorization', 'X-Requested-With', 'Content-Type', 'Accept', 'Cache-Control'].join(', ')
 
 /**
  * Basic CORS middleware handler.
@@ -22,7 +23,7 @@ function setCorsHeaders(method, res, next, allowedDomain = '*') {
     // set headers
     res.header({
         'Access-Control-Allow-Origin': allowedDomain,
-        'Access-Control-Allow-Headers': 'Origin, Authorization, X-Requested-With, Content-Type, Accept, Cache-Control',
+        'Access-Control-Allow-Headers': CORS_ALLOWED_HEADERS,
         'Access-Control-Expose-Headers': 'Location, X-ID',
         'Access-Control-Allow-Methods': 'GET, HEAD, PUT, DELETE, POST, OPTIONS'
     })
@@ -34,3 +35,5 @@ function setCorsHeaders(method, res, next, allowedDomain = '*') {
         next()
     }
 }
+
+exports.CORS_ALLOWED_HEADERS = CORS_ALLOWED_HEADERS
