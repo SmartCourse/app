@@ -44,9 +44,9 @@ app.use('/api', apiRouter)
  * If requests are returned for these rotues, return the template.
  */
 PRE_RENDERED_TEMPLATES
-    .forEach(path => {
-        app.use(`${path}`, function (_, res) {
-            res.sendFile(path.join(__dirname, `../public${path}`, 'index.html'))
+    .forEach(route => {
+        app.use(`${route}`, function (_, res) {
+            res.sendFile(path.join(__dirname, `../public${route}`, 'index.html'))
         })
     })
 
