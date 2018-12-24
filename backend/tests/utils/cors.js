@@ -1,10 +1,14 @@
 const { expect } = require('chai')
-const { corsDev, corsProd } = require('../../src/utils/cors')
+const {
+    corsDev,
+    corsProd,
+    CORS_ALLOWED_HEADERS
+} = require('../../src/utils/cors')
 
 describe('cors', function () {
     const headers = {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Origin, Authorization, X-Requested-With, Content-Type, Accept',
+        'Access-Control-Allow-Headers': CORS_ALLOWED_HEADERS,
         'Access-Control-Allow-Methods': 'GET, HEAD, PUT, DELETE, POST, OPTIONS',
         'Access-Control-Expose-Headers': 'Location, X-ID'
     }
@@ -41,7 +45,7 @@ describe('cors', function () {
                         .to.deep.equal({
                             'Access-Control-Expose-Headers': 'Location, X-ID',
                             'Access-Control-Allow-Origin': 'https://smartcourse.me',
-                            'Access-Control-Allow-Headers': 'Origin, Authorization, X-Requested-With, Content-Type, Accept',
+                            'Access-Control-Allow-Headers': CORS_ALLOWED_HEADERS,
                             'Access-Control-Allow-Methods': 'GET, HEAD, PUT, DELETE, POST, OPTIONS'
                         })
                 }
