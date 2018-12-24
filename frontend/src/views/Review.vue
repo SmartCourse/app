@@ -49,11 +49,11 @@
 </template>
 
 <script>
+import AppButtonToolTip from '@/components/AppButton/WithToolTip'
 import ReviewCard from '@/components/Reviews/ReviewCard'
 import ReplyCard from '@/components/Comments/CommentCard'
 import ReplyForm from '@/components/Comments/CommentForm'
 import ReplyBar from '@/components/Comments/CommentSpacer'
-import AppButtonToolTip from '@/components/AppButton/WithToolTip'
 import { mapGetters } from 'vuex'
 
 export default {

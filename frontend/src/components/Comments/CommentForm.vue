@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import Card from '@/components/Card'
 import AppButtonToolTip from '@/components/AppButton/WithToolTip'
+import Card from '@/components/Card'
 
 export default {
   name: 'CommentForm',

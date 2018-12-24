@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content subject-list">
+  <div class="main-content subject-list" data-view>
     <FilterSearch v-model="search"/>
     <TilesContainer v-if="filtered.length">
         <Tile :key="item.code" v-for="item in filtered">

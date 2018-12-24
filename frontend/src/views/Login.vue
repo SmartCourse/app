@@ -1,5 +1,5 @@
 <template>
-<div class="auth-page">
+<div class="auth-page" data-view>
     <AppAuthForm v-if="!loading"
       :title="'Login'"
       :buttonText="'Log In'"

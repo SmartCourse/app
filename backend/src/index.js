@@ -37,6 +37,10 @@ const apiRouter = require('./routes')
 
 app.use('/api', apiRouter)
 
+app.use('/signup', function (_, res) {
+    res.sendFile(path.join(__dirname, '../public/signup', 'index.html'))
+})
+
 /*
     anything that gets here and not handled
     by api error handler should get index.html.

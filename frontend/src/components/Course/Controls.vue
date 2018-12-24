@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import AppButton from '@/components/AppButton'
 import AppButtonWithToolTip from '@/components/AppButton/WithToolTip'
 
 export default {
@@ -24,7 +23,7 @@ export default {
     routeName: String,
     buttonText: String
   },
-  components: { AppButton, AppButtonWithToolTip },
+  components: { AppButtonWithToolTip },
   computed: {
     authenticated() {
       return this.$store.getters['auth/isLoggedIn']

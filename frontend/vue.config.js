@@ -3,8 +3,8 @@ const PrerenderSpaPlugin = require('prerender-spa-plugin')
 
 const productionPlugins = [
   new PrerenderSpaPlugin({
-    staticDir: path.join(__dirname, 'dist'),
-    routes: ['/', '/subject', '/login', '/signup'],
+    staticDir: path.join(__dirname, '../backend/public'),
+    routes: ['/', '/signup'],
     renderer: new PrerenderSpaPlugin.PuppeteerRenderer({
       // We need to inject a value so we're able to
       // detect if the page is currently pre-rendered.
@@ -19,5 +19,10 @@ const productionPlugins = [
 ]
 
 module.exports = {
-  lintOnSave: true
+  lintOnSave: true,
+  configureWebpack: (config) => {
+    if (process.env.NODE_ENV === 'production') {
+      config.plugins.push(...productionPlugins);
+    }
+  },
 }
