@@ -57,7 +57,6 @@ describe('Test question routes', () => {
     describe('PUT /api/course/ACCT1501/question', () => {
         let postRequest
         let putRequest
-        let getRequest
         let location
 
         before(() => {
@@ -77,37 +76,51 @@ describe('Test question routes', () => {
                         .expect(200)
                     return putRequest
                 })
-                .then((res) => {
-                    getRequest = supertest
-                        .get(location)
-                        .set('Accept', 'application/json')
-                        .expect('Content-Type', /json/)
-                        .expect(200)
-                    return getRequest
-                })
             return postRequest
         })
 
         it('has the correct title', () =>
-            getRequest.then(({ body }) => {
+            putRequest.then(({ body }) => {
                 expect(body.title).to.equal('jeff')
             })
         )
 
         it('has the correct body', () =>
-            getRequest.then(({ body }) => {
+            putRequest.then(({ body }) => {
                 expect(body.body).to.equal('edited text')
             })
         )
 
+        describe('follow up to verify edited record exists', () => {
+            let getRequest
+
+            before(() => {
+                getRequest = supertest
+                    .get(location)
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                return getRequest
+            })
+
+            it('has the correct title', () =>
+                getRequest.then(({ body }) => {
+                    expect(body.title).to.equal('jeff')
+                })
+            )
+
+            it('has the correct body', () =>
+                getRequest.then(({ body }) => {
+                    expect(body.body).to.equal('edited text')
+                })
+            )
+        })
     })
 
     describe('DELETE /api/course/ACCT1501/question', () => {
         let postRequest
         let postCommentRequest
         let deleteRequest
-        let getRequest
-        let getCommentRequest
         let location
 
         before(() => {
@@ -135,39 +148,55 @@ describe('Test question routes', () => {
                         .expect(204)
                     return deleteRequest
                 })
-                .then(res => {
-                    getRequest = supertest
-                        .get(location)
-                        .set('Accept', 'application/json')
-                        .expect('Content-Type', /json/)
-                        // TODO: at the moment there is no 404 implemented for missing resources
-                        //.expect(404)
-                    return getRequest
-                })
-                .then(res => {
-                    getCommentRequest = supertest
-                        .get(`${location}/answers`)
-                        .set('Accept', 'application/json')
-                        .expect('Content-Type', /json/)
-                        .expect(200)
-                    return getCommentRequest
-                })
             return postRequest
         })
 
-        // TODO: not sure what should be in the body... undefined may not be right
         it('has the correct body (undefined)', () =>
-            getRequest.then(({ body }) => {
+            deleteRequest.then(({ body }) => {
                 expect(body.body).to.equal(undefined)
             })
         )
 
-        // TODO: this may have to change to querying the comment individually..
-        it('answers are gone', () =>
-            getCommentRequest.then(({ body }) =>
-                assert(body.length === 0))
-        )
+        describe('follow up to verify deleted record is gone', () => {
+            let getRequest
 
+            before(() => {
+                getRequest = supertest
+                    .get(location)
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    // TODO: at the moment there is no 404 implemented for missing resources
+                    // .expect(404)
+                return getRequest
+            })
+
+            // TODO: not sure what should be in the body... undefined may not be right
+            it('has the correct body (undefined)', () =>
+                getRequest.then(({ body }) => {
+                    expect(body.body).to.equal(undefined)
+                })
+            )
+        })
+
+        describe('follow up to verify answers are gone', () => {
+            let getCommentRequest
+
+            before(() => {
+                getCommentRequest = supertest
+                    .get(`${location}/answers`)
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                return getCommentRequest
+            })
+
+            // TODO: this may have to change to querying the comment individually..
+            // TODO: should give 404
+            it('answers are gone', () =>
+                getCommentRequest.then(({ body }) =>
+                    assert(body.length === 0))
+            )
+        })
     })
 })
 
@@ -312,7 +341,6 @@ describe('Test answer routes', () => {
     describe('PUT /api/course/ACCT1501/question/1/answer/', () => {
         let postRequest
         let putRequest
-        let getRequest
         let location
 
         before(() => {
@@ -332,30 +360,38 @@ describe('Test answer routes', () => {
                         .expect(200)
                     return putRequest
                 })
-                .then((res) => {
-                    getRequest = supertest
-                        .get(location)
-                        .set('Accept', 'application/json')
-                        .expect('Content-Type', /json/)
-                        .expect(200)
-                    return getRequest
-                })
             return postRequest
         })
 
         it('has the correct body', () =>
-            getRequest.then(({ body }) => {
+            putRequest.then(({ body }) => {
                 expect(body.body).to.equal('edited text')
             })
         )
 
+        describe('follow up to verify edited record exists', () => {
+            let getRequest
+
+            before(() => {
+                getRequest = supertest
+                    .get(location)
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                return getRequest
+            })
+
+            it('has the correct body', () =>
+                getRequest.then(({ body }) => {
+                    expect(body.body).to.equal('edited text')
+                })
+            )
+        })
     })
 
     describe('DELETE /api/course/ACCT1501/question/1/answer/', () => {
         let postRequest
         let deleteRequest
-        let getRequest
-        let getCommentRequest
         let location
         let id
 
@@ -376,38 +412,54 @@ describe('Test answer routes', () => {
                         .expect(204)
                     return deleteRequest
                 })
-                .then(res => {
-                    getRequest = supertest
-                        .get(location)
-                        .set('Accept', 'application/json')
-                        .expect('Content-Type', /json/)
-                        // TODO: at the moment there is no 404 implemented for missing posts
-                        //.expect(404)
-                    return getRequest
-                })
-                .then(res => {
-                    getCommentRequest = supertest
-                        .get(`/api/course/ACCT1501/question/1/answers`)
-                        .set('Accept', 'application/json')
-                        .expect('Content-Type', /json/)
-                        .expect(200)
-                    return getCommentRequest
-                })
+
             return postRequest
         })
 
-        // TODO: not sure what should be in the body... undefined may not be right
         it('has the correct body (undefined)', () =>
-            getRequest.then(({ body }) => {
+            deleteRequest.then(({ body }) => {
                 expect(body.body).to.equal(undefined)
             })
         )
 
-        it('answer is gone', () =>
-            // check the posted comment doesn't appear in the list
-            getCommentRequest.then(({ body }) =>
-                expect(body.filter(({ cid }) => cid === id).length).to.equal(0))
-        )
+        describe('follow up to verify deleted answer is gone', () => {
+            let getRequest
 
+            before(() => {
+                getRequest = supertest
+                    .get(location)
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                // TODO: at the moment there is no 404 implemented for missing posts
+                // .expect(404)
+                return getRequest
+            })
+
+            // TODO: not sure what should be in the body... undefined may not be right
+            it('has the correct body (undefined)', () =>
+                getRequest.then(({ body }) => {
+                    expect(body.body).to.equal(undefined)
+                })
+            )
+        })
+
+        describe('follow up to verify deleted answer is missing from list of answers', () => {
+            let getCommentRequest
+
+            before(() => {
+                getCommentRequest = supertest
+                    .get('/api/course/ACCT1501/question/1/answers')
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                return getCommentRequest
+            })
+
+            it('answer is gone', () =>
+                // check the posted comment doesn't appear in the list
+                getCommentRequest.then(({ body }) =>
+                    expect(body.filter(({ cid }) => cid === id).length).to.equal(0))
+            )
+        })
     })
 })
