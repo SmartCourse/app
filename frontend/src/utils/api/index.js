@@ -2,17 +2,16 @@ import APIError from './errors'
 import store from '../../store'
 import { getAuthHeaders } from './auth'
 
-const API_URL = process && process.env && process.env.NODE_ENV === 'development'
-  ? 'http://localhost:3000/api' : (process.env.NODE_ENV === 'staging'
-    ? 'https://smartcourse-staging.azurewebsites.net/api'
-    : 'https://smartcourse-prod.azurewebsites.net/api')
+const API_URL = process.env.VUE_APP_API_URL
 
 async function responseCheck(res) {
   if (res.ok) {
-    return res.json()
+    // check if body, else rely on headers
+    return res.status === 200 ? res.json() : res.headers.get('X-ID')
   } else if (res.status >= 500) {
     throw new APIError('Server Error')
   } else {
+    // if 400s response json is probably sent to explain problem
     const err = await res.json()
     throw new APIError(err.message, err.code)
   }
@@ -21,14 +20,8 @@ async function responseCheck(res) {
 function request (path, { headers, method, data }) {
   // eventually add cors and auth headers
   const url = `${API_URL}${path}`
-
-  if (method === 'GET') {
-    return fetch(url, { headers })
-  }
-
-  const auth = store.getters.authObject
+  const auth = store.getters['auth/userAuthObject']
   const body = data ? JSON.stringify(data) : null
-
   headers = {
     'Content-Type': 'application/json',
     ...headers
@@ -39,7 +32,12 @@ function request (path, { headers, method, data }) {
   // even if not logged on
   if (!headers.Authorization && auth) {
     return getAuthHeaders(auth)
-      .then(options => fetch(url, {
+      // simple request or non-simple?
+      .then(options => method === 'GET' ? fetch(url, {
+        headers: {
+          ...options.headers
+        }
+      }) : fetch(url, {
         headers: {
           ...options.headers,
           ...headers

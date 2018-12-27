@@ -1,18 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="/favicon.ico">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title>SmartCourse</title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but SmartCourse doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico">
+  <meta name="description" content="Community-driven ratings, reviews and info about UNSW courses.">
+  <meta property="og:title" content="<%= VUE_APP_TITLE %>">
+  <meta property="og:description" content="Community-driven ratings, reviews and info about UNSW courses.">
+  <meta property="og:url" content="https://smartcourse.me">
+  <meta property="og:image" content="/logo.png">
+  <title><%= VUE_APP_TITLE %></title>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but SmartCourse doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+  </noscript>
+  <script defer async>
+    document.addEventListener('DOMContentLoaded', new Promise((done) => {
+
+      const links = [
+        'https://fonts.googleapis.com/css?family=Open+Sans',
+        'https://fonts.googleapis.com/icon?family=Material+Icons'
+      ]
+      .map(href => {
+        const link = document.createElement('link')
+        link.href = href
+        link.setAttribute('rel', 'stylesheet')
+        return link
+      }).map(el => {
+        document.head.appendChild(el)
+      })
+    
+      done()
+    })
+  )
+  </script>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>

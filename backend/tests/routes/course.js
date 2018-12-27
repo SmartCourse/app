@@ -1,6 +1,28 @@
+const fetch = require('node-fetch')
 const app = require('../../src')
 const supertest = require('supertest')(app)
 const { expect } = require('chai')
+
+before(() => {
+    return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
+        {
+            'credentials': 'omit',
+            'headers': {},
+            'referrer': 'http://localhost:8080/login',
+            'referrerPolicy': 'no-referrer-when-downgrade',
+            'body': '{"email":"backendtest@test.com","password":"backendtest","returnSecureToken":true}',
+            'method': 'POST',
+            'mode': 'cors'
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            global.idToken = data.idToken
+            return supertest.post('/api/user')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .send({ displayName: 'BackendTester', degree: 'B. Arts', gradYear: 2018 })
+        })
+})
 
 describe('Course route testing', () => {
     describe('GET /api/course', () => {
@@ -14,9 +36,9 @@ describe('Course route testing', () => {
             return request
         })
 
-        it('returns a list', () =>
+        it('returns exactly 3006 courses', () =>
             request.then(({ body }) =>
-                expect(body.length).to.be.greaterThan(0))
+                expect(body.length).to.equal(3006))
         )
 
         it('has the correct code', () =>
@@ -63,18 +85,44 @@ describe('Course route testing', () => {
             request = supertest
                 .post('/api/course/ACCT1501/question')
                 .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
                 .send({ body: 'testu', title: 'jeff' })
-                .expect('Content-Type', /json/)
-                .expect(200)
+
             return request
         })
 
-        it('returns the question we POSTed', () =>
-            request.then(({ body }) => {
-                expect(body.title).to.equal('jeff')
-                expect(body.body).to.equal('testu')
-            })
+        it('returns correct status', () =>
+            request.expect(201)
         )
+
+        it('returns correct Location', () => {
+            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/question/15031')
+        })
+
+        describe('new record exists', () => {
+            let followUp
+
+            before(() => {
+                followUp = supertest
+                    .get('/api/course/ACCT1501/question/15031')
+                    .set('Accept', 'application/json')
+                    .expect(200)
+
+                return followUp
+            })
+
+            it('has the correct title', () =>
+                followUp.then(({ body }) => {
+                    expect(body.title).to.equal('jeff')
+                })
+            )
+
+            it('has the correct body', () =>
+                followUp.then(({ body }) => {
+                    expect(body.body).to.equal('testu')
+                })
+            )
+        })
     })
 
     describe('GET /api/course/ACCT1501/questions', () => {
@@ -91,71 +139,118 @@ describe('Course route testing', () => {
 
         it('correct number of questions', () =>
             request.then(({ body }) =>
-                expect(body.length).is.a('number'))
+                expect(body.data.length).to.equal(6))
         )
 
         it('question has a title', () =>
             request.then(({ body }) =>
-                expect(body[0].title).is.a('string'))
+                expect(body.data[0].title).is.a('string'))
         )
 
         it('question has a body', () =>
             request.then(({ body }) =>
-                expect(body[0].body).is.a('string'))
+                expect(body.data[0].body).is.a('string'))
         )
 
         it('question has a course id', () =>
             request.then(({ body }) =>
-                expect(body[0].code).is.a('string'))
+                expect(body.data[0].courseID).to.equal(1))
         )
     })
 
     describe('POST /api/course/COMP4920/review', () => {
         let request
+        const form = {
+            title: 'I\'m a real boy',
+            body: 'barry is good',
+            enjoy: 3,
+            recommend: 0,
+            workload: 2,
+            teaching: 1,
+            difficulty: 1
+        }
 
         before(() => {
             request = supertest
                 .post('/api/course/COMP4920/review')
                 .set('Accept', 'application/json')
-                .send({ title: 'I\'m a real boy', body: 'barry is good' })
-                .expect('Content-Type', /json/)
-                .expect(200)
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .send(form)
+
             return request
         })
 
-        it('review has a body', () =>
-            request.then(({ body }) => {
-                expect(body.title).to.equal('I\'m a real boy')
-                expect(body.body).to.equal('barry is good')
+        it('returns correct status', () => {
+            request.expect(201)
+        })
+
+        it('returns correct Location', () => {
+            expect(request.res.headers.location).to.equal('/api/course/COMP4920/review/9019')
+        })
+
+        describe('Review created correctly', () => {
+            let followUp
+
+            before(() => {
+                followUp = supertest
+                    .get('/api/course/COMP4920/review/9019')
+                    .set('Accept', 'application/json')
+                    .expect(200)
+
+                return followUp
             })
-        )
+
+            it('has the correct title', () =>
+                followUp.then(({ body }) => {
+                    expect(body.title).to.equal(form.title)
+                })
+            )
+
+            it('has the correct body', () =>
+                followUp.then(({ body }) => {
+                    expect(body.body).to.equal(form.body)
+                })
+            )
+
+            it('has the correct recommend', () =>
+                followUp.then(({ body }) => {
+                    expect(body.recommend).to.equal(form.recommend)
+                })
+            )
+        })
     })
 
-    describe('GET /api/course/COMP4920/reviews', () => {
+    describe('GET /api/course/ACCT1511/reviews', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/course/COMP4920/reviews')
+                .get('/api/course/ACCT1511/reviews')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
+
             return request
         })
 
-        it('Returns a list of reviews', () =>
+        it('Returns a list of reviews with meta fields', () =>
             request.then(({ body }) =>
-                expect(body).is.a('array'))
+                expect(body.meta).is.a('object'))
         )
 
-        it('review[0] has a body', () =>
+        it('Returns a list of reviews', () =>
             request.then(({ body }) =>
-                expect(body[0].body).is.a('string'))
+                expect(body.data).is.a('array'))
+        )
+
+        it('review[0] has good code', () =>
+            request.then(({ body }) =>
+                expect(body.data[0].code).to.equal('ACCT1511'))
         )
 
         it('review[0] has a course id', () =>
             request.then(({ body }) =>
-                expect(body[0].code).is.a('string'))
+                expect(body.data[0].courseID).is.a('number'))
         )
     })
 })

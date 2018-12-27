@@ -1,6 +1,12 @@
 const app = require('../../src')
 const supertest = require('supertest')(app)
 
+before(function (done) {
+    app.on('ready', function() {
+        done()
+    })
+})
+
 describe('API route testing', () => {
     it('index', () =>
         supertest

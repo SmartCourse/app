@@ -19,6 +19,10 @@ export default {
 
 <style lang="less" scoped>
 
+h1 {
+  margin: 15px 0;
+}
+
 h1 span {
     padding: 0.15em 0.1em;
 }

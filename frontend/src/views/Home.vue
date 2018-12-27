@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-view>
     <section class="main-content home">
       <AppLogo class="splash" :first="'Smart'" :last="'Course'"/>
       <p>Community-driven ratings, reviews and info about UNSW courses.</p>
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import Search from '@/components/AppSearch'
+import Search from '@/components/Search'
 
 export default {
   components: { Search }
@@ -64,7 +64,7 @@ export default {
   background-color: var(--white);
   /* override main-content width */
   max-width: none;
-  width: 100%;
+  padding: 0 20px;
 }
 
 .home > p {
@@ -145,10 +145,19 @@ a {
 }
 
 /* tablet and below */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 700px) {
   .home {
    font-size: var(--font-large-mobile);
   }
+
+  .home > p {
+    font-size: var(--font-medium-mobile);
+  }
+
+  .home > p {
+    max-width: 400px;
+  }
+
   .splash {
    font-size: 3rem;
   }
@@ -165,14 +174,20 @@ a {
 
 @media screen and (max-width: 500px) {
   .why-card {
-    width: 300px;
+    width: 280px;
+  }
+}
+
+@media screen and (min-width: 700px) {
+  .why-card {
+    width: 200px;
   }
 }
 
 @media screen and (min-width: 1200px) {
    .why-card {
-     width: 350px;
-     min-height: 350px;
+     width: 340px;
+     min-height: 340px;
    }
 
    .why {

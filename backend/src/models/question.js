@@ -1,3 +1,5 @@
+const { TABLE_NAMES: { QUESTIONS, COMMENTS, COURSES } } = require('./constants')
+
 /* All inputs should be validated in this class that are question related */
 class Question {
     constructor(db) {
@@ -10,34 +12,128 @@ class Question {
      * @param   {id}      questionID Required id param.
      * @returns {object}             Single question
      */
-    getQuestion(questionID) {
+    getQuestion(id) {
         return this.db
-            .query('SELECT * FROM question WHERE id=?', [questionID])
+            .run(`SELECT * FROM ${QUESTIONS} WHERE id=@id`,
+                {
+                    [QUESTIONS]: { id }
+                })
+            .then(([row]) => row || {})
     }
 
     /**
+     * Get a specific page of questions for a course
      * @param   {string} code        The code of the course
      * @param   {number} pageNumber  The page number for which we want to get questions.
      * @returns {object}
      */
-    getQuestions(code, pageNumber) {
-        const pageSize = 10
+    getQuestions(code, pageNumber, pageSize) {
+        if (isNaN(pageNumber) || isNaN(pageSize)) {
+            throw Error('Invalid paging values')
+        }
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll('SELECT * FROM question WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
-                [code, offset, pageSize])
+            .run(`SELECT q.*, cou.code, (SELECT COUNT(com.questionID)
+            FROM ${COMMENTS} com
+            WHERE com.questionID = q.id) as numAnswers
+            FROM ${QUESTIONS} q
+            JOIN ${COURSES} cou on cou.code = @code
+            WHERE courseID = cou.id
+            ORDER BY q.timestamp DESC
+            OFFSET ${offset} ROWS
+            FETCH NEXT ${pageSize} ROWS ONLY`,
+            {
+                [COURSES]: { code }
+            })
+    }
+
+    getQuestionsByUserID(userID, limit = 10) {
+        if (isNaN(limit)) {
+            throw Error('Invalid limit value')
+        }
+        return this.db
+            .run(`SELECT * FROM ${QUESTIONS}
+                WHERE userID=@userID
+                ORDER BY timestamp DESC
+                OFFSET 0 ROWS
+                FETCH NEXT ${limit} ROWS ONLY`,
+            {
+                [QUESTIONS]: { userID }
+            })
+    }
+
+    /**
+     * Gets the total number of questions for a course
+     * @param   {string} code        The code of the course duh
+     * @returns {object}
+     */
+    getQuestionCount(code) {
+        return this.db
+            .run(`SELECT COUNT(*) AS COUNT FROM ${QUESTIONS}
+                WHERE courseID=(SELECT id FROM ${COURSES} WHERE code=@code)`,
+            {
+                [COURSES]: { code }
+            })
+            .then(([row]) => row || { COUNT: 0 })
     }
 
     /**
      * Post a question.
-     * @param {string} code  The code of the course
+     * @param {string}  code  The code of the course
      * @param {object}  data      controller passed in object which should
-     *                       contain the user data (probs eventually from an auth token)
+     *                       contain the user data
      */
     postQuestion(code, { userID, title, body }) {
         return this.db
-            .insert('question', { code, userID, title, body })
-            .then((questionID) => this.getQuestion(questionID))
+            .run(`INSERT INTO ${QUESTIONS} (courseID, userID, title, body)
+                SELECT id, @userID, @title, @body
+                FROM courses
+                WHERE code=@code;
+                SELECT @@identity AS id`,
+            {
+                [QUESTIONS]: { userID, title, body },
+                [COURSES]: { code }
+            })
+            .then(([{ id }]) => id)
+    }
+
+    /**
+     * Put a question - i.e. update the body
+     * @param {number}  id    The id of the question
+     * @param {object}  body  object containing question data including
+                              user id and body of the question
+     */
+    putQuestion(id, { userID, body }) {
+        return this.db
+            .run(`UPDATE ${QUESTIONS}
+                    SET body=@body
+                    WHERE userID=@userID AND id=@id`,
+            {
+                [QUESTIONS]: { userID, body, id }
+            })
+    }
+
+    /**
+     * Delete a question and its answers.
+     * @param {number}  id      The id of the question
+     * @param {object}  userID  The id of the user
+     */
+    deleteQuestion(id, userID) {
+        // The query does an auth check with userID before deleting
+        return this.db
+            .run(`BEGIN TRANSACTION;
+                    IF EXISTS (SELECT * FROM ${QUESTIONS} WHERE userID=@userID AND id=@id)
+                    BEGIN
+                      DELETE ${COMMENTS}
+                        WHERE questionID=@questionID;
+                      DELETE ${QUESTIONS}
+                        WHERE userID=@userID AND id=@id;
+                    END;
+                  COMMIT;`,
+            {
+                [QUESTIONS]: { userID, id },
+                [COMMENTS]: { questionID: id }
+            })
     }
 }
 

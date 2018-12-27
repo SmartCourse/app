@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import ReviewForm from '@/components/reviews-replies/ReviewForm'
+import ReviewForm from '@/components/Reviews/ReviewForm'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -33,10 +33,6 @@ export default {
   },
   methods: {
     submitReview (reviewForm) {
-      // check that they actually typed something
-      if (reviewForm.title === '' || reviewForm.body === '') {
-        return
-      }
       this.$store.dispatch('reviews/postReview',
         {
           form: reviewForm,

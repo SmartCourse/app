@@ -1,32 +1,68 @@
 <template>
     <section class="main-content">
       <AppBreadCrumb/>
-      <ReviewCard v-bind="review"/>
 
-      <ReplyForm @submitCommentForm="submitReply" :type="commentType" :callback="submitReply">
-        <span class="form-failure"
-            v-if="error.code">{{error.message}}</span>
+      <transition name="fade-slide">
+        <ReviewCard v-bind="review" :authenticated="isLoggedIn" v-if="!loadingReview"/>
+      </transition>
+
+      <div style="text-align:center" v-if="loadingReview">
+        <LoadingSpinner/>
+      </div>
+
+      <ReplyBar v-if="replies.length">
+        <h3 style="font: var(--header-4);">{{ replies.length }} Comments</h3>
+        <AppButtonToolTip
+          v-if="!formToggle"
+          @click.native="formToggle = true"
+          :disabled="!isLoggedIn"
+          :disabledMessage="tooltipMessage"
+        >
+          Post Comment
+        </AppButtonToolTip>
+      </ReplyBar>
+
+      <ReplyForm
+        @submitCommentForm="submitReply"
+        :title="'Post Comment'"
+        :type="commentType"
+        :callback="submitReply"
+        :closeCallback="replies.length ? () => formToggle = false : null"
+        :authenticated="isLoggedIn"
+        v-if="!loadingReplies"
+        v-show="formToggle || !replies.length"
+      >
+        <span class="form-failure" v-if="error.code">{{error.message}}</span>
       </ReplyForm>
 
-      <transition-group name='fade' tag='ul' v-if="replies.length">
+      <div style="text-align:center" v-else-if="!loadingReview && loadingReplies">
+        <LoadingSpinner/>
+      </div>
+
+      <transition-group name='fade-slide' tag='ul' v-if="replies.length">
         <li v-for="answer in replies" :key="answer.id">
-          <ReplyCard :comment="answer" />
+          <ReplyCard :comment="answer" :type="commentType" :id="id" :code="code" :authenticated="isLoggedIn"/>
         </li>
       </transition-group>
+
     </section>
 </template>
 
 <script>
-import ReviewCard from '@/components/reviews-replies/ReviewCard'
-import ReplyCard from '@/components/comments/CommentCard'
-import ReplyForm from '@/components/comments/CommentForm'
+import AppButtonToolTip from '@/components/AppButton/WithToolTip'
+import ReviewCard from '@/components/Reviews/ReviewCard'
+import ReplyCard from '@/components/Comments/CommentCard'
+import ReplyForm from '@/components/Comments/CommentForm'
+import ReplyBar from '@/components/Comments/CommentSpacer'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     ReviewCard,
     ReplyCard,
-    ReplyForm
+    ReplyForm,
+    ReplyBar,
+    AppButtonToolTip
   },
   props: {
     code: {
@@ -40,26 +76,43 @@ export default {
   },
   data() {
     return {
-      commentType: 'Reply'
+      commentType: 'Reply', // If changed, also modify CommentCards
+      formToggle: false
     }
   },
   computed: {
     ...mapGetters('reviews', {
       review: 'review',
       replies: 'replies',
-      loading: 'loading',
+      loadingReview: 'loadingReview',
+      loadingReplies: 'loadingReplies',
       error: 'error'
-    })
+    }),
+    ...mapGetters('auth', ['isLoggedIn']),
+    tooltipMessage() {
+      return {
+        content: this.isLoggedIn ? '' : 'You must be logged in to comment.',
+        placement: 'right'
+      }
+    }
   },
   methods: {
     submitReply (replyForm) {
+      if (!this.isLoggedIn) {
+        this.$router.push('/login')
+        return
+      }
       // check that they actually typed something
       if (replyForm.body === '') {
         // this.answerFormResponse.text = "Please type an answer!"
         // this.answerFormResponse.style = {'form-success': false, 'form-failure': true}
         return
       }
-      this.$store.dispatch('reviews/postReply', {form: replyForm, code: this.code, id: this.review.id})
+      this.$store.dispatch('reviews/postReply', { form: replyForm, code: this.code, id: this.review.id })
+      // toggle the form if no error occurred
+        .then(() => {
+          if (!this.error.message) this.formToggle = !this.formToggle
+        })
     }
   },
   created () {
@@ -68,12 +121,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 1s;
-}
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-</style>

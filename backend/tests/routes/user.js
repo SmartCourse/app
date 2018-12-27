@@ -1,9 +1,11 @@
 const app = require('../../src')
+const db = require('../../src/models/db')
 const supertest = require('supertest')(app)
+const { expect } = require('chai')
 
 describe('User route testing', function() {
     /* should be a route (ie to get self data) */
-    describe('/api/user', () => {
+    describe('GET /api/user', () => {
         it('user index', () =>
             supertest
                 .get('/api/user')
@@ -28,6 +30,17 @@ describe('User route testing', function() {
                 .expect(401))
     })
 
+    it('/api/user/1/questions', () =>
+        supertest
+            .get('/api/user/1/questions')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .then(({ body }) => {
+                expect(body).to.have.lengthOf(10)
+            })
+    )
+
     it('/api/user/1', () =>
         supertest
             .get('/api/user/1')
@@ -35,7 +48,7 @@ describe('User route testing', function() {
             .expect('Content-Type', /json/)
             .expect(200))
 
-    describe('POST /api/user', () => {
+    describe('POST /api/user ERRORs', () => {
         it('exists', () =>
             supertest
                 .post('/api/user')
@@ -43,4 +56,8 @@ describe('User route testing', function() {
                 .expect('Content-Type', /json/)
                 .expect(401))
     })
+})
+
+after(function() {
+    db.close()
 })

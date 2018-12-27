@@ -1,13 +1,17 @@
 <template>
-<div class="auth-page">
+<div class="auth-page" data-view>
     <AppAuthForm v-if="!loading"
       :title="'Login'"
-      :buttonText="'Login'"
+      :buttonText="'Log In'"
+      :flavour="'Welcome back.'"
       :error="error"
       :clickHandler="clickHandler"
-    >
-      <input class="auth-input" type="text" v-model="email" placeholder="Email">
-      <input class="auth-input" type="password" v-model="password" placeholder="Password">
+      :link="{
+        text: 'Forgot your password?',
+        name: 'Forgot Password'
+      }">
+      <AuthInput spellcheck="false" type="email" v-model="email" placeholder="Email"/>
+      <AuthInput type="password" v-model="password" placeholder="Password"/>
     </AppAuthForm>
     <LoadingSpinner v-else/>
 </div>
@@ -15,7 +19,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import AppAuthForm from '@/components/AppAuthForm'
+import AppAuthForm from '@/components/Authentication/Form'
+import AuthInput from '@/components/Authentication/Input'
 
 export default {
   name: 'login',
@@ -25,16 +30,28 @@ export default {
       password: ''
     }
   },
-  components: { AppAuthForm },
+  components: { AppAuthForm, AuthInput },
   computed: {
-    ...mapGetters('auth', [ 'error', 'loading' ])
+    ...mapGetters('auth', [ 'loading', 'error', 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile' ])
+  },
+  // reroute whenever auth loading state changes
+  watch: {
+    loading() { this.reroute() }
   },
   methods: {
     clickHandler() {
       const { email, password } = this
-      this.$store.dispatch('auth/signIn', {email, password})
-        .then(() => this.$router.push('/'))
-        .catch(e => {})
+      this.$store.dispatch('auth/signIn', { email, password })
+    },
+    reroute() {
+      // we need to check the store to determine state
+      if (this.isFirebaseAuthorised) {
+        if (this.hasProfile) {
+          this.$router.push('/')
+        } else {
+          this.$router.push('/create-profile')
+        }
+      }
     }
   },
   created() {
@@ -42,14 +59,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.auth-input {
-  font: inherit;
-  display: block;
-  margin: 10px 0;
-  padding: 10px 0;
-  border-style: none;
-  border-bottom: 1px solid var(--color-light-gray);
-}
-</style>

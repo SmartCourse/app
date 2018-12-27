@@ -1,3 +1,13 @@
+const {
+    DONT_RECOMMEND,
+    RECOMMEND,
+    MIN_ENJOY,
+    MAX_ENJOY,
+    MIN_OPTION,
+    MAX_OPTION,
+    TABLE_NAMES: { REVIEWS, COURSES, COMMENTS }
+} = require('./constants')
+
 /* All inputs should be validated in this class that are review related */
 class Review {
     constructor(db) {
@@ -12,20 +22,51 @@ class Review {
      */
     getReview(id) {
         return this.db
-            .query('SELECT * FROM review WHERE id=?', [id])
+            .run(`SELECT * FROM ${REVIEWS} WHERE id=@id`,
+                {
+                    [REVIEWS]: { id }
+                })
+            .then(([row]) => row || {})
     }
 
     /**
      * @param   {string}  code          The code of the course
-     * @param   {number}  pageNumber    The page number for which we want to get questions.
+     * @param   {number}  pageNumber    The page number for which we want to get reviews.
      * @returns {Array}
      */
-    getReviews(code, pageNumber) {
-        const pageSize = 10
+    getReviews(code, pageNumber, pageSize) {
+        if (isNaN(pageNumber) || isNaN(pageSize)) {
+            throw Error('Invalid paging values')
+        }
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .queryAll('SELECT * FROM review WHERE code=? ORDER BY timestamp DESC LIMIT ?, ?',
-                [code, offset, pageSize])
+            .run(`SELECT r.*, cou.code, (SELECT COUNT(com.reviewID)
+                FROM ${COMMENTS} com
+                WHERE com.reviewID = r.id) as numResponses
+            FROM ${REVIEWS} r
+            JOIN ${COURSES} cou ON cou.code = @code
+            WHERE r.courseID=cou.id
+            ORDER BY r.timestamp DESC
+            OFFSET ${offset} ROWS
+            FETCH NEXT ${pageSize} ROWS ONLY`,
+            {
+                [COURSES]: { code }
+            })
+    }
+
+    /**
+     * Gets the total number of reviews for a course
+     * @param   {string} code        The code of the course
+     * @returns {object}
+     */
+    getReviewCount(code) {
+        return this.db
+            .run(`SELECT COUNT(*) AS COUNT FROM ${REVIEWS} r
+            WHERE r.courseID=(SELECT c.id FROM ${COURSES} c WHERE c.code=@code)`,
+            {
+                [COURSES]: { code }
+            })
+            .then(([row]) => row || { COUNT: 0 })
     }
 
     /**
@@ -33,10 +74,71 @@ class Review {
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
-    postReview(code, { title, body, userID = 1 }) {
+    postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID }) {
+        if (recommend !== DONT_RECOMMEND && recommend !== RECOMMEND) throw Error('Invalid recommend value')
+        if (enjoy < MIN_ENJOY || enjoy > MAX_ENJOY) throw Error('Invalid enjoy value')
+
+        ;[difficulty, teaching, workload].forEach(item => {
+            if (item < MIN_OPTION || item > MAX_OPTION) throw Error('Invalid difficulty, teaching or workload value')
+        })
+
+        // insert review, get review, update course ratings
         return this.db
-            .insert('review', { code, body, title, userID })
-            .then((reviewID) => this.getReview(reviewID))
+            .run(`INSERT INTO ${REVIEWS} (courseID, userID, title, body, recommend, enjoy, difficulty, teaching, workload)
+                SELECT id, @userID, @title, @body, @recommend, @enjoy, @difficulty, @teaching, @workload
+                FROM courses
+                WHERE code=@code;
+                SELECT @@identity AS id`,
+            {
+                [REVIEWS]: { userID, title, body, recommend, enjoy, difficulty, teaching, workload },
+                [COURSES]: { code }
+            })
+            .then(([{ id }]) => id)
+    }
+
+    /**
+     * Put a review - i.e. update the body and ratings
+     * @param {number}  id    The id of the review
+     * @param {object}  body  object containing review data including
+                              user id, body of the review and ratings
+     */
+    putReview(id, { userID, body, recommend, enjoy, difficulty, teaching, workload }) {
+        return this.db
+            .run(`UPDATE ${REVIEWS}
+                    SET
+                      body=@body,
+                      recommend=@recommend,
+                      enjoy=@enjoy,
+                      difficulty=@difficulty,
+                      teaching=@teaching,
+                      workload=@workload
+                    WHERE userID=@userID AND id=@id`,
+            {
+                [REVIEWS]: { userID, body, id, recommend, enjoy, difficulty, teaching, workload }
+            })
+    }
+
+    /**
+     * Delete a review and its comments.
+     * @param {number}  id      The id of the question
+     * @param {object}  userID  The id of the user
+     */
+    deleteReview(id, userID) {
+        // The query does an auth check with userID before deleting
+        return this.db
+            .run(`BEGIN TRANSACTION;
+                    IF EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)
+                    BEGIN
+                      DELETE ${COMMENTS}
+                        WHERE reviewID=@reviewID;
+                      DELETE ${REVIEWS}
+                        WHERE id=@id;
+                    END;
+                  COMMIT;`,
+            {
+                [COMMENTS]: { reviewID: id },
+                [REVIEWS]: { userID, id }
+            })
     }
 }
 
