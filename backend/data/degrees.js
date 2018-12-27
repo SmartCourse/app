@@ -1,4 +1,3 @@
-const { TABLE_NAMES } = require('../src/models/constants')
 const faculties = require('./faculties')
 
 module.exports = [

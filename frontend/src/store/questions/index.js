@@ -47,11 +47,7 @@ const mutations = {
 
     // get the most upvoted answer
     const { ans, index } = mapped.reduce(
-<<<<<<< HEAD
       ({ ans, index }, curr, i) => (curr.likes >= ans.likes ? { ans: curr, index: i } : { ans, index }),
-=======
-      ({ ans, index }, curr, i) => (curr.likes >= ans.likes ? { ans: curr, index: i } : {ans, index}),
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
       { ans: { likes: -1 }, index: -1 }
     )
     // only set answer as 'accepted' if it has >= 2 likes
@@ -63,7 +59,6 @@ const mutations = {
 
     state.questionObj.answers = [ans, ...ordered]
   },
-<<<<<<< HEAD
   /**
    * Given the post returns the location of the new resource,
    * extract it and store it for future use.
@@ -74,8 +69,6 @@ const mutations = {
     const [id] = resourceUrl.match(/\d+$/)
     state.questionObj.question.id = id
   },
-=======
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
   FOCUS_LIKES (state, { likes }) {
     const oldLikes = state.questionObj.question.likes
     state.questionObj.question.likes = likes

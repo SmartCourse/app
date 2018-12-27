@@ -13,21 +13,12 @@ export function replyMapper({ id, likes, userLiked, user, body, timestamp }) {
     likes,
     userLiked,
     user,
-<<<<<<< HEAD
     published: formatDistanceStrict(new Date(timestamp), new Date(), { addSuffix: true }),
     timestamp: new Date(timestamp)
   }
 }
 
 export function reviewMapper({ id, code, title, body, likes, numResponses, userLiked, recommend, user, timestamp }) {
-=======
-    published: formatDistanceStrict(timestamp * 1000, new Date(), { addSuffix: true }),
-    timestamp: timestamp
-  }
-}
-
-export function reviewMapper({ id, code, title, body, likes, userLiked, recommend, user, timestamp }) {
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
   return {
     id: String(id),
     code,
@@ -36,16 +27,10 @@ export function reviewMapper({ id, code, title, body, likes, userLiked, recommen
     likes,
     userLiked,
     recommend: Boolean(recommend),
-<<<<<<< HEAD
     numResponses,
     user,
     published: formatDistanceStrict(new Date(timestamp), new Date(), { addSuffix: true }),
     timestamp: new Date(timestamp)
-=======
-    user,
-    published: formatDistanceStrict(timestamp * 1000, new Date(), { addSuffix: true }),
-    timestamp: timestamp
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
   }
 }
 
@@ -101,17 +86,9 @@ export function putLikes(course, id, data) {
 }
 
 export function getReplyLikes(course, id, commentID) {
-<<<<<<< HEAD
   return get(`/course/${course}/review/${id}/comment/${commentID}/likes`)
 }
 
 export function putReplyLikes(course, id, commentID, data) {
   return put(`/course/${course}/review/${id}/comment/${commentID}/likes`, { data })
-=======
-  return get(`/course/${course}/review/${id}/reply/${commentID}/likes`)
-}
-
-export function putReplyLikes(course, id, commentID, data) {
-  return put(`/course/${course}/review/${id}/reply/${commentID}/likes`, { data })
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 }

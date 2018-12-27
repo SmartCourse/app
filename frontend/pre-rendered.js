@@ -1,5 +1,5 @@
 module.exports = [
-    '/',
-    '/signup',
-    '/login'
+  '/',
+  '/signup',
+  '/login'
 ]

@@ -2,7 +2,7 @@
   <div data-view>
     <section class="main-content home">
       <AppLogo class="splash" :first="'Smart'" :last="'Course'"/>
-      <p>Community-driven ratings, reviews and info about UNSW courses.</p>
+        <p>Community-driven ratings, reviews and info about UNSW courses.</p>
       <Search/>
       <p>or <router-link :to="'/subject'">browse by subject area</router-link></p>
     </section>
@@ -151,13 +151,10 @@ a {
   }
 
   .home > p {
-<<<<<<< HEAD
     font-size: var(--font-medium-mobile);
   }
 
   .home > p {
-=======
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
     max-width: 400px;
   }
 

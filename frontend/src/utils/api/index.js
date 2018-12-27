@@ -2,14 +2,7 @@ import APIError from './errors'
 import store from '../../store'
 import { getAuthHeaders } from './auth'
 
-<<<<<<< HEAD
 const API_URL = process.env.VUE_APP_API_URL
-=======
-const API_URL = process && process.env && process.env.NODE_ENV === 'development'
-  ? 'http://localhost:3000/api' : (process.env.NODE_ENV === 'staging'
-    ? 'https://smartcourse-staging.azurewebsites.net/api'
-    : 'https://smartcourse.me/api')
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 
 async function responseCheck(res) {
   if (res.ok) {

@@ -18,13 +18,8 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 import AppButtonToolTip from '@/components/AppButton/WithToolTip'
 import Card from '@/components/Card'
-=======
-import Card from '@/components/Card'
-import AppButtonToolTip from '@/components/AppButton/WithToolTip'
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 
 export default {
   name: 'CommentForm',

@@ -40,10 +40,7 @@ const mutations = {
     state.reviewObj.review = reviewMapper(review)
   },
   FOCUS_REPLIES (state, replies) {
-<<<<<<< HEAD
     // DISCUSS wonder if sorting should be done here or not.
-=======
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
     state.reviewObj.replies = sortByHotness(replies.map(replyMapper))
   },
   FOCUS_LIKES (state, { likes }) {
@@ -51,7 +48,6 @@ const mutations = {
     state.reviewObj.review.likes = likes
     state.reviewObj.review.userLiked += likes - oldLikes
   },
-<<<<<<< HEAD
   /**
    * Given the post returns the location of the new resource,
    * extract it and store it for future use.
@@ -62,8 +58,6 @@ const mutations = {
     const [id] = resourceUrl.match(/\d+$/)
     state.reviewObj.review.id = id
   },
-=======
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
   API_ERROR (state, { code, message }) {
     state.error.code = code
     state.error.message = message

@@ -57,11 +57,7 @@ export default {
 .search {
     position: relative;
     font-size: var(--font-medium);
-<<<<<<< HEAD:frontend/src/components/Search/index.vue
     margin: 10px auto;
-=======
-    margin: 20px auto;
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7:frontend/src/components/Search/index.vue
 }
 
 .search-bar, ul {
@@ -97,13 +93,10 @@ li:hover {
 }
 
 @media screen and (max-width: 740px) {
-<<<<<<< HEAD:frontend/src/components/Search/index.vue
     .search {
         font: var(--header-4);
     }
 
-=======
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7:frontend/src/components/Search/index.vue
     ul, .search-bar {
         width: 330px;
     }

@@ -70,17 +70,6 @@ class Review {
     }
 
     /**
-     * Gets the total number of reviews for a course
-     * @param   {string} code        The code of the course
-     * @returns {object}
-     */
-    getReviewCount(code) {
-        return this.db
-            .queryAll(`SELECT COUNT() FROM ${REVIEWS} WHERE code=?`,
-                [code])
-    }
-
-    /**
      * @param {string} code  The code of the course.
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)

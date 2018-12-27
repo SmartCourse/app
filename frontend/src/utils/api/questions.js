@@ -14,41 +14,23 @@ export function answerMapper({ id, questionID, likes, user, userLiked, body, tim
     likes,
     userLiked,
     user,
-<<<<<<< HEAD
     published: formatDistanceStrict(new Date(timestamp), new Date(), { addSuffix: true }),
     timestamp: new Date(timestamp)
   }
 }
 
 export function questionMapper({ id, code, likes, userLiked, numAnswers: numResponses, user, title, body, timestamp }) {
-=======
-    published: formatDistanceStrict(timestamp * 1000, new Date(), { addSuffix: true }),
-    timestamp: timestamp
-  }
-}
-
-export function questionMapper({ id, code, likes, userLiked, numAnswers, user, title, body, timestamp }) {
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
   return {
     id: String(id),
     code,
     title,
     body,
-<<<<<<< HEAD
     numResponses,
     likes,
     userLiked,
     user,
     published: formatDistanceStrict(new Date(timestamp), new Date(), { addSuffix: true }),
     timestamp: new Date(timestamp)
-=======
-    numAnswers,
-    likes,
-    userLiked,
-    user,
-    published: formatDistanceStrict(timestamp * 1000, new Date(), { addSuffix: true }),
-    timestamp: timestamp
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
   }
 }
 
@@ -73,14 +55,6 @@ export function postAnswer(course, id, data) {
     .then(cid => get(`/course/${course}/question/${id}/answer/${cid}`))
 }
 
-export function getLikes(course, id) {
-  return get(`/course/${course}/question/${id}/likes`)
-}
-
-export function putLikes(course, id, data) {
-  return put(`/course/${course}/question/${id}/likes`, { data })
-}
-
 export function getAnswerLikes(course, id, commentID) {
   return get(`/course/${course}/question/${id}/answer/${commentID}/likes`)
 }
@@ -95,14 +69,6 @@ export function getLikes(course, id) {
 
 export function putLikes(course, id, data) {
   return put(`/course/${course}/question/${id}/likes`, { data })
-}
-
-export function getAnswerLikes(course, id, commentID) {
-  return get(`/course/${course}/question/${id}/amswer/${commentID}/likes`)
-}
-
-export function putAnswerLikes(course, id, commentID, data) {
-  return put(`/course/${course}/question/${id}/answer/${commentID}/likes`, { data })
 }
 
 /**

@@ -33,10 +33,6 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('auth/logout')
-<<<<<<< HEAD
-=======
-      // .then(() => this.$router.push("/"))
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
     }
   }
 }
@@ -88,13 +84,7 @@ export default {
     }
 
     .menu-items .link-item {
-<<<<<<< HEAD
         font: var(--body-copy-1);
     }
-=======
-        font: var(--header-4-mobile);
-    }
-
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 }
 </style>

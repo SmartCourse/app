@@ -1,9 +1,5 @@
 import { expect } from 'chai'
-<<<<<<< HEAD
 import { mount, RouterLinkStub } from '@vue/test-utils'
-=======
-import { mount } from '@vue/test-utils'
->>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 import CommentCard from '@/components/Comments/CommentCard'
 import Vote from '@/components/Vote'
 
