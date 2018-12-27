@@ -22,7 +22,7 @@ review.get('/:id/comment/:cid', commentController.getComment)
 /* full auth check */
 review.use(isAuthorized)
 
-/* Delete a review*/
+/* Delete a review */
 review.delete('/:id', reviewController.deleteReview)
 
 /* Put an updated review */

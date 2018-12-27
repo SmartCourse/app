@@ -104,7 +104,7 @@ exports.putQuestion = function ({ user, params, body }, res) {
 }
 
 /* DELETE question */
-exports.deleteQuestion = function ({ user, params}, res) {
+exports.deleteQuestion = function ({ user, params }, res) {
     questionModel.deleteQuestion(params.id, user.id)
         .then(deleteResponseHandler(res))
         .catch(errorHandler(res))

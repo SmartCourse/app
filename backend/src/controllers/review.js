@@ -95,7 +95,7 @@ exports.putReview = function ({ user, params, body }, res) {
 }
 
 /* DELETE review */
-exports.deleteReview = function ({ user, params}, res) {
+exports.deleteReview = function ({ user, params }, res) {
     reviewModel.deleteReview(params.id, user.id)
         .then(deleteResponseHandler(res))
         .catch(errorHandler(res))

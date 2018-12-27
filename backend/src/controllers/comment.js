@@ -29,7 +29,7 @@ exports.putComment = function ({ user, params, body }, res) {
 }
 
 /* DELETE comment */
-exports.deleteComment = function ({ user, params}, res) {
+exports.deleteComment = function ({ user, params }, res) {
     commentModel.deleteComment(params.cid, user.id)
         .then(deleteResponseHandler(res))
         .catch(errorHandler(res))
