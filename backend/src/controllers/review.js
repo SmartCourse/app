@@ -4,7 +4,7 @@ const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
 const errorHandler = require('./error')
-const { responseHandler, postResponseHandler, userLikesMapper } = require('../utils/helpers')
+const { responseHandler, postResponseHandler, deleteResponseHandler, userLikesMapper } = require('../utils/helpers')
 const { TABLE_NAMES } = require('../models/constants')
 
 /* GET review for single id. */
@@ -85,4 +85,18 @@ exports.putReplyLikes = function ({ user, params, body, query }, res) {
     body.userID = user.id
     likesModel.putLikes({ type: TABLE_NAMES.COMMENTS, id: params.replyID, ...body })
         .then(() => exports.getReviewComments({ user, params, query }, res))
+}
+
+/* PUT updated review body */
+exports.putReview = function ({ user, params, body }, res) {
+    body.userID = user.id
+    reviewModel.putReview(params.id, body)
+        .then(() => exports.getReview({ user, params }, res))
+}
+
+/* DELETE review */
+exports.deleteReview = function ({ user, params}, res) {
+    reviewModel.deleteReview(params.id, user.id)
+        .then(deleteResponseHandler(res))
+        .catch(errorHandler(res))
 }

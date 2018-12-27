@@ -81,7 +81,7 @@ class Question {
      * Post a question.
      * @param {string}  code  The code of the course
      * @param {object}  data      controller passed in object which should
-     *                       contain the user data (probs eventually from an auth token)
+     *                       contain the user data
      */
     postQuestion(code, { userID, title, body }) {
         return this.db
@@ -95,6 +95,45 @@ class Question {
                 [COURSES]: { code }
             })
             .then(([{ id }]) => id)
+    }
+
+    /**
+     * Put a question - i.e. update the body
+     * @param {number}  id    The id of the question
+     * @param {object}  body  object containing question data including
+                              user id and body of the question
+     */
+    putQuestion(id, { userID, body }) {
+        return this.db
+            .run(`UPDATE ${QUESTIONS}
+                    SET body=@body
+                    WHERE userID=@userID AND id=@id`,
+            {
+                [QUESTIONS]: { userID, body, id }
+            })
+    }
+
+    /**
+     * Delete a question and its answers.
+     * @param {number}  id      The id of the question
+     * @param {object}  userID  The id of the user
+     */
+    deleteQuestion(id, userID) {
+        // The query does an auth check with userID before deleting
+        return this.db
+            .run(`BEGIN TRANSACTION;
+                    IF EXISTS (SELECT * FROM ${QUESTIONS} WHERE userID=@userID AND id=@id)
+                    BEGIN
+                      DELETE ${COMMENTS}
+                        WHERE questionID=@questionID;
+                      DELETE ${QUESTIONS}
+                        WHERE userID=@userID AND id=@id;
+                    END;
+                  COMMIT;`,
+            {
+                [QUESTIONS]: { userID, id },
+                [COMMENTS]: { questionID: id }
+            })
     }
 }
 

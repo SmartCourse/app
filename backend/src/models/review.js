@@ -31,7 +31,7 @@ class Review {
 
     /**
      * @param   {string}  code          The code of the course
-     * @param   {number}  pageNumber    The page number for which we want to get questions.
+     * @param   {number}  pageNumber    The page number for which we want to get reviews.
      * @returns {Array}
      */
     getReviews(code, pageNumber, pageSize) {
@@ -44,7 +44,7 @@ class Review {
                 FROM ${COMMENTS} com
                 WHERE com.reviewID = r.id) as numResponses
             FROM ${REVIEWS} r
-            JOIN ${COURSES} cou ON cou.code = @code 
+            JOIN ${COURSES} cou ON cou.code = @code
             WHERE r.courseID=cou.id
             ORDER BY r.timestamp DESC
             OFFSET ${offset} ROWS
@@ -94,6 +94,51 @@ class Review {
                 [COURSES]: { code }
             })
             .then(([{ id }]) => id)
+    }
+
+    /**
+     * Put a review - i.e. update the body and ratings
+     * @param {number}  id    The id of the review
+     * @param {object}  body  object containing review data including
+                              user id, body of the review and ratings
+     */
+    putReview(id, { userID, body, recommend, enjoy, difficulty, teaching, workload }) {
+        return this.db
+            .run(`UPDATE ${REVIEWS}
+                    SET
+                      body=@body,
+                      recommend=@recommend,
+                      enjoy=@enjoy,
+                      difficulty=@difficulty,
+                      teaching=@teaching,
+                      workload=@workload
+                    WHERE userID=@userID AND id=@id`,
+            {
+                [REVIEWS]: { userID, body, id, recommend, enjoy, difficulty, teaching, workload }
+            })
+    }
+
+    /**
+     * Delete a review and its comments.
+     * @param {number}  id      The id of the question
+     * @param {object}  userID  The id of the user
+     */
+    deleteReview(id, userID) {
+        // The query does an auth check with userID before deleting
+        return this.db
+            .run(`BEGIN TRANSACTION;
+                    IF EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)
+                    BEGIN
+                      DELETE ${COMMENTS}
+                        WHERE reviewID=@reviewID;
+                      DELETE ${REVIEWS}
+                        WHERE id=@id;
+                    END;
+                  COMMIT;`,
+            {
+                [COMMENTS]: { reviewID: id },
+                [REVIEWS]: { userID, id }
+            })
     }
 }
 

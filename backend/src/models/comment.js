@@ -27,7 +27,7 @@ class Comment {
 
     /**
      * // TODO - PAGING
-     * Get all of dem comments for a specific question
+     * Get all of dem comments for a specific comment
      * @param   {object} queryObject
      * @param   {number} pageNumber
      * @returns {Array}
@@ -44,7 +44,7 @@ class Comment {
                 ON c.userID=u.id
                 JOIN ${DEGREES} AS d
                 ON u.degreeID = d.id
-                
+
                 WHERE c.${key}=@${key}`,
             {
                 [COMMENTS]: { [key]: value }
@@ -62,7 +62,7 @@ class Comment {
                 ON c.userID=u.id
                 JOIN ${DEGREES} AS d
                 ON u.degreeID = d.id
-                
+
                 WHERE c.id=@id`,
             {
                 [COMMENTS]: { id }
@@ -71,12 +71,37 @@ class Comment {
     }
 
     /**
-     * Edit a comment
-     * @param {number} id           Id of the comment to be edited
-     * @param {object} data         Relevant fields that need to be updated
+     * Put a comment - i.e. update the body
+     * @param {number}  id    The id of the comment
+     * @param {object}  body  object containing comment data including
+                              user id and body of the comment
      */
-    editComment(id, data) {
-        return Promise.resolve({ id, data })
+    putComment(id, { userID, body }) {
+        return this.db
+            .run(`UPDATE ${COMMENTS}
+                    SET body=@body
+                    WHERE userID=@userID AND id=@id`,
+            {
+                [COMMENTS]: { userID, body, id }
+            })
+    }
+
+    /**
+     * Delete a comment and its answers (although answering comments isn't yet supported...).
+     * @param {number}  id      The id of the comment
+     * @param {object}  userID  The id of the user
+     */
+    deleteComment(id, userID) {
+        // The query does an implicit auth check with userID before deleting
+        return this.db
+            .run(`BEGIN TRANSACTION;
+                    IF EXISTS (SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
+                      DELETE ${COMMENTS}
+                        WHERE commentParent=@commentParent OR id=@id;
+                  COMMIT;`,
+            {
+                [COMMENTS]: { userID, id, commentParent: id }
+            })
     }
 }
 

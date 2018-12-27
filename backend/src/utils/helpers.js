@@ -27,6 +27,17 @@ exports.postResponseHandler = function(location, response) {
     }
 }
 
+/**
+ * given a DELETE successful delete request
+ * create a 204 response with an empty body
+ * @param {Express.Response} response The express response object
+ */
+exports.deleteResponseHandler = function(response) {
+    return () => {
+        response.sendStatus(204)
+    }
+}
+
 exports.toLowerCase = str => str.toLowerCase()
 
 exports.isFirebaseAuthorized = function(req, res, next) {

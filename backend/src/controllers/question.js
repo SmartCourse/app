@@ -4,7 +4,7 @@ const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
 const errorHandler = require('./error')
-const { responseHandler, postResponseHandler, userLikesMapper } = require('../utils/helpers')
+const { responseHandler, postResponseHandler, deleteResponseHandler, userLikesMapper } = require('../utils/helpers')
 const { TABLE_NAMES } = require('../models/constants')
 
 /* GET question data. */
@@ -63,7 +63,7 @@ exports.getQuestionAnswers = function ({ user, params, query }, res) {
 /* POST new answer. */
 exports.postAnswer = function ({ user, params, query, body }, res) {
     body.userID = user.id
-    const location = `/api/course/${params.code}/question/${params.id}/answers`
+    const location = `/api/course/${params.code}/question/${params.id}/answer`
 
     commentModel.postComment({ questionID: params.id }, body)
         .then(postResponseHandler(location, res))
@@ -94,4 +94,18 @@ exports.putAnswerLikes = function ({ user, params, body, query }, res) {
     body.userID = user.id
     likesModel.putLikes({ type: TABLE_NAMES.COMMENTS, id: params.answerID, ...body })
         .then(() => exports.getQuestionAnswers({ user, params, query }, res))
+}
+
+/* PUT updated question body */
+exports.putQuestion = function ({ user, params, body }, res) {
+    body.userID = user.id
+    questionModel.putQuestion(params.id, body)
+        .then(() => exports.getQuestion({ user, params }, res))
+}
+
+/* DELETE question */
+exports.deleteQuestion = function ({ user, params}, res) {
+    questionModel.deleteQuestion(params.id, user.id)
+        .then(deleteResponseHandler(res))
+        .catch(errorHandler(res))
 }
