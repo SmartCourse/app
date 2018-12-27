@@ -21,7 +21,11 @@ export default {
 h3 {
   font: var(--header-4);
   font-weight: bolder;
+<<<<<<< HEAD
   margin: 0;
+=======
+  margin: 0 5px;
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 }
 
 .header-title:hover {

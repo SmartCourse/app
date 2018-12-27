@@ -11,17 +11,29 @@ before(() => {
             'headers': {},
             'referrer': 'http://localhost:8080/login',
             'referrerPolicy': 'no-referrer-when-downgrade',
+<<<<<<< HEAD
             'body': '{"email":"backendtest2@test.com","password":"abc123","returnSecureToken":true}',
+=======
+            'body': '{"email":"backendtest@test.com","password":"backendtest","returnSecureToken":true}',
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
             'method': 'POST',
             'mode': 'cors'
         })
         .then((res) => res.json())
         .then((data) => {
+<<<<<<< HEAD
             global.idToken2 = data.idToken
             return supertest.post('/api/user')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken2}`)
                 .send({ displayName: 'BackendTester2', degree: 'B. Arts', gradYear: 2018 })
+=======
+            global.idToken = data.idToken
+            return supertest.post('/api/user')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .send({ displayName: 'BackendTester', degree: 'B. Testing', gradYear: 2018 })
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
         })
 })
 
@@ -201,6 +213,7 @@ describe('Test question routes', () => {
 })
 
 describe('Test answer routes', () => {
+<<<<<<< HEAD
     describe('POST /api/course/COMP4920/question/1/answer', () => {
         let request
         let body = 'superruuu____testu'
@@ -249,6 +262,32 @@ describe('Test answer routes', () => {
     })
 
     describe('GET /api/course/COMP4920/question/1/likes', () => {
+=======
+    describe('POST /api/course/COMP4920/question/1/answers', () => {
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
+        let request
+
+        before(() => {
+            request = supertest
+                .get('/api/course/COMP4920/question/1/likes')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .expect('Content-Type', /json/)
+                .expect(200)
+            return request
+        })
+
+<<<<<<< HEAD
+=======
+        it('returns the answer we POSTed', () =>
+            request.then(({ body }) => {
+                // expect(body[0].body).to.equal('superruuu____testu'))
+                expect(body.body).is.a('string')
+            })
+        )
+    })
+
+    describe('GET /api/course/COMP4920/question/1/likes', () => {
         let request
 
         before(() => {
@@ -260,6 +299,7 @@ describe('Test answer routes', () => {
             return request
         })
 
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
         it('likes is a number', () =>
             request.then(({ body: { likes } }) => {
                 expect(likes).to.be.a('number')
@@ -281,7 +321,11 @@ describe('Test answer routes', () => {
                 .put('/api/course/COMP4920/question/1/likes')
                 .send({ value: 0 })
                 .set('Accept', 'application/json')
+<<<<<<< HEAD
                 .set('Authorization', `Bearer ${global.idToken2}`)
+=======
+                .set('Authorization', `Bearer ${global.idToken}`)
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
                 .expect('Content-Type', /json/)
                 .expect(200)
             return request
@@ -326,7 +370,11 @@ describe('Test answer routes', () => {
                 .post('/api/course/COMP4920/question/1/answer')
                 .send({ badBody: 'superruuu____testu' })
                 .set('Accept', 'application/json')
+<<<<<<< HEAD
                 .set('Authorization', `Bearer ${global.idToken2}`)
+=======
+                .set('Authorization', `Bearer ${global.idToken}`)
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
                 .expect('Content-Type', /json/)
                 .expect(400)
             return request

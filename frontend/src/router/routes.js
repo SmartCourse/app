@@ -45,7 +45,11 @@ export default new Router({
     },
     {
       path: '/course/:code([\\w]{8})/',
+<<<<<<< HEAD
       props: ({ params: { code } }) => ({
+=======
+      props: ({params: { code }}) => ({
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
         code
       }),
       children: [

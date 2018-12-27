@@ -4,6 +4,7 @@ const assert = require('assert')
 const { expect } = require('chai')
 const fetch = require('node-fetch')
 
+<<<<<<< HEAD
 before(() => {
     return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
         {
@@ -26,6 +27,9 @@ before(() => {
 })
 
 describe('Test review routes', function () {
+=======
+describe('Review route testing', function () {
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
     // technically non-deterministic as relies on POST from course.js
     describe('GET /api/course/COMP4920/review/1', () => {
         let request
@@ -46,6 +50,7 @@ describe('Test review routes', function () {
 
         it('review has a course code', () =>
             request.then(({ body }) =>
+<<<<<<< HEAD
                 expect(body.courseID).to.be.a('number'))
         )
     })
@@ -169,6 +174,9 @@ describe('Test review routes', function () {
             deleteRequest.then(({ body }) => {
                 expect(body.body).to.equal(undefined)
             })
+=======
+                expect(body.code).to.match(/\w{4}\d{4}/))
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
         )
 
         describe('follow up to verify deleted record is gone', () => {

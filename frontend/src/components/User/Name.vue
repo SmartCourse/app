@@ -41,7 +41,10 @@ export default {
 .inline {
     display: flex;
     justify-content: flex-start;
+<<<<<<< HEAD
     flex-wrap: wrap;
+=======
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
     align-items: center;
 }
 </style>

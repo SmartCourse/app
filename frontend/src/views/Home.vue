@@ -151,10 +151,13 @@ a {
   }
 
   .home > p {
+<<<<<<< HEAD
     font-size: var(--font-medium-mobile);
   }
 
   .home > p {
+=======
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
     max-width: 400px;
   }
 

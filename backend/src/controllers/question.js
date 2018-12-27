@@ -109,3 +109,29 @@ exports.deleteQuestion = function ({ user, params }, res) {
         .then(deleteResponseHandler(res))
         .catch(errorHandler(res))
 }
+
+/* GET the question likes value */
+exports.getQuestionLikes = function ({ params }, res) {
+    responseHandler(likesModel.getLikes({ type: TABLE_NAMES.QUESTIONS, id: params.id }), res)
+        .catch(errorHandler(res))
+}
+
+/* PUT updated question likes value */
+exports.putQuestionLikes = function ({ user, params, body }, res) {
+    body.userID = user.id
+    likesModel.putLikes({ type: TABLE_NAMES.QUESTIONS, ...params, ...body })
+        .then(() => exports.getQuestion({ user, params }, res))
+}
+
+/* GET the answer likes value */
+exports.getAnswerLikes = function ({ params }, res) {
+    responseHandler(likesModel.getLikes({ type: TABLE_NAMES.COMMENTS, id: params.id }), res)
+        .catch(errorHandler(res))
+}
+
+/* PUT updated answer likes value */
+exports.putAnswerLikes = function ({ user, params, body, query }, res) {
+    body.userID = user.id
+    likesModel.putLikes({ type: TABLE_NAMES.COMMENTS, id: params.answerID, ...body })
+        .then(() => exports.getQuestionAnswers({ user, params, query }, res))
+}

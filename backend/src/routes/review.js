@@ -43,4 +43,10 @@ review.put('/:id/likes', reviewController.putReviewLikes)
 /* Put an updated review's reply like value */
 review.put('/:id/comment/:replyID/likes', reviewController.putReplyLikes)
 
+/* Put an updated like value */
+review.put('/:id/likes', reviewController.putReviewLikes)
+
+/* Put an updated review's reply like value */
+review.put('/:id/reply/:replyID/likes', reviewController.putReplyLikes)
+
 module.exports = review

@@ -6,15 +6,23 @@
         :user="user"
         :published="published"
     >
+<<<<<<< HEAD
       <Category :recommend="recommend" class="right-margin">
         {{ recommend ? "Recommended" : "Not Recommended" }}
       </Category>
+=======
+      <Category :recommend="recommend">{{ recommend ? "Recommended" : "Not Recommended" }}</Category>
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
     </PostCard>
 </template>
 
 <script>
 import PostCard from '@/components/Card/Large'
+<<<<<<< HEAD
 import Category from '@/components/Category/Recommend'
+=======
+import Category from '@/components/Category'
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 
 export default {
   components: { PostCard, Category },
@@ -46,9 +54,12 @@ export default {
   }
 }
 </script>
+<<<<<<< HEAD
 
 <style scoped>
 .right-margin {
   margin-right: 20px;
 }
 </style>
+=======
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7

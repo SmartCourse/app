@@ -2,6 +2,7 @@
   <Card class="feed-card">
     <UserMini v-if="user" :name="user.displayName" :id="user.id" :picture="user.picture" />
     <div class="info">
+<<<<<<< HEAD
       <div class="key-info">
         <SecondHeader :routeName="routeName" :code="code" :id="id">
           {{ title }}
@@ -27,6 +28,21 @@
           {{ teachingPeriod }}
         </Semester>
       </div>
+=======
+      <SecondHeader :routeName="routeName" :code="code" :id="id">
+        {{ title }}
+      </SecondHeader>
+      <p class="published">
+        <time>{{ published }}</time>
+      </p>
+      <Category :recommend="recommend" v-if="cardType === 'Review'">
+        <p><b>{{ positiveOrNegativeText }}</b></p>
+      </Category>
+      <p v-else>
+        <span v-if="numAnswers === 0">Know the answer to this question?</span>
+        <span v-else>{{ numAnswers }} Answer{{ numAnswers > 1 ? 's' : '' }}</span>
+      </p>
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
       <p class="likes">{{ likes > 0 && likes || 0 }} user{{ likes != 1 ? 's' : ''}} found this helpful</p>
     </div>
   </Card>
@@ -36,8 +52,12 @@
 import Card from '@/components/Card'
 import SecondHeader from '@/components/Card/SecondaryHeader'
 import UserMini from '@/components/User/Mini'
+<<<<<<< HEAD
 import Recommend from '@/components/Category/Recommend'
 import Semester from '@/components/Category/Semester'
+=======
+import Category from '@/components/Category'
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 
 export default {
   props: {
@@ -45,18 +65,30 @@ export default {
     likes: Number,
     published: String,
     user: Object,
+<<<<<<< HEAD
     numResponses: { type: Number, default: 0 },
     code: String,
     id: String,
     cardType: String,
     recommend: Boolean,
     teachingPeriod: { type: String, default: '18s2' }
+=======
+    numAnswers: {type: Number, default: 0},
+    code: String,
+    id: String,
+    cardType: String,
+    recommend: Boolean
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
   },
   components: {
     Card,
     UserMini,
+<<<<<<< HEAD
     Semester,
     Recommend,
+=======
+    Category,
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
     SecondHeader
   },
   computed: {
@@ -72,6 +104,10 @@ export default {
 </script>
 
 <style scoped>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 .feed-card {
   border-radius: 0;
   min-width: 310px;
@@ -91,6 +127,7 @@ export default {
   text-align: right;
 }
 
+<<<<<<< HEAD
 .categories {
   display: flex;
   align-items: center;
@@ -102,6 +139,10 @@ export default {
 
 p {
   margin: 0;
+=======
+p {
+  margin: 0 5px;
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
   font: var(--body-copy-2);
 }
 
@@ -113,10 +154,20 @@ p {
 @media screen and (max-width: 500px) {
   .info {
     grid-gap: 5px;
+<<<<<<< HEAD
     grid-template-columns: 1fr 100px;
+=======
+    grid-template-columns: 1fr 120px;
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
   }
   .likes {
     display: none;
   }
+<<<<<<< HEAD
 }
+=======
+
+}
+
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 </style>

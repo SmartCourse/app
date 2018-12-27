@@ -49,11 +49,18 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import AppButtonToolTip from '@/components/AppButton/WithToolTip'
+=======
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 import ReviewCard from '@/components/Reviews/ReviewCard'
 import ReplyCard from '@/components/Comments/CommentCard'
 import ReplyForm from '@/components/Comments/CommentForm'
 import ReplyBar from '@/components/Comments/CommentSpacer'
+<<<<<<< HEAD
+=======
+import AppButtonToolTip from '@/components/AppButton/WithToolTip'
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 import { mapGetters } from 'vuex'
 
 export default {

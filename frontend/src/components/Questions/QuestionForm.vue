@@ -9,8 +9,13 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import AppButton from '@/components/AppButton'
 import CardForm from '@/components/Card/Form'
+=======
+import CardForm from '@/components/Card/Form'
+import AppButton from '@/components/AppButton'
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 import AppInput from '@/components/AppInput'
 
 export default {

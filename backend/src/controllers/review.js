@@ -100,3 +100,10 @@ exports.deleteReview = function ({ user, params }, res) {
         .then(deleteResponseHandler(res))
         .catch(errorHandler(res))
 }
+
+/* PUT updated reply likes value */
+exports.putReplyLikes = function ({ user, params, body, query }, res) {
+    body.userID = user.id
+    likesModel.putLikes({ type: TABLE_NAMES.COMMENTS, id: params.replyID, ...body })
+        .then(() => exports.getReviewComments({ user, params, query }, res))
+}

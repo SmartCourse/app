@@ -145,10 +145,13 @@ p {
     margin: auto;
     margin-top: 20px;
 }
+<<<<<<< HEAD
 
 @media screen and (max-width: 600px) {
   .form {
     grid-template-columns: 1fr;
   }
 }
+=======
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 </style>

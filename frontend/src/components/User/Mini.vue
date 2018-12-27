@@ -2,7 +2,11 @@
     <router-link :to="{ name: 'Profile', params: { id: String(id) } }" tag='div' class="avatar">
         <!-- TODO: use picture if present -->
         <div :class="`${background} letter`">
+<<<<<<< HEAD
           {{ name && name.charAt(0).toUpperCase() || '?'}}
+=======
+          {{ name.charAt(0).toUpperCase() }}
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
         </div>
         <!--div :class="" :style="`background-image:url(${picture});`" v-else /-->
     </router-link>
@@ -48,7 +52,11 @@ export default {
 }
 
 .purple {
+<<<<<<< HEAD
   background-color: var(--color-purple);
+=======
+  background-color: #673ab7;
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 }
 
 .red {
@@ -60,7 +68,11 @@ export default {
 }
 
 .blue {
+<<<<<<< HEAD
   background-color: var(--color-blue);
+=======
+  background-color: #2196f3;
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
 }
 
 .dark-blue {

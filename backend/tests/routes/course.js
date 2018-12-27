@@ -20,7 +20,11 @@ before(() => {
             return supertest.post('/api/user')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken}`)
+<<<<<<< HEAD
                 .send({ displayName: 'BackendTester', degree: 'B. Arts', gradYear: 2018 })
+=======
+                .send({ displayName: 'BackendTester', degree: 'B. Testing', gradYear: 2018 })
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
         })
 })
 
@@ -91,8 +95,21 @@ describe('Course route testing', () => {
             return request
         })
 
+<<<<<<< HEAD
         it('returns correct status', () =>
             request.expect(201)
+=======
+        it('returns the question we POSTed', () =>
+            request.then(({ body }) =>
+                expect(body.title).to.equal('jeff')
+            )
+        )
+
+        it('returns the question we POSTed', () =>
+            request.then(({ body }) =>
+                expect(body.body).to.equal('testu')
+            )
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
         )
 
         it('returns correct Location', () => {
@@ -139,7 +156,11 @@ describe('Course route testing', () => {
 
         it('correct number of questions', () =>
             request.then(({ body }) =>
+<<<<<<< HEAD
                 expect(body.data.length).to.equal(6))
+=======
+                expect(body.data.length).to.equal(5))
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
         )
 
         it('question has a title', () =>
@@ -154,7 +175,11 @@ describe('Course route testing', () => {
 
         it('question has a course id', () =>
             request.then(({ body }) =>
+<<<<<<< HEAD
                 expect(body.data[0].courseID).to.equal(1))
+=======
+                expect(body.data[0].code).to.equal('ACCT1501'))
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
         )
     })
 
@@ -176,6 +201,7 @@ describe('Course route testing', () => {
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken}`)
                 .send(form)
+<<<<<<< HEAD
 
             return request
         })
@@ -218,6 +244,24 @@ describe('Course route testing', () => {
                 })
             )
         })
+=======
+                .expect('Content-Type', /json/)
+                .expect(200)
+            return request
+        })
+
+        it('review has correct title', () =>
+            request.then(({ body }) =>
+                expect(body.title).to.equal(form.title)
+            )
+        )
+
+        it('review has correct body', () =>
+            request.then(({ body }) =>
+                expect(body.body).to.equal(form.body)
+            )
+        )
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
     })
 
     describe('GET /api/course/ACCT1511/reviews', () => {
@@ -245,12 +289,20 @@ describe('Course route testing', () => {
 
         it('review[0] has good code', () =>
             request.then(({ body }) =>
+<<<<<<< HEAD
                 expect(body.data[0].code).to.equal('ACCT1511'))
+=======
+                expect(body.data[0].body).is.a('string'))
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
         )
 
         it('review[0] has a course id', () =>
             request.then(({ body }) =>
+<<<<<<< HEAD
                 expect(body.data[0].courseID).is.a('number'))
+=======
+                expect(body.data[0].code).is.a('string'))
+>>>>>>> 6067b0b906da55869d3c6fddd9503dce430ca5a7
         )
     })
 })

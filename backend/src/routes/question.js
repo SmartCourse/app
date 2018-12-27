@@ -43,4 +43,10 @@ question.put('/:id/likes', questionController.putQuestionLikes)
 /* Put an updated question's answer like value */
 question.put('/:id/answer/:answerID/likes', questionController.putAnswerLikes)
 
+/* Put an updated question like value */
+question.put('/:id/likes', questionController.putQuestionLikes)
+
+/* Put an updated question's answer like value */
+question.put('/:id/answer/:answerID/likes', questionController.putAnswerLikes)
+
 module.exports = question
