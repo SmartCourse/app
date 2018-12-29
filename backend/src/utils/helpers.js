@@ -9,6 +9,10 @@ exports.responseHandler = function(fn, response) {
     return fn.then(data => response.json(data))
 }
 
+exports.getResponseHandler = function(response) {
+    return data => { response.json(data) }
+}
+
 /**
  * given a POST successful post request
  * create a 201 response, and set headers

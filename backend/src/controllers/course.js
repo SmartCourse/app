@@ -19,16 +19,16 @@ exports.getCourses = function (_, res) {
 /* Get specifc course data */
 exports.getCourse = function ({ params }, res, next) {
     courseModel.getCourse(params.code)
+        // Throw a 404 error if the requested course doesn't exist
         .then(course => {
-            // TODO: throw error if course === {}
-            console.log(course)
-            if (Object.keys(course).length === 0) {
-                console.log('HEY EMPTY COURSE')
-                throw new APIError(404, 1, 'This course does not exist')
+            if (!course.code) {
+                throw new APIError(404, 301, `The requested course '${params.code}' does not exist`)
             }
             return course
         })
+        // Otherwise respond normally
         .then(getResponseHandler(res))
+        // Catch everything and delegate to the error handler
         .catch(next)
 }
 

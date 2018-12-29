@@ -1,4 +1,5 @@
 const { TABLE_NAMES: { COURSES, SUBJECTS, REVIEWS } } = require('./constants')
+const { APIError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are course related */
 class Course {
@@ -43,6 +44,7 @@ class Course {
                         [COURSES]: { code }
                     }))
             .then(([row]) => row || {})
+            .catch(err => { throw new APIError(500, 300, err.message) })
     }
 
     updateCourseRatings(code) {
@@ -63,6 +65,7 @@ class Course {
             {
                 [COURSES]: { code }
             })
+            .catch(err => { throw new APIError(500, 300, err.message) })
     }
 }
 
