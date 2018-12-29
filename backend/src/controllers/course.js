@@ -5,19 +5,31 @@ const reviewModel = require('../models/review')()
 const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
 const errorHandler = require('./error')
-const { responseHandler, postResponseHandler } = require('../utils/helpers')
+const { APIError } = require('../utils/error')
+const { responseHandler, getResponseHandler, postResponseHandler } = require('../utils/helpers')
 const { TABLE_NAMES } = require('../models/constants')
 
 /* Get all course data */
 exports.getCourses = function (_, res) {
-    responseHandler(courseModel.getCourses(), res)
+    courseModel.getCourses()
+        .then(getResponseHandler(res))
         .catch(errorHandler(res))
 }
 
 /* Get specifc course data */
-exports.getCourse = function ({ params }, res) {
-    responseHandler(courseModel.getCourse(params.code), res)
-        .catch(errorHandler(res))
+exports.getCourse = function ({ params }, res, next) {
+    courseModel.getCourse(params.code)
+        .then(course => {
+            // TODO: throw error if course === {}
+            console.log(course)
+            if (Object.keys(course).length === 0) {
+                console.log('HEY EMPTY COURSE')
+                throw new APIError(404, 1, 'This course does not exist')
+            }
+            return course
+        })
+        .then(getResponseHandler(res))
+        .catch(next)
 }
 
 /* Get all questions for a course */
@@ -26,7 +38,7 @@ exports.getCourseQuestions = function ({ params, query }, res) {
     // TODO get page size from query
     const pageSize = PAGE_SIZE
 
-    const getCourseQuestions = Promise.all([
+    Promise.all([
         questionModel.getQuestions(params.code, pageNumber, pageSize),
         questionModel.getQuestionCount(params.code)
     ]).then(function([questions, questionCount]) {
@@ -50,8 +62,7 @@ exports.getCourseQuestions = function ({ params, query }, res) {
             }
         })
     })
-
-    responseHandler(getCourseQuestions, res)
+        .then(getResponseHandler(res))
         .catch(errorHandler(res))
 }
 

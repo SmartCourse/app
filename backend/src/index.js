@@ -6,6 +6,7 @@ const firebase = require('./auth')
 const compression = require('compression')
 const db = require('./models/db')
 const PRE_RENDERED_TEMPLATES = require('../../frontend/pre-rendered')
+const { errorHandler } = require('./utils/error')
 
 const app = express()
 
@@ -58,6 +59,8 @@ PRE_RENDERED_TEMPLATES
 app.use('*', function (_, res) {
     res.sendFile(path.join(__dirname, '../public', 'index.html'))
 })
+
+app.use(errorHandler)
 
 /*
  * Connect to SQL server
