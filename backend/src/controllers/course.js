@@ -22,7 +22,7 @@ exports.getCourse = function ({ params }, res, next) {
         // Throw a 404 error if the requested course doesn't exist
         .then(course => {
             if (!course.code) {
-                throw new APIError(404, 301, `The requested course '${params.code}' does not exist`)
+                throw new APIError({ status: 404, code: 301, message: `The requested course '${params.code}' does not exist` })
             }
             return course
         })

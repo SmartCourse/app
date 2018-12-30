@@ -40,9 +40,9 @@ exports.APIErrorHandler = function(err, req, res, next) {
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
  */
 exports.APIError = class APIError extends Error {
-    constructor(status = 400, code = 1, ...params) {
+    constructor({ status = 400, code = 1, message = 'Unkown Error' }) {
         // Pass remaining arguments (including vendor specific ones) to parent constructor
-        super(...params)
+        super(message)
         this.status = status
         this.code = code
     }

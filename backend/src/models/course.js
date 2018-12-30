@@ -44,7 +44,7 @@ class Course {
                         [COURSES]: { code }
                     }))
             .then(([row]) => row || {})
-            .catch(err => { throw new APIError(500, 300, err.message) })
+            .catch(err => { throw new APIError({ status: 500, code: 300, message: err.message }) })
     }
 
     updateCourseRatings(code) {
@@ -65,7 +65,7 @@ class Course {
             {
                 [COURSES]: { code }
             })
-            .catch(err => { throw new APIError(500, 300, err.message) })
+            .catch(err => { throw new APIError({ status: 500, code: 300, message: err.message }) })
     }
 }
 
