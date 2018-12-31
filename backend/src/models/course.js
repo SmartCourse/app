@@ -43,8 +43,11 @@ class Course {
                     {
                         [COURSES]: { code }
                     }))
-            .then(([row]) => row || {})
-            .catch(err => { throw new APIError({ status: 500, code: 300, message: err.message }) })
+            .then(([row]) => {
+                if (row) return row
+                // Throw a 404 error if the requested course doesn't exist
+                throw new APIError({ status: 404, code: 301, message: `The requested course '${code}' does not exist` })
+            })
     }
 
     updateCourseRatings(code) {
