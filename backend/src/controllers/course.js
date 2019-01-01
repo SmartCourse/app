@@ -4,8 +4,7 @@ const questionModel = require('../models/question')()
 const reviewModel = require('../models/review')()
 const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
-const errorHandler = require('./error')
-const { responseHandler, getResponseHandler, postResponseHandler } = require('../utils/helpers')
+const { getResponseHandler, postResponseHandler } = require('../utils/helpers')
 const { TABLE_NAMES } = require('../models/constants')
 
 /* Get all course data */
@@ -57,12 +56,12 @@ exports.getCourseQuestions = function ({ params, query }, res, next) {
 }
 
 /* Get all reviews for a course */
-exports.getCourseReviews = function ({ params, query }, res) {
+exports.getCourseReviews = function ({ params, query }, res, next) {
     const pageNumber = parseInt(query.p) || 1
     // TODO get page size from query
     const pageSize = PAGE_SIZE
 
-    const getCourseReviews = Promise.all([
+    Promise.all([
         reviewModel.getReviews(params.code, pageNumber, pageSize),
         reviewModel.getReviewCount(params.code)
     ]).then(function([reviews, reviewCount]) {
@@ -87,24 +86,24 @@ exports.getCourseReviews = function ({ params, query }, res) {
         })
     })
 
-    responseHandler(getCourseReviews, res)
-        .catch(errorHandler(res))
+        .then(getResponseHandler(res))
+        .catch(next)
 }
 
 /* POST new question and if successful return 201 status */
-exports.postQuestion = function ({ user, params, body }, res) {
+exports.postQuestion = function ({ user, params, body }, res, next) {
     body.userID = user.id
     const location = `/api/course/${params.code}/question`
     questionModel.postQuestion(params.code, body)
         .then(postResponseHandler(location, res))
-        .catch(errorHandler(res))
+        .catch(next)
 }
 
 /* POST new review and if successful return 201 status */
-exports.postReview = function ({ user, params, body }, res) {
+exports.postReview = function ({ user, params, body }, res, next) {
     body.userID = user.id
     const location = `/api/course/${params.code}/review`
     reviewModel.postReview(params.code, body)
         .then(postResponseHandler(location, res))
-        .catch(errorHandler(res))
+        .catch(next)
 }

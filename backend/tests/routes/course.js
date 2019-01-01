@@ -88,7 +88,7 @@ describe('Course route testing', () => {
             return request
         })
 
-        it('has the correct response body', () =>
+        it('has the correct error code', () =>
             request.then(({ body }) =>
                 expect(body.code).to.equal(301)) // course does not exist
         )

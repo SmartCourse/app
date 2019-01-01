@@ -1,5 +1,5 @@
 const { TABLE_NAMES: { COURSES, SUBJECTS, REVIEWS } } = require('./constants')
-const { APIError } = require('../utils/error')
+const { APIError, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are course related */
 class Course {
@@ -24,12 +24,16 @@ class Course {
      */
     getCoursesBySubject(code) {
         return this.db
-            .run(`SELECT c.* FROM ${COURSES} as c
-                JOIN ${SUBJECTS} s ON s.code=@code
-                WHERE c.subjectID=s.id`,
+            .run(`IF EXISTS(SELECT * FROM ${SUBJECTS} WHERE code=@code)
+                      SELECT c.* FROM ${COURSES} as c
+                      JOIN ${SUBJECTS} s ON s.code=@code
+                      WHERE c.subjectID=s.id;
+                  ELSE
+                      THROW 50201, 'The requested subject ${code} does not exist', 1;`,
             {
                 [SUBJECTS]: { code }
             })
+            .catch(translateSQLError({ '50201': 404 }))
     }
 
     /**
@@ -58,17 +62,16 @@ class Course {
         // ^ multiply by 100 so we have an integer percentage (we do this at an early step however, to avoid floating point biz)
         return this.db
             .run(`UPDATE ${COURSES}
-                    SET
-                      recommend = (SELECT CASE WHEN COUNT(*)=0 THEN -1 ELSE SUM(recommend)*100/COUNT(*) END FROM ${REVIEWS} WHERE code=@code),
-                      enjoy = (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(enjoy-1)*100/(4*COUNT(*)) END FROM ${REVIEWS} WHERE code=@code),
-                      difficulty = (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(difficulty-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} WHERE code=@code AND difficulty > 0),
-                      teaching = (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(teaching-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} WHERE code=@code AND teaching > 0),
-                      workload = (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(workload-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} WHERE code=@code AND workload > 0)
-                    WHERE code=@code;`,
+                      SET
+                          recommend = (SELECT CASE WHEN COUNT(*)=0 THEN -1 ELSE SUM(recommend)*100/COUNT(*) END FROM ${REVIEWS} WHERE code=@code),
+                          enjoy = (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(enjoy-1)*100/(4*COUNT(*)) END FROM ${REVIEWS} WHERE code=@code),
+                          difficulty = (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(difficulty-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} WHERE code=@code AND difficulty > 0),
+                          teaching = (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(teaching-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} WHERE code=@code AND teaching > 0),
+                          workload = (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(workload-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} WHERE code=@code AND workload > 0)
+                      WHERE code=@code;`,
             {
                 [COURSES]: { code }
             })
-            .catch(err => { throw new APIError({ status: 500, code: 300, message: err.message }) })
     }
 }
 

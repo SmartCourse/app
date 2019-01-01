@@ -5,7 +5,9 @@
  *
  * 0 - no error occurred (TODO: should this be defined?)
  * 1 - misc
- * 2 - (reserved)
+ * 2 - subject
+ *   200: misc subject error
+ *   201: subject doesn't exist
  * 3 - course
  *   300: misc course error
  *   301: course doesn't exist
@@ -21,16 +23,18 @@
  * https://expressjs.com/en/guide/error-handling.html
  */
 exports.APIErrorHandler = function(err, req, res, next) {
+    // Log stack trace
+    console.error(err.stack)
+
     // APIErrors (i.e. expected errors) will have a status
     if (!err.status) {
         // If it's an unexpected error, we just treat it as a 500
         err.code = 1
         err.status = 500
-        console.error('Unexpected Error!')
+        err.errors = []
     }
+    console.error(`    HTTP response: ${err.status}\n    API error code: ${err.code}`)
 
-    // Log error information incluing stack trace
-    console.error(`${err.stack}\n    API code: ${err.code}\n    HTTP status: ${err.status}`)
     // Send the response
     res.status(err.status).json({ message: err.message, code: err.code, errors: err.errors })
 }
@@ -41,7 +45,7 @@ exports.APIErrorHandler = function(err, req, res, next) {
  * Reference for extension of Error:
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
  */
-exports.APIError = class APIError extends Error {
+class APIError extends Error {
     /*
      * Reference for design of these error fields:
      * https://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#errors
@@ -58,5 +62,22 @@ exports.APIError = class APIError extends Error {
         this.status = status
         this.code = code
         this.errors = errors
+    }
+}
+exports.APIError = APIError
+
+/*
+ * Translate result of SQL THROW statement into an API error
+ *  @param {object} mapping of SQL error number to HTTP status code
+ *                  supplied error numbers above 50000 are user-defined and
+ *                  should map to API error codes by subtracting 50000
+ */
+exports.translateSQLError = function(obj) {
+    return function (err) {
+        if (err.number && err.number > 50000) {
+            throw new APIError({ status: obj[err.number], code: err.number - 50000, message: err.message })
+        } else {
+            throw err
+        }
     }
 }
