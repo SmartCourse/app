@@ -3,7 +3,6 @@
  * TODO error constant file
  * TODO we might want to map error codes to messages or something
  *
- * 0 - no error occurred (TODO: should this be defined?)
  * 1 - misc
  * 2 - subject
  *   200: misc subject error
@@ -56,7 +55,7 @@ class APIError extends Error {
      *  errors: For validation errors on PUT, PATCH & POST
     *           list of { code, field, message } for each invalid field:
      */
-    constructor({ status = 400, code = 1, message = 'Unkown Error', errors = [] }) {
+    constructor({ status = 400, code = 1, message = 'Unknown Error', errors = [] }) {
         // Pass remaining arguments (including vendor specific ones) to parent constructor
         super(message)
         this.status = status
