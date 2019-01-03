@@ -91,6 +91,7 @@ exports.translateSQLError = function(obj) {
         if (err.number && err.number > 50000) {
             throw new APIError({ status: obj[err.number], code: err.number - 50000, message: err.message })
         } else {
+            // In case some unexpected SQL error occurred, we just throw it
             throw err
         }
     }
