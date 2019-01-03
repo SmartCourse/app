@@ -4,6 +4,8 @@
  * TODO we might want to map error codes to messages or something
  *
  * 1000 - misc
+ *   1001:
+ *   1002: validation error
  * 2000 - subject
  *   2001: subject doesn't exist
  * 3000 - course
@@ -11,6 +13,8 @@
  * 4000 - question
  * 5000 - review
  * 6000 - comment
+ *   6001: comment doesn't exist
+ *   6002: invalid body
  * 7000 - user/auth
 */
 

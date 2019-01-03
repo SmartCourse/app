@@ -1,4 +1,5 @@
 const { TABLE_NAMES: { COMMENTS, USERS, DEGREES } } = require('./constants')
+const { APIError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are comment related */
 class Comment {
@@ -15,6 +16,19 @@ class Comment {
      */
     postComment(queryObject, { body, userID }) {
         const [key, value] = Object.entries(queryObject)[0]
+
+        // validation
+        if (!body) {
+            const type = key === 'questionID' ? 'answer' : 'comment'
+            throw new APIError({
+                status: 400,
+                code: 1002,
+                message: `Invalid ${type}`,
+                errors: [{ code: 6002, message: `Invalid ${type} body` }]
+            })
+        }
+
+        // TODO validate question/reviewID
         return this.db
             .run(`INSERT INTO ${COMMENTS} (${key}, body, userID)
                 VALUES (@${key}, @body, @userID);

@@ -49,7 +49,6 @@ class Course {
                     }))
             .then(([row]) => {
                 if (row) return row
-                // Throw a 404 error if the requested course doesn't exist
                 throw new APIError({ status: 404, code: 3001, message: `The requested course '${code}' does not exist` })
             })
     }
