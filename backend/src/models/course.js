@@ -29,7 +29,7 @@ class Course {
                       JOIN ${SUBJECTS} s ON s.code=@code
                       WHERE c.subjectID=s.id;
                   ELSE
-                      THROW ${toSQLErrorCode(2001)}, 'The requested subject ${code} does not exist', 1;`,
+                      THROW ${toSQLErrorCode(2001)}, 'The requested subject does not exist', 1;`,
             {
                 [SUBJECTS]: { code }
             })

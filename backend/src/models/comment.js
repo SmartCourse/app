@@ -1,5 +1,5 @@
 const { TABLE_NAMES: { COMMENTS, USERS, DEGREES } } = require('./constants')
-const { APIError } = require('../utils/error')
+const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are comment related */
 class Comment {
@@ -63,6 +63,7 @@ class Comment {
             {
                 [COMMENTS]: { [key]: value }
             })
+            // TODO: check comment exists and 404 if not
     }
 
     getComment(id) {
@@ -81,7 +82,10 @@ class Comment {
             {
                 [COMMENTS]: { id }
             })
-            .then(([row]) => row || {})
+            .then(([row]) => {
+                if (row) return row
+                throw new APIError({ status: 404, code: 6001, message: 'The comment does not exist' })
+            })
     }
 
     /**
@@ -92,12 +96,18 @@ class Comment {
      */
     putComment(id, { userID, body }) {
         return this.db
-            .run(`UPDATE ${COMMENTS}
-                    SET body=@body
-                    WHERE userID=@userID AND id=@id`,
+            .run(`IF NOT EXISTS(SELECT * FROM ${COMMENTS} WHERE id=@id)
+                      THROW ${toSQLErrorCode(6001)}, 'The comment does not exist', 1;
+                  IF NOT EXISTS(SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
+                      THROW ${toSQLErrorCode(7002)}, 'You cannot edit this comment', 1;
+                  ELSE
+                      UPDATE ${COMMENTS}
+                      SET body=@body
+                      WHERE userID=@userID AND id=@id;`,
             {
                 [COMMENTS]: { userID, body, id }
             })
+            .catch(translateSQLError({ [toSQLErrorCode(6001)]: 404, [toSQLErrorCode(7002)]: 403 }))
     }
 
     /**
@@ -107,6 +117,7 @@ class Comment {
      */
     deleteComment(id, userID) {
         // The query does an implicit auth check with userID before deleting
+        // TODO: throw proper errors
         return this.db
             .run(`BEGIN TRANSACTION;
                     IF EXISTS (SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)

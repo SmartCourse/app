@@ -1,4 +1,5 @@
 const { TABLE_NAMES: { QUESTIONS, COMMENTS, COURSES } } = require('./constants')
+const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are question related */
 class Question {
@@ -18,7 +19,10 @@ class Question {
                 {
                     [QUESTIONS]: { id }
                 })
-            .then(([row]) => row || {})
+            .then(([row]) => {
+                if (row) return row
+                throw new APIError({ status: 404, code: 4001, message: 'The question does not exist' })
+            })
     }
 
     /**
@@ -29,28 +33,33 @@ class Question {
      */
     getQuestions(code, pageNumber, pageSize) {
         if (isNaN(pageNumber) || isNaN(pageSize)) {
-            throw Error('Invalid paging values')
+            throw APIError({ status: 400, code: 4000, message: 'Invalid paging values' })
         }
+
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .run(`SELECT q.*, cou.code, (SELECT COUNT(com.questionID)
-            FROM ${COMMENTS} com
-            WHERE com.questionID = q.id) as numAnswers
-            FROM ${QUESTIONS} q
-            JOIN ${COURSES} cou on cou.code = @code
-            WHERE courseID = cou.id
-            ORDER BY q.timestamp DESC
-            OFFSET ${offset} ROWS
-            FETCH NEXT ${pageSize} ROWS ONLY`,
+            .run(`IF NOT EXISTS (SELECT * FROM ${COURSES} WHERE code=@code)
+                      THROW ${toSQLErrorCode(3001)}, 'The course does not exist', 1;
+                  SELECT q.*, cou.code, (SELECT COUNT(com.questionID)
+                  FROM ${COMMENTS} com
+                  WHERE com.questionID = q.id) as numAnswers
+                  FROM ${QUESTIONS} q
+                  JOIN ${COURSES} cou on cou.code = @code
+                  WHERE courseID = cou.id
+                  ORDER BY q.timestamp DESC
+                  OFFSET ${offset} ROWS
+                  FETCH NEXT ${pageSize} ROWS ONLY`,
             {
                 [COURSES]: { code }
             })
+            .catch(translateSQLError({ [toSQLErrorCode(3001)]: 404 }))
     }
 
     getQuestionsByUserID(userID, limit = 10) {
         if (isNaN(limit)) {
-            throw Error('Invalid limit value')
+            throw APIError({ status: 400, code: 4000, message: 'Invalid limit' })
         }
+        // TODO 404 error for invalid user
         return this.db
             .run(`SELECT * FROM ${QUESTIONS}
                 WHERE userID=@userID
@@ -68,6 +77,7 @@ class Question {
      * @returns {object}
      */
     getQuestionCount(code) {
+        // TODO 404 for invalid course
         return this.db
             .run(`SELECT COUNT(*) AS COUNT FROM ${QUESTIONS}
                 WHERE courseID=(SELECT id FROM ${COURSES} WHERE code=@code)`,
@@ -85,16 +95,22 @@ class Question {
      */
     postQuestion(code, { userID, title, body }) {
         return this.db
-            .run(`INSERT INTO ${QUESTIONS} (courseID, userID, title, body)
-                SELECT id, @userID, @title, @body
-                FROM courses
-                WHERE code=@code;
-                SELECT @@identity AS id`,
+            .run(`IF EXISTS(SELECT * FROM ${COURSES} WHERE code=@code)
+                      BEGIN
+                      INSERT INTO ${QUESTIONS} (courseID, userID, title, body)
+                          SELECT id, @userID, @title, @body
+                          FROM courses
+                          WHERE code=@code;
+                      SELECT @@identity AS id;
+                      END;
+                  ELSE
+                      THROW ${toSQLErrorCode(3001)}, 'The course does not exist', 1;`,
             {
                 [QUESTIONS]: { userID, title, body },
                 [COURSES]: { code }
             })
             .then(([{ id }]) => id)
+            .catch(translateSQLError({ [toSQLErrorCode(3001)]: 404 }))
     }
 
     /**
@@ -104,6 +120,7 @@ class Question {
                               user id and body of the question
      */
     putQuestion(id, { userID, body }) {
+        // TODO 404 errors and permissions..
         return this.db
             .run(`UPDATE ${QUESTIONS}
                     SET body=@body
@@ -120,6 +137,7 @@ class Question {
      */
     deleteQuestion(id, userID) {
         // The query does an auth check with userID before deleting
+        // TODO throw appropriate errors
         return this.db
             .run(`BEGIN TRANSACTION;
                     IF EXISTS (SELECT * FROM ${QUESTIONS} WHERE userID=@userID AND id=@id)

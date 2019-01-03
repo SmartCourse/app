@@ -165,15 +165,13 @@ describe('Test question routes', () => {
                     .get(location)
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
-                    // TODO: at the moment there is no 404 implemented for missing resources
-                    // .expect(404)
+                    .expect(404)
                 return getRequest
             })
 
-            // TODO: not sure what should be in the body... undefined may not be right
-            it('has the correct body (undefined)', () =>
+            it('has the correct error code', () =>
                 getRequest.then(({ body }) => {
-                    expect(body.body).to.equal(undefined)
+                    expect(body.code).to.equal(4001)
                 })
             )
         })

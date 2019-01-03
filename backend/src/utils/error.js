@@ -17,8 +17,8 @@
  *   6002: invalid body
  * 7000 - user/auth
  *   7001: user doesn't exist
- *   7002:
- *   7003:
+ *   7002: not allowed due to permissions or not logged in
+ *   7003: not allowed because you need to create a profile
  *   7004: invalid display name
  *   7005: invalid degree
  *   7006: invalid graduation year

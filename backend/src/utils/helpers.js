@@ -45,6 +45,7 @@ exports.deleteResponseHandler = function(response) {
 exports.toLowerCase = str => str.toLowerCase()
 
 exports.isFirebaseAuthorized = function(req, res, next) {
+    // TODO new error pattern
     if (!req.authorized) {
         return res.status(401).json({ code: 401, message: 'Unauthorized' })
     }
@@ -52,6 +53,7 @@ exports.isFirebaseAuthorized = function(req, res, next) {
 }
 
 exports.isAuthorized = function(req, res, next) {
+    // TODO new error pattern
     if (!req.user) {
         return res.status(403).json({ code: 403, message: 'No user profile' })
     }
