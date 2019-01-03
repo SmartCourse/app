@@ -68,7 +68,7 @@ describe('Subject route testing', () => {
 
         it('has the correct error code', () =>
             request.then(({ body }) =>
-                expect(body.code).to.equal(201)) // subject does not exist
+                expect(body.code).to.equal(2001)) // subject does not exist
         )
     })
 })

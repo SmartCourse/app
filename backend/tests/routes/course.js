@@ -90,7 +90,7 @@ describe('Course route testing', () => {
 
         it('has the correct error code', () =>
             request.then(({ body }) =>
-                expect(body.code).to.equal(301)) // course does not exist
+                expect(body.code).to.equal(3001)) // course does not exist
         )
     })
 

@@ -3,17 +3,15 @@
  * TODO error constant file
  * TODO we might want to map error codes to messages or something
  *
- * 1 - misc
- * 2 - subject
- *   200: misc subject error
- *   201: subject doesn't exist
- * 3 - course
- *   300: misc course error
- *   301: course doesn't exist
- * 4 - question
- * 5 - review
- * 6 - comment
- * 7 - user/auth
+ * 1000 - misc
+ * 2000 - subject
+ *   2001: subject doesn't exist
+ * 3000 - course
+ *   3001: course doesn't exist
+ * 4000 - question
+ * 5000 - review
+ * 6000 - comment
+ * 7000 - user/auth
 */
 
 /* Error handler
@@ -28,7 +26,7 @@ exports.APIErrorHandler = function(err, req, res, next) {
     // APIErrors (i.e. expected errors) will have a status
     if (!err.status) {
         // If it's an unexpected error, we just treat it as a 500
-        err.code = 1
+        err.code = 1000
         err.status = 500
         err.errors = []
     }
@@ -55,7 +53,7 @@ class APIError extends Error {
      *  errors: For validation errors on PUT, PATCH & POST
     *           list of { code, field, message } for each invalid field:
      */
-    constructor({ status = 400, code = 1, message = 'Unknown Error', errors = [] }) {
+    constructor({ status = 400, code = 1000, message = 'Unknown Error', errors = [] }) {
         // Pass remaining arguments (including vendor specific ones) to parent constructor
         super(message)
         this.status = status
@@ -64,6 +62,13 @@ class APIError extends Error {
     }
 }
 exports.APIError = APIError
+
+/*
+ * Translate an API error code to one that will work in an SQL THROW statement
+ */
+exports.toSQLErrorCode = function(code) {
+    return code + 50000
+}
 
 /*
  * Translate result of SQL THROW statement into an API error
