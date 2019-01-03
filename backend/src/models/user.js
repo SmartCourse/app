@@ -1,4 +1,5 @@
 const { TABLE_NAMES: { USERS, DEGREES } } = require('./constants')
+const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are User related */
 class User {
@@ -22,10 +23,12 @@ class User {
             {
                 [USERS]: { id }
             })
-            .then(([row]) => row || null)
-            .then((profile) => {
-                if (profile && profile.reputation < 0) profile.reputation = 0
-                return profile
+            .then(([profile]) => {
+                if (profile) {
+                    if (profile.reputation < 0) profile.reputation = 0
+                    return profile
+                }
+                throw new APIError({ status: 404, code: 7001, message: 'No such user' })
             })
     }
 
@@ -45,16 +48,12 @@ class User {
             {
                 [USERS]: { id }
             })
-            .then(([row]) => row || {})
-            .then((profile) => {
-                // this is defensive and should never really occur
-                // but will avoid unnecessary crashes
-                if (!profile) {
-                    return console.warn('invalid userId', id)
+            .then(([profile]) => {
+                if (profile) {
+                    if (profile.reputation < 0) profile.reputation = 0
+                    return profile
                 }
-                if (profile.reputation < 0) profile.reputation = 0
-
-                return profile
+                throw new APIError({ status: 404, code: 7001, message: 'No such user' })
             })
     }
 
@@ -72,7 +71,10 @@ class User {
             {
                 [USERS]: { uid }
             })
-            .then(([row]) => row || {})
+            .then(([profile]) => {
+                if (profile) return profile
+                throw new APIError({ status: 404, code: 7001, message: 'No such user' })
+            })
     }
 
     /**
@@ -85,9 +87,22 @@ class User {
     createUser(data) {
         const { displayName, degree, gradYear } = data
         delete data.degree
-        if (!(displayName && degree && gradYear)) {
-            return Promise.reject(Error('You must provide a display name!'))
+
+        // validation
+        const errors = []
+        if (!displayName) {
+            errors.push({ code: 7004, message: 'You must provide a display name' })
         }
+        if (!degree) {
+            errors.push({ code: 7005, message: 'You must provide a degree' })
+        }
+        if (!gradYear) {
+            errors.push({ code: 7006, message: 'You must provide a graduation year' })
+        }
+        if (errors.length > 0) {
+            throw new APIError({ status: 400, code: 1002, message: 'Invalid profile information', errors })
+        }
+
         return this.db
             .run(`INSERT INTO ${USERS} (displayName, email, uid, gradYear, degreeID)
                 SELECT @displayName, @email, @uid, @gradYear, id
@@ -106,19 +121,23 @@ class User {
         const { degree } = data
         delete data.degree
         return this.db
-            .run(`UPDATE u
-                SET u.degreeID = d.id,
-                u.gradYear = @gradYear,
-                u.description = @description,
-                u.picture = @picture
-                FROM ${USERS} AS u
-                JOIN ${DEGREES} d ON d.name=@name
-                WHERE u.id = @id`,
+            .run(`IF EXISTS(SELECT * FROM ${USERS} WHERE id=@id)
+                      UPDATE u
+                      SET u.degreeID = d.id,
+                      u.gradYear = @gradYear,
+                      u.description = @description,
+                      u.picture = @picture
+                      FROM ${USERS} AS u
+                      JOIN ${DEGREES} d ON d.name=@name
+                      WHERE u.id = @id;
+                  ELSE
+                      THROW ${toSQLErrorCode(7001)}, 'No such user', 1;`,
             {
                 [DEGREES]: { name: degree },
                 [USERS]: { id, ...data }
             })
             .then(() => this.getProfile(id))
+            .catch(translateSQLError({ [toSQLErrorCode(7001)]: 404 }))
     }
 }
 

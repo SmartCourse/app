@@ -27,7 +27,7 @@ exports.createUser = function({ authorized: { email, uid }, body: { displayName,
 
 exports.updateUser = function({ user: { id }, body: { degree, gradYear, description, picture } }, res, next) {
     return userModel.updateUser(id, { degree, gradYear, description, picture })
-        // TODO clean up put response... 
+        // TODO clean up put response...
         .then(getResponseHandler(res))
         .catch(next)
 }

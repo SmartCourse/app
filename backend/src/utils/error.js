@@ -16,6 +16,12 @@
  *   6001: comment doesn't exist
  *   6002: invalid body
  * 7000 - user/auth
+ *   7001: user doesn't exist
+ *   7002:
+ *   7003:
+ *   7004: invalid display name
+ *   7005: invalid degree
+ *   7006: invalid graduation year
 */
 
 /* Error handler
