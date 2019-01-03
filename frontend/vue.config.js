@@ -1,6 +1,6 @@
 const path = require('path')
 const PrerenderSpaPlugin = require('prerender-spa-plugin')
-const PRE_RENDERED_ROUTES = require('./pre-rendered')
+const PRE_RENDERED_ROUTES = require('../backend/pre-rendered')
 
 const productionPlugins = [
   new PrerenderSpaPlugin({
