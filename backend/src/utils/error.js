@@ -31,7 +31,8 @@
  */
 exports.APIErrorHandler = function(err, req, res, next) {
     // Log stack trace
-    console.error(err.stack)
+    // Just use first 3 lines because rest is usually Express internals..
+    console.error(err.stack.split('\n').slice(0, 4).join('\n'))
 
     // APIErrors (i.e. expected errors) will have a status
     if (!err.status) {
@@ -82,9 +83,9 @@ exports.toSQLErrorCode = function(code) {
 
 /*
  * Translate result of SQL THROW statement into an API error
- *  @param {object} mapping of SQL error number to HTTP status code
- *                  supplied error numbers above 50000 are user-defined and
- *                  should map to API error codes by subtracting 50000
+ * @param {object} mapping of SQL error number to HTTP status code
+ *                 supplied error numbers above 50000 are user-defined and
+ *                 should map to API error codes by subtracting 50000
  */
 exports.translateSQLError = function(obj) {
     return function (err) {
