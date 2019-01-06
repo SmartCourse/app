@@ -189,7 +189,7 @@ describe('Test question routes', () => {
             })
 
             // TODO: this may have to change to querying the comment individually..
-            // TODO: should give 404
+            // TODO: should give 404?
             it('answers are gone', () =>
                 getCommentRequest.then(({ body }) =>
                     assert(body.length === 0))

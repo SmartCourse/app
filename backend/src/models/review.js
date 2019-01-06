@@ -83,7 +83,6 @@ class Review {
      *                       contain the user data (probs eventually from an auth token)
      */
     postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID }) {
-
         // validation
         const errors = []
         if (!title) errors.push({ code: 5002, message: 'Review must have a title' })

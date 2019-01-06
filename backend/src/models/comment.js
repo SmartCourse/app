@@ -63,7 +63,7 @@ class Comment {
             {
                 [COMMENTS]: { [key]: value }
             })
-            // TODO: check comment exists and 404 if not
+            // TODO: check parent object exists and 404 if not
     }
 
     getComment(id) {

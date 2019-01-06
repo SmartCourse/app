@@ -179,15 +179,13 @@ describe('Test review routes', function () {
                     .get(location)
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
-                    // TODO: at the moment there is no 404 implemented for missing resources
-                    // .expect(404)
+                    .expect(404)
                 return getRequest
             })
 
-            // TODO: not sure what should be in the body... undefined may not be right
             it('has the correct body (undefined)', () =>
                 getRequest.then(({ body }) => {
-                    expect(body.body).to.equal(undefined)
+                    expect(body.code).to.equal(5001)
                 })
             )
         })
@@ -205,7 +203,7 @@ describe('Test review routes', function () {
             })
 
             // TODO: this may have to change to querying the comment individually..
-            // TODO: should give 404
+            // TODO: should give 404?
             it('comments are gone', () =>
                 getCommentRequest.then(({ body }) =>
                     assert(body.length === 0))
