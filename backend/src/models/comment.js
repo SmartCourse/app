@@ -24,7 +24,7 @@ class Comment {
                 status: 400,
                 code: 1002,
                 message: `Invalid ${type}`,
-                errors: [{ code: 6002, message: `Invalid ${type} body` }]
+                errors: [{ code: 6002, message: `${type} must have a body` }]
             })
         }
 

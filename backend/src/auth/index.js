@@ -19,7 +19,6 @@ module.exports = function (req, _, next) {
         .then(decodedToken => {
             // attach user to request obj
             req.authorized = decodedToken
-            // TODO hmmmm
             return userModel.getUserByUID(decodedToken.uid)
         })
         .then(user => {
