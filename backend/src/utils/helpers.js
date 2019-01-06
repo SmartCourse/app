@@ -1,15 +1,11 @@
 const { APIError } = require('./error')
 
 /**
- * Basic JSON response wrapper for controllers
- * @param   {function} fn       A controller function (must return a promise)
+ * Takes a successful GET response and creates
+ * a function that adds the response data
  * @param   {object}   response Express response object
  * @returns {Promise}
  */
-exports.responseHandler = function(fn, response) {
-    return fn.then(data => response.json(data))
-}
-
 exports.getResponseHandler = function(response) {
     return data => { response.json(data) }
 }
