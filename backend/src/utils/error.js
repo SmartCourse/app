@@ -11,7 +11,16 @@
  * 3000 - course
  *   3001: course doesn't exist
  * 4000 - question
+ *   4001: question doesn't exist
+ *   4002: invalid title
+ *   4003: invalid body
  * 5000 - review
+ *   5001: review doesn't exist
+ *   5002: invalid title
+ *   5003: invalid body
+ *   5004: invalid recommend
+ *   5005: invalid enjoy
+ *   5006: invalid difficulty/teaching/workload
  * 6000 - comment
  *   6001: comment doesn't exist
  *   6002: invalid body

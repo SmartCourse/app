@@ -94,17 +94,22 @@ class Question {
      *                       contain the user data
      */
     postQuestion(code, { userID, title, body }) {
+        // validation
+        const errors = []
+        if (!title) errors.push({ code: 4002, message: 'Question must have a title' })
+        if (!body) errors.push({ code: 4003, message: 'Question must have a body' })
+        if (errors.length > 0) {
+            throw new APIError({ status: 400, code: 1002, message: 'Invalid question', errors })
+        }
+
         return this.db
-            .run(`IF EXISTS(SELECT * FROM ${COURSES} WHERE code=@code)
-                      BEGIN
-                      INSERT INTO ${QUESTIONS} (courseID, userID, title, body)
-                          SELECT id, @userID, @title, @body
-                          FROM courses
-                          WHERE code=@code;
-                      SELECT @@identity AS id;
-                      END;
-                  ELSE
-                      THROW ${toSQLErrorCode(3001)}, 'The course does not exist', 1;`,
+            .run(`IF NOT EXISTS(SELECT * FROM ${COURSES} WHERE code=@code)
+                      THROW ${toSQLErrorCode(3001)}, 'The course does not exist', 1;
+                  INSERT INTO ${QUESTIONS} (courseID, userID, title, body)
+                      SELECT id, @userID, @title, @body
+                      FROM courses
+                      WHERE code=@code;
+                  SELECT @@identity AS id`,
             {
                 [QUESTIONS]: { userID, title, body },
                 [COURSES]: { code }
