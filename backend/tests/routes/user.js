@@ -56,6 +56,7 @@ describe('User route testing', function() {
                 .expect('Content-Type', /json/)
                 .expect(401))
     })
+    // TODO PUT test
 })
 
 after(function() {
