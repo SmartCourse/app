@@ -183,7 +183,8 @@ describe('Course route testing', () => {
             recommend: 0,
             workload: 2,
             teaching: 1,
-            difficulty: 1
+            difficulty: 1,
+            session: 10
         }
 
         before(() => {

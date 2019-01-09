@@ -117,7 +117,8 @@ function sqlReview(code) {
             enjoy: nextValue(MIN_ENJOY, MAX_ENJOY),
             difficulty: nextValue(MIN_OPTION, MAX_OPTION),
             teaching: nextValue(MIN_OPTION, MAX_OPTION),
-            workload: nextValue(MIN_OPTION, MAX_OPTION)
+            workload: nextValue(MIN_OPTION, MAX_OPTION),
+            session: nextValue(1, sessions.length)
         }
     }
 }

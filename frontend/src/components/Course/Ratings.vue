@@ -5,11 +5,10 @@
 </template>
 
 <script>
-import Rating from '@/components/AppRating/CircleWithText'
 import Bar from '@/components/AppRating/BarWithText'
 
 export default {
-  components: { Rating, Bar },
+  components: { Bar },
   props: {
     ratings: Array
   }
