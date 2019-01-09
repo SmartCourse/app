@@ -42,8 +42,8 @@
 </template>
 
 <script>
-import CardForm from '@/components/Card/Form'
 import AppButton from '@/components/AppButton'
+import CardForm from '@/components/Card/Form'
 import AppInput from '@/components/AppInput'
 import InputOptions from '@/components/Reviews/ReviewOptions'
 

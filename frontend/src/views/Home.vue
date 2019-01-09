@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-view>
     <section class="main-content home">
       <AppLogo class="splash" :first="'Smart'" :last="'Course'"/>
       <p>Community-driven ratings, reviews and info about UNSW courses.</p>

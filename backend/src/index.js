@@ -3,8 +3,11 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const firebase = require('./auth')
-const db = require('./models/db')
 const compression = require('compression')
+const db = require('./models/db')
+const PRE_RENDERED_TEMPLATES = require('../pre-rendered')
+const { APIErrorHandler } = require('./utils/error')
+
 const app = express()
 
 // for json parsing
@@ -17,7 +20,7 @@ app.use(compression())
 
 // for caching
 app.use(express.static(path.join(__dirname, '../public'), {
-    maxAge: '30d'
+    maxAge: app.get('env') === 'development' ? '0' : '30d'
 }))
 
 // for auth tokens
@@ -38,6 +41,17 @@ const apiRouter = require('./routes')
 app.use('/api', apiRouter)
 
 /*
+ * These templates are prerendered to enchance SEO.
+ * If requests are returned for these rotues, return the template.
+ */
+PRE_RENDERED_TEMPLATES
+    .forEach(route => {
+        app.use(`${route}`, function (_, res) {
+            res.sendFile(path.join(__dirname, `../public${route}`, 'index.html'))
+        })
+    })
+
+/*
     anything that gets here and not handled
     by api error handler should get index.html.
     NB: frontend must handle actual 404s.
@@ -45,6 +59,8 @@ app.use('/api', apiRouter)
 app.use('*', function (_, res) {
     res.sendFile(path.join(__dirname, '../public', 'index.html'))
 })
+
+app.use(APIErrorHandler)
 
 /*
  * Connect to SQL server

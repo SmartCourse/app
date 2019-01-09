@@ -47,7 +47,7 @@ const mutations = {
 
     // get the most upvoted answer
     const { ans, index } = mapped.reduce(
-      ({ ans, index }, curr, i) => (curr.likes >= ans.likes ? { ans: curr, index: i } : {ans, index}),
+      ({ ans, index }, curr, i) => (curr.likes >= ans.likes ? { ans: curr, index: i } : { ans, index }),
       { ans: { likes: -1 }, index: -1 }
     )
     // only set answer as 'accepted' if it has >= 2 likes

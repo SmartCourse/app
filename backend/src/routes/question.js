@@ -22,8 +22,20 @@ question.get('/:id/answer/:cid', commentController.getComment)
 /* full auth check */
 question.use(isAuthorized)
 
+/* Delete a question */
+question.delete('/:id', questionController.deleteQuestion)
+
+/* Put an updated question */
+question.put('/:id', questionController.putQuestion)
+
 /* Post an answer for a given question */
 question.post('/:id/answer', questionController.postAnswer)
+
+/* Delete an answer */
+question.delete('/:id/answer/:cid', commentController.deleteComment)
+
+/* Put an updated answer */
+question.put('/:id/answer/:cid', commentController.putComment)
 
 /* Put an updated question like value */
 question.put('/:id/likes', questionController.putQuestionLikes)

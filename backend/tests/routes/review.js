@@ -1,5 +1,6 @@
 const app = require('../../src')
 const supertest = require('supertest')(app)
+const assert = require('assert')
 const { expect } = require('chai')
 const fetch = require('node-fetch')
 
@@ -24,7 +25,7 @@ before(() => {
         })
 })
 
-describe('Review route testing', function () {
+describe('Test review routes', function () {
     // technically non-deterministic as relies on POST from course.js
     describe('GET /api/course/COMP4920/review/1', () => {
         let request
@@ -49,6 +50,169 @@ describe('Review route testing', function () {
         )
     })
 
+    describe('PUT /api/course/ACCT1501/review', () => {
+        let postRequest
+        let putRequest
+        let location
+
+        const originalReview = {
+            title: 'jeff',
+            body: 'barry is good',
+            enjoy: 3,
+            recommend: 0,
+            workload: 2,
+            teaching: 1,
+            difficulty: 1
+        }
+        const editedReview = {
+            title: 'jeff',
+            body: 'edited body',
+            enjoy: 0,
+            recommend: 1,
+            workload: 4,
+            teaching: 1,
+            difficulty: 0
+        }
+
+        before(() => {
+            postRequest = supertest
+                .post('/api/course/ACCT1501/review')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .send(originalReview)
+                .expect(201)
+                .then((res) => {
+                    location = res.headers.location
+                    putRequest = supertest
+                        .put(location)
+                        .send(editedReview)
+                        .set('Accept', 'application/json')
+                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .expect(200)
+                    return putRequest
+                })
+            return postRequest
+        })
+
+        it('has been edited correctly', () =>
+            putRequest.then(({ body: { title, body, enjoy, recommend, workload, teaching, difficulty } }) => {
+                let result = { title, body, enjoy, recommend, workload, teaching, difficulty }
+                expect(result).to.deep.equal(editedReview)
+            })
+        )
+
+        describe('follow up to verify edited record exists', () => {
+            let getRequest
+
+            before(() => {
+                getRequest = supertest
+                    .get(location)
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                return getRequest
+            })
+
+            it('has been edited correctly', () =>
+                getRequest.then(({ body: { title, body, enjoy, recommend, workload, teaching, difficulty } }) => {
+                    let result = { title, body, enjoy, recommend, workload, teaching, difficulty }
+                    expect(result).to.deep.equal(editedReview)
+                })
+            )
+        })
+    })
+
+    describe('DELETE /api/course/ACCT1501/review', () => {
+        let postRequest
+        let postCommentRequest
+        let deleteRequest
+        let location
+        const reviewBody = {
+            title: 'jeff',
+            body: 'barry is good',
+            enjoy: 3,
+            recommend: 0,
+            workload: 2,
+            teaching: 1,
+            difficulty: 1
+        }
+
+        before(() => {
+            postRequest = supertest
+                .post('/api/course/ACCT1501/review')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .send(reviewBody)
+                .expect(201)
+                .then(res => {
+                    location = res.headers.location
+                    postCommentRequest = supertest
+                        .post(`${location}/comment`)
+                        .send({ body: 'this is a comment' })
+                        .set('Accept', 'application/json')
+                        .set('Authorization', `Bearer ${global.idToken2}`)
+                        .expect(201)
+                    return postCommentRequest
+                })
+                .then(res => {
+                    deleteRequest = supertest
+                        .delete(location)
+                        .set('Accept', 'application/json')
+                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .expect(204)
+                    return deleteRequest
+                })
+            return postRequest
+        })
+
+        it('has the correct body', () =>
+            deleteRequest.then(({ body }) => {
+                expect(body.body).to.equal(undefined)
+            })
+        )
+
+        describe('follow up to verify deleted record is gone', () => {
+            let getRequest
+
+            before(() => {
+                getRequest = supertest
+                    .get(location)
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(404)
+                return getRequest
+            })
+
+            it('has the correct body (undefined)', () =>
+                getRequest.then(({ body }) => {
+                    expect(body.code).to.equal(5001)
+                })
+            )
+        })
+
+        describe('follow up to verify comments are gone', () => {
+            let getCommentRequest
+
+            before(() => {
+                getCommentRequest = supertest
+                    .get(`${location}/comments`)
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                return getCommentRequest
+            })
+
+            // TODO: this may have to change to querying the comment individually..
+            // TODO: should give 404?
+            it('comments are gone', () =>
+                getCommentRequest.then(({ body }) =>
+                    assert(body.length === 0))
+            )
+        })
+    })
+})
+
+describe('Test comment routes', () => {
     describe('GET /api/course/COMP4920/review/1/comments', () => {
         let request
 
@@ -119,6 +283,130 @@ describe('Review route testing', function () {
             it('has the correct author', () =>
                 followUp.then(({ body }) =>
                     expect(body.user.displayName).to.equal('BackendTester3'))
+            )
+        })
+    })
+
+    describe('PUT /api/course/ACCT1501/review/1/comment/', () => {
+        let postRequest
+        let putRequest
+        let location
+
+        before(() => {
+            postRequest = supertest
+                .post('/api/course/ACCT1501/review/1/comment')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .send({ body: 'original text' })
+                .expect(201)
+                .then((res) => {
+                    location = res.headers.location
+                    putRequest = supertest
+                        .put(location)
+                        .send({ body: 'edited text' })
+                        .set('Accept', 'application/json')
+                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .expect(200)
+                    return putRequest
+                })
+            return postRequest
+        })
+
+        it('has the correct body', () =>
+            putRequest.then(({ body }) => {
+                expect(body.body).to.equal('edited text')
+            })
+        )
+
+        describe('follow up to verify edited record exists', () => {
+            let getRequest
+
+            before(() => {
+                getRequest = supertest
+                    .get(location)
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                return getRequest
+            })
+
+            it('has the correct body', () =>
+                getRequest.then(({ body }) => {
+                    expect(body.body).to.equal('edited text')
+                })
+            )
+        })
+    })
+
+    describe('DELETE /api/course/ACCT1501/review/1/comment/', () => {
+        let postRequest
+        let deleteRequest
+        let location
+        let id
+
+        before(() => {
+            postRequest = supertest
+                .post('/api/course/ACCT1501/review/1/comment')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken}`)
+                .send({ body: 'original text' })
+                .expect(201)
+                .then(res => {
+                    id = Number(res.headers['x-id'])
+                    location = res.headers.location
+                    deleteRequest = supertest
+                        .delete(location)
+                        .set('Accept', 'application/json')
+                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .expect(204)
+                    return deleteRequest
+                })
+            return postRequest
+        })
+
+        it('has the correct body (undefined)', () =>
+            deleteRequest.then(({ body }) => {
+                expect(body.body).to.equal(undefined)
+            })
+        )
+
+        describe('follow up to verify deleted comment is gone', () => {
+            let getRequest
+
+            before(() => {
+                getRequest = supertest
+                    .get(location)
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                // TODO: at the moment there is no 404 implemented for missing posts
+                // .expect(404)
+                return getRequest
+            })
+
+            // TODO: not sure what should be in the body... undefined may not be right
+            it('has the correct body (undefined)', () =>
+                getRequest.then(({ body }) => {
+                    expect(body.body).to.equal(undefined)
+                })
+            )
+        })
+
+        describe('follow up to verify deleted comment is missing from list of comments', () => {
+            let getCommentRequest
+
+            before(() => {
+                getCommentRequest = supertest
+                    .get('/api/course/ACCT1501/review/1/comments')
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                return getCommentRequest
+            })
+
+            it('comment is gone', () =>
+                // check the posted comment doesn't appear in the list
+                getCommentRequest.then(({ body }) =>
+                    expect(body.filter(({ cid }) => cid === id).length).to.equal(0))
             )
         })
     })

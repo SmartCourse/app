@@ -55,4 +55,20 @@ describe('Subject route testing', () => {
                 expect(body.filter(c => c.name === 'Accounting and Financial Management 1A').length).to.equal(1))
         )
     })
+
+    describe('GET /api/subject/NOTEXIST (error)', () => {
+        let request
+        before(() => {
+            request = supertest
+                .get('/api/subject/NOTEXIST')
+                .set('Accept', 'application/json')
+                .expect(404)
+            return request
+        })
+
+        it('has the correct error code', () =>
+            request.then(({ body }) =>
+                expect(body.code).to.equal(2001)) // subject does not exist
+        )
+    })
 })
