@@ -232,9 +232,9 @@ describe('Test comment routes', () => {
                 expect(body).is.a('array'))
         )
 
-        it('comment list has length 3', () =>
+        it('comment list has length 1', () =>
             request.then(({ body }) =>
-                expect(body).has.lengthOf(3)
+                expect(body).has.lengthOf(1)
             )
         )
     })
