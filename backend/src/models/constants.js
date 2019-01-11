@@ -3,6 +3,7 @@ const { TYPES } = require('tedious')
 // Current Environment
 exports.PRODUCTION = process.env.NODE_ENV === 'production'
 exports.TESTING = process.env.NODE_ENV === 'test'
+exports.DEVELOPMENT = process.env.NODE_ENV === 'development'
 
 // User Constants
 exports.ANONYMOUS = 0
