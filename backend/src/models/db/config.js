@@ -2,7 +2,7 @@ const { PRODUCTION, TESTING } = require('../constants')
 
 // really this should be able to differentiate staging from development and testing, but atm, can't
 exports.DB_NAME = PRODUCTION ? 'smartcourse'
-    : TESTING ? undefined : 'smartcourse-staging'
+    : TESTING ? 'testdb' : 'smartcourse-staging'
 
 exports.MAX_CONNECTIONS = 100
 
