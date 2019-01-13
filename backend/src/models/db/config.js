@@ -16,7 +16,6 @@ exports.DB_CONFIG = {
             database: exports.DB_NAME,
             rowCollectionOnDone: true,
             rowCollectionOnRequestCompletion: true,
-            encrypt: PRODUCTION,
-            port: 1433
+            encrypt: PRODUCTION
         }
 }
