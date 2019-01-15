@@ -1,5 +1,5 @@
 <template>
-    <Card>
+    <Card class="large-card">
         <div v-if="title" class="space-between">
             <CardHeader >{{ title }}</CardHeader>
              <!-- Add badges here in future -->
@@ -47,6 +47,10 @@ export default {
 </script>
 
 <style scoped>
+.large-card {
+    margin-bottom: 10px;
+}
+
 .content {
     display: grid;
     grid-template-columns: 45px auto;
