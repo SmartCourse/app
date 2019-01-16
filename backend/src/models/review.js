@@ -7,7 +7,11 @@ const {
     MAX_OPTION,
     TABLE_NAMES: { REVIEWS, COURSES, COMMENTS }
 } = require('./constants')
-const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
+const {
+    APIError,
+    toSQLErrorCode,
+    translateSQLError
+} = require('../utils/error')
 
 /* All inputs should be validated in this class that are review related */
 class Review {
@@ -19,6 +23,7 @@ class Review {
     /**
      * Gets specific review corresponding to an id.
      * @param   {number}  id   Required id param.
+     * @throws  {APIError}
      * @returns {object}
      */
     getReview(id) {
@@ -82,7 +87,7 @@ class Review {
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
-    postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID }) {
+    postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID, session }) {
         // validation
         const errors = []
         if (!title) errors.push({ code: 5002, message: 'Review must have a title' })
@@ -107,13 +112,13 @@ class Review {
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${COURSES} WHERE code=@code)
                       THROW ${toSQLErrorCode(3001)}, 'The course does not exist', 1;
-                  INSERT INTO ${REVIEWS} (courseID, userID, title, body, recommend, enjoy, difficulty, teaching, workload)
-                      SELECT id, @userID, @title, @body, @recommend, @enjoy, @difficulty, @teaching, @workload
+                  INSERT INTO ${REVIEWS} (courseID, userID, title, body, recommend, enjoy, difficulty, teaching, workload, session)
+                      SELECT id, @userID, @title, @body, @recommend, @enjoy, @difficulty, @teaching, @workload, @session
                       FROM courses
                       WHERE code=@code;
                   SELECT @@identity AS id`,
             {
-                [REVIEWS]: { userID, title, body, recommend, enjoy, difficulty, teaching, workload },
+                [REVIEWS]: { userID, title, body, recommend, enjoy, difficulty, teaching, workload, session },
                 [COURSES]: { code }
             })
             .then(([{ id }]) => id)

@@ -11,6 +11,7 @@ const {
     sqlQuestions,
     sqlReviews,
     sqlComments,
+    sqlSessions,
     sqlLikes,
     sqlUsers,
     unswDataInitialised,
@@ -63,10 +64,12 @@ class DB {
                         await sqlDegrees(connection)
                         await sqlSubjects(connection)
                         await sqlCourses(connection)
+                        await sqlSessions(connection)
                     }
 
                     // Initialise test databases
                     if (!PRODUCTION && !await testDataInitialised(connection)) {
+                        await sqlSessions(connection)
                         await sqlQuestions(connection)
                         await sqlReviews(connection)
                         await sqlComments(connection)

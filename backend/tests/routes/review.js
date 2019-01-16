@@ -62,7 +62,8 @@ describe('Test review routes', function () {
             recommend: 0,
             workload: 2,
             teaching: 1,
-            difficulty: 1
+            difficulty: 1,
+            session: 2
         }
         const editedReview = {
             title: 'jeff',
@@ -134,7 +135,8 @@ describe('Test review routes', function () {
             recommend: 0,
             workload: 2,
             teaching: 1,
-            difficulty: 1
+            difficulty: 1,
+            session: 2
         }
 
         before(() => {
@@ -183,7 +185,7 @@ describe('Test review routes', function () {
                 return getRequest
             })
 
-            it('has the correct body (undefined)', () =>
+            it('has the correct API response code', () =>
                 getRequest.then(({ body }) => {
                     expect(body.code).to.equal(5001)
                 })
@@ -230,9 +232,9 @@ describe('Test comment routes', () => {
                 expect(body).is.a('array'))
         )
 
-        it('comment list has length 3', () =>
+        it('comment list has length 1', () =>
             request.then(({ body }) =>
-                expect(body).has.lengthOf(3)
+                expect(body).has.lengthOf(1)
             )
         )
     })
@@ -364,7 +366,7 @@ describe('Test comment routes', () => {
             return postRequest
         })
 
-        it('has the correct body (undefined)', () =>
+        it('has no body', () =>
             deleteRequest.then(({ body }) => {
                 expect(body.body).to.equal(undefined)
             })
@@ -384,7 +386,7 @@ describe('Test comment routes', () => {
             })
 
             // TODO: not sure what should be in the body... undefined may not be right
-            it('has the correct body (undefined)', () =>
+            it('has no body', () =>
                 getRequest.then(({ body }) => {
                     expect(body.body).to.equal(undefined)
                 })

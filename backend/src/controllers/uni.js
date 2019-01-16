@@ -29,3 +29,9 @@ exports.getCourses = function ({ params }, res, next) {
         .then(getResponseHandler(res))
         .catch(next)
 }
+
+exports.getSessions = function (_, res, next) {
+    uniModel.getSessions()
+        .then(getResponseHandler(res))
+        .catch(next)
+}

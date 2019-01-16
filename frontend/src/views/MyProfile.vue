@@ -41,15 +41,13 @@
 
 <script>
 import AppButton from '@/components/AppButton'
-import AppInput from '@/components/AppInput'
 import TransparentCard from '@/components/Card/Transparent'
 import Mini from '@/components/User/Mini'
-import Reputation from '@/components/User/Reputation'
 import AuthSelect from '@/components/Authentication/Select'
 import { mapGetters } from 'vuex'
 
 export default {
-  components: { AppInput, AppButton, TransparentCard, Mini, Reputation, AuthSelect },
+  components: { AppButton, TransparentCard, Mini, AuthSelect },
   data() {
     return {
       degree: '',

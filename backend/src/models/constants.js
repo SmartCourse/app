@@ -30,7 +30,8 @@ exports.TABLE_NAMES = {
     UNIVERSITY: 'university',
     USERS: 'users',
     DEGREES: 'degrees',
-    FACULTIES: 'faculties'
+    FACULTIES: 'faculties',
+    SESSIONS: 'sessions'
 }
 
 // Table Columns
@@ -52,6 +53,24 @@ exports.TABLE_COLUMNS = {
         },
         name: {
             type: TYPES.VarChar,
+            options: { nullable: false }
+        }
+    },
+    [exports.TABLE_NAMES.SESSIONS]: {
+        id: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        shortName: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        longName: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        year: {
+            type: TYPES.Int,
             options: { nullable: false }
         }
     },
@@ -205,6 +224,10 @@ exports.TABLE_COLUMNS = {
             options: { nullable: false }
         },
         courseID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        session: {
             type: TYPES.Int,
             options: { nullable: false }
         },

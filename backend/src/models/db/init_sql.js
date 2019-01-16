@@ -3,6 +3,7 @@ const faculties = require('../../../data/faculties')
 const degrees = require('../../../data/degrees')
 const subjects = require('../../../data/subjects')
 const courses = require('../../../data/courses')
+const sessions = require('../../../data/sessions')
 const {
     NUM_DUMMY_USERS,
     SAMPLE_QUESTIONS,
@@ -72,6 +73,10 @@ exports.sqlSubjects = async function(db) {
     return bulkInsertDB(db, TABLE_NAMES.SUBJECTS, subjects)
 }
 
+exports.sqlSessions = async function (db) {
+    return bulkInsertDB(db, TABLE_NAMES.SESSIONS, sessions)
+}
+
 exports.sqlCourses = async function(db) {
     return bulkInsertDB(db, TABLE_NAMES.COURSES, courses)
 }
@@ -112,7 +117,8 @@ function sqlReview(code) {
             enjoy: nextValue(MIN_ENJOY, MAX_ENJOY),
             difficulty: nextValue(MIN_OPTION, MAX_OPTION),
             teaching: nextValue(MIN_OPTION, MAX_OPTION),
-            workload: nextValue(MIN_OPTION, MAX_OPTION)
+            workload: nextValue(MIN_OPTION, MAX_OPTION),
+            session: nextValue(1, sessions.length)
         }
     }
 }
@@ -271,6 +277,14 @@ ${
             name VARCHAR(8000) NOT NULL
         );
 
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.SESSIONS}' AND xtype='U')
+        CREATE TABLE ${TABLE_NAMES.SESSIONS} (
+            id INTEGER PRIMARY KEY IDENTITY(1,1),
+            shortName VARCHAR(100) NOT NULL,
+            longName  VARCHAR(100) NOT NULL,
+            year      INTEGER NOT NULL
+        );
+
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.DEGREES}' AND xtype='U')
         CREATE TABLE ${TABLE_NAMES.DEGREES} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
@@ -374,13 +388,17 @@ ${
             difficulty INTEGER DEFAULT '0',
             teaching INTEGER DEFAULT '0',
             workload INTEGER DEFAULT '0',
+            session INTEGER NOT NULL,
             timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
             CONSTRAINT fk_course_review
                 FOREIGN KEY (courseID)
                 REFERENCES ${TABLE_NAMES.COURSES} (id),
             CONSTRAINT fk_user_review
                 FOREIGN KEY (userID)
-                REFERENCES ${TABLE_NAMES.USERS} (id)
+                REFERENCES ${TABLE_NAMES.USERS} (id),
+            CONSTRAINT fk_session_review
+                FOREIGN KEY (session)
+                REFERENCES ${TABLE_NAMES.SESSIONS} (id)
         );
 
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.COMMENTS}' AND xtype='U')
