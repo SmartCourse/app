@@ -33,7 +33,10 @@ class DB {
         for (let i = 1; i < MAX_CONNECTIONS; i++) {
             const connection = new Connection(DB_CONFIG)
             connection.on('connect', (err) => {
-                if (err) throw Error('Couldn\'t connect to DB')
+                if (err) {
+                    console.warn(err)
+                    throw new Error('Couldn\'t connect to DB')
+                }
                 this.connections.push(connection)
             })
         }
