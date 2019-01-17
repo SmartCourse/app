@@ -22,11 +22,6 @@ app.use(cookieParser())
 // for gzipping
 app.use(compression())
 
-// for caching
-app.use(express.static(path.join(__dirname, '../public'), {
-    maxAge: ENV === 'development' ? '1d' : '30d'
-}))
-
 // for auth tokens
 app.use(firebase)
 
@@ -46,6 +41,14 @@ if (ENV === 'production') {
 const apiRouter = require('./routes')
 
 app.use('/api', apiRouter)
+
+// for caching
+const ONE_DAY = 1000 * 60 * 60 * 24
+
+app.use(express.static(path.join(__dirname, '../public'), {
+    maxAge: ENV === 'development' ? ONE_DAY : ONE_DAY * 30,
+    cacheControl: ENV !== 'test'
+}))
 
 /*
  * These templates are prerendered to enchance SEO.
