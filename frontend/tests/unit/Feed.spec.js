@@ -3,7 +3,7 @@ import { mount, RouterLinkStub } from '@vue/test-utils'
 import Feed from '@/components/Course/Feed'
 import FeedCard from '@/components/Course/FeedCard'
 
-describe('Feed.vue Reviews', () => {
+describe.skip('Feed.vue Reviews', () => {
   before(function() {
     this.items = [
       { id: '1', title: 'hey', body: 'wow', likes: 2, published: new Date().toDateString(), user: { displayName: 'Henry', id: 0 } },
@@ -25,7 +25,7 @@ describe('Feed.vue Reviews', () => {
   })
 })
 
-describe('Feed.vue Questions', () => {
+describe.skip('Feed.vue Questions', () => {
   before(function() {
     this.items = [
       { id: '1', title: 'hey', body: 'wow', likes: 2, published: new Date().toDateString(), user: { displayName: 'Henry', id: 0 } },
