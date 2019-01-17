@@ -9,7 +9,10 @@ const PRE_RENDERED_TEMPLATES = require('../pre-rendered')
 const { APIErrorHandler } = require('./utils/error')
 
 const app = express()
+
+// ENV related things
 const ENV = app.get('env')
+const LOG = process.env.LOG
 
 // for json parsing
 app.use(express.json())
@@ -30,7 +33,7 @@ app.use(firebase)
 // for setting cors headers
 const { corsDev, corsProd } = require('./utils/cors')
 
-if (ENV === 'test') {
+if (LOG) {
     app.use(logger('dev'))
 }
 
