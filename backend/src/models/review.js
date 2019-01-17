@@ -98,6 +98,10 @@ class Review {
         if (enjoy < MIN_ENJOY || enjoy > MAX_ENJOY) {
             errors.push({ code: 5005, message: 'Invalid enjoy value' })
         }
+        if (!session) {
+            errors.push({ code: 5006, message: 'No session provided' })
+        }
+
         Object.entries({ difficulty, teaching, workload })
             .forEach(([key, item]) => {
                 if (item < MIN_OPTION || item > MAX_OPTION) {

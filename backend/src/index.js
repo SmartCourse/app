@@ -7,6 +7,7 @@ const compression = require('compression')
 const db = require('./models/db')
 const PRE_RENDERED_TEMPLATES = require('../pre-rendered')
 const { APIErrorHandler } = require('./utils/error')
+const { staticFilesCache } = require('./utils/cache')
 
 const app = express()
 
@@ -43,12 +44,7 @@ const apiRouter = require('./routes')
 app.use('/api', apiRouter)
 
 // for caching
-const ONE_DAY = 1000 * 60 * 60 * 24
-
-app.use(express.static(path.join(__dirname, '../public'), {
-    maxAge: ENV === 'development' ? ONE_DAY : ONE_DAY * 30,
-    cacheControl: ENV !== 'test'
-}))
+app.use(staticFilesCache)
 
 /*
  * These templates are prerendered to enchance SEO.

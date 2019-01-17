@@ -38,6 +38,7 @@ export default {
     font: var(--body-copy-1);
     padding: 10px 30px 10px 0px;
     border: none;
+    border-radius: 0;
     width: 100%;
     box-shadow: none;
     background: transparent;

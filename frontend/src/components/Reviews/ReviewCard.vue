@@ -6,18 +6,22 @@
         :user="user"
         :published="published"
     >
-      <Category :recommend="recommend" class="right-margin">
+    <div class="right-margin">
+      <Category :recommend="recommend">
         {{ recommend ? "Recommended" : "Not Recommended" }}
       </Category>
+      <Semester>{{ sessionShortName }}</Semester>
+    </div>
     </PostCard>
 </template>
 
 <script>
 import PostCard from '@/components/Card/Large'
 import Category from '@/components/Category/Recommend'
+import Semester from '@/components/Category/Semester'
 
 export default {
-  components: { PostCard, Category },
+  components: { PostCard, Category, Semester },
   props: {
     code: String,
     id: String,
@@ -28,7 +32,17 @@ export default {
     body: String,
     published: String,
     authenticated: Boolean,
-    recommend: Boolean
+    recommend: Boolean,
+    session: {
+      default: 0,
+      type: Number
+    }
+  },
+  computed: {
+    sessionShortName() {
+      return this.$store.getters.sessions.length &&
+        this.$store.getters.sessions[this.session].shortName
+    }
   },
   methods: {
     upvote() {
@@ -50,5 +64,9 @@ export default {
 <style scoped>
 .right-margin {
   margin-right: 20px;
+}
+
+.right-margin > * {
+  margin: 0 2.5px;
 }
 </style>

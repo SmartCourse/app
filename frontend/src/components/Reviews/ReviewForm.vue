@@ -9,6 +9,9 @@
       <span class="required">*</span>
       <textarea placeholder="Your review here..." v-model="body"></textarea><br>
 
+      <OptionHeader>What session did you take the course?</OptionHeader>
+      <Selector :items="sessions" v-model="session" :placeholder="'Select a session..'"/>
+
       <InputOptions v-model="recommend" :options="['Yes', 'No']">
         Would you recommend this course to a friend? <span class="required">*</span>
       </InputOptions>
@@ -30,9 +33,9 @@
       </InputOptions>
 
       <AppButton
-        :disabled="!(recommend && enjoy && body && title)"
+        :disabled="!(recommend && enjoy && body && title && session)"
         class='submit'
-        @click.native="callback({title, body, recommend, enjoy, difficulty, teaching, workload})"
+        @click.native="callback({title, body, recommend, enjoy, difficulty, teaching, workload, session: sessionId})"
       >
         Submit
       </AppButton>
@@ -46,6 +49,8 @@ import AppButton from '@/components/AppButton'
 import CardForm from '@/components/Card/Form'
 import AppInput from '@/components/AppInput'
 import InputOptions from '@/components/Reviews/ReviewOptions'
+import OptionHeader from '@/components/Reviews/ReviewOptionHeader'
+import Selector from '@/components/Authentication/Select'
 
 export default {
   name: 'ReviewForm',
@@ -53,7 +58,20 @@ export default {
     CardForm,
     AppButton,
     AppInput,
-    InputOptions
+    InputOptions,
+    Selector,
+    OptionHeader
+  },
+  computed: {
+    sessions() {
+      return this.$store.getters.sessions.map(({ longName }) => longName)
+    },
+    sessionId() {
+      const session = this.$store.getters.sessions
+        .find(({ longName }) => longName === this.session)
+
+      return session ? session.id : -1
+    }
   },
   props: {
     callback: Function
@@ -66,7 +84,8 @@ export default {
       enjoy: '',
       difficulty: '',
       teaching: '',
-      workload: ''
+      workload: '',
+      session: ''
     }
   }
 }
