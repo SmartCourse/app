@@ -1,12 +1,13 @@
+const { APIError } = require('./error')
 
 /**
- * Basic JSON response wrapper for controllers
- * @param   {function} fn       A controller function (must return a promise)
+ * Takes a successful GET response and creates
+ * a function that adds the response data
  * @param   {object}   response Express response object
  * @returns {Promise}
  */
-exports.responseHandler = function(fn, response) {
-    return fn.then(data => response.json(data))
+exports.getResponseHandler = function(response) {
+    return data => { response.json(data) }
 }
 
 /**
@@ -42,14 +43,14 @@ exports.toLowerCase = str => str.toLowerCase()
 
 exports.isFirebaseAuthorized = function(req, res, next) {
     if (!req.authorized) {
-        return res.status(401).json({ code: 401, message: 'Unauthorized' })
+        throw new APIError({ status: 401, code: 7002, message: 'Unauthorized' })
     }
     next()
 }
 
 exports.isAuthorized = function(req, res, next) {
     if (!req.user) {
-        return res.status(403).json({ code: 403, message: 'No user profile' })
+        throw new APIError({ status: 403, code: 7003, message: 'No user profile' })
     }
     next()
 }

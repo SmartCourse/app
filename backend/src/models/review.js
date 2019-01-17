@@ -7,6 +7,11 @@ const {
     MAX_OPTION,
     TABLE_NAMES: { REVIEWS, COURSES, COMMENTS }
 } = require('./constants')
+const {
+    APIError,
+    toSQLErrorCode,
+    translateSQLError
+} = require('../utils/error')
 
 /* All inputs should be validated in this class that are review related */
 class Review {
@@ -18,6 +23,7 @@ class Review {
     /**
      * Gets specific review corresponding to an id.
      * @param   {number}  id   Required id param.
+     * @throws  {APIError}
      * @returns {object}
      */
     getReview(id) {
@@ -26,7 +32,10 @@ class Review {
                 {
                     [REVIEWS]: { id }
                 })
-            .then(([row]) => row || {})
+            .then(([row]) => {
+                if (row) return row
+                throw new APIError({ status: 404, code: 5001, message: 'The review does not exist' })
+            })
     }
 
     /**
@@ -40,18 +49,21 @@ class Review {
         }
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
-            .run(`SELECT r.*, cou.code, (SELECT COUNT(com.reviewID)
-                FROM ${COMMENTS} com
-                WHERE com.reviewID = r.id) as numResponses
-            FROM ${REVIEWS} r
-            JOIN ${COURSES} cou ON cou.code = @code
-            WHERE r.courseID=cou.id
-            ORDER BY r.timestamp DESC
-            OFFSET ${offset} ROWS
-            FETCH NEXT ${pageSize} ROWS ONLY`,
+            .run(`IF NOT EXISTS (SELECT * FROM ${COURSES} WHERE code=@code)
+                      THROW ${toSQLErrorCode(3001)}, 'The course does not exist', 1;
+                  SELECT r.*, cou.code, (SELECT COUNT(com.reviewID)
+                  FROM ${COMMENTS} com
+                  WHERE com.reviewID = r.id) as numResponses
+                  FROM ${REVIEWS} r
+                  JOIN ${COURSES} cou ON cou.code = @code
+                  WHERE r.courseID=cou.id
+                  ORDER BY r.timestamp DESC
+                  OFFSET ${offset} ROWS
+                  FETCH NEXT ${pageSize} ROWS ONLY`,
             {
                 [COURSES]: { code }
             })
+            .catch(translateSQLError({ [toSQLErrorCode(3001)]: 404 }))
     }
 
     /**
@@ -60,6 +72,7 @@ class Review {
      * @returns {object}
      */
     getReviewCount(code) {
+        // TODO: 404 for invalid course
         return this.db
             .run(`SELECT COUNT(*) AS COUNT FROM ${REVIEWS} r
             WHERE r.courseID=(SELECT c.id FROM ${COURSES} c WHERE c.code=@code)`,
@@ -74,26 +87,42 @@ class Review {
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
      */
-    postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID }) {
-        if (recommend !== DONT_RECOMMEND && recommend !== RECOMMEND) throw Error('Invalid recommend value')
-        if (enjoy < MIN_ENJOY || enjoy > MAX_ENJOY) throw Error('Invalid enjoy value')
-
-        ;[difficulty, teaching, workload].forEach(item => {
-            if (item < MIN_OPTION || item > MAX_OPTION) throw Error('Invalid difficulty, teaching or workload value')
-        })
+    postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID, session }) {
+        // validation
+        const errors = []
+        if (!title) errors.push({ code: 5002, message: 'Review must have a title' })
+        if (!body) errors.push({ code: 5003, message: 'Review must have a body' })
+        if (recommend !== DONT_RECOMMEND && recommend !== RECOMMEND) {
+            errors.push({ code: 5004, message: 'Invalid recommend value' })
+        }
+        if (enjoy < MIN_ENJOY || enjoy > MAX_ENJOY) {
+            errors.push({ code: 5005, message: 'Invalid enjoy value' })
+        }
+        Object.entries({ difficulty, teaching, workload })
+            .forEach(([key, item]) => {
+                if (item < MIN_OPTION || item > MAX_OPTION) {
+                    errors.push({ code: 5006, message: `Invalid ${key} value` })
+                }
+            })
+        if (errors.length > 0) {
+            throw new APIError({ status: 400, code: 1002, message: 'Invalid review' })
+        }
 
         // insert review, get review, update course ratings
         return this.db
-            .run(`INSERT INTO ${REVIEWS} (courseID, userID, title, body, recommend, enjoy, difficulty, teaching, workload)
-                SELECT id, @userID, @title, @body, @recommend, @enjoy, @difficulty, @teaching, @workload
-                FROM courses
-                WHERE code=@code;
-                SELECT @@identity AS id`,
+            .run(`IF NOT EXISTS(SELECT * FROM ${COURSES} WHERE code=@code)
+                      THROW ${toSQLErrorCode(3001)}, 'The course does not exist', 1;
+                  INSERT INTO ${REVIEWS} (courseID, userID, title, body, recommend, enjoy, difficulty, teaching, workload, session)
+                      SELECT id, @userID, @title, @body, @recommend, @enjoy, @difficulty, @teaching, @workload, @session
+                      FROM courses
+                      WHERE code=@code;
+                  SELECT @@identity AS id`,
             {
-                [REVIEWS]: { userID, title, body, recommend, enjoy, difficulty, teaching, workload },
+                [REVIEWS]: { userID, title, body, recommend, enjoy, difficulty, teaching, workload, session },
                 [COURSES]: { code }
             })
             .then(([{ id }]) => id)
+            .catch(translateSQLError({ [toSQLErrorCode(3001)]: 404 }))
     }
 
     /**
@@ -103,6 +132,7 @@ class Review {
                               user id, body of the review and ratings
      */
     putReview(id, { userID, body, recommend, enjoy, difficulty, teaching, workload }) {
+        // TODO 404 errors and permissions..
         return this.db
             .run(`UPDATE ${REVIEWS}
                     SET
@@ -125,6 +155,7 @@ class Review {
      */
     deleteReview(id, userID) {
         // The query does an auth check with userID before deleting
+        // TODO throw appropriate errors
         return this.db
             .run(`BEGIN TRANSACTION;
                     IF EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)

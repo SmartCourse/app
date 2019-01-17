@@ -12,11 +12,8 @@
 </template>
 
 <script>
-import AppButton from '@/components/AppButton'
-
 export default {
   props: ['value', 'options'],
-  components: { AppButton },
   methods: {
     clickEventHandler(val) {
       this.$emit('input', val)

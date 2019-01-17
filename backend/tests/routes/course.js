@@ -78,6 +78,22 @@ describe('Course route testing', () => {
         )
     })
 
+    describe('GET /api/course/NOTEXIST (error)', () => {
+        let request
+        before(() => {
+            request = supertest
+                .get('/api/course/NOTEXIST')
+                .set('Accept', 'application/json')
+                .expect(404)
+            return request
+        })
+
+        it('has the correct error code', () =>
+            request.then(({ body }) =>
+                expect(body.code).to.equal(3001)) // course does not exist
+        )
+    })
+
     describe('POST /api/course/ACCT1501/question', () => {
         let request
 
@@ -167,7 +183,8 @@ describe('Course route testing', () => {
             recommend: 0,
             workload: 2,
             teaching: 1,
-            difficulty: 1
+            difficulty: 1,
+            session: 10
         }
 
         before(() => {

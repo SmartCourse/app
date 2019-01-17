@@ -1,9 +1,9 @@
-const { TABLE_NAMES: { DEGREES, SUBJECTS, FACULTIES } } = require('./constants')
+const { TABLE_NAMES: { DEGREES, SUBJECTS, FACULTIES, SESSIONS } } = require('./constants')
 
 /* All inputs should be validated in this class that are subject related */
 class Uni {
     constructor(db) {
-        console.log('initialising ORM subject object')
+        console.log('initialising ORM Uni object')
         this.db = db
     }
 
@@ -24,6 +24,14 @@ class Uni {
     getFaculties() {
         return this.db
             .run(`SELECT * FROM ${FACULTIES}`)
+    }
+
+    /**
+     * @returns {Array} Available sessions in database
+     */
+    getSessions() {
+        return this.db
+            .run(`SELECT * FROM ${SESSIONS}`)
     }
 }
 

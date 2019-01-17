@@ -1,9 +1,13 @@
 ---
 language: node_js
+services:
+  - docker
 node_js:
   - 10
 notifications:
-    slack: cs4920-2018:SDt3tqEvra7QvkVy5wnY9faR
+  slack: cs4920-2018:SDt3tqEvra7QvkVy5wnY9faR
+before_install:
+  - ./docker.sh
 install:
   - cd frontend
   - npm install

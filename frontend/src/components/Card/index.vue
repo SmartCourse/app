@@ -7,7 +7,6 @@
 <style scoped>
 .card {
   position: relative;
-  margin-bottom: 10px;
   border-radius: 4px;
   padding: 15px;
   background-color:var(--white);
