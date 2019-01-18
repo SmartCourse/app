@@ -71,9 +71,9 @@ const mutations = {
     // convert list of courses to object
     state.courseMap = courses
       .map(courseMapper)
-      .reduce((acc, course) => {
-        acc[course.code] = course
-        return acc
+      .reduce((courseMap, course) => {
+        courseMap[course.code] = course
+        return courseMap
       }, {})
   },
   LOAD_FACULTIES(state, faculties) {
@@ -83,7 +83,8 @@ const mutations = {
     state.degrees = degrees
   },
   LOAD_SESSIONS(state, sessions) {
-    state.sessions = sessions
+    const currentYear = new Date().getFullYear()
+    state.sessions = sessions.filter(session => session.year <= currentYear)
   },
   UPDATE_COURSE(state, course) {
     // assumes courseMapper already applied...
