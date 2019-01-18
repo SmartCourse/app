@@ -64,7 +64,9 @@ export default {
   },
   computed: {
     sessions() {
-      return this.$store.getters.sessions.map(({ longName }) => longName)
+      return this.$store.getters.sessions
+        .map(({ longName }) => longName)
+        .reverse()
     },
     sessionId() {
       const session = this.$store.getters.sessions

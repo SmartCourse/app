@@ -6,7 +6,7 @@ const ENV = process.env.NODE_ENV
 // for caching
 const ONE_DAY = 1000 * 60 * 60 * 24
 
-const staticPath = path.join(__dirname, '../public')
+const staticPath = path.join(__dirname, '../../public')
 
 const cacheOptions = {
     // 1d for staging, 30d for prod

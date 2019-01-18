@@ -34,14 +34,14 @@ export default {
     authenticated: Boolean,
     recommend: Boolean,
     session: {
-      default: 0,
+      default: 1,
       type: Number
     }
   },
   computed: {
     sessionShortName() {
       return this.$store.getters.sessions.length &&
-        this.$store.getters.sessions[this.session].shortName
+        this.$store.getters.sessions[this.session - 1].shortName
     }
   },
   methods: {
