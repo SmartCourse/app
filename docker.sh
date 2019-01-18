@@ -7,7 +7,6 @@ docker rm $DOCKER_NAME
 
 set -ex
 
-docker pull microsoft/mssql-server-linux:2017-latest
 # docker build --tag $DOCKER_NAME .
 docker run \
     --name $DOCKER_NAME \
