@@ -52,7 +52,7 @@ export default {
     recommend: Boolean,
     // it's an id not a string, can be used
     // to index the sessions array
-    session: { type: Number, default: 0 }
+    session: { type: Number, default: 1 }
   },
   components: {
     Card,
@@ -71,7 +71,7 @@ export default {
     },
     teachingPeriod() {
       return this.$store.getters.sessions.length &&
-        this.$store.getters.sessions[this.session].shortName
+        this.$store.getters.sessions[this.session - 1].shortName
     }
   }
 }
