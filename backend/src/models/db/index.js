@@ -69,7 +69,6 @@ class DB {
 
                     // Initialise test databases
                     if (!PRODUCTION && !await testDataInitialised(connection)) {
-                        await sqlSessions(connection)
                         await sqlQuestions(connection)
                         await sqlReviews(connection)
                         await sqlComments(connection)

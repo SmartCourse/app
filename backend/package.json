@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=test npx nodemon ./src/bin/www",
+    "start": "cross-env NODE_ENV=test LOG=true npx nodemon ./src/bin/www",
     "lint": "npx eslint src/**/*.js tests/**/*.js --fix",
     "test:lint": "npx eslint src/**/*.js tests/**/*.js",
     "test:src": "cross-env NODE_ENV=test npx nyc mocha tests/**/*.js --timeout 75000",

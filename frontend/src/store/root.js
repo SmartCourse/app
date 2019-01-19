@@ -8,7 +8,8 @@ const state = {
   // cached courses
   courseMap: {},
   faculties: [],
-  degrees: []
+  degrees: [],
+  sessions: []
 }
 
 const getters = {
@@ -17,7 +18,8 @@ const getters = {
   // convert object to list
   courses: ({ courseMap }) => Object.values(courseMap),
   faculties: ({ faculties }) => faculties,
-  degrees: ({ degrees }) => degrees
+  degrees: ({ degrees }) => degrees,
+  sessions: ({ sessions }) => sessions
 }
 
 const actions = {
@@ -38,7 +40,7 @@ const actions = {
       return
     }
     return get('/uni/faculties')
-      .then(data => commit('REFRESH_FACULTIES', data))
+      .then(data => commit('LOAD_FACULTIES', data))
       .catch(err => console.warn(err))
   },
   getDegrees({ commit, getters }) {
@@ -47,7 +49,16 @@ const actions = {
       return
     }
     return get('/uni/degrees')
-      .then(data => commit('REFRESH_DEGREES', data))
+      .then(data => commit('LOAD_DEGREES', data))
+      .catch(err => console.warn(err))
+  },
+  getSessions({ commit, getters }) {
+    // avoid repeats of this
+    if (getters.sessions.length) {
+      return
+    }
+    return get('/uni/sessions')
+      .then(data => commit('LOAD_SESSIONS', data))
       .catch(err => console.warn(err))
   }
 }
@@ -60,16 +71,20 @@ const mutations = {
     // convert list of courses to object
     state.courseMap = courses
       .map(courseMapper)
-      .reduce((acc, course) => {
-        acc[course.code] = course
-        return acc
+      .reduce((courseMap, course) => {
+        courseMap[course.code] = course
+        return courseMap
       }, {})
   },
-  REFRESH_FACULTIES(state, faculties) {
+  LOAD_FACULTIES(state, faculties) {
     state.faculties = faculties
   },
-  REFRESH_DEGREES(state, degrees) {
+  LOAD_DEGREES(state, degrees) {
     state.degrees = degrees
+  },
+  LOAD_SESSIONS(state, sessions) {
+    const currentYear = new Date().getFullYear()
+    state.sessions = sessions.filter(session => session.year <= currentYear)
   },
   UPDATE_COURSE(state, course) {
     // assumes courseMapper already applied...

@@ -50,7 +50,9 @@ export default {
     id: String,
     cardType: String,
     recommend: Boolean,
-    teachingPeriod: { type: String, default: '18s2' }
+    // it's an id not a string, can be used
+    // to index the sessions array
+    session: { type: Number, default: 1 }
   },
   components: {
     Card,
@@ -66,6 +68,10 @@ export default {
     },
     positiveOrNegativeText() {
       return this.recommend ? 'Recommended' : 'Not Recommended'
+    },
+    teachingPeriod() {
+      return this.$store.getters.sessions.length &&
+        this.$store.getters.sessions[this.session - 1].shortName
     }
   }
 }

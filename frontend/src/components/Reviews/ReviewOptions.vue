@@ -1,8 +1,8 @@
 <template>
 <div>
-    <h4 class="options-header">
-        <slot></slot>
-    </h4>
+    <OptionHeader>
+        <slot/>
+    </OptionHeader>
     <div class="options">
         <AppButton
             @click.native="clickEventHandler(option)"
@@ -21,10 +21,11 @@
 
 <script>
 import AppButton from '@/components/AppButton'
+import OptionHeader from '@/components/Reviews/ReviewOptionHeader'
 
 export default {
   props: ['value', 'options'],
-  components: { AppButton },
+  components: { AppButton, OptionHeader },
   methods: {
     clickEventHandler(val) {
       this.$emit('input', val)
@@ -34,10 +35,6 @@ export default {
 </script>
 
 <style scoped>
-.options-header {
-    font: var(--header-4);
-}
-
 .options {
     display: grid;
     grid-auto-columns: 1fr;
