@@ -57,7 +57,7 @@ export default {
     recommend: Boolean,
     // it's an id not a string, can be used
     // to index the sessions array
-    session: { type: Number, default: 1 }
+    session: Number
   },
   components: {
     Card,

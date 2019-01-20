@@ -1,51 +1,51 @@
 <template>
-    <section class="main-content">
-      <AppBreadCrumb/>
+  <section class="main-content">
+    <AppBreadCrumb/>
 
-      <transition name="fade-slide">
-        <ReviewCard v-bind="review" :authenticated="isLoggedIn" v-if="!loadingReview"/>
-      </transition>
+    <transition name="fade-slide">
+      <ReviewCard v-bind="review" :authenticated="isLoggedIn" v-if="!loadingReview"/>
+    </transition>
 
-      <div style="text-align:center" v-if="loadingReview">
-        <LoadingSpinner/>
-      </div>
+    <div style="text-align:center" v-if="loadingReview">
+      <LoadingSpinner/>
+    </div>
 
-      <ReplyBar v-if="replies.length">
-        <h3 style="font: var(--header-4);">{{ replies.length }} Comments</h3>
-        <AppButtonToolTip
-          v-if="!formToggle"
-          @click.native="formToggle = true"
-          :disabled="!isLoggedIn"
-          :disabledMessage="tooltipMessage"
-        >
-          Post Comment
-        </AppButtonToolTip>
-      </ReplyBar>
-
-      <ReplyForm
-        @submitCommentForm="submitReply"
-        :title="'Post Comment'"
-        :type="commentType"
-        :callback="submitReply"
-        :closeCallback="replies.length ? () => formToggle = false : null"
-        :authenticated="isLoggedIn"
-        v-if="!loadingReplies"
-        v-show="formToggle || !replies.length"
+    <ReplyBar v-if="replies.length">
+      <h3 style="font: var(--header-4);">{{ replies.length }} Comments</h3>
+      <AppButtonToolTip
+        v-if="!formToggle"
+        @click.native="formToggle = true"
+        :disabled="!isLoggedIn"
+        :disabledMessage="tooltipMessage"
       >
-        <span class="form-failure" v-if="error.code">{{error.message}}</span>
-      </ReplyForm>
+        Post Comment
+      </AppButtonToolTip>
+    </ReplyBar>
 
-      <div style="text-align:center" v-else-if="!loadingReview && loadingReplies">
-        <LoadingSpinner/>
-      </div>
+    <ReplyForm
+      @submitCommentForm="submitReply"
+      :title="'Post Comment'"
+      :type="commentType"
+      :callback="submitReply"
+      :closeCallback="replies.length ? () => formToggle = false : null"
+      :authenticated="isLoggedIn"
+      v-if="!loadingReplies"
+      v-show="formToggle || !replies.length"
+    >
+      <span class="form-failure" v-if="error.code">{{error.message}}</span>
+    </ReplyForm>
 
-      <transition-group name='fade-slide' tag='ul' v-if="replies.length">
-        <li v-for="answer in replies" :key="answer.id">
-          <ReplyCard :comment="answer" :type="commentType" :id="id" :code="code" :authenticated="isLoggedIn"/>
-        </li>
-      </transition-group>
+    <div style="text-align:center" v-else-if="!loadingReview && loadingReplies">
+      <LoadingSpinner/>
+    </div>
 
-    </section>
+    <transition-group name='fade-slide' tag='ul' v-if="replies.length">
+      <li v-for="answer in replies" :key="answer.id">
+        <ReplyCard :comment="answer" :type="commentType" :id="id" :code="code" :authenticated="isLoggedIn"/>
+      </li>
+    </transition-group>
+
+  </section>
 </template>
 
 <script>
