@@ -1,50 +1,50 @@
-  <template>
-    <section class="main-content">
-      <AppBreadCrumb/>
+<template>
+  <section class="main-content">
+    <AppBreadCrumb/>
 
-      <transition name="fade-slide">
-        <QuestionCard v-bind="question" :authenticated="isLoggedIn" v-if="!loadingQuestion" />
-      </transition>
-      <div style="text-align:center" v-if="loadingQuestion">
-        <LoadingSpinner/>
-      </div>
+    <transition name="fade-slide">
+      <QuestionCard v-bind="question" :authenticated="isLoggedIn" v-if="!loadingQuestion" />
+    </transition>
+    <div style="text-align:center" v-if="loadingQuestion">
+      <LoadingSpinner/>
+    </div>
 
-      <AnswerBar v-if="answers.length">
-        <h3 style="font: var(--header-4);">{{ answers.length }} Answers</h3>
-        <AppButtonToolTip
-          v-if="!formToggle"
-          @click.native="formToggle = true"
-          :disabled="!isLoggedIn"
-          :disabledMessage="tooltipMessage"
-        >
-          Post Answer
-        </AppButtonToolTip>
-      </AnswerBar>
-
-      <AnswerForm
-        @submitCommentForm="submitAnswer"
-        :title="'Post Answer'"
-        :type="commentType"
-        :callback="submitAnswer"
-        :closeCallback="answers.length ? () => formToggle = false : null"
-        :authenticated="isLoggedIn"
-        v-if="!loadingAnswers"
-        v-show="formToggle || !answers.length"
+    <AnswerBar v-if="answers.length">
+      <h3 style="font: var(--header-4);">{{ answers.length }} Answers</h3>
+      <AppButtonToolTip
+        v-if="!formToggle"
+        @click.native="formToggle = true"
+        :disabled="!isLoggedIn"
+        :disabledMessage="tooltipMessage"
       >
-        <span class="form-failure" v-if="error.code">{{error.message}}</span>
-      </AnswerForm>
+        Post Answer
+      </AppButtonToolTip>
+    </AnswerBar>
 
-      <div style="text-align:center" v-if="!loadingQuestion && loadingAnswers">
-        <LoadingSpinner/>
-      </div>
+    <AnswerForm
+      @submitCommentForm="submitAnswer"
+      :title="'Post Answer'"
+      :type="commentType"
+      :callback="submitAnswer"
+      :closeCallback="answers.length ? () => formToggle = false : null"
+      :authenticated="isLoggedIn"
+      v-if="!loadingAnswers"
+      v-show="formToggle || !answers.length"
+    >
+      <span class="form-failure" v-if="error.code">{{error.message}}</span>
+    </AnswerForm>
 
-      <transition-group name='fade-slide' tag='ul' v-if="answers.length">
-        <li v-for="answer in answers" :key="answer.id">
-          <AnswerCard :comment="answer" :type="commentType" :id="id" :code="code" :authenticated="isLoggedIn"/>
-        </li>
-      </transition-group>
+    <div style="text-align:center" v-if="!loadingQuestion && loadingAnswers">
+      <LoadingSpinner/>
+    </div>
 
-    </section>
+    <transition-group name='fade-slide' tag='ul' v-if="answers.length">
+      <li v-for="answer in answers" :key="answer.id">
+        <AnswerCard :comment="answer" :type="commentType" :id="id" :code="code" :authenticated="isLoggedIn"/>
+      </li>
+    </transition-group>
+
+  </section>
 </template>
 
 <script>

@@ -1,40 +1,40 @@
 <template>
-    <section class="main-content">
-        <div class="flex-container">
-          <div class="profile-container">
-          <CardHeader>User Profile</CardHeader>
-          <Card class="profile">
-            <transition name="fade-slide">
-              <div v-if="!loading">
-                <UserSummary
-                  :reputation="user.reputation"
-                  :displayName="user.displayName"
-                  :id="user.id"/>
-                <div class="data-container">
-                  <Field :title="'Degree'" :body="user.degree || 'B. Engineering'"/>
-                  <Field :title="'Joined'" :body="user.joined"/>
-                  <Field :title="'Graduation Year'" :body="user.gradYear || 2018"/>
-                  <Field :title="'Description'" :body=" user.description || 'No description set'"/>
-                  <!-- <p>Reputation <i class="material-icons star">star</i></p> -->
-                </div>
+  <section class="main-content">
+      <div class="flex-container">
+        <div class="profile-container">
+        <CardHeader>User Profile</CardHeader>
+        <Card class="profile">
+          <transition name="fade-slide">
+            <div v-if="!loading">
+              <UserSummary
+                :reputation="user.reputation"
+                :displayName="user.displayName"
+                :id="user.id"/>
+              <div class="data-container">
+                <Field :title="'Degree'" :body="user.degree || 'B. Engineering'"/>
+                <Field :title="'Joined'" :body="user.joined"/>
+                <Field :title="'Graduation Year'" :body="user.gradYear || 2018"/>
+                <Field :title="'Description'" :body=" user.description || 'No description set'"/>
+                <!-- <p>Reputation <i class="material-icons star">star</i></p> -->
               </div>
-            </transition>
-
-            <div style="text-align:center" v-if="loading">
-              <LoadingSpinner/>
             </div>
-        </Card>
-        </div>
-        <div>
-          <CardHeader>Recent Questions</CardHeader>
-          <FeedCard
-            v-for="q in questions"
-            v-bind="q"
-            :key="q.id"
-            />
-        </div>
-        </div>
-    </section>
+          </transition>
+
+          <div style="text-align:center" v-if="loading">
+            <LoadingSpinner/>
+          </div>
+      </Card>
+      </div>
+      <div>
+        <CardHeader>Recent Questions</CardHeader>
+        <FeedCard
+          v-for="q in questions"
+          v-bind="q"
+          :key="q.id"
+          />
+      </div>
+      </div>
+  </section>
 </template>
 
 <script>

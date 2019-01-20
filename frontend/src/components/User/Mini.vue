@@ -52,11 +52,11 @@ export default {
 }
 
 .red {
-  background-color: #ff5722;
+  background-color: var(--color-red);
 }
 
 .orange {
-  background-color: #ff9800;
+  background-color: var(--color-orange);
 }
 
 .blue {
