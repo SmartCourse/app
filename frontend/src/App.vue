@@ -75,7 +75,7 @@ html, body {
   --color-purple:  #673ab7;
   --color-red: #ff5722;
   --color-orange: #ff9800;
-  
+
   // font format
   --header-1: 600 2.5rem /1.2 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;
   --header-1-mobile: 600 1.75rem /1.1 -apple-system, BlinkMacSystemFont, 'Open Sans', 'Helvetica Neue', sans-serif;

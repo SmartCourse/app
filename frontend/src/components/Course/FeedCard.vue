@@ -23,7 +23,7 @@
         <Recommend :recommend="recommend" v-if="cardType === 'Review'">
           {{ positiveOrNegativeText }}
         </Recommend>
-        <Semester>
+        <Semester v-if="session">
           {{ teachingPeriod }}
         </Semester>
         <Badge v-if="pinned">

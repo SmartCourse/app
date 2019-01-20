@@ -15,7 +15,7 @@
         v-if="!loading && reviews.length"
       />
 
-      <WarningContainer v-if="!loading && reviews.length">
+      <WarningContainer v-if="!loading && !reviews.length">
         <WarningHeader>This course currently has no reviews!</WarningHeader>
         <p>Have you done this course? Maybe you can help by writing its first review.</p>
       </WarningContainer>

@@ -96,7 +96,7 @@ class DB {
         return new Promise((resolve, reject) => {
             // TODO - something more elegant?
             while (this.connections.length === 0) {
-                console.log('Not enough connections')
+                console.warn('Not enough connections')
             }
             const connection = this.connections.pop()
 
