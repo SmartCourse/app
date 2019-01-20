@@ -26,6 +26,9 @@
         <Semester>
           {{ teachingPeriod }}
         </Semester>
+        <Badge v-if="pinned">
+          FAQ
+        </Badge>
       </div>
       <p class="likes">{{ likes > 0 && likes || 0 }} user{{ likes != 1 ? 's' : ''}} found this helpful</p>
     </div>
@@ -38,6 +41,7 @@ import SecondHeader from '@/components/Card/SecondaryHeader'
 import UserMini from '@/components/User/Mini'
 import Recommend from '@/components/Category/Recommend'
 import Semester from '@/components/Category/Semester'
+import Badge from '@/components/Category/Badge'
 
 export default {
   props: {
@@ -46,6 +50,7 @@ export default {
     published: String,
     user: Object,
     numResponses: { type: Number, default: 0 },
+    pinned: Number,
     code: String,
     id: String,
     cardType: String,
@@ -58,6 +63,7 @@ export default {
     Card,
     UserMini,
     Semester,
+    Badge,
     Recommend,
     SecondHeader
   },
