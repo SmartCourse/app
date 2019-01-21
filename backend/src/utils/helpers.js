@@ -43,7 +43,12 @@ exports.toLowerCase = str => str.toLowerCase()
 
 exports.isFirebaseAuthorized = function(req, res, next) {
     if (!req.authorized) {
-        throw new APIError({ status: 401, code: 7002, message: 'Unauthorized' })
+        throw new APIError({
+            status: 401,
+            code: 7002,
+            message: 'Unauthenticated',
+            headers: { 'WWW-Authenticate': 'Bearer' }
+        })
     }
     next()
 }
