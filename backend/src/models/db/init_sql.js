@@ -20,7 +20,8 @@ const {
     MIN_ENJOY,
     MAX_ENJOY,
     MIN_OPTION,
-    MAX_OPTION
+    MAX_OPTION,
+    PERM_USER
 } = require('../constants')
 
 // Globals
@@ -259,7 +260,7 @@ exports.sqlLikes = async function(db) {
 exports.sqlTables = function() {
     return `
     BEGIN TRANSACTION;
-    
+
 ${
     // Testing assumes a fresh database
     TESTING ? `
@@ -310,6 +311,7 @@ ${
             gradYear VARCHAR(8000),
             description VARCHAR(8000),
             picture VARCHAR(8000),
+            permissions INTEGER DEFAULT '${PERM_USER}',
             CONSTRAINT fk_degree_user
                 FOREIGN KEY (degreeID)
                 REFERENCES ${TABLE_NAMES.DEGREES} (id)
