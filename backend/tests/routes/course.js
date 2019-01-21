@@ -112,7 +112,7 @@ describe('Course route testing', () => {
         )
 
         it('returns correct Location', () => {
-            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/question/15031')
+            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/question/12025')
         })
 
         describe('new record exists', () => {
@@ -120,7 +120,7 @@ describe('Course route testing', () => {
 
             before(() => {
                 followUp = supertest
-                    .get('/api/course/ACCT1501/question/15031')
+                    .get('/api/course/ACCT1501/question/12025')
                     .set('Accept', 'application/json')
                     .expect(200)
 
@@ -155,7 +155,7 @@ describe('Course route testing', () => {
 
         it('correct number of questions', () =>
             request.then(({ body }) =>
-                expect(body.data.length).to.equal(6))
+                expect(body.data.length).to.equal(5))
         )
 
         it('question has a title', () =>
