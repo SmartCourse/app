@@ -1,9 +1,15 @@
-#!/bin/bash -e
+#!/bin/bash
 
-docker pull microsoft/mssql-server-linux:2017-latest
-# docker build --tag 'smartcourse-testing' .
+DOCKER_NAME='smartcourse-testing'
+
+docker kill $DOCKER_NAME
+docker rm $DOCKER_NAME
+
+set -ex
+
+# docker build --tag $DOCKER_NAME .
 docker run \
-    --name 'smartcourse-testing' \
+    --name $DOCKER_NAME \
     --env 'ACCEPT_EULA=Y' \
     --env "MSSQL_SA_PASSWORD=$AZURE_SQL_PASSWORD" \
     -p 1433:1433 \
@@ -11,7 +17,7 @@ docker run \
 
 sleep 20
 
-docker exec -it 'smartcourse-testing' /opt/mssql-tools/bin/sqlcmd \
+docker exec -it $DOCKER_NAME /opt/mssql-tools/bin/sqlcmd \
    -S localhost,1433 -U SA -P "$AZURE_SQL_PASSWORD" \
    -Q 'CREATE DATABASE testdb'
  

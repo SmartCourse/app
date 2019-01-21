@@ -7,8 +7,13 @@ const compression = require('compression')
 const db = require('./models/db')
 const PRE_RENDERED_TEMPLATES = require('../pre-rendered')
 const { APIErrorHandler } = require('./utils/error')
+const { staticFilesCache } = require('./utils/cache')
 
 const app = express()
+
+// ENV related things
+const ENV = app.get('env')
+const LOG = process.env.LOG
 
 // for json parsing
 app.use(express.json())
@@ -18,27 +23,28 @@ app.use(cookieParser())
 // for gzipping
 app.use(compression())
 
-// for caching
-app.use(express.static(path.join(__dirname, '../public'), {
-    maxAge: app.get('env') === 'development' ? '0' : '30d'
-}))
-
 // for auth tokens
 app.use(firebase)
 
 // for setting cors headers
 const { corsDev, corsProd } = require('./utils/cors')
 
-if (app.get('env') === 'development') {
+if (LOG) {
     app.use(logger('dev'))
-    app.use(corsDev)
-} else {
+}
+
+if (ENV === 'production') {
     app.use(corsProd)
+} else {
+    app.use(corsDev)
 }
 
 const apiRouter = require('./routes')
 
 app.use('/api', apiRouter)
+
+// for caching
+app.use(staticFilesCache)
 
 /*
  * These templates are prerendered to enchance SEO.

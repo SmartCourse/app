@@ -6,44 +6,36 @@ export function getReview(course, id) {
   return get(`/course/${course}/review/${id}`)
 }
 
-export function replyMapper({ id, likes, userLiked, user, body, timestamp }) {
+export function replyMapper({ id, timestamp, ...rest }) {
   return {
     id: String(id),
-    body,
-    likes,
-    userLiked,
-    user,
     published: formatDistanceStrict(new Date(timestamp), new Date(), { addSuffix: true }),
-    timestamp: new Date(timestamp)
+    timestamp: new Date(timestamp),
+    ...rest
   }
 }
 
-export function reviewMapper({ id, code, title, body, likes, numResponses, userLiked, recommend, user, timestamp }) {
+export function reviewMapper({ id, numResponses, userLiked, recommend, timestamp, ...rest }) {
   return {
     id: String(id),
-    code,
-    title,
-    body,
-    likes,
     userLiked,
     recommend: Boolean(recommend),
     numResponses,
-    user,
     published: formatDistanceStrict(new Date(timestamp), new Date(), { addSuffix: true }),
-    timestamp: new Date(timestamp)
+    timestamp: new Date(timestamp),
+    ...rest
   }
 }
 
 /* Maps a new review from a ReviewForm to something the backend understands */
-export function newReviewMapper({ title, body, recommend, enjoy, difficulty, teaching, workload }) {
+export function newReviewMapper({ recommend, enjoy, difficulty, teaching, workload, ...rest }) {
   return {
-    title,
-    body,
     recommend: { 'Yes': 1, 'No': 0 }[recommend],
     enjoy: Number(enjoy),
     difficulty: { '': 0, 'Easy': 1, 'Average': 2, 'Hard': 3 }[difficulty],
     teaching: { '': 0, 'Poor': 1, 'Average': 2, 'Excellent': 3 }[teaching],
-    workload: { '': 0, 'Light': 1, 'Average': 2, 'Heavy': 3 }[workload]
+    workload: { '': 0, 'Light': 1, 'Average': 2, 'Heavy': 3 }[workload],
+    ...rest
   }
 }
 

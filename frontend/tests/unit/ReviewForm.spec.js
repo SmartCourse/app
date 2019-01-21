@@ -4,7 +4,7 @@ import ReviewForm from '@/components/Reviews/ReviewForm'
 import Options from '@/components/Reviews/ReviewOptions'
 import AppButton from '@/components/AppButton'
 
-describe('ReviewForm.vue', () => {
+describe.skip('ReviewForm.vue', () => {
   before(function () {
     this.review = { title: 'test review title', body: 'test review', recommend: '', enjoy: '' }
     this.cbstub = () => true

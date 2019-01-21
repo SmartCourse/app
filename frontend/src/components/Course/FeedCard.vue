@@ -23,9 +23,12 @@
         <Recommend :recommend="recommend" v-if="cardType === 'Review'">
           {{ positiveOrNegativeText }}
         </Recommend>
-        <Semester>
+        <Semester v-if="session">
           {{ teachingPeriod }}
         </Semester>
+        <Badge v-if="pinned">
+          FAQ
+        </Badge>
       </div>
       <p class="likes">{{ likes > 0 && likes || 0 }} user{{ likes != 1 ? 's' : ''}} found this helpful</p>
     </div>
@@ -38,6 +41,7 @@ import SecondHeader from '@/components/Card/SecondaryHeader'
 import UserMini from '@/components/User/Mini'
 import Recommend from '@/components/Category/Recommend'
 import Semester from '@/components/Category/Semester'
+import Badge from '@/components/Category/Badge'
 
 export default {
   props: {
@@ -46,16 +50,20 @@ export default {
     published: String,
     user: Object,
     numResponses: { type: Number, default: 0 },
+    pinned: Number,
     code: String,
     id: String,
     cardType: String,
     recommend: Boolean,
-    teachingPeriod: { type: String, default: '18s2' }
+    // it's an id not a string, can be used
+    // to index the sessions array
+    session: Number
   },
   components: {
     Card,
     UserMini,
     Semester,
+    Badge,
     Recommend,
     SecondHeader
   },
@@ -66,6 +74,10 @@ export default {
     },
     positiveOrNegativeText() {
       return this.recommend ? 'Recommended' : 'Not Recommended'
+    },
+    teachingPeriod() {
+      return this.$store.getters.sessions.length &&
+        this.$store.getters.sessions[this.session - 1].shortName
     }
   }
 }
