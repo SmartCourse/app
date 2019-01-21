@@ -148,9 +148,9 @@ const actions = {
       // abort! abort!
       commit('ERROR', error.message)
       commit('SET_PROFILE', null)
-      // if there's a 403 error code, it means it's a valid account but no profile exists yet
+      // if there's a 7003 error code, it means it's a valid account but no profile exists yet
       // otherwise, completely abort auth
-      if (!error.code || error.code !== 403) {
+      if (!error.code || error.code !== 7003) {
         commit('SET_USER', null)
         await auth.signOut()
       }
