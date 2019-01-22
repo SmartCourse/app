@@ -73,7 +73,7 @@ class User {
             })
             .then(([profile]) => {
                 if (profile) return profile
-                throw new APIError({ status: 404, code: 7001, message: 'No such user' })
+                throw new APIError({ status: 404, code: 7001, message: 'No user profile for that uid' })
             })
     }
 

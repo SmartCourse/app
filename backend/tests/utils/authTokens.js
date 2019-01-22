@@ -20,29 +20,31 @@ function createGlobalIdToken(varName, displayName, email, password) {
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global[varName]}`)
                 .send({ displayName, degree: 'B. Arts', gradYear: 2018 })
+                .expect(200)
         })
 }
 
 async function setup() {
-    await Promise.all(
-        // create 3 backend tester users
-        new Array(3).fill(0).map((_, i) =>
-            createGlobalIdToken(
-                `idToken${i}`,
-                `BackendTester${i}`,
-                process.env[`BACKEND_TEST_EMAIL_${i}`],
-                process.env[`BACKEND_TEST_PASSWORD_${i}`]
-            )
-        // and the superuser
-        ) + [
-            createGlobalIdToken(
-                'idTokenSuper',
-                'SuperUser',
-                process.env.SUPERUSER_EMAIL,
-                process.env.SUPERUSER_PASSWORD
-            )
-        ]
+    // create 3 backend tester users
+    const promises = new Array(3).fill(0).map((_, i) =>
+        createGlobalIdToken(
+            `idToken${i}`,
+            `BackendTester${i}`,
+            process.env[`BACKEND_TEST_EMAIL_${i}`],
+            process.env[`BACKEND_TEST_PASSWORD_${i}`]
+        )
     )
+    // and the superuser
+    promises.push(
+        createGlobalIdToken(
+            'idTokenSuper',
+            'SuperUser',
+            process.env.SUPERUSER_EMAIL,
+            process.env.SUPERUSER_PASSWORD
+        )
+    )
+
+    await Promise.all(promises)
 }
 
 before(() => setup())

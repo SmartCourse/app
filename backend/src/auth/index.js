@@ -25,7 +25,7 @@ module.exports = function (req, _, next) {
             req.user = user
         })
         .catch(err => {
-            // invalid JWT
+            // invalid JWT, or missing profile
             console.warn(err.message)
         })
         .then(next)
