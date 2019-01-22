@@ -4,26 +4,48 @@ const assert = require('assert')
 const { expect } = require('chai')
 
 describe('Test review routes', function () {
-    // technically non-deterministic as relies on POST from course.js
-    describe('GET /api/course/COMP4920/review/1', () => {
-        let request
+    describe('GET /api/course/COMP4920/review', () => {
+        let postRequest
+        let location
+        let getRequest
+
+        const review = {
+            title: 'blinky',
+            body: 'blinky is good',
+            enjoy: 2,
+            recommend: 1,
+            workload: 1,
+            teaching: 3,
+            difficulty: 1,
+            session: 3
+        }
 
         before(() => {
-            request = supertest
-                .get('/api/course/COMP4920/review/1')
+            postRequest = supertest
+                .post('/api/course/COMP4920/review')
                 .set('Accept', 'application/json')
-                .expect('Content-Type', /json/)
-                .expect(200)
-            return request
+                .set('Authorization', `Bearer ${global.idToken0}`)
+                .send(review)
+                .expect(201)
+                .then((res) => {
+                    location = res.headers.location
+                    getRequest = supertest
+                        .get(location)
+                        .set('Accept', 'application/json')
+                        .expect('Content-Type', /json/)
+                        .expect(200)
+                    return getRequest
+                })
+            return postRequest
         })
 
         it('review has a body', () =>
-            request.then(({ body }) =>
+            getRequest.then(({ body }) =>
                 expect(body.body).is.a('string'))
         )
 
         it('review has a course code', () =>
-            request.then(({ body }) =>
+            getRequest.then(({ body }) =>
                 expect(body.courseID).to.be.a('number'))
         )
     })
