@@ -2,28 +2,6 @@ const app = require('../../src')
 const supertest = require('supertest')(app)
 const assert = require('assert')
 const { expect } = require('chai')
-const fetch = require('node-fetch')
-
-before(() => {
-    return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
-        {
-            'credentials': 'omit',
-            'headers': {},
-            'referrer': 'http://localhost:8080/login',
-            'referrerPolicy': 'no-referrer-when-downgrade',
-            'body': '{"email":"backendtest3@test.com","password":"abc123","returnSecureToken":true}',
-            'method': 'POST',
-            'mode': 'cors'
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            global.idToken3 = data.idToken
-            return supertest.post('/api/user')
-                .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken3}`)
-                .send({ displayName: 'BackendTester3', degree: 'B. Arts', gradYear: 2018 })
-        })
-})
 
 describe('Test review routes', function () {
     // technically non-deterministic as relies on POST from course.js
@@ -79,7 +57,7 @@ describe('Test review routes', function () {
             postRequest = supertest
                 .post('/api/course/ACCT1501/review')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken}`)
+                .set('Authorization', `Bearer ${global.idToken0}`)
                 .send(originalReview)
                 .expect(201)
                 .then((res) => {
@@ -88,7 +66,7 @@ describe('Test review routes', function () {
                         .put(location)
                         .send(editedReview)
                         .set('Accept', 'application/json')
-                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .set('Authorization', `Bearer ${global.idToken0}`)
                         .expect(200)
                     return putRequest
                 })
@@ -143,7 +121,7 @@ describe('Test review routes', function () {
             postRequest = supertest
                 .post('/api/course/ACCT1501/review')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken}`)
+                .set('Authorization', `Bearer ${global.idToken0}`)
                 .send(reviewBody)
                 .expect(201)
                 .then(res => {
@@ -152,7 +130,7 @@ describe('Test review routes', function () {
                         .post(`${location}/comment`)
                         .send({ body: 'this is a comment' })
                         .set('Accept', 'application/json')
-                        .set('Authorization', `Bearer ${global.idToken2}`)
+                        .set('Authorization', `Bearer ${global.idToken1}`)
                         .expect(201)
                     return postCommentRequest
                 })
@@ -160,7 +138,7 @@ describe('Test review routes', function () {
                     deleteRequest = supertest
                         .delete(location)
                         .set('Accept', 'application/json')
-                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .set('Authorization', `Bearer ${global.idToken0}`)
                         .expect(204)
                     return deleteRequest
                 })
@@ -249,7 +227,7 @@ describe('Test comment routes', () => {
             request = supertest
                 .post('/api/course/COMP4920/review/1/comment')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken3}`)
+                .set('Authorization', `Bearer ${global.idToken2}`)
                 .send({ body: requestBody })
 
             return request
@@ -284,7 +262,7 @@ describe('Test comment routes', () => {
 
             it('has the correct author', () =>
                 followUp.then(({ body }) =>
-                    expect(body.user.displayName).to.equal('BackendTester3'))
+                    expect(body.user.displayName).to.equal('BackendTester2'))
             )
         })
     })
@@ -298,7 +276,7 @@ describe('Test comment routes', () => {
             postRequest = supertest
                 .post('/api/course/ACCT1501/review/1/comment')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken}`)
+                .set('Authorization', `Bearer ${global.idToken0}`)
                 .send({ body: 'original text' })
                 .expect(201)
                 .then((res) => {
@@ -307,7 +285,7 @@ describe('Test comment routes', () => {
                         .put(location)
                         .send({ body: 'edited text' })
                         .set('Accept', 'application/json')
-                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .set('Authorization', `Bearer ${global.idToken0}`)
                         .expect(200)
                     return putRequest
                 })
@@ -350,7 +328,7 @@ describe('Test comment routes', () => {
             postRequest = supertest
                 .post('/api/course/ACCT1501/review/1/comment')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken}`)
+                .set('Authorization', `Bearer ${global.idToken0}`)
                 .send({ body: 'original text' })
                 .expect(201)
                 .then(res => {
@@ -359,7 +337,7 @@ describe('Test comment routes', () => {
                     deleteRequest = supertest
                         .delete(location)
                         .set('Accept', 'application/json')
-                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .set('Authorization', `Bearer ${global.idToken0}`)
                         .expect(204)
                     return deleteRequest
                 })
