@@ -6,6 +6,7 @@
  * 1000 - misc
  *   1001:
  *   1002: validation error
+ *   1003: authorization: you don't have permission to do that!
  * 2000 - subject
  *   2001: subject doesn't exist
  * 3000 - course
@@ -26,7 +27,7 @@
  *   6002: invalid body
  * 7000 - user/auth
  *   7001: user doesn't exist
- *   7002: not authenticated because you need to log in to firebase
+ *   7002: not authenticated because of missing or malformed firebase token
  *   7003: authenticated, but not authorized because you need to create a profile
  *   7004: invalid display name
  *   7005: invalid degree
