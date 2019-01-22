@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { USERS, DEGREES } } = require('./constants')
+const { TABLE_NAMES: { USERS, DEGREES }, PERM_ADMIN, PERM_USER } = require('./constants')
 const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are User related */
@@ -103,9 +103,12 @@ class User {
             throw new APIError({ status: 400, code: 1002, message: 'Invalid profile information', errors })
         }
 
+        // create superuser
+        data.permissions = data.uid === process.env.SUPERUSER_UID ? PERM_ADMIN : PERM_USER
+
         return this.db
-            .run(`INSERT INTO ${USERS} (displayName, email, uid, gradYear, degreeID)
-                SELECT @displayName, @email, @uid, @gradYear, id
+            .run(`INSERT INTO ${USERS} (displayName, email, uid, gradYear, degreeID, permissions)
+                SELECT @displayName, @email, @uid, @gradYear, id, @permissions
                 FROM degrees
                 WHERE name = @name;
                 SELECT @@identity AS id

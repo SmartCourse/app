@@ -406,8 +406,7 @@ describe('Test answer routes', () => {
                     .get(location)
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
-                // TODO: at the moment there is no 404 implemented for missing posts
-                // .expect(404)
+                    .expect(404)
                 return getRequest
             })
 
@@ -440,10 +439,10 @@ describe('Test answer routes', () => {
     })
 
     describe('DELETE /api/course/ACCT1501/question/1/answer/ (admin)', () => {
+        // create a comment as regular user, then delete as admin
         let postRequest
         let deleteRequest
         let location
-        let id
 
         before(() => {
             postRequest = supertest
@@ -453,12 +452,11 @@ describe('Test answer routes', () => {
                 .send({ body: 'original text' })
                 .expect(201)
                 .then(res => {
-                    id = Number(res.headers['x-id'])
                     location = res.headers.location
                     deleteRequest = supertest
                         .delete(location)
                         .set('Accept', 'application/json')
-                        .set('Authorization', `Bearer ${global.idToken0}`)
+                        .set('Authorization', `Bearer ${global.idTokenSuper}`)
                         .expect(204)
                     return deleteRequest
                 })
@@ -480,8 +478,7 @@ describe('Test answer routes', () => {
                     .get(location)
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
-                // TODO: at the moment there is no 404 implemented for missing posts
-                // .expect(404)
+                    .expect(404)
                 return getRequest
             })
 
@@ -490,25 +487,6 @@ describe('Test answer routes', () => {
                 getRequest.then(({ body }) => {
                     expect(body.body).to.equal(undefined)
                 })
-            )
-        })
-
-        describe('follow up to verify deleted answer is missing from list of answers', () => {
-            let getCommentRequest
-
-            before(() => {
-                getCommentRequest = supertest
-                    .get('/api/course/ACCT1501/question/1/answers')
-                    .set('Accept', 'application/json')
-                    .expect('Content-Type', /json/)
-                    .expect(200)
-                return getCommentRequest
-            })
-
-            it('answer is gone', () =>
-                // check the posted comment doesn't appear in the list
-                getCommentRequest.then(({ body }) =>
-                    expect(body.filter(({ cid }) => cid === id).length).to.equal(0))
             )
         })
     })

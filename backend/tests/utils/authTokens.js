@@ -25,6 +25,7 @@ function createGlobalIdToken(varName, displayName, email, password) {
 
 async function setup() {
     await Promise.all(
+        // create 3 backend tester users
         new Array(3).fill(0).map((_, i) =>
             createGlobalIdToken(
                 `idToken${i}`,
@@ -32,7 +33,15 @@ async function setup() {
                 process.env[`BACKEND_TEST_EMAIL_${i}`],
                 process.env[`BACKEND_TEST_PASSWORD_${i}`]
             )
-        )
+        // and the superuser
+        ) + [
+            createGlobalIdToken(
+                'idTokenSuper',
+                'SuperUser',
+                process.env.SUPERUSER_EMAIL,
+                process.env.SUPERUSER_PASSWORD
+            )
+        ]
     )
 }
 
