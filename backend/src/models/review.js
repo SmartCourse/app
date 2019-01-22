@@ -6,7 +6,7 @@ const {
     MIN_OPTION,
     MAX_OPTION,
     TABLE_NAMES: { REVIEWS, COURSES, COMMENTS },
-    PERM_MOD
+    PERMISSIONS_MOD
 } = require('./constants')
 const {
     APIError,
@@ -141,7 +141,7 @@ class Review {
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${REVIEWS} WHERE id=@id)
                       THROW ${toSQLErrorCode(5001)}, 'The review does not exist', 1;
-                  IF ${permissions} < ${PERM_MOD} AND NOT EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)
+                  IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)
                       THROW ${toSQLErrorCode(1003)}, 'You cannot edit this review', 1;
                   ELSE
                       UPDATE ${REVIEWS}
@@ -170,7 +170,7 @@ class Review {
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${REVIEWS} WHERE id=@id)
                       THROW ${toSQLErrorCode(5001)}, 'The question does not exist', 1;
-                  IF ${permissions} < ${PERM_MOD} AND NOT EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)
+                  IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)
                       THROW ${toSQLErrorCode(1003)}, 'You cannot delete this question', 1;
                   ELSE
                     BEGIN

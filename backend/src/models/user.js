@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { USERS, DEGREES }, PERM_ADMIN, PERM_USER } = require('./constants')
+const { TABLE_NAMES: { USERS, DEGREES }, PERMISSIONS_ADMIN, PERMISSIONS_USER } = require('./constants')
 const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are User related */
@@ -104,7 +104,7 @@ class User {
         }
 
         // create superuser
-        data.permissions = data.uid === process.env.SUPERUSER_UID ? PERM_ADMIN : PERM_USER
+        data.permissions = data.uid === process.env.SUPERUSER_UID ? PERMISSIONS_ADMIN : PERMISSIONS_USER
 
         return this.db
             .run(`INSERT INTO ${USERS} (displayName, email, uid, gradYear, degreeID, permissions)

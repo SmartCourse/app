@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { COMMENTS, USERS, DEGREES }, PERM_MOD } = require('./constants')
+const { TABLE_NAMES: { COMMENTS, USERS, DEGREES }, PERMISSIONS_MOD } = require('./constants')
 const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are comment related */
@@ -98,7 +98,7 @@ class Comment {
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${COMMENTS} WHERE id=@id)
                       THROW ${toSQLErrorCode(6001)}, 'The comment does not exist', 1;
-                  IF ${permissions} < ${PERM_MOD} AND NOT EXISTS (SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
+                  IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
                       THROW ${toSQLErrorCode(1003)}, 'You cannot edit this comment', 1;
                   ELSE
                       UPDATE ${COMMENTS}
@@ -122,7 +122,7 @@ class Comment {
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${COMMENTS} WHERE id=@id)
                       THROW ${toSQLErrorCode(6001)}, 'The comment does not exist', 1;
-                  IF ${permissions} < ${PERM_MOD} AND NOT EXISTS (SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
+                  IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
                       THROW ${toSQLErrorCode(1003)}, 'You cannot delete this comment', 1;
                   ELSE
                       DELETE ${COMMENTS}

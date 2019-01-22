@@ -21,7 +21,7 @@ const {
     MAX_ENJOY,
     MIN_OPTION,
     MAX_OPTION,
-    PERM_USER
+    PERMISSIONS_USER
 } = require('../constants')
 
 // Globals
@@ -311,7 +311,7 @@ ${
             gradYear VARCHAR(8000),
             description VARCHAR(8000),
             picture VARCHAR(8000),
-            permissions INTEGER DEFAULT '${PERM_USER}',
+            permissions INTEGER DEFAULT '${PERMISSIONS_USER}',
             CONSTRAINT fk_degree_user
                 FOREIGN KEY (degreeID)
                 REFERENCES ${TABLE_NAMES.DEGREES} (id)
