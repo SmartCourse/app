@@ -5,7 +5,8 @@ const {
     MAX_ENJOY,
     MIN_OPTION,
     MAX_OPTION,
-    TABLE_NAMES: { REVIEWS, COURSES, COMMENTS }
+    TABLE_NAMES: { REVIEWS, COURSES, COMMENTS },
+    PERM_MOD
 } = require('./constants')
 const {
     APIError,
@@ -135,21 +136,27 @@ class Review {
      * @param {object}  body  object containing review data including
                               user id, body of the review and ratings
      */
-    putReview(id, { userID, body, recommend, enjoy, difficulty, teaching, workload }) {
+    putReview(id, { userID, permissions, body, recommend, enjoy, difficulty, teaching, workload }) {
         // TODO 404 errors and permissions..
         return this.db
-            .run(`UPDATE ${REVIEWS}
-                    SET
-                      body=@body,
-                      recommend=@recommend,
-                      enjoy=@enjoy,
-                      difficulty=@difficulty,
-                      teaching=@teaching,
-                      workload=@workload
-                    WHERE userID=@userID AND id=@id`,
+            .run(`IF NOT EXISTS(SELECT * FROM ${REVIEWS} WHERE id=@id)
+                      THROW ${toSQLErrorCode(5001)}, 'The review does not exist', 1;
+                  IF ${permissions} < ${PERM_MOD} AND NOT EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)
+                      THROW ${toSQLErrorCode(1003)}, 'You cannot edit this review', 1;
+                  ELSE
+                      UPDATE ${REVIEWS}
+                      SET
+                        body=@body,
+                        recommend=@recommend,
+                        enjoy=@enjoy,
+                        difficulty=@difficulty,
+                        teaching=@teaching,
+                        workload=@workload
+                      WHERE userID=@userID AND id=@id`,
             {
                 [REVIEWS]: { userID, body, id, recommend, enjoy, difficulty, teaching, workload }
             })
+            .catch(translateSQLError({ [toSQLErrorCode(5001)]: 404, [toSQLErrorCode(1003)]: 403 }))
     }
 
     /**
@@ -157,23 +164,26 @@ class Review {
      * @param {number}  id      The id of the question
      * @param {object}  userID  The id of the user
      */
-    deleteReview(id, userID) {
+    deleteReview(id, userID, permissions) {
         // The query does an auth check with userID before deleting
         // TODO throw appropriate errors
         return this.db
-            .run(`BEGIN TRANSACTION;
-                    IF EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)
+            .run(`IF NOT EXISTS(SELECT * FROM ${REVIEWS} WHERE id=@id)
+                      THROW ${toSQLErrorCode(5001)}, 'The question does not exist', 1;
+                  IF ${permissions} < ${PERM_MOD} AND NOT EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)
+                      THROW ${toSQLErrorCode(1003)}, 'You cannot delete this question', 1;
+                  ELSE
                     BEGIN
                       DELETE ${COMMENTS}
                         WHERE reviewID=@reviewID;
                       DELETE ${REVIEWS}
                         WHERE id=@id;
-                    END;
-                  COMMIT;`,
+                    END;`,
             {
                 [COMMENTS]: { reviewID: id },
                 [REVIEWS]: { userID, id }
             })
+            .catch(translateSQLError({ [toSQLErrorCode(5001)]: 404, [toSQLErrorCode(1003)]: 403 }))
     }
 }
 
