@@ -1,29 +1,7 @@
-const fetch = require('node-fetch')
 const app = require('../../src')
 const assert = require('assert')
 const supertest = require('supertest')(app)
 const { expect } = require('chai')
-
-before(() => {
-    return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
-        {
-            'credentials': 'omit',
-            'headers': {},
-            'referrer': 'http://localhost:8080/login',
-            'referrerPolicy': 'no-referrer-when-downgrade',
-            'body': '{"email":"backendtest2@test.com","password":"abc123","returnSecureToken":true}',
-            'method': 'POST',
-            'mode': 'cors'
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            global.idToken2 = data.idToken
-            return supertest.post('/api/user')
-                .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken2}`)
-                .send({ displayName: 'BackendTester2', degree: 'B. Arts', gradYear: 2018 })
-        })
-})
 
 describe('Test question routes', () => {
     describe('GET /api/course/COMP4920/question/1', () => {
@@ -63,7 +41,7 @@ describe('Test question routes', () => {
             postRequest = supertest
                 .post('/api/course/ACCT1501/question')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken}`)
+                .set('Authorization', `Bearer ${global.idToken0}`)
                 .send({ body: 'original text', title: 'jeff' })
                 .expect(201)
                 .then((res) => {
@@ -72,7 +50,7 @@ describe('Test question routes', () => {
                         .put(location)
                         .send({ body: 'edited text' })
                         .set('Accept', 'application/json')
-                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .set('Authorization', `Bearer ${global.idToken0}`)
                         .expect(200)
                     return putRequest
                 })
@@ -127,7 +105,7 @@ describe('Test question routes', () => {
             postRequest = supertest
                 .post('/api/course/ACCT1501/question')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken}`)
+                .set('Authorization', `Bearer ${global.idToken0}`)
                 .send({ body: 'original text', title: 'jeff' })
                 .expect(201)
                 .then(res => {
@@ -136,7 +114,7 @@ describe('Test question routes', () => {
                         .post(`${location}/answer`)
                         .send({ body: 'this is a comment' })
                         .set('Accept', 'application/json')
-                        .set('Authorization', `Bearer ${global.idToken2}`)
+                        .set('Authorization', `Bearer ${global.idToken1}`)
                         .expect(201)
                     return postCommentRequest
                 })
@@ -144,7 +122,7 @@ describe('Test question routes', () => {
                     deleteRequest = supertest
                         .delete(location)
                         .set('Accept', 'application/json')
-                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .set('Authorization', `Bearer ${global.idToken0}`)
                         .expect(204)
                     return deleteRequest
                 })
@@ -208,7 +186,7 @@ describe('Test answer routes', () => {
                 .post('/api/course/COMP4920/question/1/answer')
                 .send({ body })
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken2}`)
+                .set('Authorization', `Bearer ${global.idToken1}`)
 
             return request
         })
@@ -237,7 +215,7 @@ describe('Test answer routes', () => {
             })
 
             it('has the correct author', () => {
-                expect(answer.user.displayName).to.equal('BackendTester2')
+                expect(answer.user.displayName).to.equal('BackendTester1')
             })
 
             it('has the correct body', () => {
@@ -279,7 +257,7 @@ describe('Test answer routes', () => {
                 .put('/api/course/COMP4920/question/1/likes')
                 .send({ value: 0 })
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken2}`)
+                .set('Authorization', `Bearer ${global.idToken1}`)
                 .expect('Content-Type', /json/)
                 .expect(200)
             return request
@@ -324,7 +302,7 @@ describe('Test answer routes', () => {
                 .post('/api/course/COMP4920/question/1/answer')
                 .send({ badBody: 'superruuu____testu' })
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken2}`)
+                .set('Authorization', `Bearer ${global.idToken1}`)
                 .expect('Content-Type', /json/)
                 .expect(400)
             return request
@@ -345,7 +323,7 @@ describe('Test answer routes', () => {
             postRequest = supertest
                 .post('/api/course/ACCT1501/question/1/answer')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken}`)
+                .set('Authorization', `Bearer ${global.idToken0}`)
                 .send({ body: 'original text' })
                 .expect(201)
                 .then((res) => {
@@ -354,7 +332,7 @@ describe('Test answer routes', () => {
                         .put(location)
                         .send({ body: 'edited text' })
                         .set('Accept', 'application/json')
-                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .set('Authorization', `Bearer ${global.idToken0}`)
                         .expect(200)
                     return putRequest
                 })
@@ -397,7 +375,7 @@ describe('Test answer routes', () => {
             postRequest = supertest
                 .post('/api/course/ACCT1501/question/1/answer')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken}`)
+                .set('Authorization', `Bearer ${global.idToken0}`)
                 .send({ body: 'original text' })
                 .expect(201)
                 .then(res => {
@@ -406,7 +384,7 @@ describe('Test answer routes', () => {
                     deleteRequest = supertest
                         .delete(location)
                         .set('Accept', 'application/json')
-                        .set('Authorization', `Bearer ${global.idToken}`)
+                        .set('Authorization', `Bearer ${global.idToken0}`)
                         .expect(204)
                     return deleteRequest
                 })
@@ -428,8 +406,7 @@ describe('Test answer routes', () => {
                     .get(location)
                     .set('Accept', 'application/json')
                     .expect('Content-Type', /json/)
-                // TODO: at the moment there is no 404 implemented for missing posts
-                // .expect(404)
+                    .expect(404)
                 return getRequest
             })
 
@@ -457,6 +434,59 @@ describe('Test answer routes', () => {
                 // check the posted comment doesn't appear in the list
                 getCommentRequest.then(({ body }) =>
                     expect(body.filter(({ cid }) => cid === id).length).to.equal(0))
+            )
+        })
+    })
+
+    describe('DELETE /api/course/ACCT1501/question/1/answer/ (admin)', () => {
+        // create a comment as regular user, then delete as admin
+        let postRequest
+        let deleteRequest
+        let location
+
+        before(() => {
+            postRequest = supertest
+                .post('/api/course/ACCT1501/question/1/answer')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken0}`)
+                .send({ body: 'original text' })
+                .expect(201)
+                .then(res => {
+                    location = res.headers.location
+                    deleteRequest = supertest
+                        .delete(location)
+                        .set('Accept', 'application/json')
+                        .set('Authorization', `Bearer ${global.idTokenSuper}`)
+                        .expect(204)
+                    return deleteRequest
+                })
+
+            return postRequest
+        })
+
+        it('has the correct body (undefined)', () =>
+            deleteRequest.then(({ body }) => {
+                expect(body.body).to.equal(undefined)
+            })
+        )
+
+        describe('follow up to verify deleted answer is gone', () => {
+            let getRequest
+
+            before(() => {
+                getRequest = supertest
+                    .get(location)
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(404)
+                return getRequest
+            })
+
+            // TODO: not sure what should be in the body... undefined may not be right
+            it('has the correct body (undefined)', () =>
+                getRequest.then(({ body }) => {
+                    expect(body.body).to.equal(undefined)
+                })
             )
         })
     })

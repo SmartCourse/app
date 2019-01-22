@@ -9,7 +9,7 @@ exports.MAX_CONNECTIONS = 100
 exports.DB_CONFIG = {
     // admin creds used for test and development
     userName: TESTING ? 'sa' : process.env.AZURE_SQL_USER,
-    password: process.env.AZURE_SQL_PASSWORD,
+    password: TESTING ? process.env.LOCAL_SQL_PASSWORD : process.env.AZURE_SQL_PASSWORD,
     server: TESTING ? 'localhost' : process.env.AZURE_SQL_SERVER,
     options:
         {

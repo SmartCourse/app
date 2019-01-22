@@ -88,6 +88,7 @@ exports.putReplyLikes = function ({ user, params, body, query }, res, next) {
 /* PUT updated review body */
 exports.putReview = function ({ user, params, body }, res, next) {
     body.userID = user.id
+    body.permissions = user.permissions
     reviewModel.putReview(params.id, body)
         .then(() => exports.getReview({ user, params }, res))
         .catch(next)
@@ -95,7 +96,7 @@ exports.putReview = function ({ user, params, body }, res, next) {
 
 /* DELETE review */
 exports.deleteReview = function ({ user, params }, res, next) {
-    reviewModel.deleteReview(params.id, user.id)
+    reviewModel.deleteReview(params.id, user.id, user.permissions)
         .then(deleteResponseHandler(res))
         .catch(next)
 }

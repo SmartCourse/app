@@ -16,6 +16,12 @@ exports.MAX_ENJOY = 5
 exports.MIN_OPTION = 0
 exports.MAX_OPTION = 3
 
+// Permissions Constants (TODO:this properly, more granularity etc)
+exports.PERMISSIONS_ANON = 0 // not logged in; read only
+exports.PERMISSIONS_USER = 1 // regular user; read & write everywhere, delete & edit everything they own
+exports.PERMISSIONS_MOD = 2 // moderator; read, write, delete, edit everything
+exports.PERMISSIONS_ADMIN = 3 // admin; everything - TODO: delete/ban users/ip addresses/etc?
+
 // Paging Constants
 exports.PAGE_SIZE = 10
 
@@ -356,6 +362,10 @@ exports.TABLE_COLUMNS = {
         picture: {
             type: TYPES.VarChar,
             options: { nullable: true }
+        },
+        permissions: {
+            type: TYPES.Int,
+            options: { nullable: false }
         }
     }
 }

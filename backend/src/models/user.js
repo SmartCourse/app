@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { USERS, DEGREES } } = require('./constants')
+const { TABLE_NAMES: { USERS, DEGREES }, PERMISSIONS_ADMIN, PERMISSIONS_USER } = require('./constants')
 const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are User related */
@@ -16,7 +16,7 @@ class User {
     getProfile(id) {
         return this.db
             .run(`SELECT u.id, u.email, u.displayName, u.gradYear, u.description,
-                u.picture, u.reputation, u.joined, d.name AS degree
+                u.picture, u.reputation, u.joined, u.permissions, d.name AS degree
                 FROM ${USERS} u
                 JOIN ${DEGREES} d ON d.id = u.degreeID
                 WHERE u.id=@id`,
@@ -73,7 +73,7 @@ class User {
             })
             .then(([profile]) => {
                 if (profile) return profile
-                throw new APIError({ status: 404, code: 7001, message: 'No such user' })
+                throw new APIError({ status: 404, code: 7001, message: 'No user profile for that uid' })
             })
     }
 
@@ -103,9 +103,12 @@ class User {
             throw new APIError({ status: 400, code: 1002, message: 'Invalid profile information', errors })
         }
 
+        // create superuser
+        data.permissions = data.uid === process.env.SUPERUSER_UID ? PERMISSIONS_ADMIN : PERMISSIONS_USER
+
         return this.db
-            .run(`INSERT INTO ${USERS} (displayName, email, uid, gradYear, degreeID)
-                SELECT @displayName, @email, @uid, @gradYear, id
+            .run(`INSERT INTO ${USERS} (displayName, email, uid, gradYear, degreeID, permissions)
+                SELECT @displayName, @email, @uid, @gradYear, id, @permissions
                 FROM degrees
                 WHERE name = @name;
                 SELECT @@identity AS id

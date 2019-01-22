@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { COMMENTS, USERS, DEGREES } } = require('./constants')
+const { TABLE_NAMES: { COMMENTS, USERS, DEGREES }, PERMISSIONS_MOD } = require('./constants')
 const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are comment related */
@@ -92,14 +92,14 @@ class Comment {
      * Put a comment - i.e. update the body
      * @param {number}  id    The id of the comment
      * @param {object}  body  object containing comment data including
-                              user id and body of the comment
+                              user id, permission level and body of the comment
      */
-    putComment(id, { userID, body }) {
+    putComment(id, { userID, permissions, body }) {
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${COMMENTS} WHERE id=@id)
                       THROW ${toSQLErrorCode(6001)}, 'The comment does not exist', 1;
-                  IF NOT EXISTS(SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
-                      THROW ${toSQLErrorCode(7002)}, 'You cannot edit this comment', 1;
+                  IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
+                      THROW ${toSQLErrorCode(1003)}, 'You cannot edit this comment', 1;
                   ELSE
                       UPDATE ${COMMENTS}
                       SET body=@body
@@ -107,26 +107,30 @@ class Comment {
             {
                 [COMMENTS]: { userID, body, id }
             })
-            .catch(translateSQLError({ [toSQLErrorCode(6001)]: 404, [toSQLErrorCode(7002)]: 403 }))
+            .catch(translateSQLError({ [toSQLErrorCode(6001)]: 404, [toSQLErrorCode(1003)]: 403 }))
     }
 
     /**
      * Delete a comment and its answers (although answering comments isn't yet supported...).
-     * @param {number}  id      The id of the comment
-     * @param {object}  userID  The id of the user
+     * @param {number}  id          The id of the comment
+     * @param {number}  permissions The permission level of the user
+     * @param {object}  userID      The id of the user
      */
-    deleteComment(id, userID) {
+    deleteComment(id, permissions, userID) {
         // The query does an implicit auth check with userID before deleting
         // TODO: throw proper errors
         return this.db
-            .run(`BEGIN TRANSACTION;
-                    IF EXISTS (SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
+            .run(`IF NOT EXISTS(SELECT * FROM ${COMMENTS} WHERE id=@id)
+                      THROW ${toSQLErrorCode(6001)}, 'The comment does not exist', 1;
+                  IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
+                      THROW ${toSQLErrorCode(1003)}, 'You cannot delete this comment', 1;
+                  ELSE
                       DELETE ${COMMENTS}
-                        WHERE commentParent=@commentParent OR id=@id;
-                  COMMIT;`,
+                      WHERE commentParent=@commentParent OR id=@id;`,
             {
                 [COMMENTS]: { userID, id, commentParent: id }
             })
+            .catch(translateSQLError({ [toSQLErrorCode(6001)]: 404, [toSQLErrorCode(1003)]: 403 }))
     }
 }
 

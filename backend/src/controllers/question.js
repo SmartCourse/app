@@ -96,6 +96,7 @@ exports.putAnswerLikes = function ({ user, params, body, query }, res, next) {
 /* PUT updated question body */
 exports.putQuestion = function ({ user, params, body }, res, next) {
     body.userID = user.id
+    body.permissions = user.permissions
     questionModel.putQuestion(params.id, body)
         .then(() => exports.getQuestion({ user, params }, res))
         .catch(next)
@@ -103,7 +104,7 @@ exports.putQuestion = function ({ user, params, body }, res, next) {
 
 /* DELETE question */
 exports.deleteQuestion = function ({ user, params }, res, next) {
-    questionModel.deleteQuestion(params.id, user.id)
+    questionModel.deleteQuestion(params.id, user.id, user.permissions)
         .then(deleteResponseHandler(res))
         .catch(next)
 }
