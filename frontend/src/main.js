@@ -1,9 +1,18 @@
 import Vue from 'vue'
+import VueAnalytics from 'vue-analytics'
+
 import App from './App'
 import router from './router'
 import store from './store'
 import injectInitialState from './utils/inject-state'
 import './config'
+
+// bring in analytics here after app is booted
+// https://github.com/MatteoGabriele/vue-analytics/blob/master/docs/page-tracking.md
+Vue.use(VueAnalytics, {
+  id: 'UA-133002215-1',
+  router
+})
 
 const app = new Vue({ // eslint-disable-line no-new
   router,
