@@ -1,4 +1,4 @@
-import { get, post, put } from './index'
+import { get, post, put, remove } from './index'
 import formatDistanceStrict from 'date-fns/formatDistanceStrict'
 
 /* get question */
@@ -31,6 +31,10 @@ export function questionMapper({ id, numAnswers: numResponses, timestamp, ...res
  */
 export function postQuestion(course, data) {
   return post(`/course/${course}/question`, { data })
+}
+
+export function deleteQuestion(course, id) {
+  return remove(`/course/${course}/question/${id}`)
 }
 
 export function getAnswers(course, id) {

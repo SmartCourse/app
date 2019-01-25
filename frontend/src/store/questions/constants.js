@@ -1,6 +1,7 @@
 import {
   getQuestion,
   postQuestion,
+  deleteQuestion,
   getAnswers,
   postAnswer,
   getLikes,
@@ -12,6 +13,7 @@ import {
 export const ACTIONS = {
   GET_QUESTION: Symbol('getQuestion'),
   POST_QUESTION: Symbol('postQuestion'),
+  DELETE_QUESTION: Symbol('deleteQuestion'),
   GET_ANSWERS: Symbol('getAnswers'),
   POST_ANSWER: Symbol('postAnswer'),
   GET_LIKES: Symbol('getLikes'),
@@ -23,6 +25,7 @@ export const ACTIONS = {
 export const REQUEST = {
   [ACTIONS.GET_QUESTION]: getQuestion,
   [ACTIONS.POST_QUESTION]: postQuestion,
+  [ACTIONS.DELETE_QUESTION]: deleteQuestion,
   [ACTIONS.GET_ANSWERS]: getAnswers,
   [ACTIONS.POST_ANSWER]: postAnswer,
   [ACTIONS.GET_LIKES]: getLikes,
@@ -34,6 +37,7 @@ export const REQUEST = {
 export const COMMITS = {
   [ACTIONS.GET_QUESTION]: 'FOCUS_QUESTION',
   [ACTIONS.POST_QUESTION]: 'SET_QUESTION',
+  [ACTIONS.DELETE_QUESTION]: 'FOCUS_QUESTION',
   [ACTIONS.GET_ANSWERS]: 'FOCUS_ANSWERS',
   [ACTIONS.POST_ANSWER]: 'APPEND_ANSWER',
   [ACTIONS.GET_LIKES]: 'FOCUS_LIKES',

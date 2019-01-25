@@ -91,6 +91,9 @@ const actions = {
   async postQuestion ({ dispatch }, { code, form }) {
     return dispatch('doRequest', { action: ACTIONS.POST_QUESTION, load: 'TOGGLE_LOADING_QUESTION', args: [code, form] })
   },
+  async deleteQuestion ({ dispatch }, { code, id }) {
+    return dispatch('doRequest', { action: ACTIONS.DELETE_QUESTION, load: 'TOGGLE_LOADING_QUESTION', args: [code, id] })
+  },
   async getAnswers ({ dispatch }, { code, id }) {
     return dispatch('doRequest', { action: ACTIONS.GET_ANSWERS, load: 'TOGGLE_LOADING_ANSWERS', args: [code, id] })
   },
