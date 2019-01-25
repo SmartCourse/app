@@ -1,14 +1,21 @@
-const { ANONYMOUS } = require('../models/constants')
 const reviewModel = require('../models/review')()
 const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
-const { getResponseHandler, postResponseHandler, deleteResponseHandler, userLikesMapper } = require('../utils/helpers')
-const { TABLE_NAMES } = require('../models/constants')
+const {
+    getResponseHandler,
+    postResponseHandler,
+    deleteResponseHandler,
+    userLikesMapper,
+    postPermissionsMapper
+} = require('../utils/helpers')
+const { TABLE_NAMES, PERMISSIONS_ANON, ANONYMOUS } = require('../models/constants')
 
 /* GET review for single id. */
 exports.getReview = function ({ user, params }, res, next) {
     const userID = (user && user.id) || ANONYMOUS
+    const userPermissions = (user && user.permissions) || PERMISSIONS_ANON
+
     Promise.all([
         reviewModel.getReview(params.id),
         likesModel.getLikes({ type: TABLE_NAMES.REVIEWS, id: params.id }),
@@ -21,6 +28,7 @@ exports.getReview = function ({ user, params }, res, next) {
                     return { ...review, ...likes, ...userLiked, user: userInfo }
                 })
         })
+        .then(postPermissionsMapper(userPermissions, userID))
         .then(getResponseHandler(res))
         .catch(next)
 }
@@ -28,6 +36,8 @@ exports.getReview = function ({ user, params }, res, next) {
 /* GET top level review replies . */
 exports.getReviewComments = function ({ user, params, query }, res, next) {
     const userID = (user && user.id) || ANONYMOUS
+    const userPermissions = (user && user.permissions) || PERMISSIONS_ANON
+
     commentModel.getComments({ reviewID: params.id }, query.p)
         .then(replies => Promise.all([
             replies,
@@ -40,7 +50,8 @@ exports.getReviewComments = function ({ user, params, query }, res, next) {
                     { type: TABLE_NAMES.COMMENTS, id: reply.id, userID }))
             )
         ]))
-        .then(([reviews, likes, userLikes]) => reviews.map(userLikesMapper(likes, userLikes)))
+        .then(([replies, likes, userLikes]) => replies.map(userLikesMapper(likes, userLikes)))
+        .then((replies) => replies.map(postPermissionsMapper(userPermissions, userID)))
         .then(getResponseHandler(res))
         .catch(next)
 }

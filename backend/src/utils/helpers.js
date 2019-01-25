@@ -1,4 +1,5 @@
 const { APIError } = require('./error')
+const { PERMISSIONS_MOD } = require('../models/constants')
 
 /**
  * Takes a successful GET response and creates
@@ -119,6 +120,35 @@ exports.userLikeMapper = (likes, userLiked, {
     },
     ...rest
 })
+
+/**
+ * Return a function that determines the edit and delete permissions for a post
+ * and adds them as meta fields
+ * Used by comment, questions and review controllers to create meta field
+ * @param {number}    userPermissions permissions of the authenticated user
+ * @param {number}    userID id of the authenticated user
+ */
+exports.postPermissionsMapper = function(userPermissions, userID) {
+    return (post) => {
+        let val = false
+
+        // note that post.user.id shouldn't ever be ANONYMOUS aka 0 because mssql ids start at 1
+        // so we can omit a check for ANONYMOUS or PERMISSIONS_ANON
+        if (userPermissions >= PERMISSIONS_MOD) {
+            val = true
+        } else if (userID === post.user.id) {
+            val = true
+        }
+
+        return {
+            ...post,
+            meta: {
+                canDelete: val,
+                canEdit: val
+            }
+        }
+    }
+}
 
 /**
  * Convert a string to utf8
