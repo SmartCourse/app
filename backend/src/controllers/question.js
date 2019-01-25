@@ -35,6 +35,9 @@ exports.getQuestion = function ({ user, params }, res, next) {
 
 /* get the questions for a specific user */
 exports.getQuestionsByUserId = function({ params: { id } }, res, next) {
+    // TODO fix this: it should return objects that are just like getQuestion
+    // requires fix here and in the model
+    // main problem is that you don't know which course each question is about!
     questionModel.getQuestionsByUserID(id)
         .then(getResponseHandler(res))
         .catch(next)
