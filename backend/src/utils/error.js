@@ -42,6 +42,7 @@
 exports.APIErrorHandler = function(err, req, res, next) {
     // Log stack trace
     // Just use first 3 lines because rest is usually Express internals..
+    // Note that printing the stack also prints err.message
     console.error(err.stack.split('\n').slice(0, 4).join('\n'))
 
     // APIErrors (i.e. expected errors) will have a status
@@ -50,6 +51,7 @@ exports.APIErrorHandler = function(err, req, res, next) {
         err.code = 1000
         err.status = 500
         err.errors = []
+        err.message = 'Unknown Error'
     }
     console.error(`    HTTP response: ${err.status}\n    API error code: ${err.code}`)
 
