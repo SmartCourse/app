@@ -1,5 +1,6 @@
 // firebase authentication class
 import auth from './config'
+import CV from './CV'
 
 import { createProfile, updateProfile, getSelf } from '@/utils/api/auth'
 
@@ -9,7 +10,9 @@ const state = {
   // firebase authObject
   userAuthObject: null,
   // our own user data
-  profile: null
+  profile: null,
+  // condition variable for app to wait on while waiting for auth to resolve on boot
+  authCV: new CV()
 }
 
 const getters = {
@@ -23,7 +26,8 @@ const getters = {
   profile: ({ profile }) => profile,
   userAuthObject: ({ userAuthObject }) => userAuthObject,
   loading: ({ loading }) => loading,
-  error: ({ error }) => error
+  error: ({ error }) => error,
+  authCV: ({ authCV }) => authCV
 }
 
 const mutations = {
@@ -183,6 +187,10 @@ const actions = {
     } catch (error) {
       commit('ERROR', error.message)
     }
+
+    // signal the CV so the router can continue loading
+    // Note we _need_ to do this before returning!
+    state.authCV.signal()
 
     // no firebase auth, just get outta here
     if (!state.userAuthObject) {
