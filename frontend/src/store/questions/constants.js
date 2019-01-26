@@ -2,6 +2,9 @@ import {
   getQuestion,
   postQuestion,
   deleteQuestion,
+  deleteAnswer,
+  editQuestion,
+  editAnswer,
   getAnswers,
   postAnswer,
   getLikes,
@@ -14,6 +17,9 @@ export const ACTIONS = {
   GET_QUESTION: Symbol('getQuestion'),
   POST_QUESTION: Symbol('postQuestion'),
   DELETE_QUESTION: Symbol('deleteQuestion'),
+  DELETE_ANSWERS: Symbol('deleteAnswers'),
+  EDIT_QUESTION: Symbol('editQuestion'),
+  EDIT_ANSWERS: Symbol('editAnswers'),
   GET_ANSWERS: Symbol('getAnswers'),
   POST_ANSWER: Symbol('postAnswer'),
   GET_LIKES: Symbol('getLikes'),
@@ -26,6 +32,9 @@ export const REQUEST = {
   [ACTIONS.GET_QUESTION]: getQuestion,
   [ACTIONS.POST_QUESTION]: postQuestion,
   [ACTIONS.DELETE_QUESTION]: deleteQuestion,
+  [ACTIONS.DELETE_ANSWER]: deleteAnswer,
+  [ACTIONS.EDIT_QUESTION]: editQuestion,
+  [ACTIONS.EDIT_ANSWER]: editAnswer,
   [ACTIONS.GET_ANSWERS]: getAnswers,
   [ACTIONS.POST_ANSWER]: postAnswer,
   [ACTIONS.GET_LIKES]: getLikes,
@@ -37,7 +46,10 @@ export const REQUEST = {
 export const COMMITS = {
   [ACTIONS.GET_QUESTION]: 'FOCUS_QUESTION',
   [ACTIONS.POST_QUESTION]: 'SET_QUESTION',
-  [ACTIONS.DELETE_QUESTION]: 'FOCUS_QUESTION',
+  [ACTIONS.DELETE_QUESTION]: '', // TODO ?
+  [ACTIONS.DELETE_ANSWER]: '', // TODO
+  [ACTIONS.EDIT_QUESTION]: 'FOCUS_QUESTION',
+  [ACTIONS.EDIT_ANSWER]: '', // TODO
   [ACTIONS.GET_ANSWERS]: 'FOCUS_ANSWERS',
   [ACTIONS.POST_ANSWER]: 'APPEND_ANSWER',
   [ACTIONS.GET_LIKES]: 'FOCUS_LIKES',

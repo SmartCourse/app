@@ -94,6 +94,9 @@ const actions = {
   async deleteQuestion ({ dispatch }, { code, id }) {
     return dispatch('doRequest', { action: ACTIONS.DELETE_QUESTION, load: 'TOGGLE_LOADING_QUESTION', args: [code, id] })
   },
+  async editQuestion ({ dispatch }, { code, id, form }) {
+    return dispatch('doRequest', { action: ACTIONS.EDIT_QUESTION, load: 'TOGGLE_LOADING_QUESTION', args: [code, id, form] })
+  },
   async getAnswers ({ dispatch }, { code, id }) {
     return dispatch('doRequest', { action: ACTIONS.GET_ANSWERS, load: 'TOGGLE_LOADING_ANSWERS', args: [code, id] })
   },
@@ -111,6 +114,12 @@ const actions = {
   },
   async putAnswerLikes ({ dispatch }, { id, code, commentID, data }) {
     return dispatch('doRequest', { action: ACTIONS.PUT_ANSWER_LIKES, load: '', args: [code, id, commentID, data] })
+  },
+  async deleteAnswer ({ dispatch }, { id, code, commentID }) {
+    return dispatch('doRequest', { action: ACTIONS.DELETE_REPLY, load: 'TOGGLE_LOADING_ANSWERS', args: [code, id, commentID] })
+  },
+  async editAnswer ({ dispatch }, { id, code, commentID, form }) {
+    return dispatch('doRequest', { action: ACTIONS.EDIT_REPLY, load: 'TOGGLE_LOADING_ANSWERS', args: [code, id, commentID, form] })
   }
 }
 

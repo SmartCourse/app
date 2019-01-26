@@ -76,6 +76,13 @@ const actions = {
     const mappedForm = newReviewMapper(form)
     return dispatch('doRequest', { action: ACTIONS.POST_REVIEW, load: 'TOGGLE_LOADING_REVIEW', args: [code, mappedForm] })
   },
+  async deleteReview ({ dispatch }, { code, id }) {
+    return dispatch('doRequest', { action: ACTIONS.DELETE_REVIEW, load: 'TOGGLE_LOADING_REVIEW', args: [code, id] })
+  },
+  async editReview ({ dispatch }, { code, id, form }) {
+    const mappedForm = newReviewMapper(form)
+    return dispatch('doRequest', { action: ACTIONS.EDIT_REVIEW, load: 'TOGGLE_LOADING_REVIEW', args: [code, id, mappedForm] })
+  },
   async getReplies ({ dispatch }, { code, id }) {
     return dispatch('doRequest', { action: ACTIONS.GET_REPLIES, load: 'TOGGLE_LOADING_REPLIES', args: [code, id] })
   },
@@ -93,6 +100,12 @@ const actions = {
   },
   async putReplyLikes ({ dispatch }, { id, code, commentID, data }) {
     return dispatch('doRequest', { action: ACTIONS.PUT_REPLY_LIKES, load: '', args: [code, id, commentID, data] })
+  },
+  async deleteReply ({ dispatch }, { id, code, commentID }) {
+    return dispatch('doRequest', { action: ACTIONS.DELETE_REPLY, load: 'TOGGLE_LOADING_REPLIES', args: [code, id, commentID] })
+  },
+  async editReply ({ dispatch }, { id, code, commentID, form }) {
+    return dispatch('doRequest', { action: ACTIONS.EDIT_REPLY, load: 'TOGGLE_LOADING_REPLIES', args: [code, id, commentID, form] })
   }
 }
 

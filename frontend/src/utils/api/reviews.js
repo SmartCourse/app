@@ -1,4 +1,4 @@
-import { get, post, put } from './index'
+import { get, post, put, remove } from './index'
 import formatDistanceStrict from 'date-fns/formatDistanceStrict'
 
 /* get review */
@@ -46,6 +46,19 @@ export function postReview(course, data) {
   return post(`/course/${course}/review`, { data })
 }
 
+/**
+ * @param {string} course  the course code of the course
+ * @param {string} id the id of the review being edited
+ * @param {object} body the data associated with the new review
+ */
+export function editReview(course, id, data) {
+  return put(`/course/${course}/review/${id}`, { data })
+}
+
+export function deleteReview(course, id) {
+  return remove(`/course/${course}/review/${id}`)
+}
+
 export function getReplies(course, id) {
   return get(`/course/${course}/review/${id}/comments`)
 }
@@ -58,15 +71,6 @@ export function getReplies(course, id) {
 export function postReply(course, id, data) {
   return post(`/course/${course}/review/${id}/comment`, { data })
     .then(cid => get(`/course/${course}/review/${id}/comment/${cid}`))
-}
-
-/**
- * @param {string} course  the course code of the course
- * @param {string} id the id of the review being edited
- * @param {object} body the data associated with the new review
- */
-export function editReview(course, id, data) {
-  return put(`/course/${course}/review/${id}`, { data })
 }
 
 export function getLikes(course, id) {
@@ -83,4 +87,12 @@ export function getReplyLikes(course, id, commentID) {
 
 export function putReplyLikes(course, id, commentID, data) {
   return put(`/course/${course}/review/${id}/comment/${commentID}/likes`, { data })
+}
+
+export function deleteReply(course, id, commentID) {
+  return remove(`/course/${course}/review/${id}/comment/${commentID}`)
+}
+
+export function editReply(course, id, commentID, data) {
+  return put(`/course/${course}/review/${id}/comment/${commentID}`, { data })
 }

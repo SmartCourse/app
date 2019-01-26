@@ -188,7 +188,7 @@ const actions = {
       commit('ERROR', error.message)
     }
 
-    // signal the CV so the router can continue loading
+    // signal the CV so the app can continue loading and use the JWT token in its requests
     // Note we _need_ to do this before returning!
     state.authCV.signal()
 
