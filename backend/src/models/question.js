@@ -133,7 +133,7 @@ class Question {
                   ELSE
                       UPDATE ${QUESTIONS}
                       SET body=@body
-                      WHERE userID=@userID AND id=@id`,
+                      WHERE id=@id`,
             {
                 [QUESTIONS]: { userID, body, id }
             })
@@ -146,7 +146,6 @@ class Question {
      * @param {object}  userID  The id of the user
      */
     deleteQuestion(id, userID, permissions) {
-        // The query does an auth check with userID before deleting
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${QUESTIONS} WHERE id=@id)
                       THROW ${toSQLErrorCode(4001)}, 'The question does not exist', 1;
@@ -157,7 +156,7 @@ class Question {
                         DELETE ${COMMENTS}
                             WHERE questionID=@questionID;
                         DELETE ${QUESTIONS}
-                            WHERE userID=@userID AND id=@id;
+                            WHERE id=@id;
                       END;`,
             {
                 [QUESTIONS]: { userID, id },
