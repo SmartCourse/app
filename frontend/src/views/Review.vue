@@ -3,7 +3,7 @@
     <AppBreadCrumb/>
 
     <transition name="fade-slide">
-      <ReviewCard v-bind="review" :authenticated="isLoggedIn" v-if="!loadingReview"/>
+      <ReviewCard v-bind="review" :code="code" :authenticated="isLoggedIn" v-if="!loadingReview"/>
     </transition>
 
     <div style="text-align:center" v-if="loadingReview">

@@ -116,10 +116,10 @@ const actions = {
     return dispatch('doRequest', { action: ACTIONS.PUT_ANSWER_LIKES, load: '', args: [code, id, commentID, data] })
   },
   async deleteAnswer ({ dispatch }, { id, code, commentID }) {
-    return dispatch('doRequest', { action: ACTIONS.DELETE_REPLY, load: 'TOGGLE_LOADING_ANSWERS', args: [code, id, commentID] })
+    return dispatch('doRequest', { action: ACTIONS.DELETE_ANSWER, load: 'TOGGLE_LOADING_ANSWERS', args: [code, id, commentID] })
   },
   async editAnswer ({ dispatch }, { id, code, commentID, form }) {
-    return dispatch('doRequest', { action: ACTIONS.EDIT_REPLY, load: 'TOGGLE_LOADING_ANSWERS', args: [code, id, commentID, form] })
+    return dispatch('doRequest', { action: ACTIONS.EDIT_ANSWER, load: 'TOGGLE_LOADING_ANSWERS', args: [code, id, commentID, form] })
   }
 }
 

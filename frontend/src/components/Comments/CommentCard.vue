@@ -5,6 +5,7 @@
       :vote="{ upvote, downvote, likes: comment.likes, userLiked: comment.userLiked, disabled: !authenticated }"
       :user="comment.user"
       :class="comment.accepted ? 'accepted' : ''"
+      :menu="menu"
     >
     </PostCard>
 </template>
@@ -21,7 +22,28 @@ export default {
     comment: Object,
     authenticated: Boolean
   },
+  computed: {
+    menu() {
+      let options = []
+      if (this.comment.meta.canDelete) {
+        options.push({
+          string: 'Delete',
+          action: this.deleteComment
+        })
+      }
+      return options
+    }
+  },
   methods: {
+    deleteComment() {
+      const { type, code, id, comment } = this
+      if (!confirm(`Permanently delete this ${type === 'Answer' ? 'answer' : 'reply'}?`)) {
+        return
+      }
+      this.$store.dispatch(`${type === 'Answer' ? 'questions' : 'reviews'}/delete${type}`, { code, id, commentID: comment.id })
+        // refresh page
+        .then(() => this.$router.go())
+    },
     upvote() {
       const { type, code, id, comment } = this
       const value = comment.userLiked === 1 ? 0 : 1

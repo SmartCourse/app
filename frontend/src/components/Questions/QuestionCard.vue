@@ -29,20 +29,23 @@ export default {
   },
   computed: {
     menu() {
-      let m = []
+      let options = []
       if (this.meta.canDelete) {
-        m.push({
+        options.push({
           string: 'Delete',
           action: this.deleteQuestion
         })
       }
-      return m
+      return options
     }
   },
   methods: {
     deleteQuestion() {
+      if (!confirm('Permanently delete this question and its answers?')) {
+        return
+      }
       this.$store.dispatch('questions/deleteQuestion', { code: this.code, id: this.id })
-        .then(() => this.$router.push('/'))
+        .then(() => this.$router.push({ name: 'questions', params: { code: this.code } }))
     },
     upvote() {
       const { code, id, userLiked } = this
