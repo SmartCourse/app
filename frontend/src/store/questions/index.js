@@ -80,6 +80,9 @@ const mutations = {
   },
   APPEND_ANSWER(state, answer) {
     state.questionObj.answers.unshift(answerMapper(answer))
+  },
+  REMOVE_ANSWER(state, cid) {
+    state.questionObj.answers = state.questionObj.answers.filter(({ id }) => id !== cid)
   }
 }
 

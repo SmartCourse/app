@@ -91,6 +91,8 @@ export function putReplyLikes(course, id, commentID, data) {
 
 export function deleteReply(course, id, commentID) {
   return remove(`/course/${course}/review/${id}/comment/${commentID}`)
+    // return id so it can be removed from the list of replies
+    .then(() => commentID)
 }
 
 export function editReply(course, id, commentID, data) {

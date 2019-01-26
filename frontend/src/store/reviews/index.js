@@ -64,6 +64,9 @@ const mutations = {
   },
   APPEND_REPLY(state, reply) {
     state.reviewObj.replies.unshift(replyMapper(reply))
+  },
+  REMOVE_REPLY(state, cid) {
+    state.reviewObj.replies = state.reviewObj.replies.filter(({ id }) => id !== cid)
   }
 }
 

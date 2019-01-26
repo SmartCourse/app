@@ -78,6 +78,8 @@ export function putAnswerLikes(course, id, commentID, data) {
 
 export function deleteAnswer(course, id, commentID) {
   return remove(`/course/${course}/question/${id}/answer/${commentID}`)
+    // return id so it can be removed from the list of answers
+    .then(() => commentID)
 }
 
 export function editAnswer(course, id, commentID, data) {

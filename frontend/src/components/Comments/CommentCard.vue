@@ -41,8 +41,6 @@ export default {
         return
       }
       this.$store.dispatch(`${type === 'Answer' ? 'questions' : 'reviews'}/delete${type}`, { code, id, commentID: comment.id })
-        // refresh page
-        .then(() => this.$router.go())
     },
     upvote() {
       const { type, code, id, comment } = this
