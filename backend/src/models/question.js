@@ -143,7 +143,8 @@ class Question {
     /**
      * Delete a question and its answers.
      * @param {number}  id      The id of the question
-     * @param {object}  userID  The id of the user
+     * @param {number}  userID  The id of the user
+     * @param {number}  permissions The permission level of the user
      */
     deleteQuestion(id, userID, permissions) {
         return this.db

@@ -113,7 +113,7 @@ class Comment {
     /**
      * Delete a comment and its answers (although answering comments isn't yet supported...).
      * @param {number}  id          The id of the comment
-     * @param {object}  userID      The id of the user
+     * @param {number}  userID      The id of the user
      * @param {number}  permissions The permission level of the user
      */
     deleteComment(id, userID, permissions) {

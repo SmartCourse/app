@@ -59,6 +59,9 @@ const mutations = {
     }
     */
     state.profile = profile
+  },
+  SIGNAL_AUTH_CV(state) {
+    state.authCV.signal()
   }
 }
 
@@ -190,7 +193,7 @@ const actions = {
 
     // signal the CV so the app can continue loading and use the JWT token in its requests
     // Note we _need_ to do this before returning!
-    state.authCV.signal()
+    commit('SIGNAL_AUTH_CV')
 
     // no firebase auth, just get outta here
     if (!state.userAuthObject) {

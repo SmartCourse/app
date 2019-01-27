@@ -161,8 +161,9 @@ class Review {
 
     /**
      * Delete a review and its comments.
-     * @param {number}  id      The id of the question
-     * @param {object}  userID  The id of the user
+     * @param {number}  id      The id of the review
+     * @param {number}  userID  The id of the user
+     * @param {number}  permissions The permission level of the user
      */
     deleteReview(id, userID, permissions) {
         // The query does an auth check with userID before deleting
