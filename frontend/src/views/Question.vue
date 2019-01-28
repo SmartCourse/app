@@ -3,7 +3,7 @@
     <AppBreadCrumb/>
 
     <transition name="fade-slide">
-      <QuestionCard v-bind="question" :authenticated="isLoggedIn" v-if="!loadingQuestion" />
+      <QuestionCard v-bind="question" :code="code" :authenticated="isLoggedIn" v-if="!loadingQuestion" />
     </transition>
     <div style="text-align:center" v-if="loadingQuestion">
       <LoadingSpinner/>

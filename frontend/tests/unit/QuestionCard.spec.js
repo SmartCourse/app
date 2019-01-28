@@ -15,6 +15,10 @@ describe.skip('QuestionCard.vue', () => {
       user: {
         displayName: 'Henry',
         id: 0
+      },
+      meta: {
+        canDelete: false,
+        canEdit: false
       }
     }
     this.wrapper = mount(QuestionCard, {

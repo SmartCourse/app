@@ -1,4 +1,4 @@
-import { get, post, put } from './index'
+import { get, post, put, remove } from './index'
 import formatDistanceStrict from 'date-fns/formatDistanceStrict'
 
 /* get question */
@@ -33,6 +33,19 @@ export function postQuestion(course, data) {
   return post(`/course/${course}/question`, { data })
 }
 
+/**
+ * @param {string} course  the course code of the course
+ * @param {string} id      the id of the question being edited
+ * @param {object} data    the data associated with the new question
+ */
+export function editQuestion(course, id, data) {
+  return put(`/course/${course}/question/${id}`, { data })
+}
+
+export function deleteQuestion(course, id) {
+  return remove(`/course/${course}/question/${id}`)
+}
+
 export function getAnswers(course, id) {
   return get(`/course/${course}/question/${id}/answers`)
 }
@@ -63,11 +76,12 @@ export function putAnswerLikes(course, id, commentID, data) {
   return put(`/course/${course}/question/${id}/answer/${commentID}/likes`, { data })
 }
 
-/**
- * @param {string} course  the course code of the course
- * @param {string} id      the id of the question being edited
- * @param {object} data    the data associated with the new question
- */
-export function editQuestion(course, id, data) {
-  return put(`/course/${course}/question/${id}`, { data })
+export function deleteAnswer(course, id, commentID) {
+  return remove(`/course/${course}/question/${id}/answer/${commentID}`)
+    // return id so it can be removed from the list of answers
+    .then(() => commentID)
+}
+
+export function editAnswer(course, id, commentID, data) {
+  return put(`/course/${course}/question/${id}/answer/${commentID}`, { data })
 }
