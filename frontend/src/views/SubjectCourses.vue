@@ -21,7 +21,7 @@
             {{ item.name }}
           </h5>
         </router-link>
-        <a class="handbook-link" target=_blank :href="item.handbookURL">Handbook Link</a>
+        <a rel="noopener noreferrer" class="handbook-link" target=_blank :href="item.handbookURL">Handbook Link</a>
       </Tile>
     </TilesContainer>
     <h2 class="sorry" v-else-if="!loading && !courses.length">

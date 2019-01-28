@@ -1,10 +1,10 @@
 <template>
     <div class="links">
         <p>
-          <a target=_blank :href="handbookURL">Handbook <i class="material-icons">launch</i></a>
+          <a rel="noopener noreferrer" target=_blank :href="handbookURL">Handbook <i class="material-icons">launch</i></a>
         </p>
         <p v-if="outlineURL">
-          <a target=_blank :href="outlineURL">Course Outline <i class="material-icons">launch</i></a>
+          <a rel="noopener noreferrer" target=_blank :href="outlineURL">Course Outline <i class="material-icons">launch</i></a>
         </p>
     </div>
 </template>
