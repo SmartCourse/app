@@ -6,6 +6,13 @@
             <slot/>
         </div>
         <InteractionMenu class="top-right" />
+        <!-- TODO: put these in the actual menu -->
+        <ol>
+            <li :key="item.id" v-for="item in menu">
+                <button @click="item.action" >{{ item.string }}</button>
+            </li>
+        </ol>
+
         <!-- User block -->
         <User v-bind="user" :published="published"/>
         <!-- Content block and user interaction -->
@@ -41,7 +48,8 @@ export default {
     /* user object, verify at lower level */
     user: Object,
     /* Date string */
-    published: String
+    published: String,
+    menu: Array
   }
 }
 </script>

@@ -5,6 +5,7 @@
         :body="body"
         :user="user"
         :published="published"
+        :menu="menu"
     />
 </template>
 
@@ -23,9 +24,29 @@ export default {
     body: String,
     // TODO fix
     published: String,
-    authenticated: Boolean
+    authenticated: Boolean,
+    meta: Object
+  },
+  computed: {
+    menu() {
+      let options = []
+      if (this.meta.canDelete) {
+        options.push({
+          string: 'Delete',
+          action: this.deleteQuestion
+        })
+      }
+      return options
+    }
   },
   methods: {
+    deleteQuestion() {
+      if (!confirm('Permanently delete this question and its answers?')) {
+        return
+      }
+      this.$store.dispatch('questions/deleteQuestion', { code: this.code, id: this.id })
+        .then(() => this.$router.push({ name: 'questions', params: { code: this.code } }))
+    },
     upvote() {
       const { code, id, userLiked } = this
       const value = userLiked === 1 ? 0 : 1

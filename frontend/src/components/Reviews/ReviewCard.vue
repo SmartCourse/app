@@ -5,6 +5,7 @@
         :body="body"
         :user="user"
         :published="published"
+        :menu="menu"
     >
     <div class="right-margin">
       <Category :recommend="recommend">
@@ -36,15 +37,33 @@ export default {
     session: {
       default: 1,
       type: Number
-    }
+    },
+    meta: Object
   },
   computed: {
     sessionShortName() {
       return this.$store.getters.sessions.length &&
         this.$store.getters.sessions[this.session - 1].shortName
+    },
+    menu() {
+      let options = []
+      if (this.meta.canDelete) {
+        options.push({
+          string: 'Delete',
+          action: this.deleteReview
+        })
+      }
+      return options
     }
   },
   methods: {
+    deleteReview() {
+      if (!confirm('Permanently delete this review and its replies?')) {
+        return
+      }
+      this.$store.dispatch('reviews/deleteReview', { code: this.code, id: this.id })
+        .then(() => this.$router.push({ name: 'info', params: { code: this.code } }))
+    },
     upvote() {
       const { code, id, userLiked } = this
       const value = userLiked === 1 ? 0 : 1
