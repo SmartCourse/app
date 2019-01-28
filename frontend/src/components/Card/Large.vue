@@ -5,7 +5,7 @@
              <!-- Add badges here in future -->
             <slot/>
         </div>
-        <InteractionMenu class="top-right"
+        <InteractionMenu v-if="menu" class="top-right"
             :menu="menu"
         />
 

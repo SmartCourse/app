@@ -47,6 +47,7 @@ export default {
   computed: {
     sessionShortName() {
       return this.$store.getters.sessions.length &&
+        this.$store.getters.sessions[this.session - 1] &&
         this.$store.getters.sessions[this.session - 1].shortName
     },
     menu() {

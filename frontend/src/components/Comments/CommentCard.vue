@@ -12,6 +12,7 @@
 
 <script>
 import PostCard from '@/components/Card/Large'
+import { menuInteractionsMapper } from '@/utils/helpers'
 
 export default {
   components: { PostCard },
@@ -20,18 +21,19 @@ export default {
     id: String,
     code: String,
     comment: Object,
-    authenticated: Boolean
+    authenticated: Boolean,
+    meta: {
+      canDelete: Boolean,
+      canEdit: Boolean
+    }
   },
   computed: {
     menu() {
-      let options = []
-      if (this.comment.meta.canDelete) {
-        options.push({
-          string: 'Delete',
-          action: this.deleteComment
-        })
-      }
-      return options
+      const thisArg = this
+      return menuInteractionsMapper({
+        type: 'comment',
+        thisArg
+      })
     }
   },
   methods: {
@@ -41,6 +43,12 @@ export default {
         return
       }
       this.$store.dispatch(`${type === 'Answer' ? 'questions' : 'reviews'}/delete${type}`, { code, id, commentID: comment.id })
+    },
+    editComment() {
+      console.warn('Not yet implemented')
+    },
+    report() {
+      console.warn('Not yet implemented')
     },
     upvote() {
       const { type, code, id, comment } = this
@@ -67,7 +75,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 .accepted {
   border: solid 1px var(--theme-light);
 }

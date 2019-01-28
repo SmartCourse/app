@@ -23,6 +23,16 @@ const ACTIONS_MAP = {
       action: 'editReview',
       label: 'Edit'
     }
+  },
+  comment: {
+    canDelete: {
+      action: 'deleteComment',
+      label: 'Delete'
+    },
+    canEdit: {
+      action: 'editComment',
+      label: 'Edit'
+    }
   }
 }
 
@@ -30,9 +40,13 @@ const ACTIONS_MAP = {
  * Given a parent component type ['review', 'question']
  * Map callback handlers and labels for menu to set types.
  */
-export function menuInteractionsMapper({ type, thisArg }) {
+export function menuInteractionsMapper({
+  type,
+  thisArg
+}) {
+  if (!thisArg.meta) return
+
   const ACTION_MAP = ACTIONS_MAP[type]
-  console.log(thisArg, type)
 
   return [...Object.entries(thisArg.meta)
     .map(([key, value]) => {

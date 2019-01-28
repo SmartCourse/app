@@ -4,16 +4,19 @@
             class="material-icons menu-button"
             type="menu"
             title="Toggle Menu"
-            @click="toggled = !toggled"
+            @click="toggleMenu"
+            @blur="blurHandler"
         >
             {{toggled ? 'not_interested' : 'more_vert'}}
         </button>
         <ol
+            ref="dropdown"
             :class="['menu-items', {'drop-down-active': toggled}]"
         >
             <MenuItem
                 v-for="item in menu"
-                @click.native="item.action"
+                @click.native="item.action && item.action(); toggleMenu()"
+                tabindex="0"
                 :key="item.label">
                 {{ item.label }}
             </MenuItem>
@@ -36,6 +39,17 @@ export default {
   data() {
     return {
       toggled: false
+    }
+  },
+  methods: {
+    toggleMenu() {
+      this.toggled = !this.toggled
+    },
+    blurHandler(event) {
+      if (this.$refs.dropdown.contains(event.relatedTarget)) {
+        return
+      }
+      this.toggled = false
     }
   }
 }
