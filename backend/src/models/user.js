@@ -16,7 +16,7 @@ class User {
     getProfile(id) {
         return this.db
             .run(`SELECT u.id, u.email, u.displayName, u.gradYear, u.description,
-                u.picture, u.reputation, u.joined, u.permissions, d.name AS degree
+                u.picture, u.reputation, u.joined, d.name AS degree
                 FROM ${USERS} u
                 JOIN ${DEGREES} d ON d.id = u.degreeID
                 WHERE u.id=@id`,

@@ -103,7 +103,7 @@ class Comment {
                   ELSE
                       UPDATE ${COMMENTS}
                       SET body=@body
-                      WHERE userID=@userID AND id=@id;`,
+                      WHERE id=@id;`,
             {
                 [COMMENTS]: { userID, body, id }
             })
@@ -113,10 +113,10 @@ class Comment {
     /**
      * Delete a comment and its answers (although answering comments isn't yet supported...).
      * @param {number}  id          The id of the comment
+     * @param {number}  userID      The id of the user
      * @param {number}  permissions The permission level of the user
-     * @param {object}  userID      The id of the user
      */
-    deleteComment(id, permissions, userID) {
+    deleteComment(id, userID, permissions) {
         // The query does an implicit auth check with userID before deleting
         // TODO: throw proper errors
         return this.db
@@ -126,9 +126,9 @@ class Comment {
                       THROW ${toSQLErrorCode(1003)}, 'You cannot delete this comment', 1;
                   ELSE
                       DELETE ${COMMENTS}
-                      WHERE commentParent=@commentParent OR id=@id;`,
+                      WHERE commentParent=@id OR id=@id;`,
             {
-                [COMMENTS]: { userID, id, commentParent: id }
+                [COMMENTS]: { userID, id }
             })
             .catch(translateSQLError({ [toSQLErrorCode(6001)]: 404, [toSQLErrorCode(1003)]: 403 }))
     }
