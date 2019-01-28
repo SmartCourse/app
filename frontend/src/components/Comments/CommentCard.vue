@@ -20,19 +20,27 @@ export default {
     type: String,
     id: String,
     code: String,
-    comment: Object,
-    authenticated: Boolean,
-    meta: {
-      canDelete: Boolean,
-      canEdit: Boolean
-    }
+    comment: {
+      published: String,
+      body: String,
+      likes: Number,
+      userLiked: Boolean,
+      accepted: Boolean,
+      user: Object,
+      meta: {
+        canDelete: Boolean,
+        canEdit: Boolean
+      }
+    },
+    authenticated: Boolean
   },
   computed: {
     menu() {
       const thisArg = this
       return menuInteractionsMapper({
         type: 'comment',
-        thisArg
+        thisArg,
+        meta: this.comment.meta
       })
     }
   },

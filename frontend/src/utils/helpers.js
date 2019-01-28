@@ -37,18 +37,23 @@ const ACTIONS_MAP = {
 }
 
 /**
- * Given a parent component type ['review', 'question']
+ * Given a parent component type ['review', 'question', 'comment]
  * Map callback handlers and labels for menu to set types.
+ * @param {object} options
+ * @param {string} options.type     The type of the card being interacted with
+ * @param {object} options.thisArg  The vue component
+ * @param {object} options.meta     The meta object provided in the response
  */
 export function menuInteractionsMapper({
   type,
-  thisArg
+  thisArg,
+  meta
 }) {
-  if (!thisArg.meta) return
+  if (!meta) return []
 
   const ACTION_MAP = ACTIONS_MAP[type]
 
-  return [...Object.entries(thisArg.meta)
+  return [...Object.entries(meta)
     .map(([key, value]) => {
       if (value && ACTION_MAP[key]) {
         const { label, action } = ACTION_MAP[key]

@@ -54,7 +54,8 @@ export default {
       const thisArg = this
       return menuInteractionsMapper({
         type: 'review',
-        thisArg
+        thisArg,
+        meta: this.meta
       })
     }
   },

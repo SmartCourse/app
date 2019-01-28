@@ -8,7 +8,6 @@
 
 <style scoped>
 .menu-item {
-    padding: 7px 0;
     border-bottom: var(--border);
 }
 
@@ -17,9 +16,9 @@
 }
 
 .menu-button {
+    padding: 7px;
     background: none;
     font: inherit;
-    padding: 0;
     display: block;
     width: 100%;
     outline: none;
@@ -27,9 +26,10 @@
     border: none;
     cursor: pointer;
     text-align: left;
+    color: var(--soft-black);
 }
 
-.menu-button:hover {
+.menu-button:hover, .menu-button:focus {
     color: var(--black);
 }
 </style>

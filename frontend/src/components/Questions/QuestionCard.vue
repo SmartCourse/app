@@ -36,7 +36,8 @@ export default {
       const thisArg = this
       return menuInteractionsMapper({
         type: 'question',
-        thisArg
+        thisArg,
+        meta: this.meta
       })
     }
   },

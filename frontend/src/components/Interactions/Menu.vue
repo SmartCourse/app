@@ -74,7 +74,7 @@ export default {
 }
 
 .menu-items {
-    padding: 3.5px 7px;
+    padding: 0;
     border: var(--border);
     background-color: var(--white);
     visibility: hidden;
