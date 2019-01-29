@@ -184,9 +184,6 @@ exports.sqlAdminUsers = async function (db) {
             permissions: PERMISSIONS_ADMIN
         }))
 
-    questions.push(...admins)
-    console.warn(questions)
-    
     return bulkInsertDB(db, TABLE_NAMES.USERS, admins)
 }
 
