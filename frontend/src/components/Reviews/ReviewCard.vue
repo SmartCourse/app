@@ -20,6 +20,7 @@
 import PostCard from '@/components/Card/Large'
 import Category from '@/components/Category/Recommend'
 import Semester from '@/components/Category/Semester'
+import { menuInteractionsMapper } from '@/utils/helpers'
 
 export default {
   components: { PostCard, Category, Semester },
@@ -38,22 +39,24 @@ export default {
       default: 1,
       type: Number
     },
-    meta: Object
+    meta: {
+      canDelete: Boolean,
+      canEdit: Boolean
+    }
   },
   computed: {
     sessionShortName() {
       return this.$store.getters.sessions.length &&
+        this.$store.getters.sessions[this.session - 1] &&
         this.$store.getters.sessions[this.session - 1].shortName
     },
     menu() {
-      let options = []
-      if (this.meta.canDelete) {
-        options.push({
-          string: 'Delete',
-          action: this.deleteReview
-        })
-      }
-      return options
+      const thisArg = this
+      return menuInteractionsMapper({
+        type: 'review',
+        thisArg,
+        meta: this.meta
+      })
     }
   },
   methods: {
@@ -63,6 +66,12 @@ export default {
       }
       this.$store.dispatch('reviews/deleteReview', { code: this.code, id: this.id })
         .then(() => this.$router.push({ name: 'info', params: { code: this.code } }))
+    },
+    editReview() {
+      console.warn('Edit not yet implemented')
+    },
+    report() {
+      console.warn('Report not yet implemented')
     },
     upvote() {
       const { code, id, userLiked } = this

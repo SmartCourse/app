@@ -24,7 +24,7 @@
           {{ positiveOrNegativeText }}
         </Recommend>
         <Semester v-if="session">
-          {{ teachingPeriod }}
+          {{ sessionShortName }}
         </Semester>
         <Badge v-if="pinned">
           FAQ
@@ -75,8 +75,9 @@ export default {
     positiveOrNegativeText() {
       return this.recommend ? 'Recommended' : 'Not Recommended'
     },
-    teachingPeriod() {
+    sessionShortName() {
       return this.$store.getters.sessions.length &&
+        this.$store.getters.sessions[this.session - 1] &&
         this.$store.getters.sessions[this.session - 1].shortName
     }
   }

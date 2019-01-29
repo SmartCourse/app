@@ -4,6 +4,7 @@
             class="search-bar"
             v-model='search'
             placeholder='Search all courses...'
+            @keydown.esc.native="resetSearch()"
         />
         <ul v-if="search && suggestions.length">
             <router-link
