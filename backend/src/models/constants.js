@@ -7,6 +7,11 @@ exports.DEVELOPMENT = process.env.NODE_ENV === 'development'
 
 // User Constants
 exports.ANONYMOUS = 0
+exports.ADMIN_USERS = [
+    { name: 'Nuno', email: 'nuno@smartcourse.me', degree: 'B. Computer Science' },
+    { name: 'Alex', email: 'alex@smartcourse.me', degree: 'B. Computer Science' },
+    { name: 'Papa', email: 'papa@smartcourse.me', degree: 'B. Computer Science' }
+]
 
 // Review Constants
 exports.DONT_RECOMMEND = 0

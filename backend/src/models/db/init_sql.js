@@ -1,4 +1,5 @@
 const { Request } = require('tedious')
+const uuid = require('uuid/v4')
 const faculties = require('../../../data/faculties')
 const degrees = require('../../../data/degrees')
 const subjects = require('../../../data/subjects')
@@ -6,7 +7,7 @@ const courses = require('../../../data/courses')
 const sessions = require('../../../data/sessions')
 const {
     NUM_DUMMY_USERS,
-    SAMPLE_QUESTIONS,
+    ADMIN_QUESTIONS,
     SAMPLE_REVIEWS,
     SAMPLE_COMMENTS,
     SAMPLE_USERS
@@ -21,7 +22,9 @@ const {
     MAX_ENJOY,
     MIN_OPTION,
     MAX_OPTION,
-    PERMISSIONS_USER
+    PERMISSIONS_USER,
+    PERMISSIONS_ADMIN,
+    ADMIN_USERS
 } = require('../constants')
 
 // Globals
@@ -82,8 +85,8 @@ exports.sqlCourses = async function(db) {
     return bulkInsertDB(db, TABLE_NAMES.COURSES, courses)
 }
 
-function sqlQuestion(code) {
-    const userID = nextValue(1, NUM_DUMMY_USERS)
+function sqlAdminQuestion(code) {
+    const userID = nextValue(1, ADMIN_USERS.length)
     questions.push({ questionID: questions.length + 1 })
     questionsToLike.push({ objectType: TABLE_NAMES.QUESTIONS, objectID: questions.length, userID })
     return function(question) {
@@ -99,13 +102,13 @@ function sqlQuestion(code) {
 
 exports.sqlQuestions = async function(db) {
     let questions = courses.map(({ code }) =>
-        SAMPLE_QUESTIONS.map(sqlQuestion(code)))
+        ADMIN_QUESTIONS.map(sqlAdminQuestion(code)))
     questions = [].concat.apply([], questions)
     return bulkInsertDB(db, TABLE_NAMES.QUESTIONS, questions)
 }
 
 function sqlReview(code) {
-    const userID = nextValue(1, NUM_DUMMY_USERS)
+    const userID = nextValue(1 + ADMIN_USERS.length, NUM_DUMMY_USERS)
     reviews.push({ reviewID: reviews.length + 1 })
     reviewsToLike.push({ objectType: TABLE_NAMES.REVIEWS, objectID: reviews.length, userID })
     return function(review) {
@@ -140,7 +143,7 @@ function genComments(parent) {
     const numComments = nextValue(minRange, maxRange)
     for (let i = 0; i < numComments; i++) {
         const index = nextValue(0, numCommentTypes - 1)
-        const uid = nextValue(1, NUM_DUMMY_USERS)
+        const uid = nextValue(1 + ADMIN_USERS.length, NUM_DUMMY_USERS)
         const comment = {
             ...parent,
             commentParent: 1,
@@ -170,13 +173,30 @@ exports.sqlComments = async function(db) {
         })
 }
 
+exports.sqlAdminUsers = async function (db) {
+    const admins = ADMIN_USERS
+        .map(({ name: displayName, email, degree }, i) => ({
+            uid: uuid(),
+            displayName,
+            email,
+            degreeID: 1 + degrees.findIndex((d) => d.name === degree),
+            gradYear: '2018',
+            permissions: PERMISSIONS_ADMIN
+        }))
+
+    questions.push(...admins)
+    console.warn(questions)
+    
+    return bulkInsertDB(db, TABLE_NAMES.USERS, admins)
+}
+
 exports.sqlUsers = async function(db) {
     const userNames = SAMPLE_USERS
     const suffixes = ['XxX', '!', 's', '!!', '_', '__', 'x']
 
     let users = []
 
-    for (let i = 1; i <= NUM_DUMMY_USERS; i++) {
+    for (let i = 1 + ADMIN_USERS.length; i <= NUM_DUMMY_USERS; i++) {
         const uid = 'userID' + i
         const displayName =
             userNames[i % userNames.length] +
@@ -268,7 +288,6 @@ ${
         DROP TABLE IF EXISTS ${TABLE_NAMES.COMMENTS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.REVIEWS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.QUESTIONS}
-        DROP TABLE IF EXISTS ${TABLE_NAMES.USERS}
     ` : ''
 }
 
@@ -461,7 +480,9 @@ async function bulkInsertDB(db, table, data) {
 
         // Setup the columns
         const columns = Object.keys(data[0])
+        console.warn(columns)
         columns.forEach((column) => {
+            console.warn(column, TABLE_COLUMNS[table][column].type)
             bulkLoad.addColumn(column, TABLE_COLUMNS[table][column].type,
                 TABLE_COLUMNS[table][column].options)
         })
@@ -471,5 +492,7 @@ async function bulkInsertDB(db, table, data) {
 
         // Do the insertion
         db.execBulkLoad(bulkLoad)
+
+        console.warn('Done:', table)
     })
 }
