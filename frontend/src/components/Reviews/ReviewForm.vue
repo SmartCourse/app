@@ -9,7 +9,7 @@
       <span class="required">*</span>
       <textarea placeholder="Your review here..." v-model="body"></textarea><br>
 
-      <OptionHeader>What session did you take the course?</OptionHeader>
+      <OptionHeader>What session did you take the course? <span class="required">*</span></OptionHeader>
       <Selector :items="sessions" v-model="session" :placeholder="'Select a session..'"/>
 
       <InputOptions v-model="recommend" :options="['Yes', 'No']">
