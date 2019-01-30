@@ -7,6 +7,11 @@ exports.DEVELOPMENT = process.env.NODE_ENV === 'development'
 
 // User Constants
 exports.ANONYMOUS = 0
+exports.ADMIN_USERS = [
+    { name: 'Nuno', email: process.env.SUPERUSER_NUNO_EMAIL, degree: 'B. Computer Science', uid: process.env.SUPERUSER_NUNO_UID },
+    { name: 'Alex', email: process.env.SUPERUSER_ALEX_EMAIL, degree: 'B. Computer Science', uid: process.env.SUPERUSER_ALEX_UID },
+    { name: 'Papa', email: process.env.SUPERUSER_PAPA_EMAIL, degree: 'B. Computer Science', uid: process.env.SUPERUSER_PAPA_UID }
+]
 
 // Review Constants
 exports.DONT_RECOMMEND = 0
@@ -15,6 +20,12 @@ exports.MIN_ENJOY = 1
 exports.MAX_ENJOY = 5
 exports.MIN_OPTION = 0
 exports.MAX_OPTION = 3
+
+// Permissions Constants (TODO:this properly, more granularity etc)
+exports.PERMISSIONS_ANON = 0 // not logged in; read only
+exports.PERMISSIONS_USER = 1 // regular user; read & write everywhere, delete & edit everything they own
+exports.PERMISSIONS_MOD = 2 // moderator; read, write, delete, edit everything
+exports.PERMISSIONS_ADMIN = 3 // admin; everything - TODO: delete/ban users/ip addresses/etc?
 
 // Paging Constants
 exports.PAGE_SIZE = 10
@@ -356,6 +367,10 @@ exports.TABLE_COLUMNS = {
         picture: {
             type: TYPES.VarChar,
             options: { nullable: true }
+        },
+        permissions: {
+            type: TYPES.Int,
+            options: { nullable: false }
         }
     }
 }

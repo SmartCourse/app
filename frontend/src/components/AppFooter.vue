@@ -16,13 +16,13 @@
                 {{ link.content }}
             </router-link>
             <li v-for="link in info_external" :key="link.content">
-                <a :href ="link.href" class="link" >{{ link.content }}</a>
+                <a :href ="link.href" rel="noopener noreferrer" class="link" >{{ link.content }}</a>
             </li>
         </ul>
         <ul class="UNSW">
             <li class="links-header">UNSW</li>
             <li v-for="link in unsw_external" :key="link.content">
-                <a :href ="link.href" class="link" >{{ link.content }}</a>
+                <a :href ="link.href" rel="noopener noreferrer" class="link" >{{ link.content }}</a>
             </li>
         </ul>
        </section>

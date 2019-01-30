@@ -1,11 +1,10 @@
-const { PAGE_SIZE } = require('../models/constants')
 const courseModel = require('../models/course')()
 const questionModel = require('../models/question')()
 const reviewModel = require('../models/review')()
 const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
-const { getResponseHandler, postResponseHandler } = require('../utils/helpers')
-const { TABLE_NAMES } = require('../models/constants')
+const { getResponseHandler, postResponseHandler, postPermissionsMapper } = require('../utils/helpers')
+const { PAGE_SIZE, TABLE_NAMES, PERMISSIONS_ANON, ANONYMOUS } = require('../models/constants')
 
 /* Get all course data */
 exports.getCourses = function (_, res, next) {
@@ -22,10 +21,13 @@ exports.getCourse = function ({ params }, res, next) {
 }
 
 /* Get all questions for a course */
-exports.getCourseQuestions = function ({ params, query }, res, next) {
+exports.getCourseQuestions = function ({ params, query, user }, res, next) {
     const pageNumber = parseInt(query.p) || 1
     // TODO get page size from query
     const pageSize = PAGE_SIZE
+
+    const userID = (user && user.id) || ANONYMOUS
+    const userPermissions = (user && user.permissions) || PERMISSIONS_ANON
 
     Promise.all([
         questionModel.getQuestions(params.code, pageNumber, pageSize),
@@ -47,7 +49,7 @@ exports.getCourseQuestions = function ({ params, query }, res, next) {
                     last: lastPage || 1,
                     pageSize
                 },
-                data: questions
+                data: questions.map(postPermissionsMapper(userPermissions, userID))
             }
         })
     })
@@ -56,10 +58,13 @@ exports.getCourseQuestions = function ({ params, query }, res, next) {
 }
 
 /* Get all reviews for a course */
-exports.getCourseReviews = function ({ params, query }, res, next) {
+exports.getCourseReviews = function ({ params, query, user }, res, next) {
     const pageNumber = parseInt(query.p) || 1
     // TODO get page size from query
     const pageSize = PAGE_SIZE
+
+    const userID = (user && user.id) || ANONYMOUS
+    const userPermissions = (user && user.permissions) || PERMISSIONS_ANON
 
     Promise.all([
         reviewModel.getReviews(params.code, pageNumber, pageSize),
@@ -81,11 +86,10 @@ exports.getCourseReviews = function ({ params, query }, res, next) {
                     last: lastPage || 1,
                     pageSize
                 },
-                data: reviews
+                data: reviews.map(postPermissionsMapper(userPermissions, userID))
             }
         })
     })
-
         .then(getResponseHandler(res))
         .catch(next)
 }

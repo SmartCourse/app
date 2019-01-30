@@ -5,7 +5,10 @@
              <!-- Add badges here in future -->
             <slot/>
         </div>
-        <InteractionMenu class="top-right" />
+        <InteractionMenu v-if="menu" class="top-right"
+            :menu="menu"
+        />
+
         <!-- User block -->
         <User v-bind="user" :published="published"/>
         <!-- Content block and user interaction -->
@@ -41,7 +44,9 @@ export default {
     /* user object, verify at lower level */
     user: Object,
     /* Date string */
-    published: String
+    published: String,
+    /* array of interactions */
+    menu: Array
   }
 }
 </script>

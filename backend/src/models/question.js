@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { QUESTIONS, COMMENTS, COURSES } } = require('./constants')
+const { TABLE_NAMES: { QUESTIONS, COMMENTS, COURSES }, PERMISSIONS_MOD } = require('./constants')
 const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are question related */
@@ -124,39 +124,46 @@ class Question {
      * @param {object}  body  object containing question data including
                               user id and body of the question
      */
-    putQuestion(id, { userID, body }) {
-        // TODO 404 errors and permissions..
+    putQuestion(id, { userID, body, permissions }) {
         return this.db
-            .run(`UPDATE ${QUESTIONS}
-                    SET body=@body
-                    WHERE userID=@userID AND id=@id`,
+            .run(`IF NOT EXISTS(SELECT * FROM ${QUESTIONS} WHERE id=@id)
+                      THROW ${toSQLErrorCode(4001)}, 'The question does not exist', 1;
+                  IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${QUESTIONS} WHERE userID=@userID AND id=@id)
+                      THROW ${toSQLErrorCode(1003)}, 'You cannot edit this question', 1;
+                  ELSE
+                      UPDATE ${QUESTIONS}
+                      SET body=@body
+                      WHERE id=@id`,
             {
                 [QUESTIONS]: { userID, body, id }
             })
+            .catch(translateSQLError({ [toSQLErrorCode(4001)]: 404, [toSQLErrorCode(1003)]: 403 }))
     }
 
     /**
      * Delete a question and its answers.
      * @param {number}  id      The id of the question
-     * @param {object}  userID  The id of the user
+     * @param {number}  userID  The id of the user
+     * @param {number}  permissions The permission level of the user
      */
-    deleteQuestion(id, userID) {
-        // The query does an auth check with userID before deleting
-        // TODO throw appropriate errors
+    deleteQuestion(id, userID, permissions) {
         return this.db
-            .run(`BEGIN TRANSACTION;
-                    IF EXISTS (SELECT * FROM ${QUESTIONS} WHERE userID=@userID AND id=@id)
-                    BEGIN
-                      DELETE ${COMMENTS}
-                        WHERE questionID=@questionID;
-                      DELETE ${QUESTIONS}
-                        WHERE userID=@userID AND id=@id;
-                    END;
-                  COMMIT;`,
+            .run(`IF NOT EXISTS(SELECT * FROM ${QUESTIONS} WHERE id=@id)
+                      THROW ${toSQLErrorCode(4001)}, 'The question does not exist', 1;
+                  IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${QUESTIONS} WHERE userID=@userID AND id=@id)
+                      THROW ${toSQLErrorCode(1003)}, 'You cannot delete this question', 1;
+                  ELSE
+                      BEGIN
+                        DELETE ${COMMENTS}
+                            WHERE questionID=@questionID;
+                        DELETE ${QUESTIONS}
+                            WHERE id=@id;
+                      END;`,
             {
                 [QUESTIONS]: { userID, id },
                 [COMMENTS]: { questionID: id }
             })
+            .catch(translateSQLError({ [toSQLErrorCode(4001)]: 404, [toSQLErrorCode(1003)]: 403 }))
     }
 }
 

@@ -85,4 +85,15 @@ export const put = (path, options) =>
   request(path, { ...options, method: 'PUT' })
     .then(responseCheck)
 
+/**
+ * A DELETE request, used to update the db
+ * delete is a reserved word so we must call this function remove :(
+ * @param   {string} path     The relative path for the api call.
+ * @param   {object} options  Any options being passed to the req, eg. auth
+ * @returns {Promise}         The relevant request
+ */
+export const remove = (path, options) =>
+  request(path, { ...options, method: 'DELETE' })
+    .then(responseCheck)
+
 export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))

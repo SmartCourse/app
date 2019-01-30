@@ -1,5 +1,6 @@
 // firebase authentication class
 import auth from './config'
+import CV from './CV'
 
 import { createProfile, updateProfile, getSelf } from '@/utils/api/auth'
 
@@ -9,7 +10,9 @@ const state = {
   // firebase authObject
   userAuthObject: null,
   // our own user data
-  profile: null
+  profile: null,
+  // condition variable for app to wait on while waiting for auth to resolve on boot
+  authCV: new CV()
 }
 
 const getters = {
@@ -23,7 +26,8 @@ const getters = {
   profile: ({ profile }) => profile,
   userAuthObject: ({ userAuthObject }) => userAuthObject,
   loading: ({ loading }) => loading,
-  error: ({ error }) => error
+  error: ({ error }) => error,
+  authCV: ({ authCV }) => authCV
 }
 
 const mutations = {
@@ -55,6 +59,9 @@ const mutations = {
     }
     */
     state.profile = profile
+  },
+  SIGNAL_AUTH_CV(state) {
+    state.authCV.signal()
   }
 }
 
@@ -148,9 +155,9 @@ const actions = {
       // abort! abort!
       commit('ERROR', error.message)
       commit('SET_PROFILE', null)
-      // if there's a 403 error code, it means it's a valid account but no profile exists yet
+      // if there's a 7003 error code, it means it's a valid account but no profile exists yet
       // otherwise, completely abort auth
-      if (!error.code || error.code !== 403) {
+      if (!error.code || error.code !== 7003) {
         commit('SET_USER', null)
         await auth.signOut()
       }
@@ -183,6 +190,10 @@ const actions = {
     } catch (error) {
       commit('ERROR', error.message)
     }
+
+    // signal the CV so the app can continue loading and use the JWT token in its requests
+    // Note we _need_ to do this before returning!
+    commit('SIGNAL_AUTH_CV')
 
     // no firebase auth, just get outta here
     if (!state.userAuthObject) {

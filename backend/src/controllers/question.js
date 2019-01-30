@@ -1,14 +1,21 @@
-const { ANONYMOUS } = require('../models/constants')
 const questionModel = require('../models/question')()
 const commentModel = require('../models/comment')()
 const likesModel = require('../models/likes')()
 const userModel = require('../models/user')()
-const { getResponseHandler, postResponseHandler, deleteResponseHandler, userLikesMapper } = require('../utils/helpers')
-const { TABLE_NAMES } = require('../models/constants')
+const {
+    getResponseHandler,
+    postResponseHandler,
+    deleteResponseHandler,
+    userLikesMapper,
+    postPermissionsMapper
+} = require('../utils/helpers')
+const { TABLE_NAMES, PERMISSIONS_ANON, ANONYMOUS } = require('../models/constants')
 
 /* GET question data. */
 exports.getQuestion = function ({ user, params }, res, next) {
     const userID = (user && user.id) || ANONYMOUS
+    const userPermissions = (user && user.permissions) || PERMISSIONS_ANON
+
     Promise.all([
         questionModel.getQuestion(params.id),
         likesModel.getLikes({ type: TABLE_NAMES.QUESTIONS, id: params.id }),
@@ -21,12 +28,16 @@ exports.getQuestion = function ({ user, params }, res, next) {
                     return { ...question, ...likes, ...userLiked, user: userInfo }
                 })
         })
+        .then(postPermissionsMapper(userPermissions, userID))
         .then(getResponseHandler(res))
         .catch(next)
 }
 
 /* get the questions for a specific user */
 exports.getQuestionsByUserId = function({ params: { id } }, res, next) {
+    // TODO fix this: it should return objects that are just like getQuestion
+    // requires fix here and in the model
+    // main problem is that you don't know which course each question is about!
     questionModel.getQuestionsByUserID(id)
         .then(getResponseHandler(res))
         .catch(next)
@@ -35,6 +46,7 @@ exports.getQuestionsByUserId = function({ params: { id } }, res, next) {
 /* GET question ansewrs. */
 exports.getQuestionAnswers = function ({ user, params, query }, res, next) {
     const userID = (user && user.id) || ANONYMOUS
+    const userPermissions = (user && user.permissions) || PERMISSIONS_ANON
 
     commentModel.getComments({ questionID: params.id }, query.p)
         .then(answers => Promise.all([
@@ -49,6 +61,7 @@ exports.getQuestionAnswers = function ({ user, params, query }, res, next) {
             )
         ]))
         .then(([answers, likes, userLikes]) => answers.map(userLikesMapper(likes, userLikes)))
+        .then((answers) => answers.map(postPermissionsMapper(userPermissions, userID)))
         .then(getResponseHandler(res))
         .catch(next)
 }
@@ -96,6 +109,7 @@ exports.putAnswerLikes = function ({ user, params, body, query }, res, next) {
 /* PUT updated question body */
 exports.putQuestion = function ({ user, params, body }, res, next) {
     body.userID = user.id
+    body.permissions = user.permissions
     questionModel.putQuestion(params.id, body)
         .then(() => exports.getQuestion({ user, params }, res))
         .catch(next)
@@ -103,7 +117,7 @@ exports.putQuestion = function ({ user, params, body }, res, next) {
 
 /* DELETE question */
 exports.deleteQuestion = function ({ user, params }, res, next) {
-    questionModel.deleteQuestion(params.id, user.id)
+    questionModel.deleteQuestion(params.id, user.id, user.permissions)
         .then(deleteResponseHandler(res))
         .catch(next)
 }

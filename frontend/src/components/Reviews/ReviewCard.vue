@@ -5,6 +5,7 @@
         :body="body"
         :user="user"
         :published="published"
+        :menu="menu"
     >
     <div class="right-margin">
       <Category :recommend="recommend">
@@ -19,6 +20,7 @@
 import PostCard from '@/components/Card/Large'
 import Category from '@/components/Category/Recommend'
 import Semester from '@/components/Category/Semester'
+import { menuInteractionsMapper } from '@/utils/helpers'
 
 export default {
   components: { PostCard, Category, Semester },
@@ -36,15 +38,41 @@ export default {
     session: {
       default: 1,
       type: Number
+    },
+    meta: {
+      canDelete: Boolean,
+      canEdit: Boolean
     }
   },
   computed: {
     sessionShortName() {
       return this.$store.getters.sessions.length &&
+        this.$store.getters.sessions[this.session - 1] &&
         this.$store.getters.sessions[this.session - 1].shortName
+    },
+    menu() {
+      const thisArg = this
+      return menuInteractionsMapper({
+        type: 'review',
+        thisArg,
+        meta: this.meta
+      })
     }
   },
   methods: {
+    deleteReview() {
+      if (!confirm('Permanently delete this review and its replies?')) {
+        return
+      }
+      this.$store.dispatch('reviews/deleteReview', { code: this.code, id: this.id })
+        .then(() => this.$router.push({ name: 'info', params: { code: this.code } }))
+    },
+    editReview() {
+      console.warn('Edit not yet implemented')
+    },
+    report() {
+      console.warn('Report not yet implemented')
+    },
     upvote() {
       const { code, id, userLiked } = this
       const value = userLiked === 1 ? 0 : 1

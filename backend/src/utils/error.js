@@ -6,6 +6,7 @@
  * 1000 - misc
  *   1001:
  *   1002: validation error
+ *   1003: authorization: you don't have permission to do that!
  * 2000 - subject
  *   2001: subject doesn't exist
  * 3000 - course
@@ -26,8 +27,8 @@
  *   6002: invalid body
  * 7000 - user/auth
  *   7001: user doesn't exist
- *   7002: not allowed due to permissions or not logged in
- *   7003: not allowed because you need to create a profile
+ *   7002: not authenticated because of missing or malformed firebase token
+ *   7003: authenticated, but not authorized because you need to create a profile
  *   7004: invalid display name
  *   7005: invalid degree
  *   7006: invalid graduation year
@@ -41,6 +42,7 @@
 exports.APIErrorHandler = function(err, req, res, next) {
     // Log stack trace
     // Just use first 3 lines because rest is usually Express internals..
+    // Note that printing the stack also prints err.message
     console.error(err.stack.split('\n').slice(0, 4).join('\n'))
 
     // APIErrors (i.e. expected errors) will have a status
@@ -49,10 +51,12 @@ exports.APIErrorHandler = function(err, req, res, next) {
         err.code = 1000
         err.status = 500
         err.errors = []
+        err.message = 'Unknown Error'
     }
     console.error(`    HTTP response: ${err.status}\n    API error code: ${err.code}`)
 
     // Send the response
+    if (err.headers) res.header(err.headers)
     res.status(err.status).json({ message: err.message, code: err.code, errors: err.errors })
 }
 
@@ -70,15 +74,17 @@ class APIError extends Error {
      *  status: HTTP status code
      *  code: Error code (see above)
      *  message: User-readable error message (TODO: different message displayed to user/frontend developer?)
+     *  headers: mapping of header names to values if required; i.e. object to use as argument to response.header()
      *  errors: For validation errors on PUT, PATCH & POST
     *           list of { code, field, message } for each invalid field:
      */
-    constructor({ status = 400, code = 1000, message = 'Unknown Error', errors = [] }) {
+    constructor({ status = 400, code = 1000, message = 'Unknown Error', headers = null, errors = [] }) {
         // Pass remaining arguments (including vendor specific ones) to parent constructor
         super(message)
         this.status = status
         this.code = code
         this.errors = errors
+        this.headers = headers
     }
 }
 exports.APIError = APIError
