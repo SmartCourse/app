@@ -6,7 +6,7 @@ const courses = require('../../../data/courses')
 const sessions = require('../../../data/sessions')
 const {
     NUM_DUMMY_USERS,
-    SAMPLE_QUESTIONS,
+    ADMIN_QUESTIONS,
     SAMPLE_REVIEWS,
     SAMPLE_COMMENTS,
     SAMPLE_USERS
@@ -21,7 +21,9 @@ const {
     MAX_ENJOY,
     MIN_OPTION,
     MAX_OPTION,
-    PERMISSIONS_USER
+    PERMISSIONS_USER,
+    PERMISSIONS_ADMIN,
+    ADMIN_USERS
 } = require('../constants')
 
 // Globals
@@ -47,11 +49,10 @@ exports.unswDataInitialised = async function(db) {
     })
 }
 
-// Assume that if there is a question in the questions table,
-// testing data already exists.
-exports.testDataInitialised = async function(db) {
+// returns number of rows in review table (for checking if testing data exists)
+exports.reviewTestDataInitialised = async function(db) {
     return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM ${TABLE_NAMES.QUESTIONS}`
+        const query = `SELECT * FROM ${TABLE_NAMES.REVIEWS}`
         const request = new Request(query, (err, rowCount) =>
             err ? reject(err) : resolve(rowCount))
         db.execSql(request)
@@ -82,8 +83,8 @@ exports.sqlCourses = async function(db) {
     return bulkInsertDB(db, TABLE_NAMES.COURSES, courses)
 }
 
-function sqlQuestion(code) {
-    const userID = nextValue(1, NUM_DUMMY_USERS)
+function sqlAdminQuestion(code) {
+    const userID = nextValue(1, ADMIN_USERS.length)
     questions.push({ questionID: questions.length + 1 })
     questionsToLike.push({ objectType: TABLE_NAMES.QUESTIONS, objectID: questions.length, userID })
     return function(question) {
@@ -99,13 +100,13 @@ function sqlQuestion(code) {
 
 exports.sqlQuestions = async function(db) {
     let questions = courses.map(({ code }) =>
-        SAMPLE_QUESTIONS.map(sqlQuestion(code)))
+        ADMIN_QUESTIONS.map(sqlAdminQuestion(code)))
     questions = [].concat.apply([], questions)
     return bulkInsertDB(db, TABLE_NAMES.QUESTIONS, questions)
 }
 
 function sqlReview(code) {
-    const userID = nextValue(1, NUM_DUMMY_USERS)
+    const userID = nextValue(1 + ADMIN_USERS.length, NUM_DUMMY_USERS)
     reviews.push({ reviewID: reviews.length + 1 })
     reviewsToLike.push({ objectType: TABLE_NAMES.REVIEWS, objectID: reviews.length, userID })
     return function(review) {
@@ -140,7 +141,7 @@ function genComments(parent) {
     const numComments = nextValue(minRange, maxRange)
     for (let i = 0; i < numComments; i++) {
         const index = nextValue(0, numCommentTypes - 1)
-        const uid = nextValue(1, NUM_DUMMY_USERS)
+        const uid = nextValue(1 + ADMIN_USERS.length, NUM_DUMMY_USERS)
         const comment = {
             ...parent,
             commentParent: 1,
@@ -170,13 +171,27 @@ exports.sqlComments = async function(db) {
         })
 }
 
+exports.sqlAdminUsers = async function (db) {
+    const admins = ADMIN_USERS
+        .map(({ name: displayName, email, degree, uid }, i) => ({
+            uid,
+            displayName,
+            email,
+            degreeID: 1 + degrees.findIndex((d) => d.name === degree),
+            gradYear: '2018',
+            permissions: PERMISSIONS_ADMIN
+        }))
+
+    return bulkInsertDB(db, TABLE_NAMES.USERS, admins)
+}
+
 exports.sqlUsers = async function(db) {
     const userNames = SAMPLE_USERS
     const suffixes = ['XxX', '!', 's', '!!', '_', '__', 'x']
 
     let users = []
 
-    for (let i = 1; i <= NUM_DUMMY_USERS; i++) {
+    for (let i = 1 + ADMIN_USERS.length; i <= NUM_DUMMY_USERS; i++) {
         const uid = 'userID' + i
         const displayName =
             userNames[i % userNames.length] +
@@ -211,11 +226,11 @@ function genLikes(parent) {
     const numLikes = nextValue(-2, 5)
     if (numLikes <= 0) return []
     // choose numLikes consecutive users for these likes...
-    const startIndex = nextValue(1, NUM_DUMMY_USERS)
+    const startIndex = nextValue(1 + ADMIN_USERS.length, NUM_DUMMY_USERS)
 
     for (let i = startIndex; i < startIndex + numLikes; ++i) {
         const like = {
-            userID: (i % NUM_DUMMY_USERS) + 1,
+            userID: (i % NUM_DUMMY_USERS) + 1 + ADMIN_USERS.length,
             // more likely to be positive!
             value: nextValue(1, 10) > 7 ? -1 : 1,
             objectType: parent.objectType,
@@ -311,7 +326,7 @@ ${
             gradYear VARCHAR(8000),
             description VARCHAR(8000),
             picture VARCHAR(8000),
-            permissions INTEGER DEFAULT '${PERMISSIONS_USER}',
+            permissions INTEGER NOT NULL DEFAULT '${PERMISSIONS_USER}',
             CONSTRAINT fk_degree_user
                 FOREIGN KEY (degreeID)
                 REFERENCES ${TABLE_NAMES.DEGREES} (id)

@@ -1,8 +1,8 @@
 exports.NUM_DUMMY_USERS = 50
 
-exports.SAMPLE_QUESTIONS = [
+exports.ADMIN_QUESTIONS = [
     {
-        title: 'Is this course textbook necessary?',
+        title: 'Is the course textbook necessary?',
         body: 'I\'m wondering if it\'s worth buying/obtaining the course textbook. If not, are there good alternative resources that people might recommend?'
     },
     {
