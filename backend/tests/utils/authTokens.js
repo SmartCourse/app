@@ -1,8 +1,12 @@
 const app = require('../../src')
 const supertest = require('supertest')(app)
 const fetch = require('node-fetch')
+const { getRandomIntInclusive } = require('../../src/utils/helpers')
 
-function createGlobalIdToken(varName, displayName, email, password, existingProfile = false) {
+async function createGlobalIdToken(varName, displayName, email, password, existingProfile = false) {
+
+    // sleep a random amount because we're hitting google's api
+    await new Promise(resolve => setTimeout(resolve, getRandomIntInclusive(100, 1000)))
     return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
         {
             'credentials': 'omit',
