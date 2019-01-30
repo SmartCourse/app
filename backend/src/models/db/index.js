@@ -16,7 +16,7 @@ const {
     sqlAdminUsers,
     sqlUsers,
     unswDataInitialised,
-    testDataInitialised
+    reviewTestDataInitialised
 } = require('./init_sql')
 
 /**
@@ -66,12 +66,15 @@ class DB {
                         await sqlSubjects(connection)
                         await sqlCourses(connection)
                         await sqlSessions(connection)
-                        await sqlAdminUsers(connection)
-                        await sqlQuestions(connection)
                     }
 
-                    // Initialise test databases
-                    if (!PRODUCTION && !await testDataInitialised(connection)) {
+                    // user and question tables gets dropped on init, so we must always re-add them
+                    await sqlAdminUsers(connection)
+                    await sqlQuestions(connection)
+
+                    // Initialise testing data
+                    // uses review table to check if initialization has happened
+                    if (!PRODUCTION && !await reviewTestDataInitialised(connection)) {
                         await sqlReviews(connection)
                         await sqlComments(connection)
                         await sqlLikes(connection)

@@ -8,9 +8,9 @@ exports.DEVELOPMENT = process.env.NODE_ENV === 'development'
 // User Constants
 exports.ANONYMOUS = 0
 exports.ADMIN_USERS = [
-    { name: 'Nuno', email: 'nuno@smartcourse.me', degree: 'B. Computer Science' },
-    { name: 'Alex', email: 'alex@smartcourse.me', degree: 'B. Computer Science' },
-    { name: 'Papa', email: 'papa@smartcourse.me', degree: 'B. Computer Science' }
+    { name: 'Nuno', email: process.env.SUPERUSER_NUNO_EMAIL, degree: 'B. Computer Science', uid: process.env.SUPERUSER_NUNO_UID },
+    { name: 'Alex', email: process.env.SUPERUSER_ALEX_EMAIL, degree: 'B. Computer Science', uid: process.env.SUPERUSER_ALEX_UID },
+    { name: 'Papa', email: process.env.SUPERUSER_PAPA_EMAIL, degree: 'B. Computer Science', uid: process.env.SUPERUSER_PAPA_UID }
 ]
 
 // Review Constants

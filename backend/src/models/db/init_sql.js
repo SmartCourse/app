@@ -1,5 +1,4 @@
 const { Request } = require('tedious')
-const uuid = require('uuid/v4')
 const faculties = require('../../../data/faculties')
 const degrees = require('../../../data/degrees')
 const subjects = require('../../../data/subjects')
@@ -50,11 +49,10 @@ exports.unswDataInitialised = async function(db) {
     })
 }
 
-// Assume that if there is a question in the questions table,
-// testing data already exists.
-exports.testDataInitialised = async function(db) {
+// returns number of rows in review table (for checking if testing data exists)
+exports.reviewTestDataInitialised = async function(db) {
     return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM ${TABLE_NAMES.QUESTIONS}`
+        const query = `SELECT * FROM ${TABLE_NAMES.REVIEWS}`
         const request = new Request(query, (err, rowCount) =>
             err ? reject(err) : resolve(rowCount))
         db.execSql(request)
@@ -175,8 +173,8 @@ exports.sqlComments = async function(db) {
 
 exports.sqlAdminUsers = async function (db) {
     const admins = ADMIN_USERS
-        .map(({ name: displayName, email, degree }, i) => ({
-            uid: uuid(),
+        .map(({ name: displayName, email, degree, uid }, i) => ({
+            uid,
             displayName,
             email,
             degreeID: 1 + degrees.findIndex((d) => d.name === degree),
@@ -228,11 +226,11 @@ function genLikes(parent) {
     const numLikes = nextValue(-2, 5)
     if (numLikes <= 0) return []
     // choose numLikes consecutive users for these likes...
-    const startIndex = nextValue(1, NUM_DUMMY_USERS)
+    const startIndex = nextValue(1 + ADMIN_USERS.length, NUM_DUMMY_USERS)
 
     for (let i = startIndex; i < startIndex + numLikes; ++i) {
         const like = {
-            userID: (i % NUM_DUMMY_USERS) + 1,
+            userID: (i % NUM_DUMMY_USERS) + 1 + ADMIN_USERS.length,
             // more likely to be positive!
             value: nextValue(1, 10) > 7 ? -1 : 1,
             objectType: parent.objectType,
@@ -285,6 +283,7 @@ ${
         DROP TABLE IF EXISTS ${TABLE_NAMES.COMMENTS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.REVIEWS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.QUESTIONS}
+        DROP TABLE IF EXISTS ${TABLE_NAMES.USERS}
     ` : ''
 }
 
@@ -327,7 +326,7 @@ ${
             gradYear VARCHAR(8000),
             description VARCHAR(8000),
             picture VARCHAR(8000),
-            permissions INTEGER DEFAULT '${PERMISSIONS_USER}',
+            permissions INTEGER NOT NULL DEFAULT '${PERMISSIONS_USER}',
             CONSTRAINT fk_degree_user
                 FOREIGN KEY (degreeID)
                 REFERENCES ${TABLE_NAMES.DEGREES} (id)
@@ -477,9 +476,7 @@ async function bulkInsertDB(db, table, data) {
 
         // Setup the columns
         const columns = Object.keys(data[0])
-        console.warn(columns)
         columns.forEach((column) => {
-            console.warn(column, TABLE_COLUMNS[table][column].type)
             bulkLoad.addColumn(column, TABLE_COLUMNS[table][column].type,
                 TABLE_COLUMNS[table][column].options)
         })
@@ -489,7 +486,5 @@ async function bulkInsertDB(db, table, data) {
 
         // Do the insertion
         db.execBulkLoad(bulkLoad)
-
-        console.warn('Done:', table)
     })
 }

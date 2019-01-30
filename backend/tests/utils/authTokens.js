@@ -2,7 +2,7 @@ const app = require('../../src')
 const supertest = require('supertest')(app)
 const fetch = require('node-fetch')
 
-function createGlobalIdToken(varName, displayName, email, password) {
+function createGlobalIdToken(varName, displayName, email, password, existingProfile = false) {
     return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
         {
             'credentials': 'omit',
@@ -16,6 +16,8 @@ function createGlobalIdToken(varName, displayName, email, password) {
         .then((res) => res.json())
         .then((data) => {
             global[varName] = data.idToken
+            if (existingProfile) { return }
+            // if no existing profile, create one in the backend
             return supertest.post('/api/user')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global[varName]}`)
@@ -39,8 +41,9 @@ async function setup() {
         createGlobalIdToken(
             'idTokenSuper',
             'SuperUser',
-            process.env.SUPERUSER_EMAIL,
-            process.env.SUPERUSER_PASSWORD
+            process.env.SUPERUSER_NUNO_EMAIL,
+            process.env.SUPERUSER_NUNO_PASSWORD,
+            true
         )
     )
 
