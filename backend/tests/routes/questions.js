@@ -174,6 +174,59 @@ describe('Test question routes', () => {
             )
         })
     })
+
+    describe('POST /api/course/COMP4920/question/1/report', () => {
+        let request
+        const report = { reason: "It suuucks" }
+
+        before(() => {
+            request = supertest
+                .post('/api/course/COMP4920/question/1/report')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken1}`)
+                .send(report)
+                .expect('Content-Type', /json/)
+            return request
+        })
+
+        it('returns correct status', () =>
+            request.expect(201)
+        )
+
+        // TODO: user should be able to see their own report - frontend could even check this before trying to report/showing report button
+        /*it('returns correct Location', () => {
+            expect(request.res.headers.location).to.equal(`/api/course/COMP4920/question/1/report/${userid}`)
+        })*/
+        // TODO test that that user can see own report
+
+        describe('report exists in list', () => {
+            let followUp
+
+            before(() => {
+                followUp = supertest
+                    .get('/api/course/COMP4920/question/1/reports')
+                    .set('Accept', 'application/json')
+                    .set('Authorization', `Bearer ${global.idTokenSuper}`)
+                    .expect(200)
+
+                return followUp
+            })
+
+            it('has one report', () =>
+                followUp.then(({ body }) => {
+                    expect(body.length).to.equal(1)
+                })
+            )
+
+            it('has the correct report', () =>
+                followUp.then(({ body }) => {
+                    // TODO user id and other data that should be in report body
+                    expect(body[0].reason).to.equal(report.reason)
+                })
+            )
+        })
+
+    })
 })
 
 describe('Test answer routes', () => {
