@@ -472,7 +472,7 @@ ${
             CONSTRAINT fk_comment_report
                 FOREIGN KEY (commentID)
                 REFERENCES ${TABLE_NAMES.COMMENTS} (id),
-            CONSTRAINT fk_user_comment
+            CONSTRAINT fk_user_report
                 FOREIGN KEY (userID)
                 REFERENCES ${TABLE_NAMES.USERS} (id)
         );
