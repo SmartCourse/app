@@ -107,7 +107,7 @@ class Question {
                       THROW ${toSQLErrorCode(3001)}, 'The course does not exist', 1;
                   INSERT INTO ${QUESTIONS} (courseID, userID, title, body)
                       SELECT id, @userID, @title, @body
-                      FROM courses
+                      FROM ${COURSES}
                       WHERE code=@code;
                   SELECT @@identity AS id`,
             {

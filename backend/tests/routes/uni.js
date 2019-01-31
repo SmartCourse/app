@@ -76,8 +76,9 @@ describe('Uni route testing', function () {
 
         it('is ordered correctly', () =>
             getRequest.then(({ body }) => {
+                console.log(body)
                 expect(body[0].parentType).to.equal('question')
-                expect(body[0].parentID).to.equal(1)
+                expect(body[0].questionID).to.equal(1)
             })
         )
         // NOTE we don't check the number of reports because of the async report test for questions

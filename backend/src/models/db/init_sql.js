@@ -456,6 +456,7 @@ ${
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.REPORTS}' AND xtype='U')
         CREATE TABLE ${TABLE_NAMES.REPORTS} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
+            courseID INTEGER NOT NULL,
             questionID INTEGER,
             reviewID INTEGER,
             commentID INTEGER,
@@ -463,6 +464,9 @@ ${
             reason VARCHAR(8000) NOT NULL,
             reviewed BIT NOT NULL DEFAULT '0',
             timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
+            CONSTRAINT fk_course_report
+                FOREIGN KEY (courseID)
+                REFERENCES ${TABLE_NAMES.COURSES} (id),
             CONSTRAINT fk_question_report
                 FOREIGN KEY (questionID)
                 REFERENCES ${TABLE_NAMES.QUESTIONS} (id),

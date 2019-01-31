@@ -8,7 +8,7 @@ exports.postQuestionReport = function ({ user, params, query, body }, res, next)
     // note that there's no actual endpoint for this yet
     const location = `/api/course/${params.code}/question/${params.id}/report`
 
-    reportModel.postReport({ questionID: params.id }, body)
+    reportModel.postReport({ questionID: params.id }, params.code, body)
         .then(postResponseHandler(location, res))
         .catch(next)
 }

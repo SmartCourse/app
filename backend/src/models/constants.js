@@ -379,6 +379,10 @@ exports.TABLE_COLUMNS = {
             type: TYPES.Int,
             options: { nullable: false }
         },
+        courseID: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
         questionID: {
             type: TYPES.Int,
             options: { nullable: true }

@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { REPORTS, USERS, DEGREES, QUESTIONS, REVIEWS, COMMENTS } } = require('./constants')
+const { TABLE_NAMES: { REPORTS, USERS, DEGREES, QUESTIONS, REVIEWS, COMMENTS, COURSES } } = require('./constants')
 const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are report related */
@@ -13,7 +13,7 @@ class Report {
      * @param   {object} queryObject   Contains the type of id and its value
      * @returns {number} id of report
      */
-    postReport(queryObject, { reason, userID }) {
+    postReport(queryObject, code, { reason, userID }) {
         const [key, value] = Object.entries(queryObject)[0]
 
         // validation
@@ -29,11 +29,14 @@ class Report {
         return this.db
             .run(`IF EXISTS(SELECT * FROM ${REPORTS} WHERE ${key}=@${key} AND userID=@userID)
                       THROW ${toSQLErrorCode(8003)}, 'You''ve already reported this post', 1;
-                  INSERT INTO ${REPORTS} (${key}, reason, userID)
-                  VALUES (@${key}, @reason, @userID);
+                  INSERT INTO ${REPORTS} (courseID, ${key}, reason, userID)
+                      SELECT id, @${key}, @reason, @userID
+                      FROM ${COURSES}
+                      WHERE code=@code;
                   SELECT @@identity AS id`,
             {
-                [REPORTS]: { [key]: value, reason, userID }
+                [REPORTS]: { [key]: value, reason, userID },
+                [COURSES]: { code }
             })
             .then(([{ id }]) => id)
             .catch(translateSQLError({ [toSQLErrorCode(8003)]: 400 }))
@@ -71,7 +74,7 @@ class Report {
      * @returns {Array}
      */
     getAllReports(pageNumber = 1) {
-        // TODO this query looks gross but I think it's not that bad - if there's a cleaner way then plz change it
+        // TODO this query looks gross - if there's a cleaner way then plz change it
         // TODO this query may perform poorly at scale, in which case the JOIN's are not strictly necessary, they're just there to make the frontend's life easier
         return this.db
             .run(`SELECT COUNT(r.id) AS numReports,
@@ -83,14 +86,10 @@ class Report {
                   ELSE 'comment'
                 END) AS parentType,
 
-                (CASE
-                  WHEN r.questionID IS NOT NULL
-                    THEN r.questionID
-                  WHEN r.reviewID IS NOT NULL
-                    THEN r.reviewID
-                  ELSE r.commentID
-                END) AS parentID,
-
+                r.questionID,
+                r.reviewID,
+                r.commentID,
+                
                 (CASE
                   WHEN r.questionID IS NOT NULL
                     THEN q.title
@@ -105,13 +104,17 @@ class Report {
                   WHEN r.reviewID IS NOT NULL
                     THEN re.body
                   ELSE c.body
-                END) AS body
+                END) AS body,
+
+                cou.code
+
                 FROM ${REPORTS} AS r
                 LEFT OUTER JOIN ${QUESTIONS} as q ON r.questionID=q.id
                 LEFT OUTER JOIN ${REVIEWS} as re ON r.reviewID=re.id
                 LEFT OUTER JOIN ${COMMENTS} as c ON r.commentID=c.id
+                LEFT OUTER JOIN ${COURSES} as cou ON r.courseID=cou.id
 
-                GROUP BY r.questionID, r.reviewID, r.commentID, q.title, re.title, q.body, re.body, c.body
+                GROUP BY r.questionID, r.reviewID, r.commentID, q.title, re.title, q.body, re.body, c.body, cou.code
                 ORDER BY numReports DESC`,
             {})
     }
