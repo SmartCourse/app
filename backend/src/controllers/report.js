@@ -1,0 +1,25 @@
+const reportModel = require('../models/report')()
+const { getResponseHandler, postResponseHandler, APIError } = require('../utils/helpers')
+const { PERMISSIONS_MOD } = require('../models/constants')
+
+/* POST new report. */
+exports.postQuestionReport = function ({ user, params, query, body }, res, next) {
+    body.userID = user.id
+    // note that there's no actual endpoint for this yet
+    const location = `/api/course/${params.code}/question/${params.id}/report`
+
+    reportModel.postReport({ questionID: params.id }, body)
+        .then(postResponseHandler(location, res))
+        .catch(next)
+}
+
+/* GET question reports. */
+exports.getQuestionReports = function ({ user, params, query }, res, next) {
+    if (user.permissions < PERMISSIONS_MOD) {
+        throw new APIError({ code: 1003, status: 403, message: 'Sorry, you can\'t view reports!' })
+    }
+
+    reportModel.getReports({ questionID: params.id })
+        .then(getResponseHandler(res))
+        .catch(next)
+}

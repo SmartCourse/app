@@ -28,7 +28,6 @@ class Comment {
             })
         }
 
-        // TODO validate question/reviewID
         return this.db
             .run(`INSERT INTO ${COMMENTS} (${key}, body, userID)
                 VALUES (@${key}, @body, @userID);

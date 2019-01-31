@@ -177,7 +177,7 @@ describe('Test question routes', () => {
 
     describe('POST /api/course/COMP4920/question/1/report', () => {
         let request
-        const report = { reason: "It suuucks" }
+        const report = { reason: 'It suuucks' }
 
         before(() => {
             request = supertest
@@ -185,7 +185,6 @@ describe('Test question routes', () => {
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken1}`)
                 .send(report)
-                .expect('Content-Type', /json/)
             return request
         })
 
@@ -193,11 +192,11 @@ describe('Test question routes', () => {
             request.expect(201)
         )
 
+        it('returns correct Location', () => {
+            expect(request.res.headers.location).to.equal('/api/course/COMP4920/question/1/report/1')
+        })
         // TODO: user should be able to see their own report - frontend could even check this before trying to report/showing report button
-        /*it('returns correct Location', () => {
-            expect(request.res.headers.location).to.equal(`/api/course/COMP4920/question/1/report/${userid}`)
-        })*/
-        // TODO test that that user can see own report
+        // TODO: test that that user can see own report
 
         describe('report exists in list', () => {
             let followUp
@@ -225,7 +224,6 @@ describe('Test question routes', () => {
                 })
             )
         })
-
     })
 })
 

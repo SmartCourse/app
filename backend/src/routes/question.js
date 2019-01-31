@@ -2,6 +2,7 @@ const express = require('express')
 const question = express.Router({ mergeParams: true })
 const questionController = require('../controllers/question')
 const commentController = require('../controllers/comment')
+const reportController = require('../controllers/report')
 const { isAuthorized } = require('../utils/helpers')
 
 /* Get the question data for a specific question id */
@@ -44,12 +45,14 @@ question.put('/:id/likes', questionController.putQuestionLikes)
 question.put('/:id/answer/:answerID/likes', questionController.putAnswerLikes)
 
 /* Report a question */
-//question.post('/:id/report', reportController.reportQuestion)
+question.post('/:id/report', reportController.postQuestionReport)
 
 /* Get reports on a question */
-//question.get('/:id/reports', reportController.getQuestionReports)
+question.get('/:id/reports', reportController.getQuestionReports)
 
 /* TODO Report an answer */
-//question.post('/:id/answer/:answerID/report', reportController.reportAnswer)
+// question.post('/:id/answer/:answerID/report', reportController.reportAnswer)
+/* Get reports on an answer */
+// question.get('/:id/answer/:answerID/reports', reportController.getAnswerReports)
 
 module.exports = question
