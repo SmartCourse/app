@@ -42,6 +42,10 @@ export function editQuestion(course, id, data) {
   return put(`/course/${course}/question/${id}`, { data })
 }
 
+export function reportQuestion(course, id, data) {
+  return post(`/course/${course}/question/${id}/report`, { data })
+}
+
 export function deleteQuestion(course, id) {
   return remove(`/course/${course}/question/${id}`)
 }
