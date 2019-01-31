@@ -56,7 +56,9 @@ export default {
     },
     report() {
       const reason = prompt('Why should this question be removed?')
-      reportQuestion(this.code, this.id, { reason }).then(() => alert('Thank you. Your report has been submitted.'))
+      reportQuestion(this.code, this.id, { reason })
+        .then(() => alert('Thank you. Your report has been submitted.'))
+        .catch((err) => alert(err.message))
     },
     upvote() {
       const { code, id, userLiked } = this

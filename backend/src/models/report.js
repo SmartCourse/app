@@ -28,7 +28,7 @@ class Report {
 
         return this.db
             .run(`IF EXISTS(SELECT * FROM ${REPORTS} WHERE ${key}=@${key} AND userID=@userID)
-                      THROW ${toSQLErrorCode(8003)}, 'You can''t report this post twice!', 1;
+                      THROW ${toSQLErrorCode(8003)}, 'You''ve already reported this post', 1;
                   INSERT INTO ${REPORTS} (${key}, reason, userID)
                   VALUES (@${key}, @reason, @userID);
                   SELECT @@identity AS id`,
