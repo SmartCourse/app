@@ -284,6 +284,7 @@ ${
         DROP TABLE IF EXISTS ${TABLE_NAMES.REVIEWS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.QUESTIONS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.USERS}
+        DROP TABLE IF EXISTS ${TABLE_NAMES.REPORTS}
     ` : ''
 }
 
@@ -451,6 +452,30 @@ ${
         );
         CREATE UNIQUE INDEX id ON ${TABLE_NAMES.LIKES} (objectType, objectID, userID);
     END
+
+    IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.REPORTS}' AND xtype='U')
+        CREATE TABLE ${TABLE_NAMES.REPORTS} (
+            id INTEGER PRIMARY KEY IDENTITY(1,1),
+            questionID INTEGER,
+            reviewID INTEGER,
+            commentID INTEGER,
+            userID INTEGER NOT NULL,
+            reason VARCHAR(8000) NOT NULL,
+            reviewed BIT NOT NULL DEFAULT '0',
+            timestamp DATE NOT NULL DEFAULT (CONVERT (date, GETDATE())),
+            CONSTRAINT fk_question_report
+                FOREIGN KEY (questionID)
+                REFERENCES ${TABLE_NAMES.QUESTIONS} (id),
+            CONSTRAINT fk_review_report
+                FOREIGN KEY (reviewID)
+                REFERENCES ${TABLE_NAMES.REVIEWS} (id),
+            CONSTRAINT fk_comment_report
+                FOREIGN KEY (commentID)
+                REFERENCES ${TABLE_NAMES.COMMENTS} (id),
+            CONSTRAINT fk_user_comment
+                FOREIGN KEY (userID)
+                REFERENCES ${TABLE_NAMES.USERS} (id)
+        );
 
     COMMIT;`
 }

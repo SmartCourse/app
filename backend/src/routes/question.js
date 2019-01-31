@@ -19,7 +19,7 @@ question.get('/:id/answer/:answerID/likes', questionController.getAnswerLikes)
 /* Get an answer for a given question */
 question.get('/:id/answer/:cid', commentController.getComment)
 
-/* full auth check */
+/* -------------------------- full auth check ----------------------- */
 question.use(isAuthorized)
 
 /* Delete a question */
@@ -42,5 +42,14 @@ question.put('/:id/likes', questionController.putQuestionLikes)
 
 /* Put an updated question's answer like value */
 question.put('/:id/answer/:answerID/likes', questionController.putAnswerLikes)
+
+/* Report a question */
+question.post('/:id/report', reportController.reportQuestion)
+
+/* Get reports on a question */
+question.get('/:id/reports', reportController.getQuestionReports)
+
+/* TODO Report an answer */
+//question.post('/:id/answer/:answerID/report', reportController.reportAnswer)
 
 module.exports = question
