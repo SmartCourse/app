@@ -15,11 +15,24 @@ exports.postQuestionReport = function ({ user, params, query, body }, res, next)
 
 /* GET question reports. */
 exports.getQuestionReports = function ({ user, params, query }, res, next) {
+    // TODO should we reveal that this endpoint exists?
     if (user.permissions < PERMISSIONS_MOD) {
         throw new APIError({ code: 1003, status: 403, message: 'Sorry, you can\'t view reports!' })
     }
 
     reportModel.getReports({ questionID: params.id })
+        .then(getResponseHandler(res))
+        .catch(next)
+}
+
+/* GET a list of posts sorted by the number of reports on each. */
+exports.getReports = function ({ user, query }, res, next) {
+    // TODO should we reveal that this endpoint exists?
+    if (user.permissions < PERMISSIONS_MOD) {
+        throw new APIError({ code: 1003, status: 403, message: 'Sorry, you can\'t view reports!' })
+    }
+
+    reportModel.getAllReports(query.p)
         .then(getResponseHandler(res))
         .catch(next)
 }

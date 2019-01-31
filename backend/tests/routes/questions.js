@@ -198,6 +198,25 @@ describe('Test question routes', () => {
         // TODO: user should be able to see their own report - frontend could even check this before trying to report/showing report button
         // TODO: test that that user can see own report
 
+        describe('same user can\'t report post again', () => {
+            let followUp
+            before(() => {
+                followUp = supertest
+                    .post('/api/course/COMP4920/question/1/report')
+                    .set('Accept', 'application/json')
+                    .set('Authorization', `Bearer ${global.idToken1}`)
+                    .send({ reason: 'It really suuuucks' })
+                    .expect(400)
+                return followUp
+            })
+
+            it('has correct error code', () =>
+                followUp.then(({ body }) => {
+                    expect(body.code).to.equal(8003)
+                })
+            )
+        })
+
         describe('report exists in list', () => {
             let followUp
 

@@ -1,5 +1,5 @@
-const { TABLE_NAMES: { REPORTS, USERS, DEGREES } } = require('./constants')
-const { APIError } = require('../utils/error')
+const { TABLE_NAMES: { REPORTS, USERS, DEGREES, QUESTIONS, REVIEWS, COMMENTS } } = require('./constants')
+const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are report related */
 class Report {
@@ -22,18 +22,25 @@ class Report {
                 status: 400,
                 code: 1002,
                 message: 'Invalid reason',
-                errors: [{ code: 1002, message: 'Report must have a reason' }]
+                errors: [{ code: 8002, message: 'Report must have a reason' }]
             })
         }
 
+        // TODO user hasn't posted a report for that post already...
         return this.db
-            .run(`INSERT INTO ${REPORTS} (${key}, reason, userID)
-                VALUES (@${key}, @reason, @userID);
-                SELECT @@identity AS id`,
+            .run(`IF EXISTS(SELECT * FROM ${REPORTS} WHERE ${key}=@${key} AND userID=@userID)
+                      THROW ${toSQLErrorCode(8003)}, 'You can''t report this post twice!', 1;
+                  ELSE
+                      BEGIN
+                          INSERT INTO ${REPORTS} (${key}, reason, userID)
+                          VALUES (@${key}, @reason, @userID);
+                          SELECT @@identity AS id
+                      END`,
             {
                 [REPORTS]: { [key]: value, reason, userID }
             })
             .then(([{ id }]) => id)
+            .catch(translateSQLError({ [toSQLErrorCode(8003)]: 400 }))
     }
 
     /**
@@ -58,6 +65,27 @@ class Report {
             {
                 [REPORTS]: { [key]: value }
             })
+    }
+
+    /**
+     * Group all reports by post id, join with the post itself
+     * TODO: pagination
+     * @param   {number} pageNumber
+     * @returns {Array}
+     */
+    getAllReports(pageNumber = 1) {
+        return this.db
+            .run(`SELECT COUNT(r.id) AS numReports,
+                r.questionID, r.reviewID, r.commentID,
+                (IF r.questionID THEN q.title ELSE IF r.reviewID then re.title ELSE NULL) as title
+                FROM ${REPORTS} AS r
+                JOIN ${QUESTIONS} as q ON r.questionID=q.id
+                JOIN ${REVIEWS} as re ON r.reviewID=re.id
+                JOIN ${COMMENTS} as c ON r.commentID=c.id
+
+                GROUP BY questionID, reviewID, commentID
+                ORDER BY numReports DESC`,
+            {})
     }
 }
 

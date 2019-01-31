@@ -32,6 +32,10 @@
  *   7004: invalid display name
  *   7005: invalid degree
  *   7006: invalid graduation year
+ * 8000 - report
+ *   8001:
+ *   8002: invalid reason
+ *   8003: single user can't report a post more than once
 */
 
 /* Error handler
