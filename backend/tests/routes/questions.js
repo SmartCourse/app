@@ -4,12 +4,12 @@ const supertest = require('supertest')(app)
 const { expect } = require('chai')
 
 describe('Test question routes', () => {
-    describe('GET /api/course/COMP4920/question/1', () => {
+    describe('GET /api/course/ACCT1501/question/1', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/course/COMP4920/question/1')
+                .get('/api/course/ACCT1501/question/1')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -175,13 +175,13 @@ describe('Test question routes', () => {
         })
     })
 
-    describe('POST /api/course/COMP4920/question/1/report', () => {
+    describe('POST /api/course/ACCT1501/question/1/report', () => {
         let request
         const report = { reason: 'It suuucks' }
 
         before(() => {
             request = supertest
-                .post('/api/course/COMP4920/question/1/report')
+                .post('/api/course/ACCT1501/question/1/report')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken1}`)
                 .send(report)
@@ -193,7 +193,7 @@ describe('Test question routes', () => {
         )
 
         it('returns correct Location', () => {
-            expect(request.res.headers.location).to.equal('/api/course/COMP4920/question/1/report/1')
+            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/question/1/report/1')
         })
         // TODO: user should be able to see their own report - frontend could even check this before trying to report/showing report button
         // TODO: test that that user can see own report
@@ -202,7 +202,7 @@ describe('Test question routes', () => {
             let followUp
             before(() => {
                 followUp = supertest
-                    .post('/api/course/COMP4920/question/1/report')
+                    .post('/api/course/ACCT1501/question/1/report')
                     .set('Accept', 'application/json')
                     .set('Authorization', `Bearer ${global.idToken1}`)
                     .send({ reason: 'It really suuuucks' })
@@ -222,7 +222,7 @@ describe('Test question routes', () => {
 
             before(() => {
                 followUp = supertest
-                    .get('/api/course/COMP4920/question/1/reports')
+                    .get('/api/course/ACCT1501/question/1/reports')
                     .set('Accept', 'application/json')
                     .set('Authorization', `Bearer ${global.idTokenSuper}`)
                     .expect(200)
@@ -247,13 +247,13 @@ describe('Test question routes', () => {
 })
 
 describe('Test answer routes', () => {
-    describe('POST /api/course/COMP4920/question/1/answer', () => {
+    describe('POST /api/course/ACCT1501/question/1/answer', () => {
         let request
         let body = 'superruuu____testu'
 
         before(() => {
             request = supertest
-                .post('/api/course/COMP4920/question/1/answer')
+                .post('/api/course/ACCT1501/question/1/answer')
                 .send({ body })
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken1}`)
@@ -274,7 +274,7 @@ describe('Test answer routes', () => {
                     .then(({ headers }) => {
                         idToMatch = Number(headers['x-id'])
                         return supertest
-                            .get('/api/course/COMP4920/question/1/answers')
+                            .get('/api/course/ACCT1501/question/1/answers')
                             .set('Accept', 'application/json')
                             .expect('Content-Type', /json/)
                             .expect(200)
@@ -294,12 +294,12 @@ describe('Test answer routes', () => {
         })
     })
 
-    describe('GET /api/course/COMP4920/question/1/likes', () => {
+    describe('GET /api/course/ACCT1501/question/1/likes', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/course/COMP4920/question/1/likes')
+                .get('/api/course/ACCT1501/question/1/likes')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -319,12 +319,12 @@ describe('Test answer routes', () => {
         )
     })
 
-    describe('PUT /api/course/COMP4920/question/1/likes', () => {
+    describe('PUT /api/course/ACCT1501/question/1/likes', () => {
         let request
 
         before(() => {
             request = supertest
-                .put('/api/course/COMP4920/question/1/likes')
+                .put('/api/course/ACCT1501/question/1/likes')
                 .send({ value: 0 })
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken1}`)
@@ -341,12 +341,12 @@ describe('Test answer routes', () => {
         )
     })
 
-    describe('GET /api/course/COMP4920/question/1/answers', () => {
+    describe('GET /api/course/ACCT1501/question/1/answers', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/course/COMP4920/question/1/answers')
+                .get('/api/course/ACCT1501/question/1/answers')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -364,12 +364,12 @@ describe('Test answer routes', () => {
         )
     })
 
-    describe('POST /api/course/COMP4920/question/1/answers (ERROR)', () => {
+    describe('POST /api/course/ACCT1501/question/1/answers (ERROR)', () => {
         let request
 
         before(() => {
             request = supertest
-                .post('/api/course/COMP4920/question/1/answer')
+                .post('/api/course/ACCT1501/question/1/answer')
                 .send({ badBody: 'superruuu____testu' })
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken1}`)
