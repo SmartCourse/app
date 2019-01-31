@@ -21,6 +21,7 @@ exports.getQuestionReports = function ({ user, params, query }, res, next) {
     }
 
     reportModel.getReports({ questionID: params.id })
+        .then(res => res.map(({ id, reason, timestamp, reviewed, ...user }) => ({ id, reason, timestamp, reviewed, user })))
         .then(getResponseHandler(res))
         .catch(next)
 }

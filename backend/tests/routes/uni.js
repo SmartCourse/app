@@ -70,7 +70,7 @@ describe('Uni route testing', function () {
 
         it('has 2 entries', () =>
             getRequest.then(({ body }) => {
-                expect(body.length).to.equal(2)
+                expect(body.length).to.equal(3)
             })
         )
 

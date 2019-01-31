@@ -49,7 +49,8 @@ class Report {
         return this.db
             .run(`SELECT u.id AS userID, u.displayName, u.gradYear,
                 u.description, u.picture, u.reputation, u.joined,
-                r.*, d.name AS degree
+                d.name AS degree,
+                r.id, r.reason, r.reviewed, r.timestamp
                 FROM ${REPORTS} AS r
 
                 JOIN ${USERS} AS u

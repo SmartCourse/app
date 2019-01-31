@@ -175,13 +175,13 @@ describe('Test question routes', () => {
         })
     })
 
-    describe('POST /api/course/ACCT1501/question/1/report', () => {
+    describe('POST /api/course/ACCT1501/question/3/report', () => {
         let request
         const report = { reason: 'It suuucks' }
 
         before(() => {
             request = supertest
-                .post('/api/course/ACCT1501/question/1/report')
+                .post('/api/course/ACCT1501/question/3/report')
                 .set('Accept', 'application/json')
                 // NOTE: this must be a different user than in the uni route test for getReports
                 .set('Authorization', `Bearer ${global.idToken2}`)
@@ -194,7 +194,7 @@ describe('Test question routes', () => {
         )
 
         it('returns correct Location', () => {
-            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/question/1/report/1')
+            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/question/3/report/1')
         })
         // TODO: user should be able to see their own report - frontend could even check this before trying to report/showing report button
         // TODO: test that that user can see own report
@@ -203,7 +203,7 @@ describe('Test question routes', () => {
             let followUp
             before(() => {
                 followUp = supertest
-                    .post('/api/course/ACCT1501/question/1/report')
+                    .post('/api/course/ACCT1501/question/3/report')
                     .set('Accept', 'application/json')
                     // NOTE must be same user as above
                     .set('Authorization', `Bearer ${global.idToken2}`)
@@ -224,7 +224,7 @@ describe('Test question routes', () => {
 
             before(() => {
                 followUp = supertest
-                    .get('/api/course/ACCT1501/question/1/reports')
+                    .get('/api/course/ACCT1501/question/3/reports')
                     .set('Accept', 'application/json')
                     .set('Authorization', `Bearer ${global.idTokenSuper}`)
                     .expect(200)
@@ -240,7 +240,6 @@ describe('Test question routes', () => {
 
             it('has the correct report', () =>
                 followUp.then(({ body }) => {
-                    // TODO user id and other data that should be in report body
                     expect(body[0].reason).to.equal(report.reason)
                 })
             )
