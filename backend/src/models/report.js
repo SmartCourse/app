@@ -26,16 +26,12 @@ class Report {
             })
         }
 
-        // TODO user hasn't posted a report for that post already...
         return this.db
             .run(`IF EXISTS(SELECT * FROM ${REPORTS} WHERE ${key}=@${key} AND userID=@userID)
                       THROW ${toSQLErrorCode(8003)}, 'You can''t report this post twice!', 1;
-                  ELSE
-                      BEGIN
-                          INSERT INTO ${REPORTS} (${key}, reason, userID)
-                          VALUES (@${key}, @reason, @userID);
-                          SELECT @@identity AS id
-                      END`,
+                  INSERT INTO ${REPORTS} (${key}, reason, userID)
+                  VALUES (@${key}, @reason, @userID);
+                  SELECT @@identity AS id`,
             {
                 [REPORTS]: { [key]: value, reason, userID }
             })
@@ -74,16 +70,47 @@ class Report {
      * @returns {Array}
      */
     getAllReports(pageNumber = 1) {
+        // TODO this query looks gross but I think it's not that bad - if there's a cleaner way then plz change it
+        // TODO this query may perform poorly at scale, in which case the JOIN's are not strictly necessary, they're just there to make the frontend's life easier
         return this.db
             .run(`SELECT COUNT(r.id) AS numReports,
-                r.questionID, r.reviewID, r.commentID,
-                (IF r.questionID THEN q.title ELSE IF r.reviewID then re.title ELSE NULL) as title
-                FROM ${REPORTS} AS r
-                JOIN ${QUESTIONS} as q ON r.questionID=q.id
-                JOIN ${REVIEWS} as re ON r.reviewID=re.id
-                JOIN ${COMMENTS} as c ON r.commentID=c.id
+                (CASE
+                  WHEN r.questionID IS NOT NULL
+                    THEN 'question'
+                  WHEN r.reviewID IS NOT NULL
+                    THEN 'review'
+                  ELSE 'comment'
+                END) AS parentType,
 
-                GROUP BY questionID, reviewID, commentID
+                (CASE
+                  WHEN r.questionID IS NOT NULL
+                    THEN r.questionID
+                  WHEN r.reviewID IS NOT NULL
+                    THEN r.reviewID
+                  ELSE r.commentID
+                END) AS parentID,
+
+                (CASE
+                  WHEN r.questionID IS NOT NULL
+                    THEN q.title
+                  WHEN r.reviewID IS NOT NULL
+                    THEN re.title
+                  ELSE 'NULL'
+                END) AS title,
+
+                (CASE
+                  WHEN r.questionID IS NOT NULL
+                    THEN q.body
+                  WHEN r.reviewID IS NOT NULL
+                    THEN re.body
+                  ELSE c.body
+                END) AS body
+                FROM ${REPORTS} AS r
+                LEFT OUTER JOIN ${QUESTIONS} as q ON r.questionID=q.id
+                LEFT OUTER JOIN ${REVIEWS} as re ON r.reviewID=re.id
+                LEFT OUTER JOIN ${COMMENTS} as c ON r.commentID=c.id
+
+                GROUP BY r.questionID, r.reviewID, r.commentID, q.title, re.title, q.body, re.body, c.body
                 ORDER BY numReports DESC`,
             {})
     }

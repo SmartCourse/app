@@ -183,7 +183,8 @@ describe('Test question routes', () => {
             request = supertest
                 .post('/api/course/ACCT1501/question/1/report')
                 .set('Accept', 'application/json')
-                .set('Authorization', `Bearer ${global.idToken1}`)
+                // NOTE: this must be a different user than in the uni route test for getReports
+                .set('Authorization', `Bearer ${global.idToken2}`)
                 .send(report)
             return request
         })
@@ -204,7 +205,8 @@ describe('Test question routes', () => {
                 followUp = supertest
                     .post('/api/course/ACCT1501/question/1/report')
                     .set('Accept', 'application/json')
-                    .set('Authorization', `Bearer ${global.idToken1}`)
+                    // NOTE must be same user as above
+                    .set('Authorization', `Bearer ${global.idToken2}`)
                     .send({ reason: 'It really suuuucks' })
                     .expect(400)
                 return followUp

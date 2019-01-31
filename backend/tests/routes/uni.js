@@ -30,64 +30,56 @@ describe('Uni route testing', function () {
             })
     )
 
-    it('GET uni/reports', () => {
-        // let request
-        // const report = { reason: 'It suuucks' }
-        /* TODO
+    describe('GET uni/reports', () => {
+        let request1, request2, request3
+        const report = { reason: 'It suuucks' }
+        let getRequest
+
+        // do a bunch of reports
         before(() => {
             request1 = supertest
-                .post('/api/course/COMP4920/question/1/report')
+                .post('/api/course/ACCT1501/question/1/report')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken0}`)
+                .send(report)
+                .expect(201)
+            request2 = supertest
+                .post('/api/course/ACCT1501/question/1/report')
+                .send(report)
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken1}`)
+                .expect(201)
+            request3 = supertest
+                .post('/api/course/ACCT1501/question/2/report')
                 .send(report)
-                .then(res => {
-                    request1 = supertest
-                        .post('/api/course/COMP4920/question/1/report')
-                        .send(report)
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken1}`)
+                .expect(201)
+            // get the reports
+            return Promise.all([request1, request2, request3])
+                .then(() => {
+                    getRequest = supertest
+                        .get('/api/uni/reports')
                         .set('Accept', 'application/json')
-                        .set('Authorization', `Bearer ${global.idToken2}`)
-                        .expect(201)
-                    return postCommentRequest
+                        .set('Authorization', `Bearer ${global.idTokenSuper}`)
+                        .expect('Content-Type', /json/)
+                        .expect(200)
+                    return getRequest
                 })
-            return request
         })
 
-        it('returns correct status', () =>
-            request.expect(201)
+        it('has 2 entries', () =>
+            getRequest.then(({ body }) => {
+                expect(body.length).to.equal(2)
+            })
         )
 
-        it('returns correct Location', () => {
-            expect(request.res.headers.location).to.equal('/api/course/COMP4920/question/1/report/1')
-        })
-        // TODO: user should be able to see their own report - frontend could even check this before trying to report/showing report button
-        // TODO: test that that user can see own report
-
-        describe('report exists in list', () => {
-            let followUp
-
-            before(() => {
-                followUp = supertest
-                    .get('/api/course/COMP4920/question/1/reports')
-                    .set('Accept', 'application/json')
-                    .set('Authorization', `Bearer ${global.idTokenSuper}`)
-                    .expect(200)
-
-                return followUp
+        it('is ordered correctly', () =>
+            getRequest.then(({ body }) => {
+                expect(body[0].parentType).to.equal('question')
+                expect(body[0].parentID).to.equal(1)
             })
-
-            it('has one report', () =>
-                followUp.then(({ body }) => {
-                    expect(body.length).to.equal(1)
-                })
-            )
-
-            it('has the correct report', () =>
-                followUp.then(({ body }) => {
-                    // TODO user id and other data that should be in report body
-                    expect(body[0].reason).to.equal(report.reason)
-                })
-            )
-        })
-        */
+        )
+        // NOTE we don't check the number of reports because of the async report test for questions
     })
 })
