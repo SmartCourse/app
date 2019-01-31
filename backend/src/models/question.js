@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { QUESTIONS, COMMENTS, COURSES }, PERMISSIONS_MOD } = require('./constants')
+const { TABLE_NAMES: { QUESTIONS, COMMENTS, COURSES, REPORTS }, PERMISSIONS_MOD } = require('./constants')
 const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are question related */
@@ -152,13 +152,12 @@ class Question {
                       THROW ${toSQLErrorCode(4001)}, 'The question does not exist', 1;
                   IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${QUESTIONS} WHERE userID=@userID AND id=@id)
                       THROW ${toSQLErrorCode(1003)}, 'You cannot delete this question', 1;
-                  ELSE
-                      BEGIN
-                        DELETE ${COMMENTS}
-                            WHERE questionID=@questionID;
-                        DELETE ${QUESTIONS}
-                            WHERE id=@id;
-                      END;`,
+                  DELETE ${REPORTS}
+                      WHERE questionID=@questionID;
+                  DELETE ${COMMENTS}
+                      WHERE questionID=@questionID;
+                  DELETE ${QUESTIONS}
+                      WHERE id=@id;`,
             {
                 [QUESTIONS]: { userID, id },
                 [COMMENTS]: { questionID: id }

@@ -1,4 +1,4 @@
-const { TABLE_NAMES: { COMMENTS, USERS, DEGREES }, PERMISSIONS_MOD } = require('./constants')
+const { TABLE_NAMES: { COMMENTS, USERS, DEGREES, REPORTS }, PERMISSIONS_MOD } = require('./constants')
 const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
 
 /* All inputs should be validated in this class that are comment related */
@@ -123,9 +123,10 @@ class Comment {
                       THROW ${toSQLErrorCode(6001)}, 'The comment does not exist', 1;
                   IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
                       THROW ${toSQLErrorCode(1003)}, 'You cannot delete this comment', 1;
-                  ELSE
-                      DELETE ${COMMENTS}
-                      WHERE commentParent=@id OR id=@id;`,
+                  DELETE ${REPORTS}
+                    WHERE commentID=@id;
+                  DELETE ${COMMENTS}
+                    WHERE commentParent=@id OR id=@id;`,
             {
                 [COMMENTS]: { userID, id }
             })

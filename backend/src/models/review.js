@@ -5,7 +5,7 @@ const {
     MAX_ENJOY,
     MIN_OPTION,
     MAX_OPTION,
-    TABLE_NAMES: { REVIEWS, COURSES, COMMENTS },
+    TABLE_NAMES: { REVIEWS, COURSES, COMMENTS, REPORTS },
     PERMISSIONS_MOD
 } = require('./constants')
 const {
@@ -173,13 +173,12 @@ class Review {
                       THROW ${toSQLErrorCode(5001)}, 'The question does not exist', 1;
                   IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)
                       THROW ${toSQLErrorCode(1003)}, 'You cannot delete this question', 1;
-                  ELSE
-                    BEGIN
-                      DELETE ${COMMENTS}
-                        WHERE reviewID=@reviewID;
-                      DELETE ${REVIEWS}
-                        WHERE id=@id;
-                    END;`,
+                  DELETE ${REPORTS}
+                    WHERE reviewID=@reviewID;
+                  DELETE ${COMMENTS}
+                    WHERE reviewID=@reviewID;
+                  DELETE ${REVIEWS}
+                    WHERE id=@id;`,
             {
                 [COMMENTS]: { reviewID: id },
                 [REVIEWS]: { userID, id }
