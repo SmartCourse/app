@@ -83,11 +83,11 @@ class Report {
         return this.db
             .run(`SELECT COUNT(r.id) AS numReports,
                 (CASE
+                  WHEN r.commentID IS NOT NULL
+                    THEN 'comment'
                   WHEN r.questionID IS NOT NULL
                     THEN 'question'
-                  WHEN r.reviewID IS NOT NULL
-                    THEN 'review'
-                  ELSE 'comment'
+                  ELSE 'review'
                 END) AS parentType,
 
                 r.questionID,
@@ -95,19 +95,19 @@ class Report {
                 r.commentID,
 
                 (CASE
+                  WHEN r.commentID IS NOT NULL
+                    THEN NULL
                   WHEN r.questionID IS NOT NULL
                     THEN q.title
-                  WHEN r.reviewID IS NOT NULL
-                    THEN re.title
-                  ELSE 'NULL'
+                  ELSE re.title
                 END) AS title,
 
                 (CASE
+                  WHEN r.commentID IS NOT NULL
+                    THEN c.body
                   WHEN r.questionID IS NOT NULL
                     THEN q.body
-                  WHEN r.reviewID IS NOT NULL
-                    THEN re.body
-                  ELSE c.body
+                  ELSE re.body
                 END) AS body,
 
                 cou.code
