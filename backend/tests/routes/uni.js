@@ -76,7 +76,6 @@ describe('Uni route testing', function () {
 
         it('is ordered correctly', () =>
             getRequest.then(({ body }) => {
-                console.log(body)
                 expect(body[0].parentType).to.equal('question')
                 expect(body[0].questionID).to.equal(1)
             })

@@ -14,8 +14,6 @@ class Report {
      * @returns {number} id of report
      */
     postReport(queryObject, code, { reason, userID }) {
-        const [key, value] = Object.entries(queryObject)[0]
-
         // validation
         if (!reason) {
             throw new APIError({
@@ -26,16 +24,22 @@ class Report {
             })
         }
 
+        const commentID = queryObject.commentID
+        delete queryObject.commentID
+        // all reports have either a questionID or reviewID
+        const [topKey, topValue] = Object.entries(queryObject)[0]
+        console.log(`topKey: ${topKey}, topValue: ${topValue}`)
+
         return this.db
-            .run(`IF EXISTS(SELECT * FROM ${REPORTS} WHERE ${key}=@${key} AND userID=@userID)
+            .run(`IF EXISTS(SELECT * FROM ${REPORTS} WHERE ${topKey}=@${topKey} AND ${commentID ? 'commentID=@commentID' : 'commentID IS NULL'} AND userID=@userID)
                       THROW ${toSQLErrorCode(8003)}, 'You''ve already reported this post', 1;
-                  INSERT INTO ${REPORTS} (courseID, ${key}, reason, userID)
-                      SELECT id, @${key}, @reason, @userID
+                  INSERT INTO ${REPORTS} (courseID, ${topKey}, commentID, reason, userID)
+                      SELECT id, @${topKey}, ${commentID ? '@commentID' : 'NULL'}, @reason, @userID
                       FROM ${COURSES}
                       WHERE code=@code;
                   SELECT @@identity AS id`,
             {
-                [REPORTS]: { [key]: value, reason, userID },
+                [REPORTS]: { [topKey]: topValue, reason, userID, commentID },
                 [COURSES]: { code }
             })
             .then(([{ id }]) => id)
@@ -73,7 +77,7 @@ class Report {
      * @param   {number} pageNumber
      * @returns {Array}
      */
-    getAllReports(pageNumber = 1) {
+    getReportSummary(pageNumber = 1) {
         // TODO this query looks gross - if there's a cleaner way then plz change it
         // TODO this query may perform poorly at scale, in which case the JOIN's are not strictly necessary, they're just there to make the frontend's life easier
         return this.db
@@ -89,7 +93,7 @@ class Report {
                 r.questionID,
                 r.reviewID,
                 r.commentID,
-                
+
                 (CASE
                   WHEN r.questionID IS NOT NULL
                     THEN q.title

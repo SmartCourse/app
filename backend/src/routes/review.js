@@ -2,6 +2,7 @@ const express = require('express')
 const review = express.Router({ mergeParams: true })
 const reviewController = require('../controllers/review')
 const commentController = require('../controllers/comment')
+const reportController = require('../controllers/report')
 const { isAuthorized } = require('../utils/helpers')
 
 /* Get the review data for a specific review id */
@@ -42,5 +43,17 @@ review.put('/:id/likes', reviewController.putReviewLikes)
 
 /* Put an updated review's reply like value */
 review.put('/:id/comment/:replyID/likes', reviewController.putReplyLikes)
+
+/* Report a review */
+review.post('/:id/report', reportController.postReport('review'))
+
+/* Get reports on a review */
+review.get('/:id/reports', reportController.getReports('review'))
+
+/* Report an comment */
+review.post('/:id/comment/:cid/report', reportController.postReport('comment'))
+
+/* Get reports on an comment */
+review.get('/:id/comment/:cid/reports', reportController.getReports('comment'))
 
 module.exports = review

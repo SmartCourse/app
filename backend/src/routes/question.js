@@ -45,14 +45,15 @@ question.put('/:id/likes', questionController.putQuestionLikes)
 question.put('/:id/answer/:answerID/likes', questionController.putAnswerLikes)
 
 /* Report a question */
-question.post('/:id/report', reportController.postQuestionReport)
+question.post('/:id/report', reportController.postReport('question'))
 
 /* Get reports on a question */
-question.get('/:id/reports', reportController.getQuestionReports)
+question.get('/:id/reports', reportController.getReports('question'))
 
-/* TODO Report an answer */
-// question.post('/:id/answer/:answerID/report', reportController.reportAnswer)
+/* Report an answer */
+question.post('/:id/answer/:cid/report', reportController.postReport('answer'))
+
 /* Get reports on an answer */
-// question.get('/:id/answer/:answerID/reports', reportController.getAnswerReports)
+question.get('/:id/answer/:cid/reports', reportController.getReports('answer'))
 
 module.exports = question

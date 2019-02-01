@@ -20,6 +20,6 @@ uni.get('/sessions', uniController.getSessions)
 uni.use(isAuthorized)
 
 /* Return all posts with reports, sorted by number of reports */
-uni.get('/reports', reportController.getReports)
+uni.get('/reports', reportController.getReportSummary)
 
 module.exports = uni
