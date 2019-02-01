@@ -1,6 +1,6 @@
 const CORS_PREFLIGHT_METHODS = ['OPTIONS', 'HEAD']
 const CORS_ALLOWED_HEADERS = ['Origin', 'Authorization', 'X-Requested-With', 'Content-Type', 'Accept', 'Cache-Control'].join(', ')
-const CORS_ALLOWED_DOMAINS = ['https://smartcourse.me','https://www.smartcourse.me','https://admin.smartcourse.me']
+const CORS_ALLOWED_DOMAINS = ['https://smartcourse.me', 'https://www.smartcourse.me', 'https://admin.smartcourse.me']
 
 /**
  * Basic CORS middleware handler.
