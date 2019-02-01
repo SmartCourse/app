@@ -28,7 +28,6 @@ class Report {
         delete queryObject.commentID
         // all reports have either a questionID or reviewID
         const [topKey, topValue] = Object.entries(queryObject)[0]
-        console.log(`topKey: ${topKey}, topValue: ${topValue}`)
 
         return this.db
             .run(`IF EXISTS(SELECT * FROM ${REPORTS} WHERE ${topKey}=@${topKey} AND ${commentID ? 'commentID=@commentID' : 'commentID IS NULL'} AND userID=@userID)

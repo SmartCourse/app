@@ -17,8 +17,6 @@ exports.postReport = function (type) {
             location = `/api/course/${params.code}/${topType}/${params.id}/report`
         }
 
-        console.log(location)
-
         // reports always have a questionID or reviewID, and have a commentID if the reported post is a comment
         reportModel.postReport({
             [`${topType}ID`]: params.id,
