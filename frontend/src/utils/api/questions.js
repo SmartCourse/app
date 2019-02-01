@@ -89,3 +89,7 @@ export function deleteAnswer(course, id, commentID) {
 export function editAnswer(course, id, commentID, data) {
   return put(`/course/${course}/question/${id}/answer/${commentID}`, { data })
 }
+
+export function reportAnswer(course, id, commentID, data) {
+  return post(`/course/${course}/question/${id}/answer/${commentID}/report`, { data })
+}
