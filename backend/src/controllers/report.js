@@ -7,7 +7,7 @@ exports.postReport = function (type) {
     // note that there's no actual endpoint for this yet
     const topType = type === 'answer' || type === 'question' ? 'question' : 'review'
 
-    return function ({ user, params, query, body }, res, next) {
+    return function ({ user, params, body }, res, next) {
         body.userID = user.id
 
         let location
@@ -32,7 +32,7 @@ exports.getReports = function (type) {
     // change answer to comment
     type = type === 'answer' ? 'comment' : type
 
-    return function ({ user, params, query }, res, next) {
+    return function ({ user, params }, res, next) {
         // TODO should we reveal that this endpoint exists?
         if (user.permissions < PERMISSIONS_MOD) {
             throw new APIError({ code: 1003, status: 403, message: 'Sorry, you can\'t view reports!' })

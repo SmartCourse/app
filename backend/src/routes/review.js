@@ -3,7 +3,7 @@ const review = express.Router({ mergeParams: true })
 const reviewController = require('../controllers/review')
 const commentController = require('../controllers/comment')
 const reportController = require('../controllers/report')
-const { isLoggedIn } = require('../utils/helpers')
+const { isLoggedIn, isModOrHigher } = require('../utils/helpers')
 
 /* Get the review data for a specific review id */
 review.get('/:id', reviewController.getReview)
@@ -49,6 +49,8 @@ review.post('/:id/report', reportController.postReport('review'))
 
 /* Report a comment */
 review.post('/:id/comment/:cid/report', reportController.postReport('comment'))
+
+review.use(isModOrHigher)
 
 /* Get reports on a review */
 review.get('/:id/reports', reportController.getReports('review'))

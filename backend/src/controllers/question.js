@@ -67,7 +67,7 @@ exports.getQuestionAnswers = function ({ user, params, query }, res, next) {
 }
 
 /* POST new answer. */
-exports.postAnswer = function ({ user, params, query, body }, res, next) {
+exports.postAnswer = function ({ user, params, body }, res, next) {
     body.userID = user.id
     const location = `/api/course/${params.code}/question/${params.id}/answer`
 

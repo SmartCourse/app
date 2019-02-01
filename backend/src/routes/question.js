@@ -3,7 +3,7 @@ const question = express.Router({ mergeParams: true })
 const questionController = require('../controllers/question')
 const commentController = require('../controllers/comment')
 const reportController = require('../controllers/report')
-const { isLoggedIn } = require('../utils/helpers')
+const { isLoggedIn, isModOrHigher } = require('../utils/helpers')
 
 /* Get the question data for a specific question id */
 question.get('/:id', questionController.getQuestion)
@@ -49,6 +49,9 @@ question.post('/:id/report', reportController.postReport('question'))
 
 /* Report an answer */
 question.post('/:id/answer/:cid/report', reportController.postReport('answer'))
+
+/* Mods only */
+question.use(isModOrHigher)
 
 /* Get reports on a question */
 question.get('/:id/reports', reportController.getReports('question'))
