@@ -68,7 +68,7 @@ describe('Uni route testing', function () {
                 })
         })
 
-        it('has 2 entries', () =>
+        it('has 3 entries', () =>
             getRequest.then(({ body }) => {
                 expect(body.length).to.equal(3)
             })

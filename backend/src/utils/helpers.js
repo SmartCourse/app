@@ -42,7 +42,7 @@ exports.deleteResponseHandler = function(response) {
 
 exports.toLowerCase = str => str.toLowerCase()
 
-exports.isFirebaseAuthorized = function(req, res, next) {
+exports.hasFirebaseToken = function(req, res, next) {
     if (!req.authorized) {
         throw new APIError({
             status: 401,
@@ -54,9 +54,17 @@ exports.isFirebaseAuthorized = function(req, res, next) {
     next()
 }
 
-exports.isAuthorized = function(req, res, next) {
+exports.isLoggedIn = function(req, res, next) {
+    // you can't do stuff unless you have a profile!
     if (!req.user) {
         throw new APIError({ status: 403, code: 7003, message: 'No user profile' })
+    }
+    next()
+}
+
+exports.isModOrHigher = function(req, res, next) {
+    if (!req.user || req.user.permissions < PERMISSIONS_MOD) {
+        throw new APIError({ status: 403, code: 1003, message: 'You can\'t do that' })
     }
     next()
 }

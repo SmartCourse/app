@@ -13,14 +13,8 @@ exports.corsDev = function({ method }, res, next) {
 }
 
 exports.corsProd = function({ headers, method }, res, next) {
-    let allowedDomain = CORS_ALLOWED_DOMAINS[0]
-    for (let i = 1; i < CORS_ALLOWED_DOMAINS.length; ++i) {
-        const domain = CORS_ALLOWED_DOMAINS[i]
-        if (headers.origin && headers.origin.startsWith(domain)) {
-            allowedDomain = domain
-            break
-        }
-    }
+    const { origin } = headers
+    const allowedDomain = CORS_ALLOWED_DOMAINS.find(domain => origin && origin.startsWith(domain)) || CORS_ALLOWED_DOMAINS[0]
     setCorsHeaders(method, res, next, allowedDomain)
 }
 

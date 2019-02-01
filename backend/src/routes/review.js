@@ -3,7 +3,7 @@ const review = express.Router({ mergeParams: true })
 const reviewController = require('../controllers/review')
 const commentController = require('../controllers/comment')
 const reportController = require('../controllers/report')
-const { isAuthorized } = require('../utils/helpers')
+const { isLoggedIn } = require('../utils/helpers')
 
 /* Get the review data for a specific review id */
 review.get('/:id', reviewController.getReview)
@@ -21,7 +21,7 @@ review.get('/:id/comment/:replyID/likes', reviewController.getReplyLikes)
 review.get('/:id/comment/:cid', commentController.getComment)
 
 /* full auth check */
-review.use(isAuthorized)
+review.use(isLoggedIn)
 
 /* Delete a review */
 review.delete('/:id', reviewController.deleteReview)
@@ -47,11 +47,11 @@ review.put('/:id/comment/:replyID/likes', reviewController.putReplyLikes)
 /* Report a review */
 review.post('/:id/report', reportController.postReport('review'))
 
+/* Report a comment */
+review.post('/:id/comment/:cid/report', reportController.postReport('comment'))
+
 /* Get reports on a review */
 review.get('/:id/reports', reportController.getReports('review'))
-
-/* Report an comment */
-review.post('/:id/comment/:cid/report', reportController.postReport('comment'))
 
 /* Get reports on an comment */
 review.get('/:id/comment/:cid/reports', reportController.getReports('comment'))
