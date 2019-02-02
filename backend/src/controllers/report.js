@@ -43,7 +43,7 @@ exports.getReports = function (type) {
         reportModel.getReports({
             [`${type}ID`]: params.id
         })
-            .then(res => res.map(({ id, reason, timestamp, reviewed, ...user }) => ({ id, reason, timestamp, reviewed, user })))
+            .then(reports => reports.map(({ id, reason, timestamp, reviewed, ...user }) => ({ id, reason, timestamp, reviewed, user })))
             .then(getResponseHandler(res))
             .catch(next)
     }
