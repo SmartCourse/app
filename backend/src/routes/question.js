@@ -3,6 +3,7 @@ const question = express.Router({ mergeParams: true })
 const questionController = require('../controllers/question')
 const commentController = require('../controllers/comment')
 const reportController = require('../controllers/report')
+const courseController = require('../controllers/course')
 const { isLoggedIn, isModOrHigher } = require('../utils/helpers')
 
 /* Get the question data for a specific question id */
@@ -22,6 +23,9 @@ question.get('/:id/answer/:cid', commentController.getComment)
 
 /* full auth check */
 question.use(isLoggedIn)
+
+/* post a new question to a course page */
+question.post('/', courseController.postQuestion)
 
 /* Delete a question */
 question.delete('/:id', questionController.deleteQuestion)
@@ -51,11 +55,12 @@ question.post('/:id/report', reportController.postReport('question'))
 question.post('/:id/answer/:cid/report', reportController.postReport('answer'))
 
 /* Mods only */
+question.use(isModOrHigher)
 
 /* Get reports on a question */
-question.get('/:id/reports', isModOrHigher, reportController.getReports('question'))
+question.get('/:id/reports', reportController.getReports('question'))
 
 /* Get reports on an answer */
-question.get('/:id/answer/:cid/reports', isModOrHigher, reportController.getReports('answer'))
+question.get('/:id/answer/:cid/reports', reportController.getReports('answer'))
 
 module.exports = question

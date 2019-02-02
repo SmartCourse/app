@@ -37,7 +37,6 @@
  *   8002: invalid reason
  *   8003: single user can't report a post more than once
 */
-// const ERROR
 
 /* Error handler
  * Prints stack trace and sets response status and body
