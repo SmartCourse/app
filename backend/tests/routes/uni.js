@@ -82,4 +82,24 @@ describe('Uni route testing', function () {
         )
         // NOTE we don't check the number of reports because of the async report test for questions
     })
+
+    describe('GET uni/reports (error)', () => {
+        let getRequest
+
+        before(() => {
+            getRequest = supertest
+                .get('/api/uni/reports')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken0}`)
+                .expect('Content-Type', /json/)
+                .expect(403)
+            return getRequest
+        })
+
+        it('has the correct error code', () =>
+            getRequest.then(({ body }) => {
+                expect(body.code).to.equal(1003)
+            })
+        )
+    })
 })
