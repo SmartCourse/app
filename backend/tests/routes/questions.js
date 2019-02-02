@@ -245,6 +245,25 @@ describe('Test question routes', () => {
             )
         })
     })
+
+    describe('GET /api/course/ACCT1501/question/3/report (error)', () => {
+        let request
+
+        before(() => {
+            request = supertest
+                .get('/api/course/ACCT1501/question/3/reports')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken0}`)
+                .expect(403)
+            return request
+        })
+
+        it('has the correct error code', () =>
+            request.then(({ body }) => {
+                expect(body.code).to.equal(1003)
+            })
+        )
+    })
 })
 
 describe('Test answer routes', () => {
