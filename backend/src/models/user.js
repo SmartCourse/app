@@ -1,5 +1,5 @@
 const { TABLE_NAMES: { USERS, DEGREES } } = require('./constants')
-const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
+const { APIError, toSQLErrorCode, translateSQLError, ERRORS } = require('../utils/error')
 
 /* All inputs should be validated in this class that are User related */
 class User {
@@ -28,7 +28,7 @@ class User {
                     if (profile.reputation < 0) profile.reputation = 0
                     return profile
                 }
-                throw new APIError({ status: 404, code: 7001, message: 'No such user' })
+                throw new APIError(ERRORS.AUTH.MISSING)
             })
     }
 
@@ -53,7 +53,7 @@ class User {
                     if (profile.reputation < 0) profile.reputation = 0
                     return profile
                 }
-                throw new APIError({ status: 404, code: 7001, message: 'No such user' })
+                throw new APIError(ERRORS.AUTH.MISSING)
             })
     }
 
@@ -73,7 +73,7 @@ class User {
             })
             .then(([profile]) => {
                 if (profile) return profile
-                throw new APIError({ status: 404, code: 7001, message: 'No user profile for that uid' })
+                throw new APIError(ERRORS.AUTH.MISSING)
             })
     }
 

@@ -1,5 +1,10 @@
 const { TABLE_NAMES: { QUESTIONS, COMMENTS, COURSES, REPORTS }, PERMISSIONS_MOD } = require('./constants')
-const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
+const {
+    APIError,
+    toSQLErrorCode,
+    translateSQLError,
+    ERRORS
+} = require('../utils/error')
 
 /* All inputs should be validated in this class that are question related */
 class Question {
@@ -21,7 +26,7 @@ class Question {
                 })
             .then(([row]) => {
                 if (row) return row
-                throw new APIError({ status: 404, code: 4001, message: 'The question does not exist' })
+                throw new APIError(ERRORS.QUESTION.MISSING)
             })
     }
 
@@ -33,7 +38,7 @@ class Question {
      */
     getQuestions(code, pageNumber, pageSize) {
         if (isNaN(pageNumber) || isNaN(pageSize)) {
-            throw APIError({ status: 400, code: 4000, message: 'Invalid paging values' })
+            throw new APIError({ ...ERRORS.QUESTION.BAD_REQUEST, message: 'Invalid paging values' })
         }
 
         const offset = (pageSize * pageNumber) - pageSize
@@ -57,7 +62,7 @@ class Question {
 
     getQuestionsByUserID(userID, limit = 10) {
         if (isNaN(limit)) {
-            throw APIError({ status: 400, code: 4000, message: 'Invalid limit' })
+            throw new APIError({ ...ERRORS.QUESTION.BAD_REQUEST, message: 'Invalid limit' })
         }
         // TODO 404 error for invalid user
         return this.db
@@ -96,10 +101,10 @@ class Question {
     postQuestion(code, { userID, title, body }) {
         // validation
         const errors = []
-        if (!title) errors.push({ code: 4002, message: 'Question must have a title' })
-        if (!body) errors.push({ code: 4003, message: 'Question must have a body' })
+        if (!title) errors.push(ERRORS.QUESTION.NO_TITLE)
+        if (!body) errors.push(ERRORS.QUESTION.NO_BODY)
         if (errors.length > 0) {
-            throw new APIError({ status: 400, code: 1002, message: 'Invalid question', errors })
+            throw new APIError({ ...ERRORS.MISC.BAD_REQUEST, message: 'Invalid question', errors })
         }
 
         return this.db

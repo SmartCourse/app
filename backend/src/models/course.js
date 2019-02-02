@@ -1,5 +1,10 @@
 const { TABLE_NAMES: { COURSES, SUBJECTS, REVIEWS } } = require('./constants')
-const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
+const {
+    APIError,
+    toSQLErrorCode,
+    translateSQLError,
+    ERRORS: { COURSE: COURSE_ERROR }
+} = require('../utils/error')
 
 /* All inputs should be validated in this class that are course related */
 class Course {
@@ -49,7 +54,7 @@ class Course {
                     }))
             .then(([row]) => {
                 if (row) return row
-                throw new APIError({ status: 404, code: 3001, message: `The requested course '${code}' does not exist` })
+                throw new APIError({ ...COURSE_ERROR.MISSING, message: `The requested course '${code}' does not exist` })
             })
     }
 

@@ -3,6 +3,7 @@ const review = express.Router({ mergeParams: true })
 const reviewController = require('../controllers/review')
 const commentController = require('../controllers/comment')
 const reportController = require('../controllers/report')
+const courseController = require('../controllers/course')
 const { isLoggedIn, isModOrHigher } = require('../utils/helpers')
 
 /* Get the review data for a specific review id */
@@ -22,6 +23,9 @@ review.get('/:id/comment/:cid', commentController.getComment)
 
 /* full auth check */
 review.use(isLoggedIn)
+
+/* create a new review for course */
+review.post('/', courseController.postReview)
 
 /* Delete a review */
 review.delete('/:id', reviewController.deleteReview)
@@ -50,12 +54,13 @@ review.post('/:id/report', reportController.postReport('review'))
 /* Report a comment */
 review.post('/:id/comment/:cid/report', reportController.postReport('comment'))
 
-// review.use(isModOrHigher)
+/* Mods only */
+review.use(isModOrHigher)
 
 /* Get reports on a review */
-review.get('/:id/reports', isModOrHigher, reportController.getReports('review'))
+review.get('/:id/reports', reportController.getReports('review'))
 
 /* Get reports on an comment */
-review.get('/:id/comment/:cid/reports', isModOrHigher, reportController.getReports('comment'))
+review.get('/:id/comment/:cid/reports', reportController.getReports('comment'))
 
 module.exports = review

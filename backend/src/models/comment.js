@@ -1,5 +1,5 @@
 const { TABLE_NAMES: { COMMENTS, USERS, DEGREES, REPORTS }, PERMISSIONS_MOD } = require('./constants')
-const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
+const { APIError, toSQLErrorCode, translateSQLError, ERRORS } = require('../utils/error')
 
 /* All inputs should be validated in this class that are comment related */
 class Comment {
@@ -21,8 +21,7 @@ class Comment {
         if (!body) {
             const type = key === 'questionID' ? 'answer' : 'comment'
             throw new APIError({
-                status: 400,
-                code: 1002,
+                ...ERRORS.MISC.VALIDATION,
                 message: `Invalid ${type}`,
                 errors: [{ code: 6002, message: `${type} must have a body` }]
             })
@@ -83,7 +82,7 @@ class Comment {
             })
             .then(([row]) => {
                 if (row) return row
-                throw new APIError({ status: 404, code: 6001, message: 'The comment does not exist' })
+                throw new APIError(ERRORS.COMMENT.MISSING)
             })
     }
 

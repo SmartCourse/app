@@ -1,3 +1,7 @@
+const BAD_REQUEST = 400
+const FORBIDDEN = 403
+const RESOURCE_NOT_FOUND = 404
+const SERVER_ERROR = 500
 /*
  * API error codes
  * TODO error constant file
@@ -37,27 +41,101 @@
  *   8002: invalid reason
  *   8003: single user can't report a post more than once
 */
-const ERRORS = {
+exports.ERRORS = {
     MISC: {
+        UNKNOWN: {
+            status: SERVER_ERROR,
+            code: 1000,
+            message: 'Unknown error'
+        },
         VALIDATION: {
-            status: 400,
+            status: BAD_REQUEST,
             code: 1002,
-            message: 'Validation error',
-            errors: [{ code: 8002, message: 'Report must have a reason' }]
+            message: 'Validation error'
         },
         AUTHORIZATION: {
             code: 1003,
-            status: 403,
+            status: FORBIDDEN,
             message: 'Authorization error. You have insufficient permissions.'
         }
     },
     SUBJECT: {
-        code: 
+        MISSING: {
+            status: RESOURCE_NOT_FOUND,
+            code: 2001,
+            message: 'Subject doesn\'t exist'
+        }
     },
     COURSE: {
-
+        MISSING: {
+            status: RESOURCE_NOT_FOUND,
+            code: 3001,
+            message: 'Course doesn\'t exist'
+        }
     },
-    
+    QUESTION: {
+        BAD_REQUEST: {
+            code: 4000,
+            status: BAD_REQUEST,
+            message: 'Malformed request'
+        },
+        MISSING: {
+            code: 4001,
+            status: RESOURCE_NOT_FOUND,
+            message: 'Question doesn\'t exist'
+        },
+        NO_TITLE: {
+            code: 4002,
+            status: BAD_REQUEST,
+            message: 'Question must have a title'
+        },
+        NO_BODY: {
+            code: 4003,
+            status: BAD_REQUEST,
+            message: 'Question must have a body'
+        }
+    },
+    REVIEW: {
+        MISSING: {
+            status: RESOURCE_NOT_FOUND,
+            code: 5001,
+            message: 'Review doesn\'t exist'
+        },
+        NO_TITLE: {
+            code: 5002,
+            message: 'Review must have a title'
+        },
+        NO_BODY: {
+            code: 5003,
+            message: 'Review must have a body'
+        },
+        INVALID_RECOMMEND: {
+            code: 5004,
+            message: 'Invalid recommend value'
+        },
+        INVALID_ENJOY: {
+            code: 5005,
+            message: 'Invalid enjoy value'
+        },
+        NO_SESSION: {
+            code: 5006, 
+            message: 'No session provided'
+        }
+    },
+    COMMENT: {
+        MISSING: {
+            status: RESOURCE_NOT_FOUND,
+            code: 6001,
+            message: 'Comment doesn\'t exist'
+        }
+    },
+    AUTH: {
+        MISSING: {
+            status: RESOURCE_NOT_FOUND,
+            code: 7001,
+            message: 'User doesn\'t exist'
+        }
+    }
 }
 
 /* Error handler
@@ -73,11 +151,12 @@ exports.APIErrorHandler = function(err, req, res, next) {
 
     // APIErrors (i.e. expected errors) will have a status
     if (!err.status) {
+        const { code, status, message } = exports.ERRORS.MISC.UNKNOWN
         // If it's an unexpected error, we just treat it as a 500
-        err.code = 1000
-        err.status = 500
+        err.code = code
+        err.status = status
         err.errors = []
-        err.message = 'Unknown Error'
+        err.message = message
     }
     console.error(`    HTTP response: ${err.status}\n    API error code: ${err.code}`)
 
@@ -105,7 +184,7 @@ class APIError extends Error {
      *           list of { code, field, message } for each invalid field:
      * @returns {APIError}
      */
-    constructor({ status = 400, code = 1000, message = 'Unknown Error', headers = null, errors = [] }) {
+    constructor({ status = BAD_REQUEST, code = 1000, message = 'Unknown Error', headers = null, errors = [] }) {
         // Pass remaining arguments (including vendor specific ones) to parent constructor
         super(message)
         this.status = status

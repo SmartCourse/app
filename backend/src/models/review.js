@@ -11,7 +11,8 @@ const {
 const {
     APIError,
     toSQLErrorCode,
-    translateSQLError
+    translateSQLError,
+    ERRORS
 } = require('../utils/error')
 
 /* All inputs should be validated in this class that are review related */
@@ -35,7 +36,7 @@ class Review {
                 })
             .then(([row]) => {
                 if (row) return row
-                throw new APIError({ status: 404, code: 5001, message: 'The review does not exist' })
+                throw new APIError(ERRORS.REVIEW.MISSING)
             })
     }
 
@@ -91,17 +92,13 @@ class Review {
     postReview(code, { title, body, recommend, enjoy, difficulty, teaching, workload, userID, session }) {
         // validation
         const errors = []
-        if (!title) errors.push({ code: 5002, message: 'Review must have a title' })
-        if (!body) errors.push({ code: 5003, message: 'Review must have a body' })
+        if (!title) errors.push(ERRORS.REVIEW.NO_TITLE)
+        if (!body) errors.push(ERRORS.REVIEW.NO_BODY)
         if (recommend !== DONT_RECOMMEND && recommend !== RECOMMEND) {
-            errors.push({ code: 5004, message: 'Invalid recommend value' })
+            errors.push(ERRORS.REVIEW.INVALID_RECOMMEND)
         }
-        if (enjoy < MIN_ENJOY || enjoy > MAX_ENJOY) {
-            errors.push({ code: 5005, message: 'Invalid enjoy value' })
-        }
-        if (!session) {
-            errors.push({ code: 5006, message: 'No session provided' })
-        }
+        if (enjoy < MIN_ENJOY || enjoy > MAX_ENJOY) errors.push(ERRORS.REVIEW.INVALID_ENJOY)
+        if (!session) errors.push(ERRORS.REVIEW.NO_SESSION)
 
         Object.entries({ difficulty, teaching, workload })
             .forEach(([key, item]) => {
@@ -110,7 +107,7 @@ class Review {
                 }
             })
         if (errors.length > 0) {
-            throw new APIError({ status: 400, code: 1002, message: 'Invalid review' })
+            throw new APIError({ ...ERRORS.MISC.VALIDATION, errors })
         }
 
         // insert review, get review, update course ratings
