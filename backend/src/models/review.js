@@ -10,8 +10,7 @@ const {
 } = require('./constants')
 const {
     APIError,
-    toSQLErrorCode,
-    translateSQLError,
+    toSQLThrow,
     ERRORS
 } = require('../utils/error')
 
@@ -52,7 +51,7 @@ class Review {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
             .run(`IF NOT EXISTS (SELECT * FROM ${COURSES} WHERE code=@code)
-                      THROW ${toSQLErrorCode(3001)}, 'The course does not exist', 1;
+                      ${toSQLThrow(ERRORS.COURSE.MISSING)}
                   SELECT r.*, cou.code, (SELECT COUNT(com.reviewID)
                   FROM ${COMMENTS} com
                   WHERE com.reviewID = r.id) as numResponses
@@ -65,7 +64,6 @@ class Review {
             {
                 [COURSES]: { code }
             })
-            .catch(translateSQLError({ [toSQLErrorCode(3001)]: 404 }))
     }
 
     /**
@@ -113,7 +111,7 @@ class Review {
         // insert review, get review, update course ratings
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${COURSES} WHERE code=@code)
-                      THROW ${toSQLErrorCode(3001)}, 'The course does not exist', 1;
+                      ${toSQLThrow(ERRORS.COURSE.MISSING)}
                   INSERT INTO ${REVIEWS} (courseID, userID, title, body, recommend, enjoy, difficulty, teaching, workload, session)
                       SELECT id, @userID, @title, @body, @recommend, @enjoy, @difficulty, @teaching, @workload, @session
                       FROM courses
@@ -124,7 +122,6 @@ class Review {
                 [COURSES]: { code }
             })
             .then(([{ id }]) => id)
-            .catch(translateSQLError({ [toSQLErrorCode(3001)]: 404 }))
     }
 
     /**
@@ -137,9 +134,9 @@ class Review {
         // TODO 404 errors and permissions..
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${REVIEWS} WHERE id=@id)
-                      THROW ${toSQLErrorCode(5001)}, 'The review does not exist', 1;
+                      ${toSQLThrow(ERRORS.REVIEW.MISSING)}
                   IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)
-                      THROW ${toSQLErrorCode(1003)}, 'You cannot edit this review', 1;
+                      ${toSQLThrow(ERRORS.MISC.AUTHORIZATION)}
                   ELSE
                       UPDATE ${REVIEWS}
                       SET
@@ -153,7 +150,6 @@ class Review {
             {
                 [REVIEWS]: { userID, body, id, recommend, enjoy, difficulty, teaching, workload }
             })
-            .catch(translateSQLError({ [toSQLErrorCode(5001)]: 404, [toSQLErrorCode(1003)]: 403 }))
     }
 
     /**
@@ -167,9 +163,9 @@ class Review {
         // TODO throw appropriate errors
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${REVIEWS} WHERE id=@id)
-                      THROW ${toSQLErrorCode(5001)}, 'The question does not exist', 1;
+                      ${toSQLThrow(ERRORS.REVIEW.MISSING)}
                   IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${REVIEWS} WHERE userID=@userID AND id=@id)
-                      THROW ${toSQLErrorCode(1003)}, 'You cannot delete this question', 1;
+                      ${toSQLThrow(ERRORS.MISC.AUTHORIZATION)}
                   DELETE ${REPORTS}
                     WHERE reviewID=@reviewID;
                   DELETE ${COMMENTS}
@@ -180,7 +176,6 @@ class Review {
                 [COMMENTS]: { reviewID: id },
                 [REVIEWS]: { userID, id }
             })
-            .catch(translateSQLError({ [toSQLErrorCode(5001)]: 404, [toSQLErrorCode(1003)]: 403 }))
     }
 }
 

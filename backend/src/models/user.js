@@ -1,5 +1,5 @@
 const { TABLE_NAMES: { USERS, DEGREES } } = require('./constants')
-const { APIError, toSQLErrorCode, translateSQLError, ERRORS } = require('../utils/error')
+const { APIError, toSQLThrow, ERRORS } = require('../utils/error')
 
 /* All inputs should be validated in this class that are User related */
 class User {
@@ -131,13 +131,12 @@ class User {
                       JOIN ${DEGREES} d ON d.name=@name
                       WHERE u.id = @id;
                   ELSE
-                      THROW ${toSQLErrorCode(7001)}, 'No such user', 1;`,
+                      ${toSQLThrow(ERRORS.USER.MISSING)}`,
             {
                 [DEGREES]: { name: degree },
                 [USERS]: { id, ...data }
             })
             .then(() => this.getProfile(id))
-            .catch(translateSQLError({ [toSQLErrorCode(7001)]: 404 }))
     }
 }
 

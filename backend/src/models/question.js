@@ -1,8 +1,7 @@
 const { TABLE_NAMES: { QUESTIONS, COMMENTS, COURSES, REPORTS }, PERMISSIONS_MOD } = require('./constants')
 const {
     APIError,
-    toSQLErrorCode,
-    translateSQLError,
+    toSQLThrow,
     ERRORS
 } = require('../utils/error')
 
@@ -44,7 +43,7 @@ class Question {
         const offset = (pageSize * pageNumber) - pageSize
         return this.db
             .run(`IF NOT EXISTS (SELECT * FROM ${COURSES} WHERE code=@code)
-                      THROW ${toSQLErrorCode(ERRORS.QUESTION.MISSING.code)}, 'The course does not exist', 1;
+                      ${toSQLThrow(ERRORS.QUESTION.MISSING)}
                   SELECT q.*, cou.code, (SELECT COUNT(com.questionID)
                   FROM ${COMMENTS} com
                   WHERE com.questionID = q.id) as numAnswers
@@ -57,7 +56,6 @@ class Question {
             {
                 [COURSES]: { code }
             })
-            .catch(translateSQLError({ [toSQLErrorCode(ERRORS.QUESTION.MISSING.code)]: 404 }))
     }
 
     getQuestionsByUserID(userID, limit = 10) {
@@ -109,7 +107,7 @@ class Question {
 
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${COURSES} WHERE code=@code)
-                      THROW ${toSQLErrorCode(ERRORS.COURSE.MISSING.code)}, 'The course does not exist', 1;
+                      ${toSQLThrow(ERRORS.COURSE.MISSING)}
                   INSERT INTO ${QUESTIONS} (courseID, userID, title, body)
                       SELECT id, @userID, @title, @body
                       FROM ${COURSES}
@@ -120,7 +118,6 @@ class Question {
                 [COURSES]: { code }
             })
             .then(([{ id }]) => id)
-            .catch(translateSQLError({ [toSQLErrorCode(ERRORS.COURSE.MISSING.code)]: 404 }))
     }
 
     /**
@@ -132,9 +129,9 @@ class Question {
     putQuestion(id, { userID, body, permissions }) {
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${QUESTIONS} WHERE id=@id)
-                      THROW ${toSQLErrorCode(ERRORS.QUESTION.MISSING.code)}, 'The question does not exist', 1;
+                      ${toSQLThrow(ERRORS.QUESTION.MISSING)}
                   IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${QUESTIONS} WHERE userID=@userID AND id=@id)
-                      THROW ${toSQLErrorCode(ERRORS.MISC.AUTHORIZATION.code)}, 'You cannot edit this question', 1;
+                      ${toSQLThrow(ERRORS.MISC.AUTHORIZATION)}
                   ELSE
                       UPDATE ${QUESTIONS}
                       SET body=@body
@@ -142,7 +139,6 @@ class Question {
             {
                 [QUESTIONS]: { userID, body, id }
             })
-            .catch(translateSQLError({ [toSQLErrorCode(ERRORS.QUESTION.MISSING.code)]: 404, [toSQLErrorCode(ERRORS.MISC.AUTHORIZATION.code)]: 403 }))
     }
 
     /**
@@ -154,9 +150,9 @@ class Question {
     deleteQuestion(id, userID, permissions) {
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${QUESTIONS} WHERE id=@id)
-                      THROW ${toSQLErrorCode(ERRORS.QUESTION.MISSING.code)}, 'The question does not exist', 1;
+                      ${toSQLThrow(ERRORS.QUESTION.MISSING)}
                   IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${QUESTIONS} WHERE userID=@userID AND id=@id)
-                      THROW ${toSQLErrorCode(ERRORS.MISC.AUTHORIZATION.code)}, 'You cannot delete this question', 1;
+                      ${toSQLThrow(ERRORS.MISC.AUTHORIZATION)}
                   DELETE ${REPORTS}
                       WHERE questionID=@questionID;
                   DELETE ${COMMENTS}
@@ -167,7 +163,6 @@ class Question {
                 [QUESTIONS]: { userID, id },
                 [COMMENTS]: { questionID: id }
             })
-            .catch(translateSQLError({ [toSQLErrorCode(ERRORS.QUESTION.MISSING.code)]: 404, [toSQLErrorCode(ERRORS.MISC.AUTHORIZATION.code)]: 403 }))
     }
 }
 

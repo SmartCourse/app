@@ -1,5 +1,5 @@
 const { TABLE_NAMES: { REPORTS, USERS, DEGREES, QUESTIONS, REVIEWS, COMMENTS, COURSES } } = require('./constants')
-const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
+const { APIError, toSQLThrow, ERRORS } = require('../utils/error')
 
 /* All inputs should be validated in this class that are report related */
 class Report {
@@ -17,10 +17,8 @@ class Report {
         // validation
         if (!reason) {
             throw new APIError({
-                status: 400,
-                code: 1002,
-                message: 'Invalid reason',
-                errors: [{ code: 8002, message: 'Report must have a reason' }]
+                ...ERRORS.MISC.VALIDATION,
+                errors: [ERRORS.REPORT.NO_REASON]
             })
         }
 
@@ -31,7 +29,7 @@ class Report {
 
         return this.db
             .run(`IF EXISTS(SELECT * FROM ${REPORTS} WHERE ${topKey}=@${topKey} AND ${commentID ? 'commentID=@commentID' : 'commentID IS NULL'} AND userID=@userID)
-                      THROW ${toSQLErrorCode(8003)}, 'You''ve already reported this post', 1;
+                      ${toSQLThrow(ERRORS.REPORT.ALREADY_REPORTED)}
                   INSERT INTO ${REPORTS} (courseID, ${topKey}, commentID, reason, userID)
                       SELECT id, @${topKey}, ${commentID ? '@commentID' : 'NULL'}, @reason, @userID
                       FROM ${COURSES}
@@ -42,7 +40,6 @@ class Report {
                 [COURSES]: { code }
             })
             .then(([{ id }]) => id)
-            .catch(translateSQLError({ [toSQLErrorCode(8003)]: 400 }))
     }
 
     /**

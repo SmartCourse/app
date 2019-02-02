@@ -1,10 +1,5 @@
 const { TABLE_NAMES: { COURSES, SUBJECTS, REVIEWS } } = require('./constants')
-const {
-    APIError,
-    toSQLErrorCode,
-    translateSQLError,
-    ERRORS
-} = require('../utils/error')
+const { APIError, toSQLThrow, ERRORS } = require('../utils/error')
 
 /* All inputs should be validated in this class that are course related */
 class Course {
@@ -34,11 +29,10 @@ class Course {
                       JOIN ${SUBJECTS} s ON s.code=@code
                       WHERE c.subjectID=s.id;
                   ELSE
-                      THROW ${toSQLErrorCode(ERRORS.SUBJECT.MISSING.code)}, 'The requested subject does not exist', 1;`,
+                      ${toSQLThrow(ERRORS.SUBJECT.MISSING)}`,
             {
                 [SUBJECTS]: { code }
             })
-            .catch(translateSQLError({ [toSQLErrorCode(ERRORS.SUBJECT.MISSING.code)]: 404 }))
     }
 
     /**
