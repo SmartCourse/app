@@ -150,26 +150,48 @@ exports.ERRORS = {
     }
 }
 
+// map of code -> error object (for sql errors and might be useful elsewhere)
+const ERROR_CODE_MAP = Object.values(exports.ERRORS)
+    .reduce((obj, outer) => {
+        Object.values(outer).map((err) => {
+            obj[err.code] = err
+        })
+        return obj
+    }, {})
+
 /* Error handler
  * Prints stack trace and sets response status and body
  * Reference for Express error handling:
  * https://expressjs.com/en/guide/error-handling.html
  */
 exports.APIErrorHandler = function(err, req, res, next) {
-    // Log stack trace
-    // Just use first 3 lines because rest is usually Express internals..
-    // Note that printing the stack also prints err.message
-    console.error(err.stack.split('\n').slice(0, 4).join('\n'))
+    let stackTrace = err.stack
 
-    // APIErrors (i.e. expected errors) will have a status
+    // APIErrors will have a status
     if (!err.status) {
-        const { code, status, message } = exports.ERRORS.MISC.UNKNOWN
-        // If it's an unexpected error, we just treat it as a 500
+        let code, status, message
+
+        // SQL errors have a number field
+        if (err.number && err.number > 50000) {
+            // SQL errors > 50000 exist in our error constants map
+            [ code, status, message ] = ERROR_CODE_MAP[err.number - 50000]
+            // set stack trace again to print the proper message
+            err.message = message
+            stackTrace = err.stack
+        } else {
+            // If it's an unexpected error, we just treat it as a 500
+            [ code, status, message ] = exports.ERRORS.MISC.UNKNOWN
+        }
         err.code = code
         err.status = status
         err.errors = []
         err.message = message
     }
+
+    // Log stack trace
+    // Just use first 3 lines because rest is usually Express internals..
+    // Note that printing the stack also prints err.message
+    console.error(stackTrace.split('\n').slice(0, 4).join('\n'))
     console.error(`    HTTP response: ${err.status}\n    API error code: ${err.code}`)
 
     // Send the response
@@ -212,6 +234,15 @@ exports.APIError = APIError
  */
 exports.toSQLErrorCode = function(code) {
     return code + 50000
+}
+
+/*
+ * Create an sql throw statement based on an error
+ */
+exports.toSQLThrow = function(eObj) {
+    // it would be annoying to escape strings for SQL here, so we grab the message
+    // from the ERROR_CODE_MAP in the handler instead
+    return `THROW ${exports.toSQLErrorCode(eObj.code)}, '', 1;`
 }
 
 /*

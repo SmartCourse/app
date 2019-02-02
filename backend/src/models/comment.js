@@ -1,5 +1,5 @@
 const { TABLE_NAMES: { COMMENTS, USERS, DEGREES, REPORTS }, PERMISSIONS_MOD } = require('./constants')
-const { APIError, toSQLErrorCode, translateSQLError, ERRORS } = require('../utils/error')
+const { APIError, toSQLErrorCode, translateSQLError, toSQLThrow, ERRORS } = require('../utils/error')
 
 /* All inputs should be validated in this class that are comment related */
 class Comment {
@@ -118,9 +118,9 @@ class Comment {
         // TODO: throw proper errors
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${COMMENTS} WHERE id=@id)
-                      THROW ${toSQLErrorCode(ERRORS.COMMENT.MISSING.code)}, 'The comment does not exist', 1;
+                      ${toSQLThrow(ERRORS.COMMENT.MISSING)}
                   IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
-                      THROW ${toSQLErrorCode(ERRORS.MISC.AUTHORIZATION.code)}, 'You cannot delete this comment', 1;
+                      ${toSQLThrow(ERRORS.MISC.AUTHORIZATION)}
                   DELETE ${REPORTS}
                     WHERE commentID=@id;
                   DELETE ${COMMENTS}
@@ -128,7 +128,6 @@ class Comment {
             {
                 [COMMENTS]: { userID, id }
             })
-            .catch(translateSQLError({ [toSQLErrorCode(ERRORS.COMMENT.MISSING.code)]: 404, [toSQLErrorCode(ERRORS.MISC.AUTHORIZATION.code)]: 403 }))
     }
 }
 
