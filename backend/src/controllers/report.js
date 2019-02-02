@@ -1,6 +1,5 @@
 const reportModel = require('../models/report')()
-const { getResponseHandler, postResponseHandler, APIError } = require('../utils/helpers')
-const { PERMISSIONS_MOD } = require('../models/constants')
+const { getResponseHandler, postResponseHandler } = require('../utils/helpers')
 
 /* return function for POSTing new report. */
 exports.postReport = function (type) {
@@ -33,11 +32,6 @@ exports.getReports = function (type) {
     type = type === 'answer' ? 'comment' : type
 
     return function ({ user, params }, res, next) {
-        // TODO should we reveal that this endpoint exists?
-        if (user.permissions < PERMISSIONS_MOD) {
-            throw new APIError({ code: 1003, status: 403, message: 'Sorry, you can\'t view reports!' })
-        }
-
         // only need one id for retrieval
         reportModel.getReports({
             [`${type}ID`]: params.id
@@ -50,11 +44,6 @@ exports.getReports = function (type) {
 
 /* GET a list of posts sorted by the number of reports on each. */
 exports.getReportSummary = function ({ user, query }, res, next) {
-    // TODO should we reveal that this endpoint exists?
-    if (user.permissions < PERMISSIONS_MOD) {
-        throw new APIError({ code: 1003, status: 403, message: 'Sorry, you can\'t view reports!' })
-    }
-
     reportModel.getReportSummary(query.p)
         .then(getResponseHandler(res))
         .catch(next)
