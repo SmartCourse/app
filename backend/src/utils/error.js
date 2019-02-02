@@ -37,6 +37,7 @@
  *   8002: invalid reason
  *   8003: single user can't report a post more than once
 */
+// const ERROR
 
 /* Error handler
  * Prints stack trace and sets response status and body
@@ -64,23 +65,24 @@ exports.APIErrorHandler = function(err, req, res, next) {
     res.status(err.status).json({ message: err.message, code: err.code, errors: err.errors })
 }
 
-/*
- * APIError
+/**
+ * @typedef {APIError}
  * Exists so that we can put a status and code in the constructor
  * Reference for extension of Error:
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
  */
 class APIError extends Error {
-    /*
+    /**
      * Reference for design of these error fields:
      * https://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#errors
-     * @param {object}
-     *  status: HTTP status code
-     *  code: Error code (see above)
-     *  message: User-readable error message (TODO: different message displayed to user/frontend developer?)
+     * @param {object} options
+     * @param {number} status  HTTP status code
+     * @param {number} code    Error code (see above)
+     * @param {string} message User-readable error message (TODO: different message displayed to user/frontend developer?)
      *  headers: mapping of header names to values if required; i.e. object to use as argument to response.header()
      *  errors: For validation errors on PUT, PATCH & POST
-    *           list of { code, field, message } for each invalid field:
+     *           list of { code, field, message } for each invalid field:
+     * @returns {APIError}
      */
     constructor({ status = 400, code = 1000, message = 'Unknown Error', headers = null, errors = [] }) {
         // Pass remaining arguments (including vendor specific ones) to parent constructor

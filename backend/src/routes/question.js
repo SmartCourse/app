@@ -51,12 +51,11 @@ question.post('/:id/report', reportController.postReport('question'))
 question.post('/:id/answer/:cid/report', reportController.postReport('answer'))
 
 /* Mods only */
-question.use(isModOrHigher)
 
 /* Get reports on a question */
-question.get('/:id/reports', reportController.getReports('question'))
+question.get('/:id/reports', isModOrHigher, reportController.getReports('question'))
 
 /* Get reports on an answer */
-question.get('/:id/answer/:cid/reports', reportController.getReports('answer'))
+question.get('/:id/answer/:cid/reports', isModOrHigher, reportController.getReports('answer'))
 
 module.exports = question

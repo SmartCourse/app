@@ -50,12 +50,12 @@ review.post('/:id/report', reportController.postReport('review'))
 /* Report a comment */
 review.post('/:id/comment/:cid/report', reportController.postReport('comment'))
 
-review.use(isModOrHigher)
+// review.use(isModOrHigher)
 
 /* Get reports on a review */
-review.get('/:id/reports', reportController.getReports('review'))
+review.get('/:id/reports', isModOrHigher, reportController.getReports('review'))
 
 /* Get reports on an comment */
-review.get('/:id/comment/:cid/reports', reportController.getReports('comment'))
+review.get('/:id/comment/:cid/reports', isModOrHigher, reportController.getReports('comment'))
 
 module.exports = review
