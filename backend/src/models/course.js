@@ -3,7 +3,7 @@ const {
     APIError,
     toSQLErrorCode,
     translateSQLError,
-    ERRORS: { COURSE: COURSE_ERROR }
+    ERRORS
 } = require('../utils/error')
 
 /* All inputs should be validated in this class that are course related */
@@ -34,11 +34,11 @@ class Course {
                       JOIN ${SUBJECTS} s ON s.code=@code
                       WHERE c.subjectID=s.id;
                   ELSE
-                      THROW ${toSQLErrorCode(2001)}, 'The requested subject does not exist', 1;`,
+                      THROW ${toSQLErrorCode(ERRORS.SUBJECT.MISSING.code)}, 'The requested subject does not exist', 1;`,
             {
                 [SUBJECTS]: { code }
             })
-            .catch(translateSQLError({ [toSQLErrorCode(2001)]: 404 }))
+            .catch(translateSQLError({ [toSQLErrorCode(ERRORS.SUBJECT.MISSING.code)]: 404 }))
     }
 
     /**
@@ -54,7 +54,7 @@ class Course {
                     }))
             .then(([row]) => {
                 if (row) return row
-                throw new APIError({ ...COURSE_ERROR.MISSING, message: `The requested course '${code}' does not exist` })
+                throw new APIError({ ...ERRORS.COURSE.MISSING, message: `The requested course '${code}' does not exist` })
             })
     }
 

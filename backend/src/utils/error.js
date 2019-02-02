@@ -118,7 +118,7 @@ exports.ERRORS = {
             message: 'Invalid enjoy value'
         },
         NO_SESSION: {
-            code: 5006, 
+            code: 5006,
             message: 'No session provided'
         }
     },
@@ -129,11 +129,23 @@ exports.ERRORS = {
             message: 'Comment doesn\'t exist'
         }
     },
-    AUTH: {
+    USER: {
         MISSING: {
             status: RESOURCE_NOT_FOUND,
             code: 7001,
             message: 'User doesn\'t exist'
+        },
+        NO_NAME: {
+            code: 7004,
+            message: 'You must provide a display name'
+        },
+        NO_DEGREE: {
+            code: 7005,
+            message: 'You must provide a degree'
+        },
+        NO_GRAD_YEAR: {
+            code: 7006,
+            message: 'You must provide a graduation year'
         }
     }
 }

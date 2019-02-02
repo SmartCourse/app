@@ -61,7 +61,6 @@ class Comment {
             {
                 [COMMENTS]: { [key]: value }
             })
-            // TODO: check parent object exists and 404 if not
     }
 
     getComment(id) {
@@ -95,9 +94,9 @@ class Comment {
     putComment(id, { userID, permissions, body }) {
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${COMMENTS} WHERE id=@id)
-                      THROW ${toSQLErrorCode(6001)}, 'The comment does not exist', 1;
+                      THROW ${toSQLErrorCode(ERRORS.COMMENT.MISSING.code)}, 'The comment does not exist', 1;
                   IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
-                      THROW ${toSQLErrorCode(1003)}, 'You cannot edit this comment', 1;
+                      THROW ${toSQLErrorCode(ERRORS.MISC.AUTHORIZATION.code)}, 'You cannot edit this comment', 1;
                   ELSE
                       UPDATE ${COMMENTS}
                       SET body=@body
@@ -105,7 +104,7 @@ class Comment {
             {
                 [COMMENTS]: { userID, body, id }
             })
-            .catch(translateSQLError({ [toSQLErrorCode(6001)]: 404, [toSQLErrorCode(1003)]: 403 }))
+            .catch(translateSQLError({ [toSQLErrorCode(ERRORS.COMMENT.MISSING.code)]: 404, [toSQLErrorCode(ERRORS.MISC.AUTHORIZATION.code)]: 403 }))
     }
 
     /**
@@ -119,9 +118,9 @@ class Comment {
         // TODO: throw proper errors
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${COMMENTS} WHERE id=@id)
-                      THROW ${toSQLErrorCode(6001)}, 'The comment does not exist', 1;
+                      THROW ${toSQLErrorCode(ERRORS.COMMENT.MISSING.code)}, 'The comment does not exist', 1;
                   IF ${permissions} < ${PERMISSIONS_MOD} AND NOT EXISTS (SELECT * FROM ${COMMENTS} WHERE userID=@userID AND id=@id)
-                      THROW ${toSQLErrorCode(1003)}, 'You cannot delete this comment', 1;
+                      THROW ${toSQLErrorCode(ERRORS.MISC.AUTHORIZATION.code)}, 'You cannot delete this comment', 1;
                   DELETE ${REPORTS}
                     WHERE commentID=@id;
                   DELETE ${COMMENTS}
@@ -129,7 +128,7 @@ class Comment {
             {
                 [COMMENTS]: { userID, id }
             })
-            .catch(translateSQLError({ [toSQLErrorCode(6001)]: 404, [toSQLErrorCode(1003)]: 403 }))
+            .catch(translateSQLError({ [toSQLErrorCode(ERRORS.COMMENT.MISSING.code)]: 404, [toSQLErrorCode(ERRORS.MISC.AUTHORIZATION.code)]: 403 }))
     }
 }
 
