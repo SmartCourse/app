@@ -1,4 +1,4 @@
-const { APIError } = require('./error')
+const { APIError } = require('../error')
 const { PERMISSIONS_MOD } = require('../models/constants')
 
 /**

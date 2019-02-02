@@ -3,7 +3,7 @@ const {
     APIError,
     toSQLThrow,
     ERRORS
-} = require('../utils/error')
+} = require('../error')
 
 /* All inputs should be validated in this class that are question related */
 class Question {

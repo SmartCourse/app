@@ -1,5 +1,5 @@
 const { TABLE_NAMES: { USERS, DEGREES } } = require('./constants')
-const { APIError, toSQLThrow, ERRORS } = require('../utils/error')
+const { APIError, toSQLThrow, ERRORS } = require('../error')
 
 /* All inputs should be validated in this class that are User related */
 class User {

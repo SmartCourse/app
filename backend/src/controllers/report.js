@@ -1,6 +1,6 @@
 const reportModel = require('../models/report')()
 const { getResponseHandler, postResponseHandler } = require('../utils/helpers')
-const { APIError, ERRORS } = require('../utils//error')
+const { APIError, ERRORS } = require('../error')
 const { PERMISSIONS_MOD } = require('../models/constants')
 
 /* return function for POSTing new report. */
