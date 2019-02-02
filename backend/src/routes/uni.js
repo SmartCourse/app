@@ -17,7 +17,6 @@ uni.get('/degrees', uniController.getDegrees)
 uni.get('/sessions', uniController.getSessions)
 
 /* Return all posts with reports, sorted by number of reports */
-uni.use(isModOrHigher)
-uni.get('/reports', reportController.getReportSummary)
+uni.get('/reports', isModOrHigher, reportController.getReportSummary)
 
 module.exports = uni

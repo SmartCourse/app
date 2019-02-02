@@ -37,7 +37,28 @@
  *   8002: invalid reason
  *   8003: single user can't report a post more than once
 */
-// const ERROR
+const ERRORS = {
+    MISC: {
+        VALIDATION: {
+            status: 400,
+            code: 1002,
+            message: 'Validation error',
+            errors: [{ code: 8002, message: 'Report must have a reason' }]
+        },
+        AUTHORIZATION: {
+            code: 1003,
+            status: 403,
+            message: 'Authorization error. You have insufficient permissions.'
+        }
+    },
+    SUBJECT: {
+        code: 
+    },
+    COURSE: {
+
+    },
+    
+}
 
 /* Error handler
  * Prints stack trace and sets response status and body
