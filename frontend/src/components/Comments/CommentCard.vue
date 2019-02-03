@@ -13,6 +13,8 @@
 <script>
 import PostCard from '@/components/Card/Large'
 import { menuInteractionsMapper } from '@/utils/helpers'
+import { reportReply } from '@/utils/api/reviews'
+import { reportAnswer } from '@/utils/api/questions'
 
 export default {
   components: { PostCard },
@@ -56,7 +58,17 @@ export default {
       console.warn('Not yet implemented')
     },
     report() {
-      console.warn('Not yet implemented')
+      const { type, code, id, comment } = this
+      const reason = prompt(`Why should this ${type === 'Answer' ? 'answer' : 'reply'} be removed?`)
+      let promise
+      if (type === 'Answer') {
+        promise = reportAnswer(code, id, comment.id, { reason })
+      } else {
+        promise = reportReply(code, id, comment.id, { reason })
+      }
+      promise
+        .then(() => alert('Thank you. Your report has been submitted.'))
+        .catch((err) => alert(err.message))
     },
     upvote() {
       const { type, code, id, comment } = this

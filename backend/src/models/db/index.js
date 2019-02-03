@@ -68,7 +68,7 @@ class DB {
                         await sqlSessions(connection)
                     }
 
-                    // user and question tables gets dropped on init, so we must always re-add them
+                    // user and question tables get dropped on init, so we must always re-add them
                     await sqlAdminUsers(connection)
                     await sqlQuestions(connection)
 

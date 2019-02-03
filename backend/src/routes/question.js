@@ -2,7 +2,9 @@ const express = require('express')
 const question = express.Router({ mergeParams: true })
 const questionController = require('../controllers/question')
 const commentController = require('../controllers/comment')
-const { isAuthorized } = require('../utils/helpers')
+const reportController = require('../controllers/report')
+const courseController = require('../controllers/course')
+const { isLoggedIn, isModOrHigher } = require('../utils/helpers')
 
 /* Get the question data for a specific question id */
 question.get('/:id', questionController.getQuestion)
@@ -20,7 +22,10 @@ question.get('/:id/answer/:answerID/likes', questionController.getAnswerLikes)
 question.get('/:id/answer/:cid', commentController.getComment)
 
 /* full auth check */
-question.use(isAuthorized)
+question.use(isLoggedIn)
+
+/* post a new question to a course page */
+question.post('/', courseController.postQuestion)
 
 /* Delete a question */
 question.delete('/:id', questionController.deleteQuestion)
@@ -42,5 +47,20 @@ question.put('/:id/likes', questionController.putQuestionLikes)
 
 /* Put an updated question's answer like value */
 question.put('/:id/answer/:answerID/likes', questionController.putAnswerLikes)
+
+/* Report a question */
+question.post('/:id/report', reportController.postReport('question'))
+
+/* Report an answer */
+question.post('/:id/answer/:cid/report', reportController.postReport('answer'))
+
+/* Mods only */
+question.use(isModOrHigher)
+
+/* Get reports on a question */
+question.get('/:id/reports', reportController.getReports('question'))
+
+/* Get reports on an answer */
+question.get('/:id/answer/:cid/reports', reportController.getReports('answer'))
 
 module.exports = question

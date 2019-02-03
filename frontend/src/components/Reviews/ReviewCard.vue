@@ -21,6 +21,7 @@ import PostCard from '@/components/Card/Large'
 import Category from '@/components/Category/Recommend'
 import Semester from '@/components/Category/Semester'
 import { menuInteractionsMapper } from '@/utils/helpers'
+import { reportReview } from '@/utils/api/reviews'
 
 export default {
   components: { PostCard, Category, Semester },
@@ -71,7 +72,10 @@ export default {
       console.warn('Edit not yet implemented')
     },
     report() {
-      console.warn('Report not yet implemented')
+      const reason = prompt('Why should this review be removed?')
+      reportReview(this.code, this.id, { reason })
+        .then(() => alert('Thank you. Your report has been submitted.'))
+        .catch((err) => alert(err.message))
     },
     upvote() {
       const { code, id, userLiked } = this

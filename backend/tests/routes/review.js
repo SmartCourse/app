@@ -4,7 +4,7 @@ const assert = require('assert')
 const { expect } = require('chai')
 
 describe('Test review routes', function () {
-    describe('GET /api/course/COMP4920/review', () => {
+    describe('GET /api/course/ACCT1501/review', () => {
         let postRequest
         let location
         let getRequest
@@ -22,7 +22,7 @@ describe('Test review routes', function () {
 
         before(() => {
             postRequest = supertest
-                .post('/api/course/COMP4920/review')
+                .post('/api/course/ACCT1501/review')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken0}`)
                 .send(review)
@@ -215,12 +215,12 @@ describe('Test review routes', function () {
 })
 
 describe('Test comment routes', () => {
-    describe('GET /api/course/COMP4920/review/1/comments', () => {
+    describe('GET /api/course/ACCT1501/review/1/comments', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/course/COMP4920/review/1/comments')
+                .get('/api/course/ACCT1501/review/1/comments')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -239,7 +239,7 @@ describe('Test comment routes', () => {
         )
     })
 
-    describe('POST /api/course/COMP4920/review/1/comment', () => {
+    describe('POST /api/course/ACCT1501/review/1/comment', () => {
         let request
         let requestBody = 'Great review, thanks!'
         let newResource
@@ -247,7 +247,7 @@ describe('Test comment routes', () => {
 
         before(() => {
             request = supertest
-                .post('/api/course/COMP4920/review/1/comment')
+                .post('/api/course/ACCT1501/review/1/comment')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken2}`)
                 .send({ body: requestBody })
@@ -265,7 +265,7 @@ describe('Test comment routes', () => {
                     .then(({ headers }) => {
                         newResource = Number(headers['x-id'])
                         followUp = supertest
-                            .get(`/api/course/COMP4920/review/1/comment/${newResource}`)
+                            .get(`/api/course/ACCT1501/review/1/comment/${newResource}`)
                             .expect('Content-Type', /json/)
 
                         return followUp

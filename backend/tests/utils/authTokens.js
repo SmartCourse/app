@@ -5,7 +5,7 @@ const { getRandomIntInclusive } = require('../../src/utils/helpers')
 
 async function createGlobalIdToken(varName, displayName, email, password, existingProfile = false) {
     // sleep a random amount because we're hitting google's api
-    await new Promise(resolve => setTimeout(resolve, getRandomIntInclusive(100, 1000)))
+    await new Promise(resolve => setTimeout(resolve, getRandomIntInclusive(100, 500)))
     return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
         {
             'credentials': 'omit',
@@ -29,7 +29,7 @@ async function createGlobalIdToken(varName, displayName, email, password, existi
         })
 }
 
-async function setup() {
+function setup() {
     // create 3 backend tester users
     const promises = new Array(3).fill(0).map((_, i) =>
         createGlobalIdToken(
@@ -50,7 +50,16 @@ async function setup() {
         )
     )
 
-    await Promise.all(promises)
+    return Promise.all(promises)
 }
 
-before(() => setup())
+before(() => {
+    // create a promise that will resolve when the app has initialized
+    let res
+    let promise = new Promise((resolve) => { res = resolve })
+    app.on('ready', () => {
+        res()
+    })
+    // call setup once app has initialized
+    return promise.then(() => setup())
+})
