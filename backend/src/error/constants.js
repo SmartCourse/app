@@ -3,10 +3,10 @@ const FORBIDDEN = 403
 const RESOURCE_NOT_FOUND = 404
 const SERVER_ERROR = 500
 
-exports.BAD_REQUEST = 400
-exports.FORBIDDEN = 403
-exports.RESOURCE_NOT_FOUND = 404
-exports.SERVER_ERROR = 500
+exports.BAD_REQUEST = BAD_REQUEST
+exports.FORBIDDEN = FORBIDDEN
+exports.RESOURCE_NOT_FOUND = RESOURCE_NOT_FOUND
+exports.SERVER_ERROR = SERVER_ERROR
 /*
  * 7000 - user/auth
  *   7001: user doesn't exist
