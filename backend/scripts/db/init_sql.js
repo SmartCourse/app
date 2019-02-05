@@ -1,9 +1,9 @@
 const { Request } = require('tedious')
-const faculties = require('../../../data/faculties')
-const degrees = require('../../../data/degrees')
-const subjects = require('../../../data/subjects')
-const courses = require('../../../data/courses')
-const sessions = require('../../../data/sessions')
+const faculties = require('../../data/faculties')
+const degrees = require('../../data/degrees')
+const subjects = require('../../data/subjects')
+const courses = require('../../data/courses')
+const sessions = require('../../data/sessions')
 const {
     NUM_DUMMY_USERS,
     ADMIN_QUESTIONS,
@@ -24,7 +24,7 @@ const {
     PERMISSIONS_USER,
     PERMISSIONS_ADMIN,
     ADMIN_USERS
-} = require('../constants')
+} = require('../../src/models/constants')
 
 // Globals
 let commentID = 1
@@ -38,9 +38,77 @@ const userRepMap = {}
 // PRNG taken from: https://gist.github.com/blixt/f17b47c62508be59987b
 let seed = 1
 
+exports.init = async function (db, { drop, create, init }) {
+    /* drop, create and init must all be defined here! */
+
+    const [connection] = db.connections
+    console.log('Database initialisation:')
+
+    if (drop !== 'none') {
+
+        console.log(`  Dropping ${drop} tables`)
+        const dropAll = drop === 'all'
+
+        await new Promise((resolve, reject) => {
+            const request = new Request(dropTables(dropAll), async (err) => {
+                if (err) reject(err)
+                else resolve()
+            })
+            connection.execSql(request)
+        })
+    }
+
+    if (create !== 'none') {
+        console.log(`  Creating all tables`)
+
+        await new Promise((resolve, reject) => {
+            const request = new Request(createTables(), async (err) => {
+                if (err) reject(err)
+                else resolve()
+            })
+            connection.execSql(request)
+        })
+    }
+
+    if (init !== 'none') {
+
+        // Static data - university
+        // init === 'static' or higher
+        // testing optimization; we can skip this if it looks like data is initialized already
+        if (TESTING && await unswDataInitialised(connection)) {
+            console.log('  Skipping static data init')
+        } else {
+            console.log('  Adding university data')
+            await sqlUniversity(connection)
+            await sqlFaculties(connection)
+            await sqlDegrees(connection)
+            await sqlSubjects(connection)
+            await sqlCourses(connection)
+            await sqlSessions(connection)
+        }
+
+        // Basic data - admin users and FAQs
+        if (init === 'basic' || init === 'test') {
+            console.log('  Adding admin users and FAQs')
+            await sqlAdminUsers(connection)
+            await sqlQuestions(connection)
+        }
+
+        // Test data
+        if (init === 'test') {
+            console.log('  Adding test data')
+            await sqlReviews(connection)
+            await sqlComments(connection)
+            await sqlLikes(connection)
+            await sqlUsers(connection)
+        }
+    }
+
+}
+
 // Assume that if UNSW has been inserted into uni table,
 // all UNSW data has been inserted into tables.
-exports.unswDataInitialised = async function(db) {
+function unswDataInitialised(db) {
     return new Promise((resolve, reject) => {
         const query = `SELECT * FROM ${TABLE_NAMES.UNIVERSITY}`
         const request = new Request(query, (err, rowCount) =>
@@ -49,37 +117,27 @@ exports.unswDataInitialised = async function(db) {
     })
 }
 
-// returns number of rows in review table (for checking if testing data exists)
-exports.reviewTestDataInitialised = async function(db) {
-    return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM ${TABLE_NAMES.REVIEWS}`
-        const request = new Request(query, (err, rowCount) =>
-            err ? reject(err) : resolve(rowCount))
-        db.execSql(request)
-    })
-}
-
-exports.sqlUniversity = async function(db) {
+function sqlUniversity(db) {
     return bulkInsertDB(db, TABLE_NAMES.UNIVERSITY, [{ name: 'UNSW' }])
 }
 
-exports.sqlFaculties = async function(db) {
+function sqlFaculties(db) {
     return bulkInsertDB(db, TABLE_NAMES.FACULTIES, faculties)
 }
 
-exports.sqlDegrees = async function(db) {
+function sqlDegrees(db) {
     return bulkInsertDB(db, TABLE_NAMES.DEGREES, degrees)
 }
 
-exports.sqlSubjects = async function(db) {
+function sqlSubjects(db) {
     return bulkInsertDB(db, TABLE_NAMES.SUBJECTS, subjects)
 }
 
-exports.sqlSessions = async function (db) {
+function sqlSessions(db) {
     return bulkInsertDB(db, TABLE_NAMES.SESSIONS, sessions)
 }
 
-exports.sqlCourses = async function(db) {
+function sqlCourses(db) {
     return bulkInsertDB(db, TABLE_NAMES.COURSES, courses)
 }
 
@@ -98,7 +156,7 @@ function sqlAdminQuestion(code) {
     }
 }
 
-exports.sqlQuestions = async function(db) {
+function sqlQuestions(db) {
     let questions = courses.map(({ code }) =>
         ADMIN_QUESTIONS.map(sqlAdminQuestion(code)))
     questions = [].concat.apply([], questions)
@@ -125,7 +183,7 @@ function sqlReview(code) {
     }
 }
 
-exports.sqlReviews = async function(db) {
+function sqlReviews(db) {
     let reviews = courses.map(({ code }) =>
         SAMPLE_REVIEWS.map(sqlReview(code)))
     reviews = [].concat.apply([], reviews)
@@ -154,7 +212,7 @@ function genComments(parent) {
     return comments
 }
 
-exports.sqlComments = async function(db) {
+function sqlComments(db) {
     // Question comments
     let comments = []
     for (let parent of questions) {
@@ -171,7 +229,7 @@ exports.sqlComments = async function(db) {
         })
 }
 
-exports.sqlAdminUsers = async function (db) {
+function sqlAdminUsers(db) {
     const admins = ADMIN_USERS
         .map(({ name: displayName, email, degree, uid }, i) => ({
             uid,
@@ -185,7 +243,7 @@ exports.sqlAdminUsers = async function (db) {
     return bulkInsertDB(db, TABLE_NAMES.USERS, admins)
 }
 
-exports.sqlUsers = async function(db) {
+function sqlUsers(db) {
     const userNames = SAMPLE_USERS
     const suffixes = ['XxX', '!', 's', '!!', '_', '__', 'x']
 
@@ -247,7 +305,7 @@ function genLikes(parent) {
     return likes
 }
 
-exports.sqlLikes = async function(db) {
+function sqlLikes(db) {
     // Like questions
     let likes = []
     for (let parent of questionsToLike) {
@@ -272,22 +330,31 @@ exports.sqlLikes = async function(db) {
         })
 }
 
-exports.sqlTables = function() {
+function dropTables(dropAll) {
     return `
     BEGIN TRANSACTION;
-
-${
-    // Testing assumes a fresh database
-    TESTING ? `
         DROP TABLE IF EXISTS ${TABLE_NAMES.REPORTS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.LIKES}
         DROP TABLE IF EXISTS ${TABLE_NAMES.COMMENTS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.REVIEWS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.QUESTIONS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.USERS}
+${
+    dropAll ? `
+        DROP TABLE IF EXISTS ${TABLE_NAMES.SESSIONS}
+        DROP TABLE IF EXISTS ${TABLE_NAMES.COURSES}
+        DROP TABLE IF EXISTS ${TABLE_NAMES.SUBJECTS}
+        DROP TABLE IF EXISTS ${TABLE_NAMES.DEGREES}
+        DROP TABLE IF EXISTS ${TABLE_NAMES.FACULTIES}
+        DROP TABLE IF EXISTS ${TABLE_NAMES.UNIVERSITY}
     ` : ''
 }
+    COMMIT;`
+}
 
+function createTables() {
+  return `
+    BEGIN TRANSACTION;
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.FACULTIES}' AND xtype='U')
         CREATE TABLE ${TABLE_NAMES.FACULTIES} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),
@@ -497,7 +564,7 @@ function nextValue(min, max) {
  * Generates an SQL statement to insert multiple rows into a given table.
  * Note: This is vulnerable to SQL injection and should only be used testing.
  */
-async function bulkInsertDB(db, table, data) {
+function bulkInsertDB(db, table, data) {
     return new Promise((resolve, reject) => {
         // Setup the bulk insertion
         const bulkLoad = db.newBulkLoad(table, {}, (error, rowCount) =>

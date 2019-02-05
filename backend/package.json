@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=test LOG=true npx nodemon ./src/bin/www",
+    "start": "npm run db-init && cross-env NODE_ENV=test LOG=true npx nodemon ./src/bin/www",
     "lint": "npx eslint src/**/*.js tests/**/*.js --fix",
     "test:lint": "npx eslint src/**/*.js tests/**/*.js --fix",
-    "test:src": "cross-env NODE_ENV=test npx nyc mocha --file tests/utils/*.js --file tests/routes/*.js --timeout 10000",
+    "test:src": "npm run db-init && cross-env NODE_ENV=test npx nyc mocha --file tests/utils/*.js --file tests/routes/*.js --timeout 10000",
     "test": "npm run test:lint && npm run test:src",
-    "coverage": "npx nyc report --reporter=html --reporter=text-lcov | coveralls"
+    "coverage": "npx nyc report --reporter=html --reporter=text-lcov | coveralls",
+    "db-init": "cross-env NODE_ENV=test LOG=true node ./scripts/db"
   },
   "dependencies": {
     "compression": "^1.7.3",
@@ -17,6 +18,7 @@
     "express": "~4.16.0",
     "firebase-admin": "^6.0.0",
     "morgan": "^1.9.1",
+    "stdio": "^0.2.7",
     "tedious": "^3.0.1"
   },
   "devDependencies": {
