@@ -1,5 +1,5 @@
 const { TABLE_NAMES: { USERS, DEGREES } } = require('./constants')
-const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
+const { APIError, toSQLThrow, ERRORS } = require('../error')
 
 /* All inputs should be validated in this class that are User related */
 class User {
@@ -28,7 +28,7 @@ class User {
                     if (profile.reputation < 0) profile.reputation = 0
                     return profile
                 }
-                throw new APIError({ status: 404, code: 7001, message: 'No such user' })
+                throw new APIError(ERRORS.USER.MISSING)
             })
     }
 
@@ -53,7 +53,7 @@ class User {
                     if (profile.reputation < 0) profile.reputation = 0
                     return profile
                 }
-                throw new APIError({ status: 404, code: 7001, message: 'No such user' })
+                throw new APIError(ERRORS.USER.MISSING)
             })
     }
 
@@ -73,7 +73,7 @@ class User {
             })
             .then(([profile]) => {
                 if (profile) return profile
-                throw new APIError({ status: 404, code: 7001, message: 'No user profile for that uid' })
+                throw new APIError(ERRORS.USER.MISSING)
             })
     }
 
@@ -91,16 +91,16 @@ class User {
         // validation
         const errors = []
         if (!displayName) {
-            errors.push({ code: 7004, message: 'You must provide a display name' })
+            errors.push(ERRORS.USER.NO_NAME)
         }
         if (!degree) {
-            errors.push({ code: 7005, message: 'You must provide a degree' })
+            errors.push(ERRORS.USER.NO_DEGREE)
         }
         if (!gradYear) {
-            errors.push({ code: 7006, message: 'You must provide a graduation year' })
+            errors.push(ERRORS.USER_NO_GRAD_YEAR)
         }
         if (errors.length > 0) {
-            throw new APIError({ status: 400, code: 1002, message: 'Invalid profile information', errors })
+            throw new APIError({ ...ERRORS.MISC.VALIDATION, message: 'Invalid profile information', errors })
         }
 
         return this.db
@@ -131,13 +131,12 @@ class User {
                       JOIN ${DEGREES} d ON d.name=@name
                       WHERE u.id = @id;
                   ELSE
-                      THROW ${toSQLErrorCode(7001)}, 'No such user', 1;`,
+                      ${toSQLThrow(ERRORS.USER.MISSING)}`,
             {
                 [DEGREES]: { name: degree },
                 [USERS]: { id, ...data }
             })
             .then(() => this.getProfile(id))
-            .catch(translateSQLError({ [toSQLErrorCode(7001)]: 404 }))
     }
 }
 

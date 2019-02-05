@@ -6,7 +6,7 @@ const firebase = require('./auth')
 const compression = require('compression')
 const db = require('./models/db')
 const PRE_RENDERED_TEMPLATES = require('../pre-rendered')
-const { APIErrorHandler } = require('./utils/error')
+const { APIErrorHandler } = require('./error')
 const { staticFilesCache } = require('./utils/cache')
 
 const app = express()
@@ -71,8 +71,9 @@ app.use(APIErrorHandler)
 /*
  * Connect to SQL server
  */
-db.init()
-    .then(() => console.log('App ready!'))
-    .then(() => app.emit('ready'))
+db.on('ready', () => {
+    console.log('App ready!')
+    app.emit('ready')
+  })
 
 module.exports = app

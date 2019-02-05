@@ -152,7 +152,7 @@ describe('Course route testing', () => {
         )
     })
 
-    describe('POST /api/course/COMP4920/review', () => {
+    describe('POST /api/course/ACCT1501/review', () => {
         let request
         const form = {
             title: 'I\'m a real boy',
@@ -167,7 +167,7 @@ describe('Course route testing', () => {
 
         before(() => {
             request = supertest
-                .post('/api/course/COMP4920/review')
+                .post('/api/course/ACCT1501/review')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken0}`)
                 .send(form)
@@ -180,7 +180,7 @@ describe('Course route testing', () => {
         })
 
         it('returns correct Location', () => {
-            expect(request.res.headers.location).to.equal('/api/course/COMP4920/review/9019')
+            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/review/9019')
         })
 
         describe('Review created correctly', () => {
@@ -188,7 +188,7 @@ describe('Course route testing', () => {
 
             before(() => {
                 followUp = supertest
-                    .get('/api/course/COMP4920/review/9019')
+                    .get('/api/course/ACCT1501/review/9019')
                     .set('Accept', 'application/json')
                     .expect(200)
 

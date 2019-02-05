@@ -12,6 +12,7 @@
 <script>
 import PostCard from '@/components/Card/Large'
 import { menuInteractionsMapper } from '@/utils/helpers'
+import { reportQuestion } from '@/utils/api/questions'
 
 export default {
   components: { PostCard },
@@ -54,7 +55,10 @@ export default {
       console.warn('Edit not implemented')
     },
     report() {
-      console.warn('Report not implemented')
+      const reason = prompt('Why should this question be removed?')
+      reportQuestion(this.code, this.id, { reason })
+        .then(() => alert('Thank you. Your report has been submitted.'))
+        .catch((err) => alert(err.message))
     },
     upvote() {
       const { code, id, userLiked } = this

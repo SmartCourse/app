@@ -2,7 +2,9 @@ const express = require('express')
 const review = express.Router({ mergeParams: true })
 const reviewController = require('../controllers/review')
 const commentController = require('../controllers/comment')
-const { isAuthorized } = require('../utils/helpers')
+const reportController = require('../controllers/report')
+const courseController = require('../controllers/course')
+const { isLoggedIn, isModOrHigher } = require('../utils/helpers')
 
 /* Get the review data for a specific review id */
 review.get('/:id', reviewController.getReview)
@@ -20,7 +22,10 @@ review.get('/:id/comment/:replyID/likes', reviewController.getReplyLikes)
 review.get('/:id/comment/:cid', commentController.getComment)
 
 /* full auth check */
-review.use(isAuthorized)
+review.use(isLoggedIn)
+
+/* create a new review for course */
+review.post('/', courseController.postReview)
 
 /* Delete a review */
 review.delete('/:id', reviewController.deleteReview)
@@ -42,5 +47,20 @@ review.put('/:id/likes', reviewController.putReviewLikes)
 
 /* Put an updated review's reply like value */
 review.put('/:id/comment/:replyID/likes', reviewController.putReplyLikes)
+
+/* Report a review */
+review.post('/:id/report', reportController.postReport('review'))
+
+/* Report a comment */
+review.post('/:id/comment/:cid/report', reportController.postReport('comment'))
+
+/* Mods only */
+review.use(isModOrHigher)
+
+/* Get reports on a review */
+review.get('/:id/reports', reportController.getReports('review'))
+
+/* Get reports on an comment */
+review.get('/:id/comment/:cid/reports', reportController.getReports('comment'))
 
 module.exports = review

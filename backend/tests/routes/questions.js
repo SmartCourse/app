@@ -4,12 +4,12 @@ const supertest = require('supertest')(app)
 const { expect } = require('chai')
 
 describe('Test question routes', () => {
-    describe('GET /api/course/COMP4920/question/1', () => {
+    describe('GET /api/course/ACCT1501/question/1', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/course/COMP4920/question/1')
+                .get('/api/course/ACCT1501/question/1')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -174,16 +174,106 @@ describe('Test question routes', () => {
             )
         })
     })
+
+    describe('POST /api/course/ACCT1501/question/3/report', () => {
+        let request
+        const report = { reason: 'It suuucks' }
+
+        before(() => {
+            request = supertest
+                .post('/api/course/ACCT1501/question/3/report')
+                .set('Accept', 'application/json')
+                // NOTE: this must be a different user than in the uni route test for getReports
+                .set('Authorization', `Bearer ${global.idToken2}`)
+                .send(report)
+            return request
+        })
+
+        it('returns correct status', () =>
+            request.expect(201)
+        )
+
+        it('returns correct Location', () => {
+            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/question/3/report/1')
+        })
+        // TODO: user should be able to see their own report - frontend could even check this before trying to report/showing report button
+        // TODO: test that that user can see own report
+
+        describe('same user can\'t report post again', () => {
+            let followUp
+            before(() => {
+                followUp = supertest
+                    .post('/api/course/ACCT1501/question/3/report')
+                    .set('Accept', 'application/json')
+                    // NOTE must be same user as above
+                    .set('Authorization', `Bearer ${global.idToken2}`)
+                    .send({ reason: 'It really suuuucks' })
+                    .expect(400)
+                return followUp
+            })
+
+            it('has correct error code', () =>
+                followUp.then(({ body }) => {
+                    expect(body.code).to.equal(8003)
+                })
+            )
+        })
+
+        describe('report exists in list', () => {
+            let followUp
+
+            before(() => {
+                followUp = supertest
+                    .get('/api/course/ACCT1501/question/3/reports')
+                    .set('Accept', 'application/json')
+                    .set('Authorization', `Bearer ${global.idTokenSuper}`)
+                    .expect(200)
+
+                return followUp
+            })
+
+            it('has one report', () =>
+                followUp.then(({ body }) => {
+                    expect(body.length).to.equal(1)
+                })
+            )
+
+            it('has the correct report', () =>
+                followUp.then(({ body }) => {
+                    expect(body[0].reason).to.equal(report.reason)
+                })
+            )
+        })
+    })
+
+    describe('GET /api/course/ACCT1501/question/3/report (error)', () => {
+        let request
+
+        before(() => {
+            request = supertest
+                .get('/api/course/ACCT1501/question/3/reports')
+                .set('Accept', 'application/json')
+                .set('Authorization', `Bearer ${global.idToken0}`)
+                .expect(403)
+            return request
+        })
+
+        it('has the correct error code', () =>
+            request.then(({ body }) => {
+                expect(body.code).to.equal(1003)
+            })
+        )
+    })
 })
 
 describe('Test answer routes', () => {
-    describe('POST /api/course/COMP4920/question/1/answer', () => {
+    describe('POST /api/course/ACCT1501/question/1/answer', () => {
         let request
         let body = 'superruuu____testu'
 
         before(() => {
             request = supertest
-                .post('/api/course/COMP4920/question/1/answer')
+                .post('/api/course/ACCT1501/question/1/answer')
                 .send({ body })
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken1}`)
@@ -204,7 +294,7 @@ describe('Test answer routes', () => {
                     .then(({ headers }) => {
                         idToMatch = Number(headers['x-id'])
                         return supertest
-                            .get('/api/course/COMP4920/question/1/answers')
+                            .get('/api/course/ACCT1501/question/1/answers')
                             .set('Accept', 'application/json')
                             .expect('Content-Type', /json/)
                             .expect(200)
@@ -224,12 +314,12 @@ describe('Test answer routes', () => {
         })
     })
 
-    describe('GET /api/course/COMP4920/question/1/likes', () => {
+    describe('GET /api/course/ACCT1501/question/1/likes', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/course/COMP4920/question/1/likes')
+                .get('/api/course/ACCT1501/question/1/likes')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -249,12 +339,12 @@ describe('Test answer routes', () => {
         )
     })
 
-    describe('PUT /api/course/COMP4920/question/1/likes', () => {
+    describe('PUT /api/course/ACCT1501/question/1/likes', () => {
         let request
 
         before(() => {
             request = supertest
-                .put('/api/course/COMP4920/question/1/likes')
+                .put('/api/course/ACCT1501/question/1/likes')
                 .send({ value: 0 })
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken1}`)
@@ -271,12 +361,12 @@ describe('Test answer routes', () => {
         )
     })
 
-    describe('GET /api/course/COMP4920/question/1/answers', () => {
+    describe('GET /api/course/ACCT1501/question/1/answers', () => {
         let request
 
         before(() => {
             request = supertest
-                .get('/api/course/COMP4920/question/1/answers')
+                .get('/api/course/ACCT1501/question/1/answers')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -294,12 +384,12 @@ describe('Test answer routes', () => {
         )
     })
 
-    describe('POST /api/course/COMP4920/question/1/answers (ERROR)', () => {
+    describe('POST /api/course/ACCT1501/question/1/answers (ERROR)', () => {
         let request
 
         before(() => {
             request = supertest
-                .post('/api/course/COMP4920/question/1/answer')
+                .post('/api/course/ACCT1501/question/1/answer')
                 .send({ badBody: 'superruuu____testu' })
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken1}`)

@@ -3,7 +3,7 @@ const { TYPES } = require('tedious')
 // Current Environment
 exports.PRODUCTION = process.env.NODE_ENV === 'production'
 exports.TESTING = process.env.NODE_ENV === 'test'
-exports.DEVELOPMENT = process.env.NODE_ENV === 'development'
+exports.STAGING = process.env.NODE_ENV === 'staging'
 
 // User Constants
 exports.ANONYMOUS = 0
@@ -42,7 +42,8 @@ exports.TABLE_NAMES = {
     USERS: 'users',
     DEGREES: 'degrees',
     FACULTIES: 'faculties',
-    SESSIONS: 'sessions'
+    SESSIONS: 'sessions',
+    REPORTS: 'reports'
 }
 
 // Table Columns
@@ -370,6 +371,44 @@ exports.TABLE_COLUMNS = {
         },
         permissions: {
             type: TYPES.Int,
+            options: { nullable: false }
+        }
+    },
+    [exports.TABLE_NAMES.REPORTS]: {
+        id: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        courseID: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        questionID: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        reviewID: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        commentID: {
+            type: TYPES.Int,
+            options: { nullable: true }
+        },
+        userID: {
+            type: TYPES.Int,
+            options: { nullable: false }
+        },
+        reason: {
+            type: TYPES.VarChar,
+            options: { nullable: false }
+        },
+        reviewed: {
+            type: TYPES.Bit,
+            options: { nullable: false }
+        },
+        timestamp: {
+            type: TYPES.Date,
             options: { nullable: false }
         }
     }
