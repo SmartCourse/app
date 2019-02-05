@@ -71,8 +71,9 @@ app.use(APIErrorHandler)
 /*
  * Connect to SQL server
  */
-db.init()
-    .then(() => console.log('App ready!'))
-    .then(() => app.emit('ready'))
+db.on('ready', () => {
+    console.log('App ready!')
+    app.emit('ready')
+  })
 
 module.exports = app

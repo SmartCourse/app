@@ -1,9 +1,9 @@
 const { Request } = require('tedious')
-const faculties = require('../../../data/faculties')
-const degrees = require('../../../data/degrees')
-const subjects = require('../../../data/subjects')
-const courses = require('../../../data/courses')
-const sessions = require('../../../data/sessions')
+const faculties = require('../../data/faculties')
+const degrees = require('../../data/degrees')
+const subjects = require('../../data/subjects')
+const courses = require('../../data/courses')
+const sessions = require('../../data/sessions')
 const {
     NUM_DUMMY_USERS,
     ADMIN_QUESTIONS,
@@ -24,7 +24,7 @@ const {
     PERMISSIONS_USER,
     PERMISSIONS_ADMIN,
     ADMIN_USERS
-} = require('../constants')
+} = require('../../src/models/constants')
 
 // Globals
 let commentID = 1
