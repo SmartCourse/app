@@ -49,16 +49,6 @@ exports.unswDataInitialised = async function(db) {
     })
 }
 
-// returns number of rows in review table (for checking if testing data exists)
-exports.reviewTestDataInitialised = async function(db) {
-    return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM ${TABLE_NAMES.REVIEWS}`
-        const request = new Request(query, (err, rowCount) =>
-            err ? reject(err) : resolve(rowCount))
-        db.execSql(request)
-    })
-}
-
 exports.sqlUniversity = async function(db) {
     return bulkInsertDB(db, TABLE_NAMES.UNIVERSITY, [{ name: 'UNSW' }])
 }
@@ -272,22 +262,31 @@ exports.sqlLikes = async function(db) {
         })
 }
 
-exports.sqlTables = function() {
+exports.dropTables = function(dropAll) {
     return `
     BEGIN TRANSACTION;
-
-${
-    // Testing assumes a fresh database
-    TESTING ? `
         DROP TABLE IF EXISTS ${TABLE_NAMES.REPORTS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.LIKES}
         DROP TABLE IF EXISTS ${TABLE_NAMES.COMMENTS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.REVIEWS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.QUESTIONS}
         DROP TABLE IF EXISTS ${TABLE_NAMES.USERS}
+${
+    dropAll ? `
+        DROP TABLE IF EXISTS ${TABLE_NAMES.SESSIONS}
+        DROP TABLE IF EXISTS ${TABLE_NAMES.COURSES}
+        DROP TABLE IF EXISTS ${TABLE_NAMES.SUBJECTS}
+        DROP TABLE IF EXISTS ${TABLE_NAMES.DEGREES}
+        DROP TABLE IF EXISTS ${TABLE_NAMES.FACULTIES}
+        DROP TABLE IF EXISTS ${TABLE_NAMES.UNIVERSITY}
     ` : ''
 }
+    COMMIT;`
+}
 
+exports.createTables = function() {
+  return `
+    BEGIN TRANSACTION;
     IF NOT EXISTS(SELECT * FROM sysobjects WHERE name='${TABLE_NAMES.FACULTIES}' AND xtype='U')
         CREATE TABLE ${TABLE_NAMES.FACULTIES} (
             id INTEGER PRIMARY KEY IDENTITY(1,1),

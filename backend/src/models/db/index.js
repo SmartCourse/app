@@ -11,6 +11,8 @@ const { EventEmitter } = require('events')
 class DB extends EventEmitter {
     constructor() {
         super()
+
+        console.log('Connecting to database')
         // Immediately start root connection process
         this.connections = [new Connection(DB_CONFIG)]
         this.ready = false
@@ -27,6 +29,7 @@ class DB extends EventEmitter {
 
                 // emit ready event once only when a connection becomes available
                 if (!this.ready) {
+                    console.log('Connected to database')
                     this.ready = true
                     this.emit('ready')
                 }
