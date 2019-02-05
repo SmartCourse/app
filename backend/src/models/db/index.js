@@ -7,7 +7,6 @@ const { EventEmitter } = require('events')
  * Very slight abstraction over the direct sql queries.
  * This object can be instantiated once and then all queries are assumed to be
  * already filtered at this point.
- * @param {string} databaseName The name of the db if it needs to be passed in.
  */
 class DB extends EventEmitter {
     constructor() {
@@ -25,6 +24,7 @@ class DB extends EventEmitter {
                     throw new Error('Couldn\'t connect to DB')
                 }
                 this.connections.push(connection)
+
                 // emit ready event once only when a connection becomes available
                 if (!this.ready) {
                     this.ready = true
