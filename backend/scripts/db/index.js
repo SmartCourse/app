@@ -23,7 +23,6 @@ const {
 const db = require('../../src/models/db')
 
 async function init({ drop, create, init }) {
-
     /* drop, create and init must all be defined here! */
 
     const [connection] = db.connections
@@ -94,6 +93,7 @@ async function init({ drop, create, init }) {
 db.on('ready', async function () {
 
     const config = getConfig()
+
     // Safety prompt
     if (PRODUCTION) {
         // list of bad things

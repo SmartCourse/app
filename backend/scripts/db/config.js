@@ -1,12 +1,16 @@
 const stdio = require('stdio');
 const { STAGING, TESTING } = require('../../src/models/constants')
 /*
- * Cases:
+ * Use cases:
  *  - TESTING and new database - add everything
  *  - TESTING and existing database - drop data and add test data
  *  - STAGING drop everything, add everything
  *  - PRODUCTION and we want to clean everything and just add admin users and FAQs
  *  - PRODUCTION and we want to add new tables and not touch anything else
+ *
+ * For TESTING, we have optimizations in the init() function for existing databases
+ * For STAGING, there's only one thing we want by default, and it can be customized
+ * For PRODUCTION, by default we just allow the creation of new tables.
  */
 
 const DEFAULT_CONFIG = {
