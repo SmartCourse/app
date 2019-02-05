@@ -24,21 +24,17 @@ db.on('ready', async function () {
             const proceed = await new Promise((resolve, reject) => {
                 stdio.question('continue? Y/n', (err, text) => {
                     if (err) {
-                        reject(err)
-                        return
+                        return reject(err)
                     }
                     if (text.toLowerCase() !== 'y') {
-                        resolve(false)
-                        return
+                        return resolve(false)
                     }
                     stdio.question('Are you really absolutely sure? Y/n', (err, text) => {
                         if (err) {
-                            reject(err)
-                            return
+                            return reject(err)
                         }
                         if (text.toLowerCase() !== 'y') {
-                            resolve(false)
-                            return
+                            return resolve(false)
                         }
                         resolve(true)
                     })

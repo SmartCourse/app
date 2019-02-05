@@ -82,6 +82,4 @@ class DB extends EventEmitter {
     }
 }
 
-//util.inherits(DB, EventEmitter)
-
 module.exports = new DB()

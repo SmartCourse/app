@@ -42,10 +42,11 @@ exports.init = async function (db, { drop, create, init }) {
     /* drop, create and init must all be defined here! */
 
     const [connection] = db.connections
+    console.log('Database initialisation:')
 
     if (drop !== 'none') {
 
-        console.log(`Dropping ${drop} tables`)
+        console.log(`  Dropping ${drop} tables`)
         const dropAll = drop === 'all'
 
         await new Promise((resolve, reject) => {
@@ -58,7 +59,7 @@ exports.init = async function (db, { drop, create, init }) {
     }
 
     if (create !== 'none') {
-        console.log(`Creating all tables`)
+        console.log(`  Creating all tables`)
 
         await new Promise((resolve, reject) => {
             const request = new Request(createTables(), async (err) => {
@@ -73,11 +74,11 @@ exports.init = async function (db, { drop, create, init }) {
 
         // Static data - university
         // init === 'static' or higher
-        // testing optimization; we can skip this if it looks like data is initialized
+        // testing optimization; we can skip this if it looks like data is initialized already
         if (TESTING && await unswDataInitialised(connection)) {
-            console.log('Skipping static data init - it looks like it\'s already there')
+            console.log('  Skipping static data init')
         } else {
-            console.log('Adding university data')
+            console.log('  Adding university data')
             await sqlUniversity(connection)
             await sqlFaculties(connection)
             await sqlDegrees(connection)
@@ -88,14 +89,14 @@ exports.init = async function (db, { drop, create, init }) {
 
         // Basic data - admin users and FAQs
         if (init === 'basic' || init === 'test') {
-            console.log('Adding admin users and FAQs')
+            console.log('  Adding admin users and FAQs')
             await sqlAdminUsers(connection)
             await sqlQuestions(connection)
         }
 
         // Test data
         if (init === 'test') {
-            console.log('Adding test data')
+            console.log('  Adding test data')
             await sqlReviews(connection)
             await sqlComments(connection)
             await sqlLikes(connection)
