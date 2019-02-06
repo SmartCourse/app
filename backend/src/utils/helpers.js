@@ -42,8 +42,8 @@ exports.deleteResponseHandler = function(response) {
 
 exports.toLowerCase = str => str.toLowerCase()
 
-exports.hasFirebaseToken = function(req, res, next) {
-    if (!req.authorized) {
+exports.hasFirebaseTokenAndVerifiedEmail = function(req, res, next) {
+    if (!req.authorized || !req.authorized.email_verified) {
         throw new APIError({
             status: 401,
             code: 7002,
