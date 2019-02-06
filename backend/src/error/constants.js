@@ -1,9 +1,11 @@
 const BAD_REQUEST = 400
+const UNAUTHENTICATED = 401
 const FORBIDDEN = 403
 const RESOURCE_NOT_FOUND = 404
 const SERVER_ERROR = 500
 
 exports.BAD_REQUEST = BAD_REQUEST
+exports.UNAUTHENTICATED = UNAUTHENTICATED
 exports.FORBIDDEN = FORBIDDEN
 exports.RESOURCE_NOT_FOUND = RESOURCE_NOT_FOUND
 exports.SERVER_ERROR = SERVER_ERROR
@@ -110,16 +112,32 @@ exports.ERRORS = {
             code: 7001,
             message: 'User doesn\'t exist'
         },
-        NO_NAME: {
+        NO_TOKEN: {
+            status: UNAUTHENTICATED,
+            code: 7002,
+            message: 'Unauthenticated',
+            headers: { 'WWW-Authenticate': 'Bearer' }
+        },
+        NO_PROFILE: {
+            status: FORBIDDEN,
+            code: 7003,
+            message: 'No user profile'
+        },
+        EMAIL_NOT_VERIFIED: {
+            status: FORBIDDEN,
             code: 7004,
+            message: 'No user profile'
+        },
+        NO_NAME: {
+            code: 7005,
             message: 'You must provide a display name'
         },
         NO_DEGREE: {
-            code: 7005,
+            code: 7006,
             message: 'You must provide a degree'
         },
         NO_GRAD_YEAR: {
-            code: 7006,
+            code: 7007,
             message: 'You must provide a graduation year'
         }
     },
