@@ -126,7 +126,7 @@ exports.ERRORS = {
         EMAIL_NOT_VERIFIED: {
             status: FORBIDDEN,
             code: 7004,
-            message: 'No user profile'
+            message: 'Email address not verified'
         },
         NO_NAME: {
             code: 7005,

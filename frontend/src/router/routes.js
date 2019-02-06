@@ -117,6 +117,11 @@ export default new Router({
       component: () => import('../views/SignUp')
     },
     {
+      path: '/verify-email',
+      name: 'Verify Email',
+      component: () => import('../views/VerifyEmail')
+    },
+    {
       path: '/create-profile',
       name: 'Create Profile',
       component: () => import('../views/CreateProfile')

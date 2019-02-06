@@ -40,7 +40,7 @@ export default {
   },
   components: { AppAuthForm, AuthInput },
   computed: {
-    ...mapGetters('auth', [ 'loading', 'error', 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile' ])
+    ...mapGetters('auth', [ 'loading', 'error', 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile', 'emailVerified' ])
   },
   // reroute whenever auth loading state changes
   watch: {
@@ -57,7 +57,10 @@ export default {
     },
     reroute() {
       if (this.isLoggedIn) this.$router.push('/')
-      if (this.isFirebaseAuthorised && !this.hasProfile) this.$router.push('/create-profile')
+      if (this.isFirebaseAuthorised) {
+        if (!this.emailVerified) this.$router.push('/verify-email')
+        else if (!this.profile) this.$router.push('/create-profile')
+      }
     }
   },
   created() {

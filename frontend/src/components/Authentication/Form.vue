@@ -6,7 +6,7 @@
         <form class="auth-form">
           <slot></slot>
           <router-link v-if="link" :to="{ name: link.name }" class="help-link">{{ link.text }}</router-link>
-          <AppButton class="button-spacing" @click.native="clickHandler">
+          <AppButton class="button-spacing" @click.native="clickHandler" v-if="buttonText">
               {{ buttonText }}
           </AppButton>
         </form>
