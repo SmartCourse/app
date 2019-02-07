@@ -6,19 +6,11 @@
       :error="error"
       :clickHandler="resendEmail"
     >
-      <div v-if="!emailVerified">
-        <p class="center">
-          A verification email has been sent to your email address.<br>
-          Please click the link in the email to verify your email, then reload this page.
-        </p>
+      <div class="center">
+        <p>A verification email has been sent to <b>{{ userAuthObject.email }}</b>.</p>
+        <p>Please click the link in the email to continue the signup process.</p>
         <p class="resend-text">
           If you need to send the verification email again, click <a @click="resendEmail" class="resend-button">here</a>.
-        </p>
-      </div>
-
-      <div v-else>
-        <p>
-          Congratulations! Your email address has been successfully verified.
         </p>
       </div>
     </AppAuthForm>
