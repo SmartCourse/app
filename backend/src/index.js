@@ -8,12 +8,9 @@ const db = require('./models/db')
 const PRE_RENDERED_TEMPLATES = require('../pre-rendered')
 const { APIErrorHandler } = require('./error')
 const { staticFilesCache } = require('./utils/cache')
+const { PRODUCTION } = require('./models/constants')
 
 const app = express()
-
-// ENV related things
-const ENV = app.get('env')
-const LOG = process.env.LOG
 
 // for json parsing
 app.use(express.json())
@@ -29,11 +26,11 @@ app.use(firebase)
 // for setting cors headers
 const { corsDev, corsProd } = require('./utils/cors')
 
-if (LOG) {
+if (process.env.LOG) {
     app.use(logger('dev'))
 }
 
-if (ENV === 'production') {
+if (PRODUCTION) {
     app.use(corsProd)
 } else {
     app.use(corsDev)
@@ -48,7 +45,7 @@ app.use(staticFilesCache)
 
 /*
  * These templates are prerendered to enchance SEO.
- * If requests are returned for these rotues, return the template.
+ * If requests are returned for these routes, return the template.
  */
 PRE_RENDERED_TEMPLATES
     .forEach(route => {

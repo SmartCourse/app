@@ -12,7 +12,7 @@ const state = {
   // our own user data
   profile: null,
   // condition variable for app to wait on while waiting for auth to resolve on boot
-  authCV: new CV()
+  authCV: null
 }
 
 const getters = {
@@ -27,7 +27,10 @@ const getters = {
   userAuthObject: ({ userAuthObject }) => userAuthObject,
   loading: ({ loading }) => loading,
   error: ({ error }) => error,
-  authCV: ({ authCV }) => authCV
+  authCV: ({ authCV }) => {
+    if (authCV === null) authCV = new CV()
+    return authCV
+  }
 }
 
 const mutations = {
@@ -59,9 +62,6 @@ const mutations = {
     }
     */
     state.profile = profile
-  },
-  SIGNAL_AUTH_CV({ authCV }) {
-    authCV.signal()
   }
 }
 
@@ -172,7 +172,7 @@ const actions = {
    * Logs into firebase and retrieves the profile
    * If anything fails it clears everything
    */
-  async checkAuth({ commit, dispatch, state }) {
+  async checkAuth({ commit, dispatch, state, getters }) {
     commit('SET_LOADING', true)
     try {
       // returns user object
@@ -193,7 +193,7 @@ const actions = {
 
     // signal the CV so the app can continue loading and use the JWT token in its requests
     // Note we _need_ to do this before returning!
-    commit('SIGNAL_AUTH_CV')
+    getters.authCV.signal()
 
     // no firebase auth, just get outta here
     if (!state.userAuthObject) {
