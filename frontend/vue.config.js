@@ -22,7 +22,7 @@ const productionPlugins = [
 module.exports = {
   lintOnSave: true,
   configureWebpack: (config) => {
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
       config.plugins.push(...productionPlugins)
     }
   }
