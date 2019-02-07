@@ -173,7 +173,7 @@ const actions = {
    * Logs into firebase and retrieves the profile
    * If anything fails it clears everything
    */
-  async checkAuth({ commit, dispatch, state, getters }) {
+  async checkAuth({ commit, dispatch, state }) {
     commit('SET_LOADING', true)
     try {
       // returns user object
