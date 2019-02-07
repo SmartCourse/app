@@ -4,8 +4,10 @@ import CV from './CV'
 
 import { createProfile, updateProfile, getSelf } from '@/utils/api/auth'
 
-// TODO: more idiomatic way to do this?
-const _continueVerifyURL = `${window.location.protocol}//${window.location.host}/create-profile`
+// TODO: more idiomatic way to do this? Router something?
+const _baseURL = `${window.location.protocol}//${window.location.host}`
+const _continueVerifyURL = `${_baseURL}/create-profile`
+const _continueResetURL = `${_baseURL}/login`
 
 const state = {
   loading: false,
@@ -245,7 +247,7 @@ const actions = {
    */
   sendPasswordResetEmail({ commit }, { email }) {
     commit('SET_LOADING', true)
-    return auth.sendPasswordResetEmail(email)
+    return auth.sendPasswordResetEmail(email, { url: _continueResetURL })
       .catch(error => commit('ERROR', error.message))
       .finally(() => commit('SET_LOADING', false))
   }
