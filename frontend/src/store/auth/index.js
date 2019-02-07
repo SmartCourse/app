@@ -4,15 +4,16 @@ import CV from './CV'
 
 import { createProfile, updateProfile, getSelf } from '@/utils/api/auth'
 
+// condition variable for app to wait on while waiting for auth to resolve on boot
+const _authCV = new CV()
+
 const state = {
   loading: false,
   error: '',
   // firebase authObject
   userAuthObject: null,
   // our own user data
-  profile: null,
-  // condition variable for app to wait on while waiting for auth to resolve on boot
-  authCV: new CV()
+  profile: null
 }
 
 const getters = {
@@ -27,7 +28,7 @@ const getters = {
   userAuthObject: ({ userAuthObject }) => userAuthObject,
   loading: ({ loading }) => loading,
   error: ({ error }) => error,
-  authCV: ({ authCV }) => authCV
+  authCV: () => _authCV
 }
 
 const mutations = {
@@ -60,8 +61,8 @@ const mutations = {
     */
     state.profile = profile
   },
-  SIGNAL_AUTH_CV({ authCV }) {
-    authCV.signal()
+  SIGNAL_AUTH_CV() {
+    _authCV.signal()
   }
 }
 
