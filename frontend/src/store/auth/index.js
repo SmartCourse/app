@@ -136,7 +136,11 @@ const actions = {
   */
   createProfile({ commit, state }, { displayName, gradYear, degree }) {
     commit('SET_LOADING', true)
-    return createProfile(state.userAuthObject, { displayName, gradYear, degree })
+    // reload user in case of stale emailVerified
+    return state.userAuthObject.reload()
+      // we need a new token to actually ensure the token's email_verified is up to date
+      .then(() => state.userAuthObject.getIdToken(true))
+      .then(() => createProfile(state.userAuthObject, { displayName, gradYear, degree }))
       .then((profile) => commit('SET_PROFILE', profile))
       .catch(error => commit('ERROR', error.message))
       .finally(() => commit('SET_LOADING', false))
@@ -201,8 +205,10 @@ const actions = {
           resolve(user)
         }, reject)
       })
-      // reload it to get the freshest beats
+      // reload it to get the freshest emailVerified state
       await user.reload()
+      // we need a new token to actually ensure the token's email_verified is up to date
+      await user.getIdToken(true)
 
       // put it in the store
       commit('SET_USER', user)
@@ -210,14 +216,9 @@ const actions = {
       commit('ERROR', error.message)
     }
 
-    // signal the CV so the app can continue loading and use the JWT token in its requests
-    // Note we _need_ to do this before returning!
-    commit('SIGNAL_AUTH_CV')
-
-    // no firebase auth, just get outta here
-    if (!state.userAuthObject) {
-      commit('SET_LOADING', false)
-      return
+    if (state.userAuthObject) {
+      // Now try to get the profile
+      await dispatch('getProfile')
     }
 
     // get existing profile information if cached
@@ -232,8 +233,10 @@ const actions = {
     }
     */
 
-    // we're authorized with firebase but there's no valid profile info yet
-    await dispatch('getProfile')
+    // signal the CV so the app can continue loading and use the JWT token in its requests
+    // Note we _need_ to do this before returning!
+    commit('SIGNAL_AUTH_CV')
+
     commit('SET_LOADING', false)
   },
 
