@@ -1,10 +1,11 @@
 const path = require('path')
 const PrerenderSpaPlugin = require('prerender-spa-plugin')
 const PRE_RENDERED_ROUTES = require('../backend/pre-rendered')
+const distDir = path.join(__dirname, '../backend/public')
 
 const productionPlugins = [
   new PrerenderSpaPlugin({
-    staticDir: path.join(__dirname, '../backend/public'),
+    staticDir: distDir,
     routes: PRE_RENDERED_ROUTES,
     renderer: new PrerenderSpaPlugin.PuppeteerRenderer({
       // We need to inject a value so we're able to
@@ -22,7 +23,7 @@ const productionPlugins = [
 module.exports = {
   lintOnSave: true,
   configureWebpack: (config) => {
-    if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
       config.plugins.push(...productionPlugins)
     }
   }

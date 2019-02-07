@@ -44,7 +44,7 @@ exports.toLowerCase = str => str.toLowerCase()
 
 exports.hasFirebaseTokenAndVerifiedEmail = function(req, res, next) {
     if (!req.authorized) {
-        throw new APIError(ERRORS.USER.UNAUTHENTICATED)
+        throw new APIError(ERRORS.USER.NO_TOKEN)
     }
     if (!req.authorized.email_verified) {
         throw new APIError(ERRORS.USER.EMAIL_NOT_VERIFIED)
