@@ -61,7 +61,6 @@ const mutations = {
     state.profile = profile
   },
   SIGNAL_AUTH_CV({ authCV }) {
-    debugger;
     authCV.signal()
   }
 }
