@@ -4,6 +4,9 @@ import CV from './CV'
 
 import { createProfile, updateProfile, getSelf } from '@/utils/api/auth'
 
+// TODO: more idiomatic way to do this?
+const _continueVerifyURL = `${window.location.protocol}//${window.location.host}/create-profile`
+
 const state = {
   loading: false,
   error: '',
@@ -105,7 +108,7 @@ const actions = {
 
   sendEmailVerification({ commit, state }) {
     commit('SET_LOADING', true)
-    return state.userAuthObject.sendEmailVerification()
+    return state.userAuthObject.sendEmailVerification({ url: _continueVerifyURL })
       .catch(error => commit('ERROR', error.message))
       .then(() => commit('ERROR', 'Verification email re-sent'))
       .finally(() => commit('SET_LOADING', false))
@@ -121,7 +124,7 @@ const actions = {
     return auth.createUserWithEmailAndPassword(email, password)
       .then(({ user }) => {
         commit('SET_USER', user)
-        return user.sendEmailVerification()
+        return user.sendEmailVerification({ url: _continueVerifyURL })
       })
       .catch(error => commit('ERROR', error.message))
       .finally(() => commit('SET_LOADING', false))
