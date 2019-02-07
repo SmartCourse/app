@@ -4,15 +4,16 @@ import CV from './CV'
 
 import { createProfile, updateProfile, getSelf } from '@/utils/api/auth'
 
+// condition variable for app to wait on while waiting for auth to resolve on boot
+const _authCV = new CV()
+
 const state = {
   loading: false,
   error: '',
   // firebase authObject
   userAuthObject: null,
   // our own user data
-  profile: null,
-  // condition variable for app to wait on while waiting for auth to resolve on boot
-  authCV: null
+  profile: null
 }
 
 const getters = {
@@ -27,10 +28,7 @@ const getters = {
   userAuthObject: ({ userAuthObject }) => userAuthObject,
   loading: ({ loading }) => loading,
   error: ({ error }) => error,
-  authCV: (state) => {
-    if (state.authCV === null) state.authCV = new CV()
-    return state.authCV
-  }
+  authCV: () => _authCV
 }
 
 const mutations = {
@@ -62,6 +60,9 @@ const mutations = {
     }
     */
     state.profile = profile
+  },
+  SIGNAL_AUTH_CV() {
+    _authCV.signal()
   }
 }
 
@@ -193,7 +194,7 @@ const actions = {
 
     // signal the CV so the app can continue loading and use the JWT token in its requests
     // Note we _need_ to do this before returning!
-    getters.authCV.signal()
+    commit('SIGNAL_AUTH_CV')
 
     // no firebase auth, just get outta here
     if (!state.userAuthObject) {
