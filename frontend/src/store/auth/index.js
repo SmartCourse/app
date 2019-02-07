@@ -27,9 +27,9 @@ const getters = {
   userAuthObject: ({ userAuthObject }) => userAuthObject,
   loading: ({ loading }) => loading,
   error: ({ error }) => error,
-  authCV: ({ authCV }) => {
-    if (authCV === null) authCV = new CV()
-    return authCV
+  authCV: (state) => {
+    if (state.authCV === null) state.authCV = new CV()
+    return state.authCV
   }
 }
 
