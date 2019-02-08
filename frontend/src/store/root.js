@@ -1,6 +1,10 @@
 import { get } from '../utils/api'
 import { courseMapper } from '@/utils/api/course'
 
+const endLoad = () => {
+  if (window && window.__loader) window.__loader.endLoad()
+}
+
 /* root application state */
 const state = {
   error: '',
@@ -39,27 +43,33 @@ const actions = {
     if (getters.faculties.length) {
       return
     }
+
     return get('/uni/faculties')
       .then(data => commit('LOAD_FACULTIES', data))
       .catch(err => console.warn(err))
+      .then(endLoad)
   },
   getDegrees({ commit, getters }) {
     // avoid repeats of this
     if (getters.degrees.length) {
       return
     }
+
     return get('/uni/degrees')
       .then(data => commit('LOAD_DEGREES', data))
       .catch(err => console.warn(err))
+      .then(endLoad)
   },
   getSessions({ commit, getters }) {
     // avoid repeats of this
     if (getters.sessions.length) {
       return
     }
+
     return get('/uni/sessions')
       .then(data => commit('LOAD_SESSIONS', data))
       .catch(err => console.warn(err))
+      .then(endLoad)
   }
 }
 

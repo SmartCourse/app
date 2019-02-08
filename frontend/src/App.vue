@@ -21,6 +21,9 @@ export default {
     }
   },
   created() {
+    [1, 2, 3].forEach(() => {
+      window && window.__loader.startLoad()
+    })
     this.$store.dispatch('getCourses')
     this.$store.dispatch('auth/checkAuth')
     this.$store.dispatch('subject/getSubjects')
