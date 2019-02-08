@@ -9,7 +9,8 @@
     "test:src": "npm run db-init && cross-env NODE_ENV=test npx nyc mocha --file tests/utils/*.js --file tests/routes/*.js --timeout 10000",
     "test": "npm run test:lint && npm run test:src",
     "coverage": "npx nyc report --reporter=html --reporter=text-lcov | coveralls",
-    "db-init": "cross-env NODE_ENV=test LOG=true node ./scripts/db"
+    "db-init": "cross-env NODE_ENV=test LOG=true node ./scripts/db",
+    "db-force-clean": "cross-env NODE_ENV=test LOG=true node ./scripts/db --drop all --create all --init basic"
   },
   "dependencies": {
     "compression": "^1.7.3",
