@@ -69,3 +69,12 @@ export function menuInteractionsMapper({
   }
   ]
 }
+
+// Below functions are used to manage the pre-boot loading
+export const endLoad = () => {
+  if (window && window.__loader) window.__loader.endLoad()
+}
+
+export const startLoad = (parent) => {
+  if (window && window.__loader) window.__loader.startLoad(parent)
+}

@@ -1,9 +1,6 @@
 import { get } from '../utils/api'
+import { startLoad, endLoad } from '../utils/helpers'
 import { courseMapper } from '@/utils/api/course'
-
-const endLoad = () => {
-  if (window && window.__loader) window.__loader.endLoad()
-}
 
 /* root application state */
 const state = {
@@ -31,17 +28,23 @@ const actions = {
     // avoid repeats of this
     if (getters.courses.length) {
       return
+    } else {
+      startLoad('Courses')
     }
+
     commit('TOGGLE_LOADING', true)
     return get('/course')
       .then(data => commit('REFRESH_COURSES', data))
       .catch(err => console.warn(err))
       .finally(() => commit('TOGGLE_LOADING', false))
+      .then(endLoad)
   },
   getFaculties({ commit, getters }) {
     // avoid repeats of this
     if (getters.faculties.length) {
       return
+    } else {
+      startLoad('Faculties')
     }
 
     return get('/uni/faculties')
@@ -53,6 +56,8 @@ const actions = {
     // avoid repeats of this
     if (getters.degrees.length) {
       return
+    } else {
+      startLoad('Degrees')
     }
 
     return get('/uni/degrees')
@@ -64,6 +69,8 @@ const actions = {
     // avoid repeats of this
     if (getters.sessions.length) {
       return
+    } else {
+      startLoad('Sessions')
     }
 
     return get('/uni/sessions')

@@ -7,13 +7,16 @@
       this.$root = root
     }
 
-    startLoad() {
-      console.info('starting load')
+    startLoad(item) {
+      if (this._started === 0) {
+        this.startTime = Date.now()
+      }
+      console.info(`Loading ${item}`)
       this._started += 1
     }
 
     endLoad() {
-      console.info('ending load')
+      console.info('Done')
       this._loaded += 1
       this.$el.style.width = `${(this._loaded / this._started) * 100}%`
       if (this._loaded >= this._started) {
@@ -21,12 +24,13 @@
       }
     }
     cleanUp() {
+      console.info(`All data loaded in ${Date.now() - this.startTime}ms`)
       setTimeout(() => {
         this.$root.classList.add('fadeout')
-      }, 100)
+      }, 500)
       setTimeout(() => {
         document.body.removeChild(this.$root)
-      }, 1000)
+      }, 1200)
     }
   }
 
