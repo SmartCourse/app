@@ -4,10 +4,8 @@ import CV from './CV'
 
 import { createProfile, updateProfile, getSelf } from '@/utils/api/auth'
 
-// TODO: more idiomatic way to do this? Router something?
-const APP_URL = `${window.location.protocol}//${window.location.host}`
-const CONTINUE_VERIFY_URL = `${APP_URL}/create-profile`
-const CONTINUE_RESET_URL = `${APP_URL}/login`
+const CONTINUE_VERIFY_URL = `${process.env.VUE_APP_URL}/create-profile`
+const CONTINUE_RESET_URL = `${process.env.VUE_APP_URL}/login`
 
 // condition variable for app to wait on while waiting for auth to resolve on boot
 const _authCV = new CV()
