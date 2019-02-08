@@ -31,16 +31,6 @@
         </div>
       </article>
     </section>
-    <!--section class="homepage-section who">
-      <article class="content">
-        <div>Our story.</div>
-      </article>
-    </section>
-    <section class="homepage-section offer">
-      <article class="content">
-        <div>Sign up today.</div>
-      </article>
-    </section-->
   </div>
 </template>
 

@@ -38,7 +38,7 @@ const getters = {
 
 const mutations = {
   ERROR(state, message) {
-    if (message) console.warn('AUTH ERROR', message)
+    if (message) console.warn('Authentication Error:', message)
     state.error = message
   },
   SET_LOADING(state, isLoading) {

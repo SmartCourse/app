@@ -1,6 +1,6 @@
 import { subjectMapper } from '@/utils/api/subject'
-
 import { doRequestFactory } from '@/store/utils'
+import { startLoad, endLoad } from '../../utils/helpers'
 
 import { REQUEST, COMMITS, ACTIONS } from './constants'
 
@@ -34,6 +34,7 @@ const mutations = {
       }, {})
   },
   TOGGLE_LOADING (state, bool) {
+    bool ? startLoad('Subjects') : endLoad()
     state.loading = bool
   },
   API_ERROR (state, { code, message }) {
