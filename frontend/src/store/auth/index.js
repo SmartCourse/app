@@ -4,6 +4,9 @@ import CV from './CV'
 
 import { createProfile, updateProfile, getSelf } from '@/utils/api/auth'
 
+const CONTINUE_VERIFY_URL = `${process.env.VUE_APP_URL}/create-profile`
+const CONTINUE_RESET_URL = `${process.env.VUE_APP_URL}/login`
+
 // condition variable for app to wait on while waiting for auth to resolve on boot
 const _authCV = new CV()
 
@@ -17,12 +20,14 @@ const state = {
 }
 
 const getters = {
-// logged into firebase (authenticated account)
-  isFirebaseAuthorised: ({ userAuthObject }) => !!userAuthObject,
+  // logged into firebase (authenticated account)
+  isFirebaseAuthorised: ({ userAuthObject }) => userAuthObject !== null,
+
+  emailVerified: ({ userAuthObject }) => userAuthObject !== null && userAuthObject.emailVerified,
   // TODO not sure if this is useful...
-  hasProfile: ({ profile }) => !!profile,
-  // logged into backend (existing profile) and authed with firebase
-  isLoggedIn: ({ profile, userAuthObject }) => !!profile && !!userAuthObject,
+  hasProfile: ({ profile }) => profile !== null,
+  // logged into backend (existing profile) and authed with firebase with a verified email address
+  isLoggedIn: ({ profile, userAuthObject }) => profile !== null && userAuthObject !== null && userAuthObject.emailVerified,
 
   profile: ({ profile }) => profile,
   userAuthObject: ({ userAuthObject }) => userAuthObject,
@@ -66,13 +71,12 @@ const mutations = {
   }
 }
 
-/* TODO CHANGE THESE TO ASYNC */
-/* successful signIn returns an UserAuth object which has field user */
 const actions = {
+
   async signIn({ commit, dispatch, state }, { email, password }) {
     commit('SET_LOADING', true)
     try {
-      // this returns the 'usercredential' which is not the user object -.-
+      /* successful signIn returns an UserCredential object which has field user */
       const { user } = await auth.signInWithEmailAndPassword(email, password)
       commit('SET_USER', user)
     } catch (error) {
@@ -103,6 +107,14 @@ const actions = {
       .finally(() => commit('SET_LOADING', false))
   },
 
+  sendEmailVerification({ commit, state }) {
+    commit('SET_LOADING', true)
+    return state.userAuthObject.sendEmailVerification({ url: CONTINUE_VERIFY_URL })
+      .catch(error => commit('ERROR', error.message))
+      .then(() => commit('ERROR', 'Verification email re-sent'))
+      .finally(() => commit('SET_LOADING', false))
+  },
+
   /**
    * successful signup returns an UserAuth object.
    * UserAuth obj has field user which is what we're interested in
@@ -111,7 +123,10 @@ const actions = {
   createAccount({ commit }, { email, password }) {
     commit('SET_LOADING', true)
     return auth.createUserWithEmailAndPassword(email, password)
-      .then(({ user }) => commit('SET_USER', user))
+      .then(({ user }) => {
+        commit('SET_USER', user)
+        return user.sendEmailVerification({ url: CONTINUE_VERIFY_URL })
+      })
       .catch(error => commit('ERROR', error.message))
       .finally(() => commit('SET_LOADING', false))
   },
@@ -122,7 +137,11 @@ const actions = {
   */
   createProfile({ commit, state }, { displayName, gradYear, degree }) {
     commit('SET_LOADING', true)
-    return createProfile(state.userAuthObject, { displayName, gradYear, degree })
+    // reload user in case of stale emailVerified
+    return state.userAuthObject.reload()
+      // we need a new token to actually ensure the token's email_verified is up to date
+      .then(() => state.userAuthObject.getIdToken(true))
+      .then(() => createProfile(state.userAuthObject, { displayName, gradYear, degree }))
       .then((profile) => commit('SET_PROFILE', profile))
       .catch(error => commit('ERROR', error.message))
       .finally(() => commit('SET_LOADING', false))
@@ -156,12 +175,13 @@ const actions = {
       // abort! abort!
       commit('ERROR', error.message)
       commit('SET_PROFILE', null)
-      // if there's a 7003 error code, it means it's a valid account but no profile exists yet
-      // otherwise, completely abort auth
-      if (!error.code || error.code !== 7003) {
-        commit('SET_USER', null)
-        await auth.signOut()
+      // if there's a 7003 or 7004 error code, it means it's a valid account but either email isn't verified or no profile exists yet
+      if (error.code && (error.code === 7003 || error.code === 7004)) {
+        return
       }
+      // otherwise, completely abort auth
+      commit('SET_USER', null)
+      await auth.signOut()
     } finally {
       // restore loading state
       commit('SET_LOADING', oldLoading)
@@ -186,20 +206,20 @@ const actions = {
           resolve(user)
         }, reject)
       })
+      // reload it to get the freshest emailVerified state
+      await user.reload()
+      // we need a new token to actually ensure the token's email_verified is up to date
+      await user.getIdToken(true)
+
       // put it in the store
       commit('SET_USER', user)
     } catch (error) {
       commit('ERROR', error.message)
     }
 
-    // signal the CV so the app can continue loading and use the JWT token in its requests
-    // Note we _need_ to do this before returning!
-    commit('SIGNAL_AUTH_CV')
-
-    // no firebase auth, just get outta here
-    if (!state.userAuthObject) {
-      commit('SET_LOADING', false)
-      return
+    if (state.userAuthObject) {
+      // Now try to get the profile
+      await dispatch('getProfile')
     }
 
     // get existing profile information if cached
@@ -214,8 +234,10 @@ const actions = {
     }
     */
 
-    // we're authorized with firebase but there's no valid profile info yet
-    await dispatch('getProfile')
+    // signal the CV so the app can continue loading and use the JWT token in its requests
+    // Note we _need_ to do this before returning!
+    commit('SIGNAL_AUTH_CV')
+
     commit('SET_LOADING', false)
   },
 
@@ -224,7 +246,7 @@ const actions = {
    */
   sendPasswordResetEmail({ commit }, { email }) {
     commit('SET_LOADING', true)
-    return auth.sendPasswordResetEmail(email)
+    return auth.sendPasswordResetEmail(email, { url: CONTINUE_RESET_URL })
       .catch(error => commit('ERROR', error.message))
       .finally(() => commit('SET_LOADING', false))
   }
