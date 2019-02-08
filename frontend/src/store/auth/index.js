@@ -22,14 +22,14 @@ const state = {
 }
 
 const getters = {
-// logged into firebase (authenticated account)
-  isFirebaseAuthorised: ({ userAuthObject }) => !!userAuthObject,
+  // logged into firebase (authenticated account)
+  isFirebaseAuthorised: ({ userAuthObject }) => userAuthObject !== null,
 
-  emailVerified: ({ userAuthObject }) => !!userAuthObject && userAuthObject.emailVerified,
+  emailVerified: ({ userAuthObject }) => userAuthObject !== null && userAuthObject.emailVerified,
   // TODO not sure if this is useful...
-  hasProfile: ({ profile }) => !!profile,
+  hasProfile: ({ profile }) => profile !== null,
   // logged into backend (existing profile) and authed with firebase with a verified email address
-  isLoggedIn: ({ profile, userAuthObject }) => !!profile && !!userAuthObject && userAuthObject.emailVerified,
+  isLoggedIn: ({ profile, userAuthObject }) => profile !== null && userAuthObject !== null && userAuthObject.emailVerified,
 
   profile: ({ profile }) => profile,
   userAuthObject: ({ userAuthObject }) => userAuthObject,
