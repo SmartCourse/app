@@ -35,7 +35,7 @@ const actions = {
     commit('TOGGLE_LOADING', true)
     return get('/course')
       .then(data => commit('REFRESH_COURSES', data))
-      .catch(err => console.warn(err))
+      .catch(err => console.warn(err.message))
       .finally(() => commit('TOGGLE_LOADING', false))
       .then(endLoad)
   },
@@ -49,7 +49,7 @@ const actions = {
 
     return get('/uni/faculties')
       .then(data => commit('LOAD_FACULTIES', data))
-      .catch(err => console.warn(err))
+      .catch(err => console.warn(err.message))
       .then(endLoad)
   },
   getDegrees({ commit, getters }) {
@@ -62,7 +62,7 @@ const actions = {
 
     return get('/uni/degrees')
       .then(data => commit('LOAD_DEGREES', data))
-      .catch(err => console.warn(err))
+      .catch(err => console.warn(err.message))
       .then(endLoad)
   },
   getSessions({ commit, getters }) {
@@ -75,7 +75,7 @@ const actions = {
 
     return get('/uni/sessions')
       .then(data => commit('LOAD_SESSIONS', data))
-      .catch(err => console.warn(err))
+      .catch(err => console.warn(err.message))
       .then(endLoad)
   }
 }

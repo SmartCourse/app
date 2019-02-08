@@ -3,6 +3,6 @@ export default class APIError extends Error {
     super(message)
     this.code = code
     this.name = 'APIError'
-    console.warn(this)
+    console.warn('APIError:', message)
   }
 }

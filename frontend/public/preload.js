@@ -11,12 +11,11 @@
       if (this._started === 0) {
         this.startTime = Date.now()
       }
-      console.info(`Loading ${item}`)
+      console.info(`Loading ${item}..`)
       this._started += 1
     }
 
     endLoad() {
-      console.info('Done')
       this._loaded += 1
       this.$el.style.width = `${(this._loaded / this._started) * 100}%`
       if (this._loaded >= this._started) {
