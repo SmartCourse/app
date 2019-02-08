@@ -5,9 +5,9 @@ import CV from './CV'
 import { createProfile, updateProfile, getSelf } from '@/utils/api/auth'
 
 // TODO: more idiomatic way to do this? Router something?
-const _baseURL = `${window.location.protocol}//${window.location.host}`
-const _continueVerifyURL = `${_baseURL}/create-profile`
-const _continueResetURL = `${_baseURL}/login`
+const APP_URL = `${window.location.protocol}//${window.location.host}`
+const CONTINUE_VERIFY_URL = `${APP_URL}/create-profile`
+const CONTINUE_RESET_URL = `${APP_URL}/login`
 
 // condition variable for app to wait on while waiting for auth to resolve on boot
 const _authCV = new CV()
@@ -111,7 +111,7 @@ const actions = {
 
   sendEmailVerification({ commit, state }) {
     commit('SET_LOADING', true)
-    return state.userAuthObject.sendEmailVerification({ url: _continueVerifyURL })
+    return state.userAuthObject.sendEmailVerification({ url: CONTINUE_VERIFY_URL })
       .catch(error => commit('ERROR', error.message))
       .then(() => commit('ERROR', 'Verification email re-sent'))
       .finally(() => commit('SET_LOADING', false))
@@ -127,7 +127,7 @@ const actions = {
     return auth.createUserWithEmailAndPassword(email, password)
       .then(({ user }) => {
         commit('SET_USER', user)
-        return user.sendEmailVerification({ url: _continueVerifyURL })
+        return user.sendEmailVerification({ url: CONTINUE_VERIFY_URL })
       })
       .catch(error => commit('ERROR', error.message))
       .finally(() => commit('SET_LOADING', false))
@@ -248,7 +248,7 @@ const actions = {
    */
   sendPasswordResetEmail({ commit }, { email }) {
     commit('SET_LOADING', true)
-    return auth.sendPasswordResetEmail(email, { url: _continueResetURL })
+    return auth.sendPasswordResetEmail(email, { url: CONTINUE_RESET_URL })
       .catch(error => commit('ERROR', error.message))
       .finally(() => commit('SET_LOADING', false))
   }
