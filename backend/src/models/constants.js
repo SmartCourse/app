@@ -226,7 +226,7 @@ exports.TABLE_COLUMNS = {
             options: { nullable: true }
         },
         timestamp: {
-            type: TYPES.Date,
+            type: TYPES.DateTime2,
             options: { nullable: false }
         }
     },
@@ -276,7 +276,7 @@ exports.TABLE_COLUMNS = {
             options: { nullable: true }
         },
         timestamp: {
-            type: TYPES.Date,
+            type: TYPES.DateTime2,
             options: { nullable: false }
         }
     },
@@ -306,7 +306,7 @@ exports.TABLE_COLUMNS = {
             options: { nullable: false }
         },
         timestamp: {
-            type: TYPES.Date,
+            type: TYPES.DateTime2,
             options: { nullable: false }
         }
     },
@@ -346,7 +346,7 @@ exports.TABLE_COLUMNS = {
             options: { nullable: false }
         },
         joined: {
-            type: TYPES.Date,
+            type: TYPES.DateTime2,
             options: { nullable: false }
         },
         reputation: {
@@ -408,7 +408,7 @@ exports.TABLE_COLUMNS = {
             options: { nullable: false }
         },
         timestamp: {
-            type: TYPES.Date,
+            type: TYPES.DateTime2,
             options: { nullable: false }
         }
     }

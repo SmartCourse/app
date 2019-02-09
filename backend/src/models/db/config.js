@@ -16,6 +16,8 @@ exports.DB_CONFIG = {
             database: exports.DB_NAME,
             rowCollectionOnDone: true,
             rowCollectionOnRequestCompletion: true,
-            encrypt: !TESTING
+            encrypt: !TESTING,
+            connectTimeout: 60000,
+            requestTimeout: 60000
         }
 }
