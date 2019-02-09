@@ -64,9 +64,13 @@ class Question {
         }
         // TODO 404 error for invalid user
         return this.db
-            .run(`SELECT * FROM ${QUESTIONS}
+            .run(`SELECT q.*, cou.code, (SELECT COUNT(com.questionID)
+                FROM ${COMMENTS} com
+                WHERE com.questionID = q.id) as numAnswers
+                FROM ${QUESTIONS} q
+                JOIN ${COURSES} cou on q.courseID=cou.id
                 WHERE userID=@userID
-                ORDER BY timestamp DESC
+                ORDER BY q.timestamp DESC
                 OFFSET 0 ROWS
                 FETCH NEXT ${limit} ROWS ONLY`,
             {

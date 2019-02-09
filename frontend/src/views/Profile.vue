@@ -5,7 +5,7 @@
         <CardHeader>User Profile</CardHeader>
         <Card class="profile">
           <transition name="fade-slide">
-            <div v-if="!loading">
+            <div v-if="!loading && user">
               <UserSummary
                 :reputation="user.reputation"
                 :displayName="user.displayName"
@@ -25,11 +25,12 @@
           </div>
       </Card>
       </div>
-      <div>
+      <div v-if="user">
         <CardHeader>Recent Questions</CardHeader>
         <FeedCard
           v-for="q in questions"
           v-bind="q"
+          cardType="question"
           :key="q.id"
           />
       </div>
@@ -78,22 +79,18 @@ export default {
 </script>
 
 <style scoped>
-p {
-    margin:5px 0px;
-}
-
 .star {
-    font-size:15px;
+  font-size:15px;
 }
 
 .header {
-    display: grid;
-    grid-template-columns: 45px auto;
-    grid-gap: 10px;
+  display: grid;
+  grid-template-columns: 45px auto;
+  grid-gap: 10px;
 }
 
 .name, .description {
-    margin: 10px 0px;
+  margin: 10px 0px;
 }
 
 .profile {
@@ -102,8 +99,8 @@ p {
 }
 
 .data-container {
-    display: block;
-    margin: 10px 0;
+  display: block;
+  margin: 10px 0;
 }
 
 .flex-container {

@@ -44,7 +44,8 @@ export default {
         { content: 'Terms of Use', href: '/terms-of-service' }
       ],
       info_external: [
-        { content: 'Contribute', href: 'https://github.com/SmartCourse/app' }
+        { content: 'Contribute', href: 'https://github.com/SmartCourse/app' },
+        { content: 'Webmaster', href: 'mailto:admin@smartcourse.me' }
       ],
       unsw_external: [
         { content: 'UNSW Handbook', href: 'https://www.handbook.unsw.edu.au/' },
