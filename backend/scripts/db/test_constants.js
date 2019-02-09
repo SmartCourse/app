@@ -6,12 +6,8 @@ exports.ADMIN_QUESTIONS = [
         body: 'I\'m wondering if it\'s worth buying/obtaining the course textbook. If not, are there good alternative resources that people might recommend?'
     },
     {
-        title: 'What year would you recommend taking this course?',
-        body: 'Is this course worth taking earlier or later in my degree? What are the advantages or disadvantages?'
-    },
-    {
         title: 'How essential is it to attend lectures?',
-        body: 'Are the lectures for the course recorded? Are the worthwhile attending. What am I giving up if I can\'t attend them?'
+        body: 'Are the lectures for the course recorded? Is it worthwhile to attend them? What am I giving up if I can\'t attend them?'
     },
     {
         title: 'What are similar courses to this course?',

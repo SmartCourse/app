@@ -74,6 +74,7 @@ describe('Course route testing', () => {
 
     describe('POST /api/course/ACCT1501/question', () => {
         let request
+        const location = '/api/course/ACCT1501/question/9019'
 
         before(() => {
             request = supertest
@@ -90,7 +91,7 @@ describe('Course route testing', () => {
         )
 
         it('returns correct Location', () => {
-            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/question/12025')
+            expect(request.res.headers.location).to.equal(location)
         })
 
         describe('new record exists', () => {
@@ -98,7 +99,7 @@ describe('Course route testing', () => {
 
             before(() => {
                 followUp = supertest
-                    .get('/api/course/ACCT1501/question/12025')
+                    .get(location)
                     .set('Accept', 'application/json')
                     .expect(200)
 
@@ -133,7 +134,7 @@ describe('Course route testing', () => {
 
         it('correct number of questions', () =>
             request.then(({ body }) =>
-                expect(body.data.length).to.equal(5))
+                expect(body.data.length).to.equal(4))
         )
 
         it('question has a title', () =>
