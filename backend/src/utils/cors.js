@@ -1,6 +1,6 @@
 const CORS_PREFLIGHT_METHODS = ['OPTIONS', 'HEAD']
 const CORS_ALLOWED_HEADERS = ['Origin', 'Authorization', 'X-Requested-With', 'Content-Type', 'Accept', 'Cache-Control'].join(', ')
-const CORS_ALLOWED_DOMAINS = ['https://smartcourse.me', 'https://www.smartcourse.me', 'https://admin.smartcourse.me', 'http://localhost:8080']
+const CORS_ALLOWED_DOMAINS = ['https://smartcourse.me', 'https://www.smartcourse.me', 'https://admin.smartcourse.me']
 
 /**
  * Basic CORS middleware handler.
@@ -8,8 +8,8 @@ const CORS_ALLOWED_DOMAINS = ['https://smartcourse.me', 'https://www.smartcourse
  * @param {*} res Express Response Object
  * @param {*} next     Pass the headers to the route handlers
  */
-exports.corsDev = function(req, res, next) {
-    setCorsHeaders(req.method, res, next, '*')
+exports.corsDev = function({ method }, res, next) {
+    setCorsHeaders(method, res, next, '*')
 }
 
 exports.corsProd = function(req, res, next) {
