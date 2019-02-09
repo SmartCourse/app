@@ -5,15 +5,11 @@ const logger = require('morgan')
 const firebase = require('./auth')
 const compression = require('compression')
 const db = require('./models/db')
-const PRE_RENDERED_TEMPLATES = require('../pre-rendered')
 const { APIErrorHandler } = require('./error')
 const { staticFilesCache } = require('./utils/cache')
+const { PRODUCTION } = require('./models/constants')
 
 const app = express()
-
-// ENV related things
-const ENV = app.get('env')
-const LOG = process.env.LOG
 
 // for json parsing
 app.use(express.json())
@@ -29,11 +25,11 @@ app.use(firebase)
 // for setting cors headers
 const { corsDev, corsProd } = require('./utils/cors')
 
-if (LOG) {
+if (process.env.LOG) {
     app.use(logger('dev'))
 }
 
-if (ENV === 'production') {
+if (PRODUCTION) {
     app.use(corsProd)
 } else {
     app.use(corsDev)
@@ -45,17 +41,6 @@ app.use('/api', apiRouter)
 
 // for caching
 app.use(staticFilesCache)
-
-/*
- * These templates are prerendered to enchance SEO.
- * If requests are returned for these rotues, return the template.
- */
-PRE_RENDERED_TEMPLATES
-    .forEach(route => {
-        app.use(`${route}`, function (_, res) {
-            res.sendFile(path.join(__dirname, `../public${route}`, 'index.html'))
-        })
-    })
 
 /*
     anything that gets here and not handled
@@ -74,6 +59,6 @@ app.use(APIErrorHandler)
 db.on('ready', () => {
     console.log('App ready!')
     app.emit('ready')
-  })
+})
 
 module.exports = app

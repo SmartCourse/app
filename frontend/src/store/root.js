@@ -1,4 +1,5 @@
 import { get } from '../utils/api'
+import { startLoad, endLoad } from '../utils/helpers'
 import { courseMapper } from '@/utils/api/course'
 
 /* root application state */
@@ -27,39 +28,55 @@ const actions = {
     // avoid repeats of this
     if (getters.courses.length) {
       return
+    } else {
+      startLoad('Courses')
     }
+
     commit('TOGGLE_LOADING', true)
     return get('/course')
       .then(data => commit('REFRESH_COURSES', data))
-      .catch(err => console.warn(err))
+      .catch(err => console.warn(err.message))
       .finally(() => commit('TOGGLE_LOADING', false))
+      .then(endLoad)
   },
   getFaculties({ commit, getters }) {
     // avoid repeats of this
     if (getters.faculties.length) {
       return
+    } else {
+      startLoad('Faculties')
     }
+
     return get('/uni/faculties')
       .then(data => commit('LOAD_FACULTIES', data))
-      .catch(err => console.warn(err))
+      .catch(err => console.warn(err.message))
+      .then(endLoad)
   },
   getDegrees({ commit, getters }) {
     // avoid repeats of this
     if (getters.degrees.length) {
       return
+    } else {
+      startLoad('Degrees')
     }
+
     return get('/uni/degrees')
       .then(data => commit('LOAD_DEGREES', data))
-      .catch(err => console.warn(err))
+      .catch(err => console.warn(err.message))
+      .then(endLoad)
   },
   getSessions({ commit, getters }) {
     // avoid repeats of this
     if (getters.sessions.length) {
       return
+    } else {
+      startLoad('Sessions')
     }
+
     return get('/uni/sessions')
       .then(data => commit('LOAD_SESSIONS', data))
-      .catch(err => console.warn(err))
+      .catch(err => console.warn(err.message))
+      .then(endLoad)
   }
 }
 

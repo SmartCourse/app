@@ -31,7 +31,7 @@ export default {
   },
   components: { AppAuthForm, AuthInput, AuthSelect },
   computed: {
-    ...mapGetters('auth', [ 'loading', 'error', 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile' ]),
+    ...mapGetters('auth', [ 'loading', 'error', 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile', 'emailVerified' ]),
     degrees() {
       return this.$store.getters.degrees.map(d => d.name)
     },
@@ -59,10 +59,12 @@ export default {
     reroute() {
       if (this.isLoggedIn) this.$router.push('/subject')
       else if (!this.isFirebaseAuthorised) this.$router.push('/signup')
+      else if (!this.emailVerified) this.$router.push('/verify-email')
     }
   },
   created() {
     this.$store.commit('auth/ERROR', '')
+    this.reroute()
   }
 }
 </script>
