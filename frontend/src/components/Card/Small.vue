@@ -6,11 +6,11 @@
       </SecondHeader>
       <div class="secondary">
         <p>
-            <span v-if="numAnswers === 0">Know the answer to this question?</span>
-            <span v-else>{{ numAnswers }} Answers</span>
+          <span v-if="numResponses === 0">Know the answer to this question?</span>
+          <span v-else>{{ numResponses }} Answer{{ numResponses > 1 ? 's' : ''}}</span>
         </p>
         <p class="published">
-            <time>{{ published }}</time>
+          <time>{{ published }}</time>
         </p>
       </div>
     </div>
@@ -27,7 +27,7 @@ export default {
     likes: Number,
     published: String,
     user: Object,
-    numAnswers: { type: Number, default: 0 },
+    numResponses: { type: Number, default: 0 },
     code: String,
     id: String,
     cardType: String,
@@ -47,7 +47,6 @@ export default {
 </script>
 
 <style scoped>
-
 .feed-card {
   border-radius: 0;
   margin: 0;
@@ -63,20 +62,19 @@ export default {
 }
 
 .secondary {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 p {
-  margin: 0 5px;
   font: var(--body-copy-2);
+  margin: 0;
 }
 
 @media screen and (max-width: 600px) {
-    .feed-card {
-        min-width: auto;
-        margin: auto;
-    }
+  .feed-card {
+      min-width: auto;
+      margin: auto;
+  }
 }
-
 </style>

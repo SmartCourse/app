@@ -14,8 +14,12 @@ export function userMapper({
   joined,
   ...rest
 }) {
+  if (!joined) {
+    return
+  }
+
   return {
     ...rest,
-    joined: format(joined * 1000, 'dd/MM/yyyy')
+    joined: format(new Date(joined), 'dd/MM/yyyy')
   }
 }
