@@ -74,8 +74,8 @@ const actions = {
   async getReviews ({ dispatch }, { id, pageNumber }) {
     return dispatch('doRequest', { action: ACTIONS.GET_REVIEWS, load: 'TOGGLE_LOADING_FEED', args: [id, pageNumber] })
   },
-  async getCourse ({ state, commit, dispatch }, id) {
-    await dispatch('doRequest', { action: ACTIONS.GET_COURSE, load: 'TOGGLE_LOADING_COURSE', args: [id] })
+  async getCourse ({ state, commit, dispatch }, code) {
+    await dispatch('doRequest', { action: ACTIONS.GET_COURSE, load: 'TOGGLE_LOADING_COURSE', args: [code] })
     commit('UPDATE_COURSE', state.course, { root: true })
   }
 }
