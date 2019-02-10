@@ -54,6 +54,26 @@ describe('Course route testing', () => {
             request.then(({ body }) =>
                 expect(body.tags).to.equal('acct1501,accounting and financial management 1a,acct,accounting,undergraduate,accounting'))
         )
+
+        describe('it has the correct ratings', () => {
+            let reviewRequest
+            before(() => {
+                reviewRequest = supertest
+                    .get('/api/course/ACCT1501/reviews')
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                return reviewRequest
+            })
+
+            it('recommend', () =>
+                Promise.all([reviewRequest, request])
+                    .then(([{ body: { data } }, { body: { recommend } }]) => {
+                        const expectedRecommend = Math.floor((100 * data.filter(({ recommend }) => recommend === 1).length) / data.length)
+                        expect(recommend).to.equal(expectedRecommend)
+                    })
+            )
+        })
     })
 
     describe('GET /api/course/NOTEXIST (error)', () => {
