@@ -12,10 +12,10 @@ exports.corsDev = function({ method }, res, next) {
     setCorsHeaders(method, res, next, '*')
 }
 
-exports.corsProd = function({ headers, method }, res, next) {
-    const { origin } = headers
+exports.corsProd = function(req, res, next) {
+    const origin = req.header('origin')
     const allowedDomain = CORS_ALLOWED_DOMAINS.find(domain => origin && origin.startsWith(domain)) || CORS_ALLOWED_DOMAINS[0]
-    setCorsHeaders(method, res, next, allowedDomain)
+    setCorsHeaders(req.method, res, next, allowedDomain)
 }
 
 function setCorsHeaders(method, res, next, allowedDomain = '*') {

@@ -57,7 +57,7 @@ export default {
 .logo-span {
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: flex-start;
 }
 
 .links {
