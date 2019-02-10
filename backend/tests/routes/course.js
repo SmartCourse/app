@@ -66,11 +66,47 @@ describe('Course route testing', () => {
                 return reviewRequest
             })
 
-            it('recommend', () =>
+            it('recommended', () =>
                 Promise.all([reviewRequest, request])
                     .then(([{ body: { data } }, { body: { recommend } }]) => {
-                        const expectedRecommend = Math.floor((100 * data.filter(({ recommend }) => recommend === 1).length) / data.length)
+                        const numRecommended = data.filter(({ recommend }) => recommend === 1).length
+                        const expectedRecommend = data.length ? Math.floor((100 * numRecommended) / data.length) : -1
                         expect(recommend).to.equal(expectedRecommend)
+                    })
+            )
+            it('enjoy', () =>
+                Promise.all([reviewRequest, request])
+                    .then(([{ body: { data } }, { body: { enjoy } }]) => {
+                        const enjoySum = data.reduce((acc, { enjoy }) => acc + enjoy - 1, 0)
+                        const expectedEnjoy = Math.floor((100 * enjoySum) / (data.length * 4))
+                        expect(enjoy).to.equal(expectedEnjoy)
+                    })
+            )
+            it('difficulty', () =>
+                Promise.all([reviewRequest, request])
+                    .then(([{ body: { data } }, { body: { difficulty } }]) => {
+                        const rated = data.filter(({ difficulty }) => difficulty > 0)
+                        const difficultySum = rated.reduce((acc, { difficulty }) => acc + difficulty - 1, 0)
+                        const expectedDifficulty = Math.floor((100 * difficultySum) / (rated.length * 2))
+                        expect(difficulty).to.equal(expectedDifficulty)
+                    })
+            )
+            it('teaching', () =>
+                Promise.all([reviewRequest, request])
+                    .then(([{ body: { data } }, { body: { teaching } }]) => {
+                        const rated = data.filter(({ teaching }) => teaching > 0)
+                        const teachingSum = rated.reduce((acc, { teaching }) => acc + teaching - 1, 0)
+                        const expectedTeaching = Math.floor((100 * teachingSum) / (rated.length * 2))
+                        expect(teaching).to.equal(expectedTeaching)
+                    })
+            )
+            it('workload', () =>
+                Promise.all([reviewRequest, request])
+                    .then(([{ body: { data } }, { body: { workload } }]) => {
+                        const rated = data.filter(({ workload }) => workload > 0)
+                        const workloadSum = rated.reduce((acc, { workload }) => acc + workload - 1, 0)
+                        const expectedWorkload = Math.floor((100 * workloadSum) / (rated.length * 2))
+                        expect(workload).to.equal(expectedWorkload)
                     })
             )
         })
