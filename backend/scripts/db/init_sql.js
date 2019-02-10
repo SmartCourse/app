@@ -45,12 +45,11 @@ exports.init = async function (db, { drop, create, init }) {
     console.log('Database initialisation:')
 
     if (drop !== 'none') {
-
         console.log(`  Dropping ${drop} tables`)
         const dropAll = drop === 'all'
 
         await new Promise((resolve, reject) => {
-            const request = new Request(dropTables(dropAll), async (err) => {
+            const request = new Request(dropTables(dropAll), (err) => {
                 if (err) reject(err)
                 else resolve()
             })
@@ -59,10 +58,10 @@ exports.init = async function (db, { drop, create, init }) {
     }
 
     if (create !== 'none') {
-        console.log(`  Creating all tables`)
+        console.log('  Creating all tables')
 
         await new Promise((resolve, reject) => {
-            const request = new Request(createTables(), async (err) => {
+            const request = new Request(createTables(), (err) => {
                 if (err) reject(err)
                 else resolve()
             })
@@ -71,7 +70,6 @@ exports.init = async function (db, { drop, create, init }) {
     }
 
     if (init !== 'none') {
-
         // Static data - university
         // init === 'static' or higher
         // testing optimization; we can skip this if it looks like data is initialized already
@@ -103,7 +101,6 @@ exports.init = async function (db, { drop, create, init }) {
             await sqlUsers(connection)
         }
     }
-
 }
 
 // Assume that if UNSW has been inserted into uni table,
