@@ -38,7 +38,7 @@ describe('cors', function () {
 
     it('calls corProd correctly when preflight required ', () => {
         corsProd(
-            { method: 'GET', headers: { referer: 'https://smartcourse.me' } },
+            { method: 'GET', header: () => 'https://smartcourse.me' },
             {
                 header: (arg) => {
                     expect(arg)
