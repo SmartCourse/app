@@ -1,8 +1,11 @@
 const app = require('../../src')
 const supertest = require('supertest')(app)
 const fetch = require('node-fetch')
+const { getRandomIntInclusive } = require('../../src/utils/helpers')
 
-function createGlobalIdToken(varName, displayName, email, password) {
+async function createGlobalIdToken(varName, displayName, email, password, existingProfile = false) {
+    // sleep a random amount because we're hitting google's api
+    await new Promise(resolve => setTimeout(resolve, getRandomIntInclusive(100, 500)))
     return fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyANscpcUrt-ECaX8lqu3vQTtEyggcZ_7X4',
         {
             'credentials': 'omit',
@@ -16,6 +19,8 @@ function createGlobalIdToken(varName, displayName, email, password) {
         .then((res) => res.json())
         .then((data) => {
             global[varName] = data.idToken
+            if (existingProfile) { return }
+            // if no existing profile, create one in the backend
             return supertest.post('/api/user')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global[varName]}`)
@@ -24,7 +29,7 @@ function createGlobalIdToken(varName, displayName, email, password) {
         })
 }
 
-async function setup() {
+function setup() {
     // create 3 backend tester users
     const promises = new Array(3).fill(0).map((_, i) =>
         createGlobalIdToken(
@@ -39,12 +44,22 @@ async function setup() {
         createGlobalIdToken(
             'idTokenSuper',
             'SuperUser',
-            process.env.SUPERUSER_EMAIL,
-            process.env.SUPERUSER_PASSWORD
+            process.env.SUPERUSER_NUNO_EMAIL,
+            process.env.SUPERUSER_NUNO_PASSWORD,
+            true
         )
     )
 
-    await Promise.all(promises)
+    return Promise.all(promises)
 }
 
-before(() => setup())
+before(() => {
+    // create a promise that will resolve when the app has initialized
+    let res
+    let promise = new Promise((resolve) => { res = resolve })
+    app.on('ready', () => {
+        res()
+    })
+    // call setup once app has initialized
+    return promise.then(() => setup())
+})

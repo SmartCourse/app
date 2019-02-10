@@ -1,5 +1,5 @@
 const { TABLE_NAMES: { COURSES, SUBJECTS, REVIEWS } } = require('./constants')
-const { APIError, toSQLErrorCode, translateSQLError } = require('../utils/error')
+const { APIError, toSQLThrow, ERRORS } = require('../error')
 
 /* All inputs should be validated in this class that are course related */
 class Course {
@@ -29,11 +29,10 @@ class Course {
                       JOIN ${SUBJECTS} s ON s.code=@code
                       WHERE c.subjectID=s.id;
                   ELSE
-                      THROW ${toSQLErrorCode(2001)}, 'The requested subject does not exist', 1;`,
+                      ${toSQLThrow(ERRORS.SUBJECT.MISSING)}`,
             {
                 [SUBJECTS]: { code }
             })
-            .catch(translateSQLError({ [toSQLErrorCode(2001)]: 404 }))
     }
 
     /**
@@ -49,7 +48,7 @@ class Course {
                     }))
             .then(([row]) => {
                 if (row) return row
-                throw new APIError({ status: 404, code: 3001, message: `The requested course '${code}' does not exist` })
+                throw new APIError({ ...ERRORS.COURSE.MISSING, message: `The requested course '${code}' does not exist` })
             })
     }
 
@@ -60,14 +59,15 @@ class Course {
         // ^ we take this mean and divide by 2 or 4 (range is 0-2 or 0-4) to get a normalised value
         // ^ multiply by 100 so we have an integer percentage (we do this at an early step however, to avoid floating point biz)
         return this.db
-            .run(`UPDATE ${COURSES}
+            .run(`UPDATE c
                       SET
-                          recommend = (SELECT CASE WHEN COUNT(*)=0 THEN -1 ELSE SUM(recommend)*100/COUNT(*) END FROM ${REVIEWS} WHERE code=@code),
-                          enjoy = (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(enjoy-1)*100/(4*COUNT(*)) END FROM ${REVIEWS} WHERE code=@code),
-                          difficulty = (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(difficulty-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} WHERE code=@code AND difficulty > 0),
-                          teaching = (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(teaching-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} WHERE code=@code AND teaching > 0),
-                          workload = (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(workload-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} WHERE code=@code AND workload > 0)
-                      WHERE code=@code;`,
+                          c.recommend =     (SELECT CASE WHEN COUNT(*)=0 THEN -1 ELSE SUM(r.recommend)*100/COUNT(*) END FROM ${REVIEWS} AS r WHERE r.courseID=c.id),
+                          c.enjoy =         (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(r.enjoy-1)*100/(4*COUNT(*)) END FROM ${REVIEWS} AS r WHERE r.courseID=c.id),
+                          c.difficulty =    (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(r.difficulty-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} AS r WHERE r.courseID=c.id AND r.difficulty > 0),
+                          c.teaching =      (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(r.teaching-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} AS r WHERE r.courseID=c.id AND r.teaching > 0),
+                          c.workload =      (SELECT CASE WHEN COUNT(*)=0 THEN 0 ELSE SUM(r.workload-1)*100/(2*COUNT(*)) END FROM ${REVIEWS} AS r WHERE r.courseID=c.id AND r.workload > 0)
+                      FROM ${COURSES} AS c
+                      WHERE c.code=@code;`,
             {
                 [COURSES]: { code }
             })

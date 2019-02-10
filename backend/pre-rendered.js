@@ -1,5 +1,0 @@
-module.exports = [
-    '/',
-    '/signup',
-    '/login'
-]

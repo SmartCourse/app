@@ -1,4 +1,4 @@
-const { APIError } = require('./error')
+const { APIError, ERRORS } = require('../error')
 const { PERMISSIONS_MOD } = require('../models/constants')
 
 /**
@@ -42,26 +42,32 @@ exports.deleteResponseHandler = function(response) {
 
 exports.toLowerCase = str => str.toLowerCase()
 
-exports.isFirebaseAuthorized = function(req, res, next) {
+exports.hasFirebaseTokenAndVerifiedEmail = function(req, res, next) {
     if (!req.authorized) {
-        throw new APIError({
-            status: 401,
-            code: 7002,
-            message: 'Unauthenticated',
-            headers: { 'WWW-Authenticate': 'Bearer' }
-        })
+        throw new APIError(ERRORS.USER.NO_TOKEN)
+    }
+    if (!req.authorized.email_verified) {
+        throw new APIError(ERRORS.USER.EMAIL_NOT_VERIFIED)
     }
     next()
 }
 
-exports.isAuthorized = function(req, res, next) {
+exports.isLoggedIn = function(req, _, next) {
+    // you can't do stuff unless you have a profile!
     if (!req.user) {
-        throw new APIError({ status: 403, code: 7003, message: 'No user profile' })
+        throw new APIError(ERRORS.USER.NO_PROFILE)
     }
     next()
 }
 
-exports.cacheResponse = function(req, res, next) {
+exports.isModOrHigher = function(req, _, next) {
+    if (!req.user || req.user.permissions < PERMISSIONS_MOD) {
+        throw new APIError(ERRORS.MISC.AUTHORIZATION)
+    }
+    next()
+}
+
+exports.cacheResponse = function(_, res, next) {
     res.set({ 'Cache-Control': 'public, max-age=31557600' })
     next()
 }

@@ -55,6 +55,10 @@ export function editReview(course, id, data) {
   return put(`/course/${course}/review/${id}`, { data })
 }
 
+export function reportReview(course, id, data) {
+  return post(`/course/${course}/review/${id}/report`, { data })
+}
+
 export function deleteReview(course, id) {
   return remove(`/course/${course}/review/${id}`)
 }
@@ -97,4 +101,8 @@ export function deleteReply(course, id, commentID) {
 
 export function editReply(course, id, commentID, data) {
   return put(`/course/${course}/review/${id}/comment/${commentID}`, { data })
+}
+
+export function reportReply(course, id, commentID, data) {
+  return post(`/course/${course}/review/${id}/comment/${commentID}/report`, { data })
 }

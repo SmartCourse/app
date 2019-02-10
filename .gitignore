@@ -25,7 +25,6 @@ yarn-error.log*
 backend/public
 backend/db
 test.db
-package-lock.json
 *.zip
 
 __pycache__

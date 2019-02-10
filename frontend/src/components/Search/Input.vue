@@ -2,6 +2,7 @@
     <input
         type='search'
         name='search'
+        aria-label='search text'
         :value="value"
         @input="$emit('input', $event.target.value)"
     />

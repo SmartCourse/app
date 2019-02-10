@@ -12,6 +12,9 @@
 
 <script>
 import PostCard from '@/components/Card/Large'
+import { menuInteractionsMapper } from '@/utils/helpers'
+import { reportReply } from '@/utils/api/reviews'
+import { reportAnswer } from '@/utils/api/questions'
 
 export default {
   components: { PostCard },
@@ -19,19 +22,28 @@ export default {
     type: String,
     id: String,
     code: String,
-    comment: Object,
+    comment: {
+      published: String,
+      body: String,
+      likes: Number,
+      userLiked: Boolean,
+      accepted: Boolean,
+      user: Object,
+      meta: {
+        canDelete: Boolean,
+        canEdit: Boolean
+      }
+    },
     authenticated: Boolean
   },
   computed: {
     menu() {
-      let options = []
-      if (this.comment.meta.canDelete) {
-        options.push({
-          string: 'Delete',
-          action: this.deleteComment
-        })
-      }
-      return options
+      const thisArg = this
+      return menuInteractionsMapper({
+        type: 'comment',
+        thisArg,
+        meta: this.comment.meta
+      })
     }
   },
   methods: {
@@ -41,6 +53,22 @@ export default {
         return
       }
       this.$store.dispatch(`${type === 'Answer' ? 'questions' : 'reviews'}/delete${type}`, { code, id, commentID: comment.id })
+    },
+    editComment() {
+      console.warn('Not yet implemented')
+    },
+    report() {
+      const { type, code, id, comment } = this
+      const reason = prompt(`Why should this ${type === 'Answer' ? 'answer' : 'reply'} be removed?`)
+      let promise
+      if (type === 'Answer') {
+        promise = reportAnswer(code, id, comment.id, { reason })
+      } else {
+        promise = reportReply(code, id, comment.id, { reason })
+      }
+      promise
+        .then(() => alert('Thank you. Your report has been submitted.'))
+        .catch((err) => alert(err.message))
     },
     upvote() {
       const { type, code, id, comment } = this
@@ -67,7 +95,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 .accepted {
   border: solid 1px var(--theme-light);
 }

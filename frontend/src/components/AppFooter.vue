@@ -16,13 +16,13 @@
                 {{ link.content }}
             </router-link>
             <li v-for="link in info_external" :key="link.content">
-                <a :href ="link.href" class="link" >{{ link.content }}</a>
+                <a :href ="link.href" rel="noopener noreferrer" class="link" >{{ link.content }}</a>
             </li>
         </ul>
         <ul class="UNSW">
             <li class="links-header">UNSW</li>
             <li v-for="link in unsw_external" :key="link.content">
-                <a :href ="link.href" class="link" >{{ link.content }}</a>
+                <a :href ="link.href" rel="noopener noreferrer" class="link" >{{ link.content }}</a>
             </li>
         </ul>
        </section>
@@ -44,7 +44,8 @@ export default {
         { content: 'Terms of Use', href: '/terms-of-service' }
       ],
       info_external: [
-        { content: 'Contribute', href: 'https://github.com/SmartCourse/app' }
+        { content: 'Contribute', href: 'https://github.com/SmartCourse/app' },
+        { content: 'Webmaster', href: 'mailto:admin@smartcourse.me' }
       ],
       unsw_external: [
         { content: 'UNSW Handbook', href: 'https://www.handbook.unsw.edu.au/' },

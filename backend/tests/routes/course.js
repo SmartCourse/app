@@ -54,6 +54,62 @@ describe('Course route testing', () => {
             request.then(({ body }) =>
                 expect(body.tags).to.equal('acct1501,accounting and financial management 1a,acct,accounting,undergraduate,accounting'))
         )
+
+        describe('it has the correct ratings', () => {
+            let reviewRequest
+            before(() => {
+                reviewRequest = supertest
+                    .get('/api/course/ACCT1501/reviews')
+                    .set('Accept', 'application/json')
+                    .expect('Content-Type', /json/)
+                    .expect(200)
+                return reviewRequest
+            })
+
+            it('recommended', () =>
+                Promise.all([reviewRequest, request])
+                    .then(([{ body: { data } }, { body: { recommend } }]) => {
+                        const numRecommended = data.filter(({ recommend }) => recommend === 1).length
+                        const expectedRecommend = data.length ? Math.floor((100 * numRecommended) / data.length) : -1
+                        expect(recommend).to.equal(expectedRecommend)
+                    })
+            )
+            it('enjoy', () =>
+                Promise.all([reviewRequest, request])
+                    .then(([{ body: { data } }, { body: { enjoy } }]) => {
+                        const enjoySum = data.reduce((acc, { enjoy }) => acc + enjoy - 1, 0)
+                        const expectedEnjoy = Math.floor((100 * enjoySum) / (data.length * 4))
+                        expect(enjoy).to.equal(expectedEnjoy)
+                    })
+            )
+            it('difficulty', () =>
+                Promise.all([reviewRequest, request])
+                    .then(([{ body: { data } }, { body: { difficulty } }]) => {
+                        const rated = data.filter(({ difficulty }) => difficulty > 0)
+                        const difficultySum = rated.reduce((acc, { difficulty }) => acc + difficulty - 1, 0)
+                        const expectedDifficulty = Math.floor((100 * difficultySum) / (rated.length * 2))
+                        expect(difficulty).to.equal(expectedDifficulty)
+                    })
+            )
+            it('teaching', () =>
+                Promise.all([reviewRequest, request])
+                    .then(([{ body: { data } }, { body: { teaching } }]) => {
+                        const rated = data.filter(({ teaching }) => teaching > 0)
+                        const teachingSum = rated.reduce((acc, { teaching }) => acc + teaching - 1, 0)
+                        const expectedTeaching = Math.floor((100 * teachingSum) / (rated.length * 2))
+                        expect(teaching).to.equal(expectedTeaching)
+                    })
+            )
+            it('workload', () =>
+                Promise.all([reviewRequest, request])
+                    .then(([{ body: { data } }, { body: { workload } }]) => {
+                        const rated = data.filter(({ workload }) => workload > 0)
+                        const workloadSum = rated.reduce((acc, { workload }) => acc + workload - 1, 0)
+                        const expectedWorkload = Math.floor((100 * workloadSum) / (rated.length * 2))
+                        expect(workload).to.equal(expectedWorkload)
+                    })
+            )
+        })
     })
 
     describe('GET /api/course/NOTEXIST (error)', () => {
@@ -74,6 +130,7 @@ describe('Course route testing', () => {
 
     describe('POST /api/course/ACCT1501/question', () => {
         let request
+        const location = '/api/course/ACCT1501/question/9019'
 
         before(() => {
             request = supertest
@@ -90,7 +147,7 @@ describe('Course route testing', () => {
         )
 
         it('returns correct Location', () => {
-            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/question/12025')
+            expect(request.res.headers.location).to.equal(location)
         })
 
         describe('new record exists', () => {
@@ -98,7 +155,7 @@ describe('Course route testing', () => {
 
             before(() => {
                 followUp = supertest
-                    .get('/api/course/ACCT1501/question/12025')
+                    .get(location)
                     .set('Accept', 'application/json')
                     .expect(200)
 
@@ -133,7 +190,7 @@ describe('Course route testing', () => {
 
         it('correct number of questions', () =>
             request.then(({ body }) =>
-                expect(body.data.length).to.equal(5))
+                expect(body.data.length).to.equal(4))
         )
 
         it('question has a title', () =>
@@ -152,7 +209,7 @@ describe('Course route testing', () => {
         )
     })
 
-    describe('POST /api/course/COMP4920/review', () => {
+    describe('POST /api/course/ACCT1501/review', () => {
         let request
         const form = {
             title: 'I\'m a real boy',
@@ -167,7 +224,7 @@ describe('Course route testing', () => {
 
         before(() => {
             request = supertest
-                .post('/api/course/COMP4920/review')
+                .post('/api/course/ACCT1501/review')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken0}`)
                 .send(form)
@@ -180,7 +237,7 @@ describe('Course route testing', () => {
         })
 
         it('returns correct Location', () => {
-            expect(request.res.headers.location).to.equal('/api/course/COMP4920/review/9019')
+            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/review/9019')
         })
 
         describe('Review created correctly', () => {
@@ -188,7 +245,7 @@ describe('Course route testing', () => {
 
             before(() => {
                 followUp = supertest
-                    .get('/api/course/COMP4920/review/9019')
+                    .get('/api/course/ACCT1501/review/9019')
                     .set('Accept', 'application/json')
                     .expect(200)
 

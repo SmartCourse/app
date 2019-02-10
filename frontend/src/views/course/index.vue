@@ -10,12 +10,12 @@
                           <h3>{{ courseInfo.name }}</h3>
                       </div>
                       <div class="right">
-                          <OverallRating :rating="courseRatings[0]"/>
+                          <OverallRating :rating="recommend"/>
                       </div>
                   </div>
                   <CourseLinks :handbookURL="courseInfo.handbookURL" :outlineURL="courseInfo.outlineURL"/>
                   <div class="ratings-big" v-if="ratingsExist">
-                      <CourseRatings :ratings="courseRatings.slice(1)"/>
+                      <CourseRatings :ratings="courseRatings.filter(rating => rating.text !== 'Recommended')"/>
                   </div>
                   <div class="ratings-small">
                       <CourseRatings v-if="ratingsExist" :ratings="courseRatings"/>
@@ -71,19 +71,18 @@ export default {
     }),
     ratingsExist() {
       return this.courseRatings && this.courseRatings[0].value >= 0
+    },
+    recommend() {
+      return this.courseRatings.find(rating => rating.text === 'Recommended')
     }
   },
   created () {
     this.$store.dispatch('course/getCourse', this.code)
   },
   beforeRouteUpdate ({ params: { code } }, from, next) {
-    // called when the route that renders this component has changed,
-    // but this component is reused in the new route.
-    // For example, for a route with dynamic params `/foo/:code`, when we
-    // navigate between `/foo/1` and `/foo/2`, the same `Foo` component instance
-    // will be reused, and this hook will be called when that happens.
-    // has access to `this` component instance.
-    if (this.code && this.code !== code) {
+    // BUG as far as I'm aware this is only called
+    // on Question/Review tab updates
+    if (this.code !== code) {
       this.$store.dispatch('course/getCourse', code)
     }
     next()

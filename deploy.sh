@@ -25,8 +25,8 @@ npm run build-$type
 # Zip the web app files
 cd ../backend
 rm -f smartcourse.zip
-cp ../scripts/backup.sh .
-zip -r smartcourse.zip pre-rendered.js package.json web.config backup.sh data public src
+cp scripts/backup.sh .
+zip -r smartcourse.zip pre-rendered.js package.json web.config backup.sh data public src scripts
 rm backup.sh
 echo ""
 
