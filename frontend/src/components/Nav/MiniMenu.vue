@@ -131,7 +131,7 @@ h2 {
 }
 
 .mini-menu__items--logout {
-  color: var(--color-negative);
+  /* color: var(--color-negative); */
 }
 
 .mini-menu__items--feedback {
