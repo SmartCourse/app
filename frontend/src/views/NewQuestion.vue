@@ -45,7 +45,11 @@ export default {
           form: questionForm,
           code: this.code
         })
-        .then(() => this.$router.push({ name: 'question', params: { code: this.code, id: this.question.id } }))
+        .then(() => {
+          if (error.code === 0) {
+            this.$router.push({ name: 'question', params: { code: this.code, id: this.question.id } })
+          }
+        })
     }
   }
 }
