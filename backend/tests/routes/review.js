@@ -4,7 +4,7 @@ const assert = require('assert')
 const { expect } = require('chai')
 
 describe('Test review routes', function () {
-    describe('GET /api/course/ACCT1501/review', () => {
+    describe('GET /api/course/ACCT1511/review', () => {
         let postRequest
         let location
         let getRequest
@@ -22,7 +22,7 @@ describe('Test review routes', function () {
 
         before(() => {
             postRequest = supertest
-                .post('/api/course/ACCT1501/review')
+                .post('/api/course/ACCT1511/review')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken0}`)
                 .send(review)
@@ -50,7 +50,7 @@ describe('Test review routes', function () {
         )
     })
 
-    describe('PUT /api/course/ACCT1501/review', () => {
+    describe('PUT /api/course/ACCT2101/review', () => {
         let postRequest
         let putRequest
         let location
@@ -77,7 +77,7 @@ describe('Test review routes', function () {
 
         before(() => {
             postRequest = supertest
-                .post('/api/course/ACCT1501/review')
+                .post('/api/course/ACCT2101/review')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken0}`)
                 .send(originalReview)
@@ -123,7 +123,7 @@ describe('Test review routes', function () {
         })
     })
 
-    describe('DELETE /api/course/ACCT1501/review', () => {
+    describe('DELETE /api/course/ACCT2507/review', () => {
         let postRequest
         let postCommentRequest
         let deleteRequest
@@ -141,7 +141,7 @@ describe('Test review routes', function () {
 
         before(() => {
             postRequest = supertest
-                .post('/api/course/ACCT1501/review')
+                .post('/api/course/ACCT2507/review')
                 .set('Accept', 'application/json')
                 .set('Authorization', `Bearer ${global.idToken0}`)
                 .send(reviewBody)
