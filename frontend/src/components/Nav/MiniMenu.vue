@@ -26,6 +26,11 @@
         @click="logout">
         Logout
       </div>
+      <div class="section mini-menu__items--feedback">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScVIOcc6y4MZ74YZeCu0Rpqg3VyTc7wtgE3ZQATBJC4f1YaRg/viewform?usp=sf_link" target="_blank">
+          Submit Feedback
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -126,7 +131,11 @@ h2 {
 }
 
 .mini-menu__items--logout {
-  color: var(--color-negative);
+  /* color: var(--color-negative); */
+}
+
+.mini-menu__items--feedback {
+  color: var(--color-red);
 }
 
 .menu-item {
