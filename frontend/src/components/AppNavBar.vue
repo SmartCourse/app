@@ -6,6 +6,7 @@
       </router-link>
     </div>
     <div class="links">
+      <h3 class="feedback-link"><a href="https://docs.google.com/forms/d/e/1FAIpQLScVIOcc6y4MZ74YZeCu0Rpqg3VyTc7wtgE3ZQATBJC4f1YaRg/viewform?usp=sf_link" target="_blank">Submit Feedback</a></h3>
       <Search class="mini" v-if="$route.name !== 'home'"/>
       <div class="nav-menu">
         <div class="menu-items">
@@ -124,6 +125,9 @@ export default {
   h3:first-of-type {
     color: var(--theme);
   }
+  .feedback-link {
+    color: var(--color-red)!important;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -136,6 +140,10 @@ export default {
   }
 
   .nav-menu .menu-items {
+    display: none;
+  }
+
+  .links .feedback-link {
     display: none;
   }
 }
