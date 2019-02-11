@@ -112,6 +112,8 @@ class Review {
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${COURSES} WHERE code=@code)
                       ${toSQLThrow(ERRORS.COURSE.MISSING)}
+                  IF EXISTS(SELECT * FROM ${REVIEWS} INNER JOIN ${COURSES} AS c ON c.id=courseID WHERE userID=@userID)
+                      ${toSQLThrow(ERRORS.REVIEW.ALREADY_REVIEWED)}
                   INSERT INTO ${REVIEWS} (courseID, userID, title, body, recommend, enjoy, difficulty, teaching, workload, session)
                       SELECT id, @userID, @title, @body, @recommend, @enjoy, @difficulty, @teaching, @workload, @session
                       FROM courses

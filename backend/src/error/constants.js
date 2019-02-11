@@ -97,6 +97,11 @@ exports.ERRORS = {
         NO_SESSION: {
             code: 5006,
             message: 'No session provided'
+        },
+        ALREADY_REVIEWED: {
+            status: BAD_REQUEST,
+            code: 5007,
+            message: 'You\'ve already reviewed this course'
         }
     },
     COMMENT: {
