@@ -78,7 +78,7 @@ textarea {
   border: var(--border);
   border-radius: 2px;
   font: inherit;
-  resize: none;
+  resize: vertical;
   padding: 10px;
   outline: none;
   margin: 10px 0px;
