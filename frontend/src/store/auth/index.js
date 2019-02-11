@@ -1,6 +1,7 @@
 // firebase authentication class
 import auth from './config'
 import CV from './CV'
+import { startLoad, endLoad } from '../../utils/helpers'
 
 import { createProfile, updateProfile, getSelf } from '@/utils/api/auth'
 
@@ -195,6 +196,8 @@ const actions = {
    */
   async checkAuth({ commit, dispatch, state }) {
     commit('SET_LOADING', true)
+
+    startLoad('Auth')
     try {
       // returns user object
       const user = await new Promise((resolve, reject) => {
@@ -237,6 +240,8 @@ const actions = {
     // signal the CV so the app can continue loading and use the JWT token in its requests
     // Note we _need_ to do this before returning!
     commit('SIGNAL_AUTH_CV')
+
+    endLoad('Auth')
 
     commit('SET_LOADING', false)
   },
