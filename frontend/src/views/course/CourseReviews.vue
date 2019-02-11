@@ -4,6 +4,8 @@
       <Options
         buttonText="Write Review"
         routeName="newReview"
+        :buttonDisabled="!isLoggedIn || hasReviewed"
+        :buttonDisabledMessage="disabledMessage"
         :code="code"
       >
         <slot/>
@@ -53,9 +55,18 @@ export default {
   computed: {
     ...mapGetters('course', {
       reviews: 'reviews',
+      hasReviewed: 'hasReviewed',
       meta: 'reviewsMeta',
       loading: 'loadingFeed'
-    })
+    }),
+    ...mapGetters('auth', { isLoggedIn: 'isLoggedIn' }),
+    disabledMessage() {
+      return {
+        content: this.hasReviewed ? 'You\'ve already reviewed this course'
+          : !this.isLoggedIn ? 'You must be logged in to post.' : '',
+        placement: 'left'
+      }
+    }
   },
   methods: {
     refreshReviews(pageNumber) {

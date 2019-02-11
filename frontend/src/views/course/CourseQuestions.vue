@@ -4,6 +4,8 @@
       <Options
         buttonText="Ask a Question"
         routeName="newQuestion"
+        :buttonDisabled="!isLoggedIn"
+        :buttonDisabledMessage="disabledMessage"
         :code="code"
       >
         <slot/>
@@ -46,7 +48,14 @@ export default {
       questions: 'questions',
       meta: 'questionsMeta',
       loading: 'loadingFeed'
-    })
+    }),
+    ...mapGetters('auth', { isLoggedIn: 'isLoggedIn' }),
+    disabledMessage() {
+      return {
+        content: this.isLoggedIn ? '' : 'You must be logged in to post.',
+        placement: 'left'
+      }
+    }
   },
   methods: {
     refreshQuestions(pageNumber) {
