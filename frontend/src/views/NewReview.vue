@@ -40,7 +40,7 @@ export default {
         })
         .then(() => {
           // only navigate away if no error occurred
-          if (error.code === 0) {
+          if (this.error.code === 0) {
             this.$router.push({ name: 'review', params: { code: this.code, id: this.review.id } })
           }
         })

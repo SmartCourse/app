@@ -46,7 +46,7 @@ export default {
           code: this.code
         })
         .then(() => {
-          if (error.code === 0) {
+          if (this.error.code === 0) {
             this.$router.push({ name: 'question', params: { code: this.code, id: this.question.id } })
           }
         })
