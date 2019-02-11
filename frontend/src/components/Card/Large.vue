@@ -71,6 +71,7 @@ export default {
 p {
     margin: 10px 0;
     padding: 5px;
+    white-space: pre-wrap;
 }
 
 .top-right {
