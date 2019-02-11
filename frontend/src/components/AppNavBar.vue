@@ -18,9 +18,12 @@
           </router-link>
           <h3 v-if="isFirebaseAuthorised" @click="logout()" class="link-item">Logout</h3>
         </div>
-        <MiniMenu :toggled="toggled" :items="menuItems" @click.native="toggleMenu">
-          <h3 v-if="isFirebaseAuthorised" @click="logout()" class="link-item">Logout</h3>
-        </MiniMenu>
+        <MiniMenu
+          :toggled="toggled"
+          :items="menuItems"
+          @click.native="toggleMenu"
+          :logout="logout"
+        />
       </div>
     </div>
   </div>

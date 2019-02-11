@@ -20,15 +20,23 @@
           class="menu-item"
         >{{ item.text }}</router-link>
       </div>
-      <slot/>
+      <div
+        class="section mini-menu__items--logout"
+        v-if="isFirebaseAuthorised"
+        @click="logout">
+        Logout
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
-    items: Array
+    items: Array,
+    logout: Function
   },
   data() {
     return {
@@ -49,6 +57,9 @@ export default {
         this.toggled = false
       }
     }
+  },
+  computed: {
+    ...mapGetters('auth', ['isFirebaseAuthorised'])
   }
 }
 </script>
@@ -114,12 +125,16 @@ h2 {
   z-index: 99;
 }
 
+.mini-menu__items--logout {
+  color: var(--color-negative);
+}
+
 .menu-item {
-    margin: 5px 0;
+  margin: 5px 0;
 }
 
 .menu-item:hover, .menu-item:active {
-    color: var(--theme-light);
+  color: var(--theme-light);
 }
 
 .toggled {
