@@ -21,36 +21,6 @@ export function getCourse(course) {
   return get(`/course/${course}`)
 }
 
-export function courseMapper({
-  code,
-  name,
-  studyLevel,
-  subjectCode,
-  handbookURL,
-  outlineURL,
-  recommend,
-  enjoy,
-  difficulty,
-  teaching,
-  workload,
-  description,
-  requirements,
-  tags
-}) {
-  return {
-    code,
-    name,
-    studyLevel,
-    subjectCode,
-    handbookURL,
-    outlineURL,
-    recommend,
-    enjoy,
-    difficulty,
-    teaching,
-    workload,
-    description,
-    requirements,
-    tags
-  }
+export function courseMapper(obj) {
+  return obj
 }
