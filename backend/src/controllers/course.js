@@ -14,8 +14,10 @@ exports.getCourses = function (_, res, next) {
 }
 
 /* Get specifc course data */
-exports.getCourse = function ({ params }, res, next) {
-    courseModel.getCourse(params.code)
+exports.getCourse = function ({ params, user }, res, next) {
+    const userID = (user && user.id) || ANONYMOUS
+    Promise.all([courseModel.getCourse(params.code), reviewModel.userHasReviewed(params.code, userID)])
+        .then(([course, hasReviewed]) => ({ ...course, hasReviewed }))
         .then(getResponseHandler(res))
         .catch(next)
 }

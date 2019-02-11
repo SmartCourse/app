@@ -6,7 +6,8 @@ const {
     MIN_OPTION,
     MAX_OPTION,
     TABLE_NAMES: { REVIEWS, COURSES, COMMENTS, REPORTS },
-    PERMISSIONS_MOD
+    PERMISSIONS_MOD,
+    ANONYMOUS
 } = require('./constants')
 const {
     APIError,
@@ -80,6 +81,23 @@ class Review {
                 [COURSES]: { code }
             })
             .then(([row]) => row || { COUNT: 0 })
+    }
+
+    /**
+     * Gets whether a user has reviewed a course or not
+     * @param {string} code
+     * @param {number} userID
+     */
+    userHasReviewed(code, userID) {
+        if (userID === ANONYMOUS) return Promise.resolve(false)
+        return this.db
+            .run(`SELECT * FROM ${REVIEWS} r
+            WHERE r.courseID=(SELECT c.id FROM ${COURSES} c WHERE c.code=@code) AND r.userID=@userID`,
+            {
+                [COURSES]: { code },
+                [REVIEWS]: { userID }
+            })
+            .then(([row]) => !!row) // return a boolean only
     }
 
     /**
