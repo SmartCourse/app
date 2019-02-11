@@ -37,6 +37,7 @@ const getters = {
   questionsMeta: ({ questionsMeta }) => questionsMeta,
   reviews: ({ reviews }) => reviews,
   reviewsMeta: ({ reviewsMeta }) => reviewsMeta,
+  hasReviewed: ({ course }) => course.hasReviewed,
   loadingCourse: ({ loadingCourse }) => loadingCourse,
   loadingFeed: ({ loadingFeed }) => loadingFeed,
   error: ({ error }) => error

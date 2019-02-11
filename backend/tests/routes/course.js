@@ -1,6 +1,7 @@
 const app = require('../../src')
 const supertest = require('supertest')(app)
 const { expect } = require('chai')
+const { ERRORS } = require('../../src/error/constants')
 
 describe('Course route testing', () => {
     describe('GET /api/course', () => {
@@ -124,7 +125,7 @@ describe('Course route testing', () => {
 
         it('has the correct error code', () =>
             request.then(({ body }) =>
-                expect(body.code).to.equal(3001)) // course does not exist
+                expect(body.code).to.equal(ERRORS.COURSE.MISSING.code)) // course does not exist
         )
     })
 
@@ -221,6 +222,7 @@ describe('Course route testing', () => {
             difficulty: 1,
             session: 10
         }
+        const location = '/api/course/ACCT1501/review/9019'
 
         before(() => {
             request = supertest
@@ -237,7 +239,7 @@ describe('Course route testing', () => {
         })
 
         it('returns correct Location', () => {
-            expect(request.res.headers.location).to.equal('/api/course/ACCT1501/review/9019')
+            expect(request.res.headers.location).to.equal(location)
         })
 
         describe('Review created correctly', () => {
@@ -245,7 +247,7 @@ describe('Course route testing', () => {
 
             before(() => {
                 followUp = supertest
-                    .get('/api/course/ACCT1501/review/9019')
+                    .get(location)
                     .set('Accept', 'application/json')
                     .expect(200)
 
@@ -267,6 +269,26 @@ describe('Course route testing', () => {
             it('has the correct recommend', () =>
                 followUp.then(({ body }) => {
                     expect(body.recommend).to.equal(form.recommend)
+                })
+            )
+        })
+        describe('Can\'t post another review to the same course', () => {
+            let followUp
+
+            before(() => {
+                followUp = supertest
+                    .post('/api/course/ACCT1501/review')
+                    .set('Accept', 'application/json')
+                    .set('Authorization', `Bearer ${global.idToken0}`)
+                    .send(form)
+                    .expect(400)
+
+                return followUp
+            })
+
+            it('has the correct error code', () =>
+                followUp.then(({ body }) => {
+                    expect(body.code).to.equal(ERRORS.REVIEW.ALREADY_REVIEWED.code)
                 })
             )
         })

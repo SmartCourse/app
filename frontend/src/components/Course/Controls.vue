@@ -5,8 +5,8 @@
         </div>
 
         <AppButtonWithToolTip
-          :disabled="!authenticated"
-          :disabledMessage="disabledMessage"
+          :disabled="buttonDisabled"
+          :disabledMessage="buttonDisabledMessage"
           @click.native="$router.push({ name: routeName, params: {code} })"
         >
           {{buttonText}}
@@ -21,7 +21,9 @@ export default {
   props: {
     code: String,
     routeName: String,
-    buttonText: String
+    buttonText: String,
+    buttonDisabled: Boolean,
+    buttonDisabledMessage: Object
   },
   components: { AppButtonWithToolTip },
   computed: {
