@@ -9,9 +9,9 @@
       <Search class="mini" v-if="$route.name !== 'home'"/>
       <div class="nav-menu">
         <div class="menu-items">
-          <router-link tag="h3" 
-            class="link-item" 
-            v-for="item in menuItems" 
+          <router-link tag="h3"
+            class="link-item"
+            v-for="item in menuItems"
             :key="item.text"
             :to="item.to">
             {{ item.text }}
@@ -46,15 +46,15 @@ export default {
   },
   data() {
     return {
-      toggled: true,
+      toggled: false,
       notFirebased: [
         {
           text: 'Login',
-          to: '/login' 
+          to: '/login'
         },
         {
           text: 'Sign Up',
-          to: '/signup' 
+          to: '/signup'
         }
       ],
       noProfile: [
