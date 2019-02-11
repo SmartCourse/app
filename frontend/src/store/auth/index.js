@@ -195,9 +195,9 @@ const actions = {
    * If anything fails it clears everything
    */
   async checkAuth({ commit, dispatch, state }) {
-    commit('SET_LOADING', true)
-
+    // app loading screen while checking auth
     startLoad('Auth')
+
     try {
       // returns user object
       const user = await new Promise((resolve, reject) => {
@@ -241,9 +241,8 @@ const actions = {
     // Note we _need_ to do this before returning!
     commit('SIGNAL_AUTH_CV')
 
+    // done auth check; show the app
     endLoad('Auth')
-
-    commit('SET_LOADING', false)
   },
 
   /**
