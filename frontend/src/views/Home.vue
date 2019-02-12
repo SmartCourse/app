@@ -87,7 +87,7 @@ export default {
   text-align: center;
   padding: 10px 20px;
   background-color: var(--white);
-  min-height:200px;
+  min-height:250px;
 }
 
 .why-card p {
@@ -129,14 +129,20 @@ a {
     color:var(--theme)
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1100px) {
    .why-card {
      width: 270px;
    }
 }
 
+@media screen and (max-width: 1100px) {
+   .why-card {
+     width: 200px;
+   }
+}
+
 /* tablet and below */
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 820px) {
   .home {
    font-size: var(--font-large-mobile);
   }
@@ -157,7 +163,6 @@ a {
     grid-template-columns: none;
     grid-auto-flow: row;
   }
-
   .why-card {
     width: 300px;
   }
@@ -165,7 +170,7 @@ a {
 
 @media screen and (max-width: 500px) {
   .why-card {
-    width: 150px;
+    width: 220px;
   }
 }
 
