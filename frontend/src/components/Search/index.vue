@@ -78,7 +78,7 @@ ul {
     border: var(--border);
     position: absolute;
     background: var(--white);
-    z-index: 10;
+    z-index: var(--z-index-search-list);
     max-height: 220px;
     overflow-y: scroll;
 }

@@ -72,6 +72,11 @@ html, body {
   --font-medium-mobile: 16px;
   --font-small: 16px;
   --font-small-mobile: 12px;
+
+  /* z-indices */
+  --z-index-loading-shell: 99;
+  --z-index-mini-menu: 98;
+  --z-index-search-list: 10;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -92,7 +97,7 @@ p {
   top: 0;
   bottom: 0;
   right: 0;
-  z-index: 99;
+  z-index: var(--z-index-loading-shell);
   display: flex;
   justify-content: center;
   align-items: center;
