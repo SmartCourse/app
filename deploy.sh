@@ -26,7 +26,7 @@ npm run build-$type
 cd ../backend
 rm -f smartcourse.zip
 cp scripts/backup.sh .
-zip -r smartcourse.zip pre-rendered.js package.json web.config backup.sh data public src scripts
+zip -r smartcourse.zip package.json package-lock.json web.config backup.sh data public src scripts
 rm backup.sh
 echo ""
 
@@ -49,5 +49,21 @@ curl -u $AZURE_USER:$AZURE_PASS \
     --data "$TMP_CMDS" \
     https://$name.scm.azurewebsites.net/api/command
 echo ""
+
+
+if [[ "$type" == "staging" ]]; then
+    read -d '' TMP_CMDS << EOF || true
+    {
+        "command": "node . --drop all --create all --init test",
+        "dir": "site/wwwroot/scripts/db"
+    }
+EOF
+    curl -u $AZURE_USER:$AZURE_PASS \
+        --header "Content-Type: application/json" \
+        --request POST \
+        --data "$TMP_CMDS" \
+        https://$name.scm.azurewebsites.net/api/command
+    echo ""
+fi
 
 echo "DONE!"

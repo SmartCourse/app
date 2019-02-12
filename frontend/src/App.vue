@@ -39,7 +39,7 @@ export default {
 
 .main-content {
   /* arbitrary */
-  min-height: calc(100vh - 64px);;
+  min-height: calc(100vh - 64px);
   max-width: 800px;
   margin: auto;
   margin-bottom: 20px;
@@ -78,7 +78,7 @@ textarea {
   border: var(--border);
   border-radius: 2px;
   font: inherit;
-  resize: none;
+  resize: vertical;
   padding: 10px;
   outline: none;
   margin: 10px 0px;

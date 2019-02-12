@@ -10,23 +10,21 @@
       <article class="content">
         <div class="why">
           <div class="why-card">
-            <p class="why-icon"><i class="material-icons theme">person</i></p>
-            <h3>Individual Value</h3>
-            <p>SmartCourse is primarily driven by a desire to give you a richer university experience.
-               Choose the courses that best suit you based on student feedback and reviews.</p>
+            <p class="why-icon"><i class="material-icons theme">find_in_page</i></p>
+            <h3>Browse Courses</h3>
+            <p>Choose the courses that best suit you based on student feedback and reviews.</p>
           </div>
           <div class="why-card">
-            <p class="why-icon"><i class="material-icons pink">people</i></p>
-            <h3>Community Driven</h3>
-            <p>SmartCourse lives off its community. We don't overthink things. We're just reflecting
-              what you say to help as many people as possible. </p>
+            <p class="why-icon"><i class="material-icons pink">contact_support</i></p>
+            <h3>Ask Questions</h3>
+            <p>Join the community. <router-link :to="'/signup'">Sign up</router-link> to ask questions about courses and vote for responses
+            </p>
           </div>
           <div class="why-card">
-            <p class="why-icon"><i class="material-icons orange">school</i></p>
-            <h3>Helping Universities</h3>
-            <p>Universities rely on SmartCourse to provide the
-              organic feedback that student surveys stuggle to deliver.
-              Could your university benefit from SmartCourse? Get in touch.</p>
+            <p class="why-icon"><i class="material-icons orange">edit</i></p>
+            <h3>Write Reviews</h3>
+            <p>Have your say. Review courses and answer questions to help other students
+            </p>
           </div>
         </div>
       </article>
@@ -68,14 +66,13 @@ export default {
 }
 
 .homepage-section {
-  padding: 20px 0;
   display: grid;
-  min-height: 400px;
 }
 
 .content {
   justify-self: center;
   margin: auto;
+  padding: 20px;
 }
 
 .why {
@@ -87,12 +84,10 @@ export default {
 }
 
 .why-card {
-  border-radius: 4px;
   text-align: center;
   padding: 10px 20px;
   background-color: var(--white);
-  width: 275px;
-  min-height: 300px;
+  min-height:250px;
 }
 
 .why-card p {
@@ -134,8 +129,20 @@ a {
     color:var(--theme)
 }
 
+@media screen and (min-width: 1100px) {
+   .why-card {
+     width: 270px;
+   }
+}
+
+@media screen and (max-width: 1100px) {
+   .why-card {
+     width: 200px;
+   }
+}
+
 /* tablet and below */
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 820px) {
   .home {
    font-size: var(--font-large-mobile);
   }
@@ -156,37 +163,15 @@ a {
     grid-template-columns: none;
     grid-auto-flow: row;
   }
-
   .why-card {
-    width: 400px;
+    width: 300px;
   }
 }
 
 @media screen and (max-width: 500px) {
   .why-card {
-    width: 280px;
+    width: 220px;
   }
-}
-
-@media screen and (min-width: 700px) {
-  .why-card {
-    width: 200px;
-  }
-}
-
-@media screen and (min-width: 1200px) {
-   .why-card {
-     width: 340px;
-     min-height: 340px;
-   }
-
-   .why {
-     grid-gap: 40px;
-   }
-
-   .content {
-     padding: 40px 0;
-   }
 }
 
 </style>

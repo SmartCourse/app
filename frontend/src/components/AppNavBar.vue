@@ -1,90 +1,150 @@
 <template>
-    <div id="nav">
-      <div class="logo-span">
-        <router-link class="link-item" to="/">
-          <AppLogo :first="'S'" :last="'C'"/>
-        </router-link>
-      </div>
-
-      <div class="links">
-        <Search class="mini" v-if="$route.name !== 'home'"/>
-        <div class="nav-menu">
-            <div class="menu-items">
-                <router-link tag="h3" v-if="!isFirebaseAuthorised" class="link-item" to="/login">Login</router-link>
-                <router-link tag="h3" v-if="!isFirebaseAuthorised" class="link-item" to="/signup">Sign Up</router-link>
-                <router-link tag="h3" v-if="isFirebaseAuthorised && !hasProfile" class="link-item" to="/create-profile">Complete Sign Up</router-link>
-                <router-link tag="h3" v-if="isLoggedIn" class="link-item" to="/profile">Profile</router-link>
-                <h3 v-if="isFirebaseAuthorised" @click="logout()" class="link-item">Logout</h3>
-            </div>
+  <div id="nav">
+    <div class="logo-span">
+      <router-link class="link-item" to="/">
+        <AppLogo :first="'S'" :last="'C'"/>
+      </router-link>
+    </div>
+    <div class="links">
+      <h3 class="feedback-link"><a href="https://docs.google.com/forms/d/e/1FAIpQLScVIOcc6y4MZ74YZeCu0Rpqg3VyTc7wtgE3ZQATBJC4f1YaRg/viewform?usp=sf_link" target="_blank">Submit Feedback</a></h3>
+      <Search class="mini" v-if="$route.name !== 'home'"/>
+      <div class="nav-menu">
+        <div class="menu-items">
+          <router-link tag="h3"
+            class="link-item"
+            v-for="item in menuItems"
+            :key="item.text"
+            :to="item.to">
+            {{ item.text }}
+          </router-link>
+          <h3 v-if="isFirebaseAuthorised" @click="logout()" class="link-item">Logout</h3>
         </div>
+        <MiniMenu
+          :toggled="toggled"
+          :items="menuItems"
+          @click.native="toggleMenu"
+          :logout="logout"
+        />
       </div>
     </div>
+  </div>
 </template>
 
 <script>
 import Search from '@/components/Search'
+import MiniMenu from '@/components/Nav/MiniMenu'
 import { mapGetters } from 'vuex'
 
 export default {
-  components: { Search },
+  components: { Search, MiniMenu },
   computed: {
-    ...mapGetters('auth', [ 'isFirebaseAuthorised', 'isLoggedIn', 'hasProfile' ])
+    ...mapGetters('auth', ['isFirebaseAuthorised', 'isLoggedIn', 'hasProfile']),
+    menuItems() {
+      const self = this
+      return [
+        ...self.notFirebased.filter(() => !self.isFirebaseAuthorised),
+        ...self.noProfile.filter(() => self.isFirebaseAuthorised && !self.hasProfile),
+        ...self.loggedIn.filter(() => self.isLoggedIn)
+      ]
+    }
+  },
+  data() {
+    return {
+      toggled: false,
+      notFirebased: [
+        {
+          text: 'Login',
+          to: '/login'
+        },
+        {
+          text: 'Sign Up',
+          to: '/signup'
+        }
+      ],
+      noProfile: [
+        {
+          text: 'Complete Sign Up',
+          to: '/create-profile'
+        }
+      ],
+      loggedIn: [
+        {
+          text: 'Profile',
+          to: '/profile'
+        }
+      ]
+    }
   },
   methods: {
     logout() {
       this.$store.dispatch('auth/logout')
+    },
+    toggleMenu() {
+      this.toggled = !this.toggled
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-
-#nav, .menu-items, .nav-menu {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    background-color: var(--white);
-    font-size: var(--font-small);
+#nav,
+.menu-items,
+.nav-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--white);
+  font-size: var(--font-small);
 }
 
 #nav {
-    padding: 0px 20px;
-    border-bottom: var(--border);
+  padding: 0px 20px;
+  border-bottom: var(--border);
 }
 
 .logo-span {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 .links {
-    /* should be flex will require less hacks */
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  /* should be flex will require less hacks */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 
-    h3 {
-        font: var(--header-4);
-        cursor: pointer;
-        margin: auto 10px;
-        text-align: center;
-        display: inline-block;
-    }
-    h3:first-of-type {
-        color: var(--theme);
-    }
+  h3 {
+    font: var(--header-4);
+    cursor: pointer;
+    margin: auto 10px;
+    text-align: center;
+    display: inline-block;
+  }
+  h3:first-of-type {
+    color: var(--theme);
+  }
+  .feedback-link {
+    color: var(--color-red)!important;
+  }
 }
 
 @media screen and (max-width: 768px) {
-    #nav {
-        font-size: var(--font-small-mobile);
-    }
+  #nav {
+    font-size: var(--font-small-mobile);
+  }
 
-    .menu-items .link-item {
-        font: var(--body-copy-1);
-    }
+  .menu-items .link-item {
+    font: var(--body-copy-1);
+  }
+
+  .nav-menu .menu-items {
+    display: none;
+  }
+
+  .links .feedback-link {
+    display: none;
+  }
 }
 </style>

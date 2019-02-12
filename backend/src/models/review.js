@@ -6,7 +6,8 @@ const {
     MIN_OPTION,
     MAX_OPTION,
     TABLE_NAMES: { REVIEWS, COURSES, COMMENTS, REPORTS },
-    PERMISSIONS_MOD
+    PERMISSIONS_MOD,
+    ANONYMOUS
 } = require('./constants')
 const {
     APIError,
@@ -83,6 +84,23 @@ class Review {
     }
 
     /**
+     * Gets whether a user has reviewed a course or not
+     * @param {string} code
+     * @param {number} userID
+     */
+    userHasReviewed(code, userID) {
+        if (userID === ANONYMOUS) return Promise.resolve(false)
+        return this.db
+            .run(`SELECT * FROM ${REVIEWS} r
+            WHERE r.courseID=(SELECT c.id FROM ${COURSES} c WHERE c.code=@code) AND r.userID=@userID`,
+            {
+                [COURSES]: { code },
+                [REVIEWS]: { userID }
+            })
+            .then(([row]) => !!row) // return a boolean only
+    }
+
+    /**
      * @param {string} code  The code of the course.
      * @param {object} data  controller passed in object which should
      *                       contain the user data (probs eventually from an auth token)
@@ -112,6 +130,8 @@ class Review {
         return this.db
             .run(`IF NOT EXISTS(SELECT * FROM ${COURSES} WHERE code=@code)
                       ${toSQLThrow(ERRORS.COURSE.MISSING)}
+                  IF EXISTS(SELECT * FROM ${REVIEWS} INNER JOIN ${COURSES} AS c ON c.id=courseID WHERE userID=@userID AND c.code=@code)
+                      ${toSQLThrow(ERRORS.REVIEW.ALREADY_REVIEWED)}
                   INSERT INTO ${REVIEWS} (courseID, userID, title, body, recommend, enjoy, difficulty, teaching, workload, session)
                       SELECT id, @userID, @title, @body, @recommend, @enjoy, @difficulty, @teaching, @workload, @session
                       FROM courses

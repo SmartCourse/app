@@ -13,12 +13,12 @@ class DB extends EventEmitter {
         super()
 
         console.log('Connecting to database')
-        // Immediately start root connection process
-        this.connections = [new Connection(DB_CONFIG)]
+        
+        this.connections = []
         this.ready = false
 
         // Setup a pool of other connections
-        for (let i = 1; i < MAX_CONNECTIONS; i++) {
+        for (let i = 0; i < MAX_CONNECTIONS; i++) {
             const connection = new Connection(DB_CONFIG)
             connection.on('connect', (err) => {
                 if (err) {
