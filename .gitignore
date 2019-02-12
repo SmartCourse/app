@@ -4,8 +4,6 @@ node_modules
 coverage
 .nyc_output
 
-/public
-
 /tests/e2e/videos/
 /tests/e2e/screenshots/
 
