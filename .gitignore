@@ -4,6 +4,9 @@ node_modules
 coverage
 .nyc_output
 
+/tests/e2e/videos/
+/tests/e2e/screenshots/
+
 # local env files
 .env.local
 .env.*.local
@@ -22,11 +25,9 @@ yarn-error.log*
 *.sln
 *.sw*
 
-backend/public
-backend/db
-test.db
 *.zip
 
 __pycache__
 *.pyc
 keys.sh
+

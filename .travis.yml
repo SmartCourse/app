@@ -1,20 +1,11 @@
 ---
 language: node_js
-services:
-  - docker
 node_js:
   - 10
 notifications:
   slack: cs4920-2018:SDt3tqEvra7QvkVy5wnY9faR
-before_install:
-  - ./docker.sh
 install:
-  - cd frontend
   - npm install
-  - npm run build-local
-  - cd ../backend
-  - npm install
-  - cd ../
 cache:
   directories:
     - node_modules
@@ -23,16 +14,9 @@ jobs:
   include:
     - stage: test
       script:
-        - cd backend
         - npm test
-        - cd ../frontend
-        - npm test
-        - cd ../
       after_script:
-        - cd backend
         - npm run coverage
-        - cd ../
-
     - stage: deploy-dev
       script:
         - ./deploy.sh staging
