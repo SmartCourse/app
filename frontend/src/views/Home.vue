@@ -11,7 +11,7 @@
         <div class="why">
           <div class="why-card">
             <p class="why-icon"><i class="material-icons theme">find_in_page</i></p>
-            <h3>Browse</h3>
+            <h3>Browse Courses</h3>
             <p>Choose the courses that best suit you based on student feedback and reviews.</p>
           </div>
           <div class="why-card">
@@ -22,7 +22,7 @@
           </div>
           <div class="why-card">
             <p class="why-icon"><i class="material-icons orange">edit</i></p>
-            <h3>Review Courses</h3>
+            <h3>Write Reviews</h3>
             <p>Have your say. Review courses and answer questions to help other students
             </p>
           </div>
@@ -67,12 +67,12 @@ export default {
 
 .homepage-section {
   display: grid;
-  min-height: 360px;
 }
 
 .content {
   justify-self: center;
   margin: auto;
+  padding: 20px;
 }
 
 .why {
@@ -87,7 +87,7 @@ export default {
   text-align: center;
   padding: 10px 20px;
   background-color: var(--white);
-  width: 275px;
+  min-height:200px;
 }
 
 .why-card p {
@@ -129,6 +129,12 @@ a {
     color:var(--theme)
 }
 
+@media screen and (min-width: 1200px) {
+   .why-card {
+     width: 270px;
+   }
+}
+
 /* tablet and below */
 @media screen and (max-width: 700px) {
   .home {
@@ -153,30 +159,14 @@ a {
   }
 
   .why-card {
-    width: 400px;
+    width: 300px;
   }
 }
 
 @media screen and (max-width: 500px) {
   .why-card {
-    width: 280px;
+    width: 150px;
   }
-}
-
-@media screen and (min-width: 700px) {
-  .why-card {
-    width: 200px;
-  }
-}
-
-@media screen and (min-width: 1200px) {
-   .why-card {
-     width: 340px;
-   }
-
-   .why {
-     grid-gap: 40px;
-   }
 }
 
 </style>
