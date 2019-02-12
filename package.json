@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build-local": "cross-env NODE_ENV=development vue-cli-service build --dest  '../backend/public' --mode development",
-    "build-staging": "cross-env NODE_ENV=staging vue-cli-service build --dest '../backend/public' --mode staging",
-    "build-prod": "cross-env NODE_ENV=production vue-cli-service build --dest '../backend/public' --mode production",
+    "build-local": "cross-env NODE_ENV=development vue-cli-service build --dest  './public' --mode development",
+    "build-staging": "cross-env NODE_ENV=staging vue-cli-service build --dest './public' --mode staging",
+    "build-prod": "cross-env NODE_ENV=production vue-cli-service build --dest './public' --mode production",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit --require tests/unit/pre-setup.js",
     "test": "npm run lint && npm run test:unit"
