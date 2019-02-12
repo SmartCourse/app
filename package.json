@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build-local": "cross-env NODE_ENV=development vue-cli-service build --dest  '../backend/public' --mode development",
-    "build-staging": "cross-env NODE_ENV=staging vue-cli-service build --dest '../backend/public' --mode staging",
-    "build-prod": "cross-env NODE_ENV=production vue-cli-service build --dest '../backend/public' --mode production",
-    "deploy-staging": "npm run build-staging && aws s3 cp '../backend/public' s3://smartcourse-resources/staging --recursive",
-    "deploy-production": "npm run build-prod && aws s3 cp '../backend/public' s3://smartcourse-resources/production --recursive",
+    "build-local": "cross-env NODE_ENV=development vue-cli-service build --mode development",
+    "build-staging": "cross-env NODE_ENV=staging vue-cli-service build --mode staging",
+    "build-prod": "cross-env NODE_ENV=production vue-cli-service build --mode production",
+    "deploy-staging": "npm run build-staging && aws s3 cp 'dist' s3://smartcourse-resources/staging --recursive",
+    "deploy-production": "npm run build-prod && aws s3 cp 'dist' s3://smartcourse-resources/production --recursive",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit --require tests/unit/pre-setup.js",
     "test": "npm run lint && npm run test:unit"

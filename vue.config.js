@@ -1,3 +1,6 @@
+const { version } = require('./package.json')
+
 module.exports = {
-  lintOnSave: true
+  lintOnSave: true,
+  assetsDir: version
 }
