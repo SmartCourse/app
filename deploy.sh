@@ -30,7 +30,7 @@ echo ""
 echo "Deploying..."
 curl -u $AZURE_USER:$AZURE_PASS \
     --request PUT \
-    --data-binary @smartcourse.zip https://$name.scm.azurewebsites.net/api/zip/site/wwwroot/ \
+    --data-binary @smartcourse.zip https://$name.scm.azurewebsites.net/api/zip/site/wwwroot/
 echo ""
 
 echo "DONE!"
