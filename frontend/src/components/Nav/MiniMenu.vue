@@ -127,7 +127,7 @@ h2 {
   right: -20px;
   height: calc(100vh - 64px);
   overflow: hidden;
-  z-index: 98;
+  z-index: var(--z-index-mini-menu);
 }
 
 .mini-menu__items--logout {
