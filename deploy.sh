@@ -22,14 +22,15 @@ npm install
 npm run build-$type
 
 # Zip the web app files
+cd dist
 rm -f smartcourse.zip
 zip -r smartcourse.zip public
 echo ""
 
 echo "Deploying..."
 curl -u $AZURE_USER:$AZURE_PASS \
-    --request POST \
-    --data-binary @smartcourse.zip https://$name.scm.azurewebsites.net/api/zipdeploy
+    --request PUT \
+    --data-binary @smartcourse.zip https://$name.scm.azurewebsites.net/api/zip/site/wwwroot/ \
 echo ""
 
 echo "DONE!"
