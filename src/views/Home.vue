@@ -22,7 +22,7 @@
           </div>
           <div class="why-card">
             <p class="why-icon"><i class="material-icons orange">edit</i></p>
-            <h3>Write Reviews</h3>
+            <h3>Help Others</h3>
             <p>Have your say. Review courses and answer questions to help other students
             </p>
           </div>
@@ -52,21 +52,36 @@ export default {
             color: 'theme',
             name: 'find_in_page'
           },
-          title: 'Browse Courses'
+          title: 'Browse Courses',
+          copy: 'Choose the courses that best suit you based on student feedback and reviews.',
+          link: {
+            copy: 'Start searching',
+            path: '/subject'
+          }
         },
         {
           icon: {
             color: 'pink',
             name: 'contact_support'
           },
-          title: 'Ask Questions'
+          title: 'Ask Questions',
+          copy: 'Join the community. Sign up to ask questions about courses and vote for responses.',
+          link: {
+            copy: 'Sign up now',
+            path: '/signup'
+          }
         },
         {
           icon: {
             color: 'orange',
             name: 'edit'
           },
-          title: 'Write Reviews'
+          title: 'Help Others',
+          copy: 'Have your say. Review courses and answer questions to help other students.',
+          link: {
+            copy: 'Answer the unanswered',
+            path: '/feed'
+          }
         }
       ]
     }

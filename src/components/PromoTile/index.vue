@@ -5,8 +5,9 @@
     </p>
     <h3 class="promo-tile__header">{{ title }}</h3>
     <p class="promo-tile__copy">
-        <slot/>
+        {{ copy }}
     </p>
+    <router-link class="promo-tile__link" v-if="link" :to="{ path: link.path }">{{ link.copy }}</router-link>
   </div>
 </template>
 
@@ -17,7 +18,12 @@ export default {
       name: String,
       color: String
     },
-    title: String
+    title: String,
+    copy: String,
+    link: {
+      copy: String,
+      path: String
+    }
   }
 }
 </script>
@@ -36,6 +42,10 @@ export default {
 
 .promo-tile__copy {
   color: var(--soft-black);
+}
+
+.promo-tile__link {
+  color: var(--theme);
 }
 
 .promo-tile__icon .material-icons {
