@@ -27,6 +27,12 @@
             </p>
           </div>
         </div>
+        <div class="why">
+          <PromoTile v-for="tile in promoTiles"
+            :key="tile.title"
+            v-bind="tile"
+          />
+        </div>
       </article>
     </section>
   </div>
@@ -34,9 +40,37 @@
 
 <script>
 import Search from '@/components/Search'
+import PromoTile from '@/components/PromoTile'
 
 export default {
-  components: { Search }
+  components: { Search, PromoTile },
+  data() {
+    return {
+      promoTiles: [
+        {
+          icon: {
+            color: 'theme',
+            name: 'find_in_page'
+          },
+          title: 'Browse Courses'
+        },
+        {
+          icon: {
+            color: 'pink',
+            name: 'contact_support'
+          },
+          title: 'Ask Questions'
+        },
+        {
+          icon: {
+            color: 'orange',
+            name: 'edit'
+          },
+          title: 'Write Reviews'
+        }
+      ]
+    }
+  }
 }
 </script>
 
@@ -83,36 +117,6 @@ export default {
   max-height: none;
 }
 
-.why-card {
-  text-align: center;
-  padding: 10px 20px;
-  background-color: var(--white);
-  min-height:250px;
-}
-
-.why-card p {
-  color: var(--soft-black);
-}
-
-.why-icon .material-icons {
-  color: var(--white);
-  padding: 0.5em;
-  font-size: var(--font-large);
-  border-radius: 100%;
-}
-
-.why-icon .orange {
-  background-color: #ff9800;
-}
-
-.why-icon .theme {
-  background-color: var(--theme);
-}
-
-.why-icon .pink {
-  background-color: pink;
-}
-
 .offer {
   background-color: var(--white);
 }
@@ -127,18 +131,6 @@ p {
 
 a {
     color:var(--theme)
-}
-
-@media screen and (min-width: 1100px) {
-   .why-card {
-     width: 270px;
-   }
-}
-
-@media screen and (max-width: 1100px) {
-   .why-card {
-     width: 200px;
-   }
 }
 
 /* tablet and below */
@@ -162,15 +154,6 @@ a {
   .why {
     grid-template-columns: none;
     grid-auto-flow: row;
-  }
-  .why-card {
-    width: 300px;
-  }
-}
-
-@media screen and (max-width: 500px) {
-  .why-card {
-    width: 220px;
   }
 }
 
