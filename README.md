@@ -1,13 +1,13 @@
 # SmartCourse
 [![Build Status](https://travis-ci.com/SmartCourse/app.svg?branch=dev)](https://travis-ci.com/SmartCourse/app)
-[![Coverage Status](https://coveralls.io/repos/github/SmartCourse/app/badge.svg?branch=dev&service=github)](https://coveralls.io/github/SmartCourse/app?branch=dev)
+![Build Version](https://img.shields.io/github/package-json/v/SmartCourse/app.svg?style=flat)
 
 ## Builds and Deployment
 Our production build is automatically deployed when code is merged with master. The current production build can be found at: http://smartcourse.me/
 
 Our staging build is automatically deployed when code is merged with dev. The current staging build can be found at: https://smartcourse-staging.azurewebsites.net/
 
-## Draft Feature Plan
+## Feature Plan
 * Question answering ala stack overflow
     * post questions
     * answer questions
@@ -47,14 +47,4 @@ npm run build
 ### Lints and fixes files
 ```
 npm run lint
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Run your end-to-end tests
-```
-npm run test:e2e
 ```
