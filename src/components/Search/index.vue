@@ -8,9 +8,11 @@
         />
         <ul v-if="search && suggestions.length">
             <router-link
+                tabindex="0"
                 @click.native="resetSearch()"
                 :key="item.code"
                 tag="li"
+                @keydown.enter.native="enterHandler(`/course/${item.code}`)"
                 v-for="item in suggestions"
                 :to="{ path: `/course/${item.code}` }"
             >
@@ -48,7 +50,11 @@ export default {
   },
 
   methods: {
-    resetSearch() { this.search = '' }
+    resetSearch() { this.search = '' },
+    enterHandler(path) {
+      this.$router.push({ path })
+      this.resetSearch()
+    }
   }
 }
 </script>
@@ -89,7 +95,8 @@ li {
     font-size: 0.8em;
 }
 
-li:hover {
+li:hover, li:focus {
+    outline: none;
     background: var(--theme-light);
 }
 
