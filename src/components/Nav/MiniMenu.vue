@@ -95,7 +95,7 @@ export default {
   }
 
   to {
-    width: 0;
+    width: 0px;
   }
 }
 

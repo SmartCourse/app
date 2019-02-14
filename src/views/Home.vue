@@ -9,25 +9,6 @@
     <section class="homepage-section">
       <article class="content">
         <div class="why">
-          <div class="why-card">
-            <p class="why-icon"><i class="material-icons theme">find_in_page</i></p>
-            <h3>Browse Courses</h3>
-            <p>Choose the courses that best suit you based on student feedback and reviews.</p>
-          </div>
-          <div class="why-card">
-            <p class="why-icon"><i class="material-icons pink">contact_support</i></p>
-            <h3>Ask Questions</h3>
-            <p>Join the community. <router-link :to="'/signup'">Sign up</router-link> to ask questions about courses and vote for responses
-            </p>
-          </div>
-          <div class="why-card">
-            <p class="why-icon"><i class="material-icons orange">edit</i></p>
-            <h3>Help Others</h3>
-            <p>Have your say. Review courses and answer questions to help other students
-            </p>
-          </div>
-        </div>
-        <div class="why">
           <PromoTile v-for="tile in promoTiles"
             :key="tile.title"
             v-bind="tile"
