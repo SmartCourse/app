@@ -50,26 +50,10 @@ export default {
 }
 
 .promo-tile__icon .material-icons {
-  /* color: var(--soft-white); */
-  /* padding: 0.5em; */
   font-size: var(--font-large);
-  /* border-radius: 100%; */
 }
 
-/*
-.promo-tile__icon .orange {
-  background-color: #ff9800;
-}
-
-.promo-tile__icon .theme {
-  background-color: var(--theme);
-}
-
-.promo-tile__icon .pink {
-  background-color: pink;
-}
-*/
-
+/* clean these guys up later */
 @media screen and (min-width: 1100px) {
   .promo-tile {
     width: 270px;
