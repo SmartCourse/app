@@ -9,23 +9,10 @@
     <section class="homepage-section">
       <article class="content">
         <div class="why">
-          <div class="why-card">
-            <p class="why-icon"><i class="material-icons theme">find_in_page</i></p>
-            <h3>Browse Courses</h3>
-            <p>Choose the courses that best suit you based on student feedback and reviews.</p>
-          </div>
-          <div class="why-card">
-            <p class="why-icon"><i class="material-icons pink">contact_support</i></p>
-            <h3>Ask Questions</h3>
-            <p>Join the community. <router-link :to="'/signup'">Sign up</router-link> to ask questions about courses and vote for responses
-            </p>
-          </div>
-          <div class="why-card">
-            <p class="why-icon"><i class="material-icons orange">edit</i></p>
-            <h3>Write Reviews</h3>
-            <p>Have your say. Review courses and answer questions to help other students
-            </p>
-          </div>
+          <PromoTile v-for="tile in promoTiles"
+            :key="tile.title"
+            v-bind="tile"
+          />
         </div>
       </article>
     </section>
@@ -34,9 +21,52 @@
 
 <script>
 import Search from '@/components/Search'
+import PromoTile from '@/components/PromoTile'
 
 export default {
-  components: { Search }
+  components: { Search, PromoTile },
+  data() {
+    return {
+      promoTiles: [
+        {
+          icon: {
+            color: 'theme',
+            name: 'find_in_page'
+          },
+          title: 'Browse Courses',
+          copy: 'Choose the courses that best suit you based on student feedback and reviews.',
+          link: {
+            copy: 'Start searching',
+            path: '/subject'
+          }
+        },
+        {
+          icon: {
+            color: 'pink',
+            name: 'contact_support'
+          },
+          title: 'Ask Questions',
+          copy: 'Join the community. Sign up to ask questions about courses and vote for responses.',
+          link: {
+            copy: 'Sign up now',
+            path: '/signup'
+          }
+        },
+        {
+          icon: {
+            color: 'orange',
+            name: 'edit'
+          },
+          title: 'Help Others',
+          copy: 'Have your say. Review courses and answer questions to help other students.',
+          link: {
+            copy: 'Answer the unanswered',
+            path: '/feed'
+          }
+        }
+      ]
+    }
+  }
 }
 </script>
 
@@ -83,36 +113,6 @@ export default {
   max-height: none;
 }
 
-.why-card {
-  text-align: center;
-  padding: 10px 20px;
-  background-color: var(--white);
-  min-height:250px;
-}
-
-.why-card p {
-  color: var(--soft-black);
-}
-
-.why-icon .material-icons {
-  color: var(--white);
-  padding: 0.5em;
-  font-size: var(--font-large);
-  border-radius: 100%;
-}
-
-.why-icon .orange {
-  background-color: #ff9800;
-}
-
-.why-icon .theme {
-  background-color: var(--theme);
-}
-
-.why-icon .pink {
-  background-color: pink;
-}
-
 .offer {
   background-color: var(--white);
 }
@@ -127,18 +127,6 @@ p {
 
 a {
     color:var(--theme)
-}
-
-@media screen and (min-width: 1100px) {
-   .why-card {
-     width: 270px;
-   }
-}
-
-@media screen and (max-width: 1100px) {
-   .why-card {
-     width: 200px;
-   }
 }
 
 /* tablet and below */
@@ -162,15 +150,6 @@ a {
   .why {
     grid-template-columns: none;
     grid-auto-flow: row;
-  }
-  .why-card {
-    width: 300px;
-  }
-}
-
-@media screen and (max-width: 500px) {
-  .why-card {
-    width: 220px;
   }
 }
 

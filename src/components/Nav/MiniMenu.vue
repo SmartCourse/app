@@ -1,24 +1,22 @@
 <template>
-  <div class="mini-menu" @click="clickHandler">
+  <div class="mini-menu" @click="clickHandler" @blur="blurHandler" tabindex="0">
     <i ref="toggle" class="material-icons">{{ toggled ? 'close' : 'menu'}}</i>
     <div :class="['mini-menu__items', toggled ? 'toggled' : 'closed' ]">
       <div class="section mini-menu__items--user">
-        <h2>User</h2>
-        <router-link
+        <MiniMenuHeader>User</MiniMenuHeader>
+        <MenuItem
           v-for="item in items"
           :key="item.text"
           :to="item.to"
-          class="menu-item"
-        >{{ item.text }}</router-link>
+        >{{ item.text }}</MenuItem>
       </div>
       <div class="section mini-menu__items--navigation">
-        <h2>Navigation</h2>
-        <router-link
+        <MiniMenuHeader>Navigation</MiniMenuHeader>
+        <MenuItem
           v-for="item in fixedItems"
           :key="item.text"
           :to="item.to"
-          class="menu-item"
-        >{{ item.text }}</router-link>
+        >{{ item.text }}</MenuItem>
       </div>
       <div
         class="section mini-menu__items--logout"
@@ -37,11 +35,17 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import MiniMenuHeader from './MiniMenuHeader'
+import MenuItem from './MiniMenuItem'
 
 export default {
   props: {
     items: Array,
     logout: Function
+  },
+  components: {
+    MiniMenuHeader,
+    MenuItem
   },
   data() {
     return {
@@ -55,10 +59,15 @@ export default {
   },
   methods: {
     clickHandler(event) {
-      const target = event.target
+      const { target } = event
       if (target === this.$refs.toggle) {
         this.toggled = !this.toggled
-      } else if (target.classList.contains('menu-item')) {
+      } else if (target.classList.contains('mini-menu__menu-item')) {
+        this.toggled = false
+      }
+    },
+    blurHandler(event) {
+      if (!event.target.contains(event.relatedTarget)) {
         this.toggled = false
       }
     }
@@ -86,7 +95,7 @@ export default {
   }
 
   to {
-    width: 0;
+    width: 0px;
   }
 }
 
@@ -94,12 +103,7 @@ export default {
   position: relative;
   display: none;
   margin-left: 10px;
-}
-
-h2 {
-  font: var(--header-3);
-  margin: 10px 0;
-  color: var(--theme);
+  outline: none;
 }
 
 .material-icons {
@@ -136,14 +140,6 @@ h2 {
 
 .mini-menu__items--feedback {
   color: var(--color-red);
-}
-
-.menu-item {
-  margin: 5px 0;
-}
-
-.menu-item:hover, .menu-item:active {
-  color: var(--theme-light);
 }
 
 .toggled {
