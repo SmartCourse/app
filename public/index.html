@@ -5,9 +5,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" href="/favicon.ico">
-  <meta name="description" content="Community-driven ratings, reviews and info about UNSW courses.">
+  <meta name="description" content="Community-driven ratings, reviews and information about UNSW courses.">
   <meta property="og:title" content="<%= VUE_APP_TITLE %>">
-  <meta property="og:description" content="Community-driven ratings, reviews and info about UNSW courses.">
+  <meta property="og:description" content="Community-driven ratings, reviews and information about UNSW courses.">
   <meta property="og:url" content="<%= VUE_APP_URL %>">
   <meta property="og:image" content="/logo.png">
   <title><%= VUE_APP_TITLE %></title>
@@ -89,6 +89,34 @@ p {
   color: var(--black-p);
 }
 
+.bg--green {
+  background-color: #8bc34a;
+}
+
+.bg--purple {
+  background-color: var(--color-purple);
+}
+
+.bg--red {
+  background-color: var(--color-red);
+}
+
+.bg--orange {
+  background-color: var(--color-orange);
+}
+
+.bg--blue {
+  background-color: var(--color-blue);
+}
+
+.bg--dark-blue {
+  background-color: #0712f7;
+}
+
+.bg--black {
+  background-color: #373737;
+}
+
 /* CSS from here related to loading state */
 #shell {
   background-color: white;
@@ -148,7 +176,7 @@ p {
     <div class="loading"></div>
     <div class="preload__content">
       <h1>Smart<span class="preload__content--course">Course</span></h1>
-      <p>Community-driven ratings, reviews and info about UNSW courses.</p>
+      <p>Community-driven ratings, reviews and information about UNSW courses.</p>
     </div>
   </div>
   <script src="/preload.js"></script>

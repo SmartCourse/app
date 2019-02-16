@@ -71,7 +71,6 @@ export default {
 </script>
 
 <style scoped>
-
 .home {
   font-size: var(--font-large);
   margin: 0 auto;

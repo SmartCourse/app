@@ -26,7 +26,10 @@
         <Semester v-if="session">
           {{ sessionShortName }}
         </Semester>
-        <Badge v-if="pinned">
+        <Badge v-if="code" :class="courseCodeCls">
+          {{ code }}
+        </Badge>
+        <Badge v-if="pinned" class="bg--orange">
           FAQ
         </Badge>
       </div>
@@ -43,6 +46,8 @@ import Recommend from '@/components/Category/Recommend'
 import Semester from '@/components/Category/Semester'
 import Badge from '@/components/Category/Badge'
 
+import { colorFromId } from '@/utils/helpers'
+
 export default {
   props: {
     title: String,
@@ -52,6 +57,7 @@ export default {
     numResponses: { type: Number, default: 0 },
     pinned: Number,
     code: String,
+    courseID: Number,
     id: String,
     cardType: String,
     recommend: Boolean,
@@ -79,6 +85,9 @@ export default {
       return this.$store.getters.sessions.length &&
         this.$store.getters.sessions[this.session - 1] &&
         this.$store.getters.sessions[this.session - 1].shortName
+    },
+    courseCodeCls() {
+      return `bg--${colorFromId(this.courseID)}`
     }
   }
 }
