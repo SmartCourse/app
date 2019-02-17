@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import Card from '@/components/Card'
+import Card from '@/components/Card/Border'
 import SecondHeader from '@/components/Card/SecondaryHeader'
 import UserMini from '@/components/User/Mini'
 import Recommend from '@/components/Category/Recommend'
@@ -87,7 +87,7 @@ export default {
         this.$store.getters.sessions[this.session - 1].shortName
     },
     courseCodeCls() {
-      return `bg--${colorFromId(this.courseID)}`
+      return `border border--${colorFromId(this.courseID)}`
     }
   }
 }
@@ -116,9 +116,11 @@ export default {
 .categories {
   display: flex;
   align-items: center;
+  flex-flow: wrap;
 }
 
 .categories > * {
+  margin: 1px 0;
   margin-right: 5px;
 }
 

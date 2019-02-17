@@ -54,6 +54,8 @@ html, body {
   --color-purple:  #673ab7;
   --color-red: #ff5722;
   --color-orange: #ff9800;
+  --color-green: #8bc34a;
+  --color-dark-blue: #0712f7;
 
   /* font format */
   --header-1: 600 2.5rem /1.2 -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Roboto', Helvetica, 'Open Sans', sans-serif;
@@ -89,32 +91,64 @@ p {
   color: var(--black-p);
 }
 
+.border {
+  border: var(--border);
+}
+
 .bg--green {
-  background-color: #8bc34a;
+  background-color: var(--color-green);
+}
+
+.border--green {
+  border-color: var(--color-green);
 }
 
 .bg--purple {
   background-color: var(--color-purple);
 }
 
+.border--purple {
+  border-color: var(--color-purple);
+}
+
 .bg--red {
   background-color: var(--color-red);
+}
+
+.border--red {
+  border-color: var(--color-red);
 }
 
 .bg--orange {
   background-color: var(--color-orange);
 }
 
+.border--orange {
+  border-color: var(--color-orange);
+}
+
 .bg--blue {
   background-color: var(--color-blue);
 }
 
+.border--blue {
+  border-color: var(--color-blue);
+}
+
 .bg--dark-blue {
-  background-color: #0712f7;
+  background-color: var(--color-dark-blue);
+}
+
+.border--dark-blue {
+  border-color: var(--color-dark-blue);
 }
 
 .bg--black {
   background-color: #373737;
+}
+
+.border--black {
+  border-color:  #373737;
 }
 
 /* CSS from here related to loading state */

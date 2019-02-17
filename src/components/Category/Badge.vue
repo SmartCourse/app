@@ -14,6 +14,6 @@ export default {
 
 <style scoped>
 .badge {
-  color: var(--white);
+  color: var(--black);
 }
 </style>

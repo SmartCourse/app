@@ -1,6 +1,6 @@
 <template>
   <div data-view>
-    <section class="main-content home">
+    <section class="home main-content">
       <AppLogo class="splash" :first="'Smart'" :last="'Course'"/>
       <p>Community-driven ratings, reviews and info about UNSW courses.</p>
       <Search/>
@@ -61,7 +61,7 @@ export default {
           copy: 'Have your say. Review courses and answer questions to help other students.',
           link: {
             copy: 'Answer the unanswered',
-            path: '/feed'
+            path: '/questions'
           }
         }
       ]
@@ -90,8 +90,7 @@ export default {
 }
 
 .splash {
-  font-size: 5rem;
-  margin:0.5em auto;
+  margin: 0.5em auto;
 }
 
 .homepage-section {

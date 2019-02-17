@@ -1,7 +1,7 @@
 <template>
     <div>
         <SubNav :routes="routes"/>
-        <router-view class="main-content"/>
+        <router-view/>
     </div>
 </template>
 

@@ -1,12 +1,15 @@
 <template>
-    <div data-view>
+    <div data-view class="main-content">
         <div>
             <h2>Latest {{ feedType }}</h2>
-            <FeedCard v-for="card in feed"
-                :key="card.id"
+            <ol>
+              <li v-for="card in feed" :key="card.id">
+                <FeedCard
                 :cardType="feedType === 'questions' ? 'Question' : 'Review'"
                 v-bind="card"
-            />
+                />
+              </li>
+            </ol>
         </div>
     </div>
 </template>

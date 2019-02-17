@@ -56,7 +56,7 @@ export default {
 /* clean these guys up later */
 @media screen and (min-width: 1100px) {
   .promo-tile {
-    width: 270px;
+    width: auto;
   }
 }
 

@@ -25,14 +25,20 @@
           </div>
       </Card>
       </div>
-      <div v-if="user">
+      <div v-if="user" class="posts">
         <CardHeader>Recent Questions</CardHeader>
-        <FeedCard
-          v-for="q in questions"
+        <ol>
+          <li v-for="q in questions" :key="q.id">
+<FeedCard
+
           v-bind="q"
-          cardType="question"
-          :key="q.id"
+          :user="user"
+          cardType="Question"
+
           />
+          </li>
+        </ol>
+
       </div>
       </div>
   </section>
@@ -41,9 +47,9 @@
 <script>
 
 import UserSummary from '@/components/User/Summary'
-import Card from '@/components/Card'
+import Card from '@/components/Card/Transparent'
 import CardHeader from '@/components/Card/Header'
-import FeedCard from '@/components/Card/Small'
+import FeedCard from '@/components/Course/FeedCard'
 import Field from '@/components/Category/Row'
 
 import { mapGetters } from 'vuex'
@@ -94,7 +100,7 @@ export default {
 }
 
 .profile {
-  min-width: 200px;
+  min-width: 180px;
   margin: 0px 20px 10px 0;
 }
 
@@ -108,6 +114,10 @@ export default {
   display: flex;
   align-items: flex-start;
   justify-content: space-around;
+}
+
+.posts {
+  flex: 1 auto;
 }
 
 @media screen and (max-width: 700px){
@@ -124,7 +134,7 @@ export default {
     margin: 10px 0;
   }
 
-  .profile-container {
+  .profile-container, .posts {
     width: 100%;
   }
 }
