@@ -119,8 +119,8 @@ const mutations = {
     state.courseMap[course.code] = course
   },
   UPDATE_FEEDS(state, feeds) {
-    state.feeds.questions = feeds.map(questionMapper)
-    state.feeds.reviews = feeds.map(reviewMapper)
+    state.feeds.questions = feeds.questions.map(questionMapper)
+    state.feeds.reviews = feeds.reviews.map(reviewMapper)
   }
 }
 
