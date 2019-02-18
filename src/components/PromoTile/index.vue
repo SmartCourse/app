@@ -53,16 +53,9 @@ export default {
   font-size: var(--font-large);
 }
 
-/* clean these guys up later */
-@media screen and (min-width: 1100px) {
+@media screen and (min-width: 821px) {
   .promo-tile {
-    width: auto;
-  }
-}
-
-@media screen and (max-width: 1100px) {
-  .promo-tile {
-    width: 200px;
+    width: 250px;
   }
 }
 

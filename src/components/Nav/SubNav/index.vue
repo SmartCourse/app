@@ -31,10 +31,9 @@ export default {
 </script>
 
 <style scoped>
-
 .sub-nav {
-    padding: 10px 20px;
-    background-color: var(--black);
+    padding: 2.5px 20px;
+    background-color: #555;
     display: flex;
     flex-direction: row;
     align-items: center;

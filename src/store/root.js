@@ -2,6 +2,7 @@ import { get } from '../utils/api'
 import { startLoad, endLoad } from '../utils/helpers'
 import { courseMapper } from '@/utils/api/course'
 import { questionMapper } from '@/utils/api/questions'
+import { reviewMapper } from '@/utils/api/reviews'
 
 /* root application state */
 const state = {
@@ -119,7 +120,7 @@ const mutations = {
   },
   UPDATE_FEEDS(state, feeds) {
     state.feeds.questions = feeds.map(questionMapper)
-    state.feeds.reviews = feeds.map(questionMapper)
+    state.feeds.reviews = feeds.map(reviewMapper)
   }
 }
 
