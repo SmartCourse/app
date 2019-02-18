@@ -1,6 +1,8 @@
 import { get } from '../utils/api'
 import { startLoad, endLoad } from '../utils/helpers'
 import { courseMapper } from '@/utils/api/course'
+import { questionMapper } from '@/utils/api/questions'
+import { reviewMapper } from '@/utils/api/reviews'
 
 /* root application state */
 const state = {
@@ -10,7 +12,11 @@ const state = {
   courseMap: {},
   faculties: [],
   degrees: [],
-  sessions: []
+  sessions: [],
+  feeds: {
+    questions: [],
+    reviews: []
+  }
 }
 
 const getters = {
@@ -77,6 +83,11 @@ const actions = {
       .then(data => commit('LOAD_SESSIONS', data))
       .catch(err => console.warn(err.message))
       .then(endLoad)
+  },
+  getFeeds({ commit }) {
+    return get('/uni/feed')
+      .then(data => commit('UPDATE_FEEDS', data))
+      .catch(err => console.warn(err.message))
   }
 }
 
@@ -106,6 +117,10 @@ const mutations = {
   UPDATE_COURSE(state, course) {
     // assumes courseMapper already applied...
     state.courseMap[course.code] = course
+  },
+  UPDATE_FEEDS(state, feeds) {
+    state.feeds.questions = feeds.map(questionMapper)
+    state.feeds.reviews = feeds.map(reviewMapper)
   }
 }
 

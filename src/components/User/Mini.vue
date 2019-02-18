@@ -1,7 +1,7 @@
 <template>
     <router-link :to="{ name: 'Profile', params: { id: String(id) } }" tag='div' class="avatar">
         <!-- TODO: use picture if present -->
-        <div :class="`${background} letter`">
+        <div :class="`bg--${background} letter`">
           {{ name && name.charAt(0).toUpperCase() || '?'}}
         </div>
         <!--div :class="" :style="`background-image:url(${picture});`" v-else /-->
@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { colorFromId } from '@/utils/helpers'
+
 export default {
   props: {
     name: String,
@@ -20,57 +22,13 @@ export default {
   },
   computed: {
     background() {
-      let cls = 'black'
-      switch (this.id % 7) {
-      case 1: cls = 'green'
-        break
-      case 2: cls = 'purple'
-        break
-      case 3: cls = 'red'
-        break
-      case 4: cls = 'orange'
-        break
-      case 5: cls = 'blue'
-        break
-      case 6: cls = 'dark-blue'
-        break
-      }
-      return cls
+      return colorFromId(this.id)
     }
   }
 }
 </script>
 
 <style scoped>
-
-.green {
-  background-color: #8bc34a;
-}
-
-.purple {
-  background-color: var(--color-purple);
-}
-
-.red {
-  background-color: var(--color-red);
-}
-
-.orange {
-  background-color: var(--color-orange);
-}
-
-.blue {
-  background-color: var(--color-blue);
-}
-
-.dark-blue {
-  background-color: #0712f7;
-}
-
-.black {
-  background-color: #373737;
-}
-
 .letter {
   padding: 10px;
   color: white;
