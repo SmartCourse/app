@@ -20,13 +20,15 @@ export default {
       return name === 'Login' || name === 'Sign Up' || name === 'Forgot Password'
     }
   },
-  created() {
-    this.$store.dispatch('getCourses')
-    this.$store.dispatch('auth/checkAuth')
-    this.$store.dispatch('subject/getSubjects')
-    this.$store.dispatch('getFaculties')
-    this.$store.dispatch('getDegrees')
-    this.$store.dispatch('getSessions')
+  async created() {
+    return Promise.all([
+      this.$store.dispatch('getCourses'),
+      this.$store.dispatch('auth/checkAuth'),
+      this.$store.dispatch('subject/getSubjects'),
+      this.$store.dispatch('getFaculties'),
+      this.$store.dispatch('getDegrees'),
+      this.$store.dispatch('getSessions')
+    ])
   }
 }
 
@@ -40,7 +42,7 @@ export default {
 .main-content {
   /* arbitrary */
   min-height: calc(100vh - 64px);
-  max-width: 800px;
+  max-width: 850px;
   margin: auto;
   margin-bottom: 20px;
 }

@@ -2,7 +2,7 @@
   <div class="main-content">
     <AppBreadCrumb/>
       <div class="course">
-          <div class="course-header">
+          <div class="course-header border">
               <div class="course-header-title">
                   <div class="key-data">
                       <div class="left">
@@ -22,7 +22,7 @@
                   </div>
               </div>
           </div>
-          <div class="course-info">
+          <div class="course-info border">
               <CourseInfo :code="code"/>
           </div>
       </div>

@@ -70,6 +70,24 @@ export function menuInteractionsMapper({
   ]
 }
 
+const colors = [
+  'black',
+  'green',
+  'purple',
+  'red',
+  'orange',
+  'blue',
+  'dark-blue'
+]
+
+/**
+ * @param   {number} id
+ * @returns {string} color
+ */
+export function colorFromId(id = 0) {
+  return colors[id % colors.length]
+}
+
 // Below functions are used to manage the pre-boot loading
 export const endLoad = () => {
   if (window && window.__loader) window.__loader.endLoad()

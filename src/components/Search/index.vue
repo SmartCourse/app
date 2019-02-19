@@ -113,7 +113,7 @@ li:hover, li:focus {
         font-size: var(--body-copy-1);
 
         & ul, .search-bar {
-            width: 180px;
+            width: 250px;
         }
     }
 

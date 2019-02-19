@@ -1,5 +1,5 @@
 <template>
-    <button :class="{ 'tab-button':true, 'tab-button-active':active }">
+    <button :class="['tab-button', {'tab-button-active':active }]">
         <slot></slot>
     </button>
 </template>

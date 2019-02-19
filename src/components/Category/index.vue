@@ -19,7 +19,7 @@ p, h6 {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  padding: 0.2em 0.5em;
+  padding: 0.1em 0.5em;
   border-radius: 4px;
 }
 </style>
