@@ -45,6 +45,11 @@ export default {
           }
         })
     }
+  },
+  created() {
+    if (!this.$store.getters.courseMap[this.code]) {
+      this.$router.push('/404')
+    }
   }
 }
 </script>

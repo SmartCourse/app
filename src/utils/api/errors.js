@@ -1,8 +1,8 @@
 export default class APIError extends Error {
-  constructor(message, code = 500) {
+  constructor(message, code = 1000, status = 500) {
     super(message)
     this.code = code
     this.name = 'APIError'
-    console.warn('APIError:', message)
+    this.status = status
   }
 }

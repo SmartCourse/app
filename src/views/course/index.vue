@@ -78,6 +78,9 @@ export default {
   },
   created () {
     this.$store.dispatch('course/getCourse', this.code)
+      .then(({ status }) => {
+        if (status === 404) this.$router.push('/404')
+      })
   },
   beforeRouteUpdate ({ params: { code } }, from, next) {
     // BUG as far as I'm aware this is only called
