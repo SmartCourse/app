@@ -35,7 +35,7 @@ export default {
 .name, .role {
     padding: 5px;
     margin: 0;
-    line-height: 10px;
+    line-height: 1.1;
 }
 
 .inline {

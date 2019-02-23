@@ -1,5 +1,5 @@
 // firebase authentication class
-import auth from './config'
+import auth, { googleAuthProvider } from './config'
 import CV from './CV'
 import { startLoad, endLoad } from '../../utils/helpers'
 
@@ -93,7 +93,26 @@ const actions = {
     await dispatch('getProfile')
     commit('SET_LOADING', false)
   },
-
+  async handleGoogleRedirect({ commit }) {
+    commit('SET_LOADING', true)
+    try {
+      const { user } = await auth.getRedirectResult()
+      commit('SET_USER', user)
+    } catch (error) {
+      commit('ERROR', error.message)
+    }
+    commit('SET_LOADING', false)
+  },
+  async signInWithGoogle({ commit, dispatch }) {
+    commit('SET_LOADING', true)
+    try {
+      await auth.signInWithRedirect(googleAuthProvider)
+      dispatch('handleGoogleRedirect')
+    } catch (error) {
+      commit('ERROR', error.message)
+    }
+    commit('SET_LOADING', false)
+  },
   /**
    * logout client side. Everything will be handled by
    * firebase for this.

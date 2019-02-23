@@ -22,7 +22,9 @@
         class="section mini-menu__items--logout"
         v-if="isFirebaseAuthorised"
         @click="logout">
-        Logout
+        <MenuItem :to="'/'">
+          Logout
+        </MenuItem>
       </div>
       <div class="section mini-menu__items--feedback">
         <a href="https://docs.google.com/forms/d/e/1FAIpQLScVIOcc6y4MZ74YZeCu0Rpqg3VyTc7wtgE3ZQATBJC4f1YaRg/viewform?usp=sf_link" target="_blank">
@@ -50,9 +52,9 @@ export default {
   data() {
     return {
       fixedItems: [
-        { text: 'Home', to: '/' },
-        { text: 'Subjects', to: '/subject' }
-        /* { text: 'Feed', to: '/feed' } */
+        { text: 'Search', to: '/' },
+        { text: 'Subjects', to: '/subject' },
+        { text: 'Feed', to: '/questions' }
       ],
       toggled: false
     }

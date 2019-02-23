@@ -11,7 +11,6 @@
       if (this._started === 0) {
         this.startTime = Date.now()
       }
-      console.info(`Loading ${item}..`)
       this._started += 1
     }
 

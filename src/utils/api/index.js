@@ -9,11 +9,13 @@ async function responseCheck(res) {
     // check if body, else rely on headers
     return res.status === 200 ? res.json() : res.headers.get('X-ID')
   } else if (res.status >= 500) {
+    console.warn('APIError:', 'Server Error')
     throw new APIError('Server Error')
   } else {
     // if 400s response json is probably sent to explain problem
     const err = await res.json()
-    throw new APIError(err.message, err.code)
+    console.warn('APIError:', err.message)
+    throw new APIError(err.message, err.code, res.status)
   }
 }
 

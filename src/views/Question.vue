@@ -115,8 +115,16 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('questions/getAnswers', { id: this.id, code: this.code })
+    // run away if course doesn't exist
+    if (!this.$store.getters.courseMap[this.code]) {
+      this.$router.push('/404')
+      return
+    }
     this.$store.dispatch('questions/getQuestion', { id: this.id, code: this.code })
+      .then(({ status }) => {
+        if (status === 404) this.$router.push('/404')
+      })
+    this.$store.dispatch('questions/getAnswers', { id: this.id, code: this.code })
   }
 }
 </script>

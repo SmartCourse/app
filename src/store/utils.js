@@ -1,16 +1,21 @@
 
+import APIError from '../utils/api/errors'
+
 // factories
 export function doRequestFactory(REQUEST, COMMITS) {
   return async function ({ commit }, { action, args, load = 'TOGGLE_LOADING' }) {
     if (load) commit(load, true)
+    let ret = new APIError('Success', 0, 200)
     try {
       const data = await REQUEST[action](...args)
       commit(COMMITS[action], data)
     } catch (e) {
       commit('API_ERROR', e)
+      ret = e
     } finally {
       if (load) commit(load, false)
     }
+    return ret
   }
 }
 

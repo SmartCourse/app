@@ -24,6 +24,7 @@ const getters = {
   error: ({ error }) => error,
   // convert object to list
   courses: ({ courseMap }) => Object.values(courseMap),
+  courseMap: ({ courseMap }) => courseMap,
   faculties: ({ faculties }) => faculties,
   degrees: ({ degrees }) => degrees,
   sessions: ({ sessions }) => sessions

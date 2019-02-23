@@ -116,7 +116,15 @@ export default {
     }
   },
   created () {
+    // run away if course doesn't exist
+    if (!this.$store.getters.courseMap[this.code]) {
+      this.$router.push('/404')
+      return
+    }
     this.$store.dispatch('reviews/getReview', { id: this.id, code: this.code })
+      .then(({ status }) => {
+        if (status === 404) this.$router.push('/404')
+      })
     this.$store.dispatch('reviews/getReplies', { id: this.id, code: this.code })
   }
 }
