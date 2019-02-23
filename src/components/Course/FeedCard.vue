@@ -27,7 +27,9 @@
           {{ sessionShortName }}
         </Semester>
         <Badge v-if="code" :class="courseCodeCls">
-          {{ code }}
+          <router-link :to="{ name: 'info', params: { code }}">
+            {{ code }}
+          </router-link>
         </Badge>
         <Badge v-if="pinned" class="bg--orange">
           FAQ

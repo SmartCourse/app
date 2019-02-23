@@ -55,6 +55,7 @@ export default {
       this.$store.dispatch(`${type === 'Answer' ? 'questions' : 'reviews'}/delete${type}`, { code, id, commentID: comment.id })
     },
     editComment() {
+      alert('Edit is coming soon, sorry!')
       console.warn('Not yet implemented')
     },
     report() {

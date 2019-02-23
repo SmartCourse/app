@@ -7,8 +7,14 @@
           <slot></slot>
           <router-link v-if="link" :to="{ name: link.name }" class="help-link">{{ link.text }}</router-link>
           <AppButton class="button-spacing" @click.native="clickHandler" v-if="buttonText">
-              {{ buttonText }}
+            {{ buttonText }}
           </AppButton>
+          <GoogleButton class="button-spacing"
+            v-if="withGoogle"
+            @click.native="withGoogle.callback"
+          >
+            {{ withGoogle.text }}
+          </GoogleButton>
         </form>
         <p class="error" v-if="error">{{ error }}</p>
       </div>
@@ -19,6 +25,7 @@
 <script>
 import AppButton from '@/components/AppButton'
 import TransparentCard from '@/components/Card/Transparent'
+import GoogleButton from '@/components/AppButton/Google'
 
 export default {
   name: 'auth-form',
@@ -34,9 +41,13 @@ export default {
     title: String,
     error: String,
     buttonText: String,
-    flavour: String
+    flavour: String,
+    withGoogle: {
+      callback: Function,
+      text: String
+    }
   },
-  components: { AppButton, TransparentCard }
+  components: { AppButton, TransparentCard, GoogleButton }
 }
 </script>
 
@@ -59,7 +70,7 @@ h1, h2 {
   font: var(--body-copy-1);
   display: grid;
   grid-auto-flow: row;
-  grid-gap: 20px;
+  grid-gap: 15px;
 }
 
 .button-spacing {

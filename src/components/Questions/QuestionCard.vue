@@ -53,6 +53,7 @@ export default {
     },
     editQuestion() {
       console.warn('Edit not implemented')
+      alert('Edit is coming soon, sorry!')
     },
     report() {
       const reason = prompt('Why should this question be removed?')

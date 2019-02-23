@@ -4,6 +4,10 @@
       :title="'Sign Up'"
       :buttonText="'Sign Up'"
       :error="error"
+      :withGoogle="{
+        callback: googleCallback,
+        text: 'Or Sign Up with Google'
+      }"
       :clickHandler="createAccount"
       :link="{
         text: 'Already have an account?',
@@ -61,7 +65,18 @@ export default {
         if (!this.emailVerified) this.$router.push('/verify-email')
         else if (!this.profile) this.$router.push('/create-profile')
       }
+    },
+    googleCallback() {
+      if (!this.tos) {
+        this.$store.commit('auth/ERROR', 'You must accept the terms of service to proceed.')
+        return
+      }
+
+      this.$store.dispatch('auth/signInWithGoogle')
     }
+  },
+  beforeMount() {
+    this.reroute()
   },
   created() {
     this.$store.commit('auth/ERROR', '')

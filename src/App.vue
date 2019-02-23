@@ -48,7 +48,7 @@ export default {
 }
 
 .auth-page {
-  height: calc(100vh - 64px);
+  min-height: calc(100vh - 64px);
   width: 100%;
   display: flex;
   flex-direction: column;
