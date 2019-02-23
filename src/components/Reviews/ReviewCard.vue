@@ -70,6 +70,7 @@ export default {
     },
     editReview() {
       console.warn('Edit not yet implemented')
+      alert('Edit is coming soon, sorry!')
     },
     report() {
       const reason = prompt('Why should this review be removed?')

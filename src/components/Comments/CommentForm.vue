@@ -1,5 +1,5 @@
 <template>
-    <Card>
+    <Card class="comment__form">
       <div class="title-container">
         <h4>{{ title }}</h4>
         <aside v-if="closeCallback" v-on:click="closeCallback"><i class="material-icons">close_circle</i></aside>
@@ -7,7 +7,7 @@
       <textarea placeholder="" v-model="body"></textarea><br>
       <!-- should probs be a separate component -->
       <AppButtonToolTip
-        @click.native="callback({body}); body='';"
+        @click.native="callback({body}) && closeCallback(); body='';"
         :disabled="!authenticated"
         :disabledMessage="disabledMessage">
         Submit
@@ -51,6 +51,10 @@ export default {
 </script>
 
 <style scoped>
+.comment__form {
+  margin-bottom: 10px;
+}
+
 h4 {
   font: var(--body-copy-1);
   margin:0 7px;

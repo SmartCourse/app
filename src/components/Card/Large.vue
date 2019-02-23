@@ -1,6 +1,6 @@
 <template>
     <Card class="large-card">
-        <div v-if="title" class="space-between">
+        <div v-if="title" class="space-between pad-right">
             <CardHeader >{{ title }}</CardHeader>
              <!-- Add badges here in future -->
             <slot/>
@@ -68,6 +68,10 @@ export default {
     justify-content: space-between;
 }
 
+.pad-right {
+    padding-right: 10px;
+}
+
 p {
     margin: 10px 0;
     padding: 5px;
@@ -75,7 +79,7 @@ p {
 }
 
 .top-right {
-    top: 17px;
+    top: 12px;
     right: 0;
 }
 

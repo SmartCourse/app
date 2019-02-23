@@ -6,6 +6,10 @@
       :flavour="'Welcome back.'"
       :error="error"
       :clickHandler="clickHandler"
+      :withGoogle="{
+        text: 'Log In with Google',
+        callback: googleCallback
+      }"
       :link="{
         text: 'Forgot your password?',
         name: 'Forgot Password'
@@ -43,6 +47,9 @@ export default {
       const { email, password } = this
       this.$store.dispatch('auth/signIn', { email, password })
     },
+    googleCallback() {
+      this.$store.dispatch('auth/signInWithGoogle')
+    },
     reroute() {
       // we need to check the store to determine state
       if (this.isFirebaseAuthorised) {
@@ -51,6 +58,9 @@ export default {
         else this.$router.push('/')
       }
     }
+  },
+  beforeMount() {
+    this.reroute()
   },
   created() {
     this.$store.commit('auth/ERROR', '')
