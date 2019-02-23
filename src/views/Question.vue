@@ -115,8 +115,11 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('questions/getAnswers', { id: this.id, code: this.code })
     this.$store.dispatch('questions/getQuestion', { id: this.id, code: this.code })
+      .then(({ status }) => {
+        if (status === 404) this.$router.push('/404')
+      })
+    this.$store.dispatch('questions/getAnswers', { id: this.id, code: this.code })
   }
 }
 </script>

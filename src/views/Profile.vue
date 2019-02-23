@@ -81,12 +81,9 @@ export default {
     const { id } = this
     this.$store.dispatch('user/getUser', { id })
       .then(({ status }) => {
-        if (status === 404) {
-          this.$router.push('/404')
-        } else {
-          this.$store.dispatch('user/getUserQuestions', { id })
-        }
+        if (status === 404) this.$router.push('/404')
       })
+    this.$store.dispatch('user/getUserQuestions', { id })
   }
 }
 </script>
