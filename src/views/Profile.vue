@@ -73,13 +73,20 @@ export default {
     ...mapGetters('user', {
       user: 'userObj',
       questions: 'recentQuestions',
-      loading: 'loading'
+      loading: 'loading',
+      error: 'error'
     })
   },
   created () {
     const { id } = this
     this.$store.dispatch('user/getUser', { id })
-    this.$store.dispatch('user/getUserQuestions', { id })
+      .then(() => {
+        if (this.error.code === 7001) {
+          this.$router.push('/404')
+        } else {
+          this.$store.dispatch('user/getUserQuestions', { id })
+        }
+      })
   }
 }
 </script>
