@@ -80,8 +80,8 @@ export default {
   created () {
     const { id } = this
     this.$store.dispatch('user/getUser', { id })
-      .then(() => {
-        if (this.error.code === 7001) {
+      .then(({ status }) => {
+        if (status === 404) {
           this.$router.push('/404')
         } else {
           this.$store.dispatch('user/getUserQuestions', { id })
